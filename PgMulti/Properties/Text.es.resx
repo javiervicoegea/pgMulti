@@ -1,0 +1,849 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="about" xml:space="preserve">
+    <value>Acerca de...</value>
+  </data>
+  <data name="all_databases" xml:space="preserve">
+    <value>Todas las bases de datos</value>
+  </data>
+  <data name="all_tasks_finished" xml:space="preserve">
+    <value>Todas las tareas han terminado correctamente</value>
+  </data>
+  <data name="apply_changes" xml:space="preserve">
+    <value>Aplicar cambios</value>
+  </data>
+  <data name="app_options" xml:space="preserve">
+    <value>Opciones de la aplicación</value>
+  </data>
+  <data name="attributions" xml:space="preserve">
+    <value>Atribuciones</value>
+  </data>
+  <data name="author" xml:space="preserve">
+    <value>Autor</value>
+  </data>
+  <data name="automatic_begin_transaction" xml:space="preserve">
+    <value>TRANSACCIÓN {0} INICIADA AUTOMÁTICAMENTE</value>
+  </data>
+  <data name="auto_coordinated_transactions" xml:space="preserve">
+    <value>Transacciones automáticas coordinadas</value>
+  </data>
+  <data name="auto_scroll" xml:space="preserve">
+    <value>Scroll automático</value>
+  </data>
+  <data name="auto_single_transactions" xml:space="preserve">
+    <value>Transacciones automáticas independientes</value>
+  </data>
+  <data name="back" xml:space="preserve">
+    <value>Atrás</value>
+  </data>
+  <data name="btn_cancel" xml:space="preserve">
+    <value>&amp;Cancelar</value>
+  </data>
+  <data name="btn_ok" xml:space="preserve">
+    <value>&amp;Aceptar</value>
+  </data>
+  <data name="btn_reset" xml:space="preserve">
+    <value>&amp;Restablecer</value>
+  </data>
+  <data name="btn_test" xml:space="preserve">
+    <value>&amp;Probar</value>
+  </data>
+  <data name="canceling_all_tasks" xml:space="preserve">
+    <value>CANCELANDO TODAS LAS TAREAS</value>
+  </data>
+  <data name="cannot_determine_with_statement" xml:space="preserve">
+    <value>No se ha podido determinar el tipo de sentencia que empieza con WITH</value>
+  </data>
+  <data name="change_pass" xml:space="preserve">
+    <value>Cambiar contraseña</value>
+  </data>
+  <data name="child_table" xml:space="preserve">
+    <value>tabla secundaria</value>
+  </data>
+  <data name="close" xml:space="preserve">
+    <value>Cerrar</value>
+  </data>
+  <data name="closed_connection" xml:space="preserve">
+    <value>CONEXIÓN CERRADA</value>
+  </data>
+  <data name="close_all" xml:space="preserve">
+    <value>Cerrar todo</value>
+  </data>
+  <data name="close_all_tabs" xml:space="preserve">
+    <value>Cerrar todas las solapas</value>
+  </data>
+  <data name="close_all_tabs_except_this_one" xml:space="preserve">
+    <value>Cerrar todas las solapas menos esta</value>
+  </data>
+  <data name="close_this_tab" xml:space="preserve">
+    <value>Cerrar esta solapa</value>
+  </data>
+  <data name="collapse_all" xml:space="preserve">
+    <value>Contraer todo</value>
+  </data>
+  <data name="columns" xml:space="preserve">
+    <value>Columnas</value>
+  </data>
+  <data name="commited_coordinated_auto_transaction" xml:space="preserve">
+    <value>TRANSACCIÓN CONFIRMADA AUTOMÁTICA Y COORDINADAMENTE</value>
+  </data>
+  <data name="commited_single_auto_transaction" xml:space="preserve">
+    <value>TRANSACCIÓN CONFIRMADA AUTOMÁTICA E INDIVIDUALMENTE</value>
+  </data>
+  <data name="completed_in" xml:space="preserve">
+    <value>Completado en {0}</value>
+  </data>
+  <data name="completed_statement_n_in_all_tasks" xml:space="preserve">
+    <value>Completada la consulta {0} en todas las tareas</value>
+  </data>
+  <data name="confirm_close" xml:space="preserve">
+    <value>El fichero {0} contiene cambios sin guardar. ¿Desea guardarlo ahora?</value>
+  </data>
+  <data name="confirm_close_all" xml:space="preserve">
+    <value>Hay ficheros modificados que no se han guardado. Si continúa, perderá los cambios realizados.</value>
+  </data>
+  <data name="confirm_execution" xml:space="preserve">
+    <value>Confirmar ejecución de comandos</value>
+  </data>
+  <data name="confirm_remove" xml:space="preserve">
+    <value>Confirmar eliminación</value>
+  </data>
+  <data name="confirm_remove_db" xml:space="preserve">
+    <value>¿Confirmas que quieres eliminar la base de datos '{0}'?</value>
+  </data>
+  <data name="confirm_remove_group" xml:space="preserve">
+    <value>¿Confirmas que quieres eliminar el grupo de bases de datos '{0}'?
+ATENCIÓN: Se eliminarán también las bases de datos dentro del grupo.</value>
+  </data>
+  <data name="confirm_stop_all" xml:space="preserve">
+    <value>¿Estás seguro de que quieres detener todas las tareas en ejecución?</value>
+  </data>
+  <data name="confirm_stop_selected" xml:space="preserve">
+    <value>¿Estás seguro de que quieres detener las tareas seleccionadas?</value>
+  </data>
+  <data name="connection_opened" xml:space="preserve">
+    <value>CONEXIÓN ABIERTA</value>
+  </data>
+  <data name="connection_opened_to" xml:space="preserve">
+    <value>CONEXIÓN ABIERTA A {0}</value>
+  </data>
+  <data name="copy_sc" xml:space="preserve">
+    <value>Copiar (ctrl + c)</value>
+  </data>
+  <data name="csv_file_filter" xml:space="preserve">
+    <value>Ficheros CSV (*.csv)|*.csv|Todos los archivos|*.*</value>
+  </data>
+  <data name="csv_task" xml:space="preserve">
+    <value>Tarea exportación CSV</value>
+  </data>
+  <data name="cut_sc" xml:space="preserve">
+    <value>Cortar (ctrl + x)</value>
+  </data>
+  <data name="db" xml:space="preserve">
+    <value>Base de datos</value>
+  </data>
+  <data name="db_field_name" xml:space="preserve">
+    <value>Base de datos</value>
+  </data>
+  <data name="delay" xml:space="preserve">
+    <value>Retraso</value>
+  </data>
+  <data name="delete_rows" xml:space="preserve">
+    <value>Borrar filas seleccionadas</value>
+  </data>
+  <data name="down" xml:space="preserve">
+    <value>Bajar</value>
+  </data>
+  <data name="edit" xml:space="preserve">
+    <value>Editar</value>
+  </data>
+  <data name="edit_db" xml:space="preserve">
+    <value>Editar base de datos</value>
+  </data>
+  <data name="edit_selected_script" xml:space="preserve">
+    <value>Editar script seleccionado</value>
+  </data>
+  <data name="enable_autocomplete" xml:space="preserve">
+    <value>Activar sugerencias automáticas</value>
+  </data>
+  <data name="error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="error_count" xml:space="preserve">
+    <value>{0} errores</value>
+  </data>
+  <data name="error_in_task" xml:space="preserve">
+    <value>ERROR EN TAREA {0}</value>
+  </data>
+  <data name="error_no_manual_transaction_allowed_in_auto_transactions" xml:space="preserve">
+    <value>ERROR: No se admiten los comandos BEGIN, COMMIT ni ROLLBACK en los modos de transacción automática</value>
+  </data>
+  <data name="error_opening_file" xml:space="preserve">
+    <value>Se produjo un error al intentar abrir el archivo en</value>
+  </data>
+  <data name="error_processing_task" xml:space="preserve">
+    <value>ERROR</value>
+  </data>
+  <data name="error_saving" xml:space="preserve">
+    <value>Se produjo un error intentando guardar el estado de la aplicación. Si la cierras, perderás el contenido de las solapas abiertas que no hubieras guardado.</value>
+  </data>
+  <data name="error_saving_file" xml:space="preserve">
+    <value>Se produjo un error al intentar guardar el archivo en</value>
+  </data>
+  <data name="executed_in_comment" xml:space="preserve">
+    <value>-- EJECUTADO EN {0}</value>
+  </data>
+  <data name="executed_query" xml:space="preserve">
+    <value>Consulta ejecutada</value>
+  </data>
+  <data name="executing_since" xml:space="preserve">
+    <value>EN EJECUCIÓN DESDE</value>
+  </data>
+  <data name="execution_log" xml:space="preserve">
+    <value>Historial de comandos ejecutados</value>
+  </data>
+  <data name="explore_table" xml:space="preserve">
+    <value>Explorar tabla</value>
+  </data>
+  <data name="explore_table_x" xml:space="preserve">
+    <value>Explorar tabla {0}</value>
+  </data>
+  <data name="export_csv" xml:space="preserve">
+    <value>Ejecutar consulta y exportar resultados en fichero CSV</value>
+  </data>
+  <data name="file" xml:space="preserve">
+    <value>Archivo</value>
+  </data>
+  <data name="find_sc" xml:space="preserve">
+    <value>Buscar (ctrl + f)</value>
+  </data>
+  <data name="finished_error" xml:space="preserve">
+    <value>terminado con ERROR</value>
+  </data>
+  <data name="finished_successfully" xml:space="preserve">
+    <value>terminado correctamente</value>
+  </data>
+  <data name="format_sc" xml:space="preserve">
+    <value>Dar formato (ctrl + d)</value>
+  </data>
+  <data name="forward" xml:space="preserve">
+    <value>Adelante</value>
+  </data>
+  <data name="general" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="goto_sc" xml:space="preserve">
+    <value>Ir a la línea... (ctrl + g)</value>
+  </data>
+  <data name="history" xml:space="preserve">
+    <value>Historial</value>
+  </data>
+  <data name="incompatible_queries" xml:space="preserve">
+    <value>El script contiene diferentes consultas cuyos resultados son incompatibles entre sí y no se pueden exportar a un mismo fichero CSV</value>
+  </data>
+  <data name="incompatible_query" xml:space="preserve">
+    <value>La sentencia nº {0} no se puede integrar porque no tiene el mismo número de campos o estos no coinciden</value>
+  </data>
+  <data name="increase_font" xml:space="preserve">
+    <value>Aumentar tamaño de la letra</value>
+  </data>
+  <data name="initializing" xml:space="preserve">
+    <value>inicializando</value>
+  </data>
+  <data name="insert_in" xml:space="preserve">
+    <value>Insertar en {0}</value>
+  </data>
+  <data name="insert_row" xml:space="preserve">
+    <value>Insertar fila</value>
+  </data>
+  <data name="keep_db_selection" xml:space="preserve">
+    <value>Mantener las bases de datos seleccionadas entre ejecuciones</value>
+  </data>
+  <data name="language" xml:space="preserve">
+    <value>Idioma</value>
+  </data>
+  <data name="level" xml:space="preserve">
+    <value>Nivel</value>
+  </data>
+  <data name="limit" xml:space="preserve">
+    <value>Límite</value>
+  </data>
+  <data name="login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="manual_scroll" xml:space="preserve">
+    <value>Scroll manual</value>
+  </data>
+  <data name="manual_transactions" xml:space="preserve">
+    <value>Transacciones manuales</value>
+  </data>
+  <data name="max_rows" xml:space="preserve">
+    <value>Límite de filas por tabla</value>
+  </data>
+  <data name="mergeTables" xml:space="preserve">
+    <value>Combinar tablas de resultados</value>
+  </data>
+  <data name="mode" xml:space="preserve">
+    <value>Modo</value>
+  </data>
+  <data name="modifications_in" xml:space="preserve">
+    <value>Modificaciones en {0}</value>
+  </data>
+  <data name="more_options" xml:space="preserve">
+    <value>Más opciones</value>
+  </data>
+  <data name="name" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="new_db" xml:space="preserve">
+    <value>Nueva base de datos</value>
+  </data>
+  <data name="new_doc_title" xml:space="preserve">
+    <value>Sin título</value>
+  </data>
+  <data name="new_group" xml:space="preserve">
+    <value>Nuevo grupo</value>
+  </data>
+  <data name="new_password" xml:space="preserve">
+    <value>Nueva contraseña</value>
+  </data>
+  <data name="no_errors" xml:space="preserve">
+    <value>Sin errores</value>
+  </data>
+  <data name="no_results" xml:space="preserve">
+    <value>La consulta no devolvió resultados</value>
+  </data>
+  <data name="no_selected_rows" xml:space="preserve">
+    <value>No ha seleccionado ninguna fila. Para seleccionar una fila, debe hacer click en el botón a la izquierda de la fila correspondiente.</value>
+  </data>
+  <data name="null_value" xml:space="preserve">
+    <value>Valor NULL</value>
+  </data>
+  <data name="n_affected_rows" xml:space="preserve">
+    <value>{0} filas afectadas</value>
+  </data>
+  <data name="open" xml:space="preserve">
+    <value>Abrir</value>
+  </data>
+  <data name="options" xml:space="preserve">
+    <value>Opciones</value>
+  </data>
+  <data name="parent_table" xml:space="preserve">
+    <value>tabla principal</value>
+  </data>
+  <data name="password" xml:space="preserve">
+    <value>Contraseña</value>
+  </data>
+  <data name="paste_sc" xml:space="preserve">
+    <value>Pegar (ctrl + v)</value>
+  </data>
+  <data name="pg_error_code" xml:space="preserve">
+    <value>Código de error de PostgreSQL</value>
+  </data>
+  <data name="pg_exception_detail" xml:space="preserve">
+    <value>Detalle de la excepción</value>
+  </data>
+  <data name="port" xml:space="preserve">
+    <value>Puerto</value>
+  </data>
+  <data name="prepared_coordinated_auto_transaction" xml:space="preserve">
+    <value>TRANSACCIÓN PREPARADA PARA LA CONFIRMACIÓN CON ID {0}</value>
+  </data>
+  <data name="query_counter" xml:space="preserve">
+    <value>CONSULTA Nº {0} DE {1} - LÍNEA {2}</value>
+  </data>
+  <data name="redo_sc" xml:space="preserve">
+    <value>Rehacer (ctrl + y)</value>
+  </data>
+  <data name="reduce_font" xml:space="preserve">
+    <value>Reducir tamaño de la letra</value>
+  </data>
+  <data name="refresh" xml:space="preserve">
+    <value>Actualizar</value>
+  </data>
+  <data name="relations" xml:space="preserve">
+    <value>Relaciones</value>
+  </data>
+  <data name="relation_type" xml:space="preserve">
+    <value>Relación {0}</value>
+  </data>
+  <data name="remove" xml:space="preserve">
+    <value>Eliminar</value>
+  </data>
+  <data name="remove_completed" xml:space="preserve">
+    <value>Borrar todos los resultados completados</value>
+  </data>
+  <data name="remove_selected" xml:space="preserve">
+    <value>Borrar los resultados completados seleccionados</value>
+  </data>
+  <data name="repeat_password" xml:space="preserve">
+    <value>Repite contraseña</value>
+  </data>
+  <data name="replace_sc" xml:space="preserve">
+    <value>Reemplazar (ctrl + r)</value>
+  </data>
+  <data name="reset_confirm_message" xml:space="preserve">
+    <value>Si restablece la contraseña, perderá toda la configuración de la aplicación. ¿Está seguro de que quiere restablecer la contraseña?</value>
+  </data>
+  <data name="reset_confirm_title" xml:space="preserve">
+    <value>Restablecer contraseña</value>
+  </data>
+  <data name="result" xml:space="preserve">
+    <value>Resultado</value>
+  </data>
+  <data name="rollbacked_coordinated_auto_transaction" xml:space="preserve">
+    <value>TRANSACCIÓN REVERTIDA AUTOMÁTICA Y COORDINADAMENTE</value>
+  </data>
+  <data name="rollbacked_prepared_transaction" xml:space="preserve">
+    <value>Transacción revertida estando preparada para la confirmación</value>
+  </data>
+  <data name="rollbacked_single_auto_transaction" xml:space="preserve">
+    <value>TRANSACCIÓN REVERTIDA AUTOMÁTICAMENTE</value>
+  </data>
+  <data name="rows_limit_warning" xml:space="preserve">
+    <value>o más ({0} es el límite)</value>
+  </data>
+  <data name="rows_limit_warning_short" xml:space="preserve">
+    <value>(solo primeras {0} filas)</value>
+  </data>
+  <data name="running" xml:space="preserve">
+    <value>ejecutando</value>
+  </data>
+  <data name="run_all" xml:space="preserve">
+    <value>Ejecutar todo</value>
+  </data>
+  <data name="run_all_extended" xml:space="preserve">
+    <value>Ejecutar todos los scripts en sus respectivas bases de datos</value>
+  </data>
+  <data name="run_on" xml:space="preserve">
+    <value>Ejecutar en {0} bases de datos</value>
+  </data>
+  <data name="save" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="saved_rows" xml:space="preserve">
+    <value>Total de filas guardadas</value>
+  </data>
+  <data name="save_all" xml:space="preserve">
+    <value>Guardar todo</value>
+  </data>
+  <data name="save_as" xml:space="preserve">
+    <value>Guardar como...</value>
+  </data>
+  <data name="saving_row" xml:space="preserve">
+    <value>Guardando fila</value>
+  </data>
+  <data name="script_count_message" xml:space="preserve">
+    <value>Se ejecutarán un total de {0} scripts</value>
+  </data>
+  <data name="script_index_message" xml:space="preserve">
+    <value>Script {0}/{1} a ejecutar en {2}</value>
+  </data>
+  <data name="select_open_file" xml:space="preserve">
+    <value>Seleccione el archivo a abrir</value>
+  </data>
+  <data name="select_save_file" xml:space="preserve">
+    <value>Seleccione donde guardar el archivo</value>
+  </data>
+  <data name="select_to_set_null_value" xml:space="preserve">
+    <value>Seleccionar para indicar el valor NULL</value>
+  </data>
+  <data name="server" xml:space="preserve">
+    <value>Servidor</value>
+  </data>
+  <data name="setup_config" xml:space="preserve">
+    <value>Inicializar configuración</value>
+  </data>
+  <data name="set_null" xml:space="preserve">
+    <value>Establecer a NULL</value>
+  </data>
+  <data name="show_text_window" xml:space="preserve">
+    <value>Ver en ventana de texto</value>
+  </data>
+  <data name="sql_file_filter" xml:space="preserve">
+    <value>Ficheros SQL (*.sql)|*.sql|Todos los archivos|*.*</value>
+  </data>
+	<data name="pgcx_file_filter" xml:space="preserve">
+    <value>Ficheros PGCX de exportación de conexiones de pgMulti (*.pgcx)|*.pgcx|Todos los archivos|*.*</value>
+  </data>
+	<data name="starting_tasks" xml:space="preserve">
+    <value>Iniciando tareas</value>
+  </data>
+  <data name="statement_n" xml:space="preserve">
+    <value>Consulta nº {0}</value>
+  </data>
+  <data name="stop_all" xml:space="preserve">
+    <value>Detener todas las tareas</value>
+  </data>
+  <data name="stop_selected" xml:space="preserve">
+    <value>Detener tareas seleccionadas</value>
+  </data>
+  <data name="syntax_error" xml:space="preserve">
+    <value>Error de sintaxis</value>
+  </data>
+  <data name="table" xml:space="preserve">
+    <value>Tabla</value>
+  </data>
+  <data name="tasks_finished_with_error" xml:space="preserve">
+    <value>Todas las tareas han terminado pero se produjeron errores</value>
+  </data>
+  <data name="task_in" xml:space="preserve">
+    <value>Tarea en {0}</value>
+  </data>
+  <data name="task_integrator" xml:space="preserve">
+    <value>TAREA INTEGRADORA</value>
+  </data>
+  <data name="test_error_title" xml:space="preserve">
+    <value>Error al probar conexión</value>
+  </data>
+  <data name="test_successful_message" xml:space="preserve">
+    <value>La conexión con el servidor se ha establecido correctamente</value>
+  </data>
+  <data name="test_successful_title" xml:space="preserve">
+    <value>Conexión correcta</value>
+  </data>
+  <data name="text" xml:space="preserve">
+    <value>Texto</value>
+  </data>
+  <data name="tip" xml:space="preserve">
+    <value>Sugerencia</value>
+  </data>
+  <data name="tip_content_no_selected_db" xml:space="preserve">
+    <value>Si activa una base de datos, también se mostrarán opciones para autocompletar esquemas, tablas, columnas y joins</value>
+  </data>
+  <data name="tip_title_no_selected_db" xml:space="preserve">
+    <value>No hay base de datos seleccionada</value>
+  </data>
+  <data name="total_duration" xml:space="preserve">
+    <value>Duración total</value>
+  </data>
+  <data name="total_rows" xml:space="preserve">
+    <value>Total de filas obtenidas</value>
+  </data>
+  <data name="total_rows_integrated_in_statement_n" xml:space="preserve">
+    <value>Total de filas integradas en consulta {0}</value>
+  </data>
+  <data name="transactions" xml:space="preserve">
+    <value>Transacciones</value>
+  </data>
+  <data name="undo_sc" xml:space="preserve">
+    <value>Deshacer (ctrl + z)</value>
+  </data>
+  <data name="up" xml:space="preserve">
+    <value>Subir</value>
+  </data>
+  <data name="user" xml:space="preserve">
+    <value>Usuario</value>
+  </data>
+  <data name="waiting_coordinated_commit" xml:space="preserve">
+    <value>Tarea {0} esperando confirmación coordinada</value>
+  </data>
+  <data name="waiting_tasks" xml:space="preserve">
+    <value>Esperando al resto de tareas...</value>
+  </data>
+  <data name="warning" xml:space="preserve">
+    <value>Atención</value>
+  </data>
+  <data name="warning_duplicate_alias" xml:space="preserve">
+    <value>Ya hay una base de datos con el mismo nombre</value>
+  </data>
+  <data name="warning_empty_alias" xml:space="preserve">
+    <value>El campo nombre no puede estar en blanco</value>
+  </data>
+  <data name="warning_empty_db" xml:space="preserve">
+    <value>El campo base de datos no puede estar en blanco</value>
+  </data>
+  <data name="warning_empty_password" xml:space="preserve">
+    <value>El campo contraseña no puede estar en blanco</value>
+  </data>
+  <data name="warning_empty_port" xml:space="preserve">
+    <value>El campo puerto no puede estar en blanco</value>
+  </data>
+  <data name="warning_empty_query" xml:space="preserve">
+    <value>La consulta SQL a ejecutar no puede estar en blanco</value>
+  </data>
+  <data name="warning_empty_server" xml:space="preserve">
+    <value>El campo servidor no puede estar en blanco</value>
+  </data>
+  <data name="warning_empty_user" xml:space="preserve">
+    <value>El campo usuario no puede estar en blanco</value>
+  </data>
+  <data name="warning_invalid_autocomplete_delay" xml:space="preserve">
+    <value>El retraso de las sugerencias automáticas introducido no es correcto</value>
+  </data>
+  <data name="warning_invalid_max_rows" xml:space="preserve">
+    <value>El límite de filas por tabla introducido no es correcto</value>
+  </data>
+  <data name="warning_invalid_password" xml:space="preserve">
+    <value>La contraseña no es correcta</value>
+  </data>
+  <data name="warning_invalid_port" xml:space="preserve">
+    <value>El campo puerto debe ser un número de puerto válido</value>
+  </data>
+  <data name="warning_no_selected_dbs" xml:space="preserve">
+    <value>Hay que seleccionar al menos una base de datos en la que ejecutar la consulta SQL</value>
+  </data>
+  <data name="warning_password_mismatch" xml:space="preserve">
+    <value>Las contraseñas no coinciden</value>
+  </data>
+  <data name="warning_password_null" xml:space="preserve">
+    <value>La contraseña no puede ser nula</value>
+  </data>
+  <data name="warning_password_too_short" xml:space="preserve">
+    <value>La contraseña es demasiado corta (debe tener al menos 6 caracteres)</value>
+  </data>
+  <data name="warning_runnig_tasks" xml:space="preserve">
+    <value>No se puede cerrar la aplicación mientras hay consultas en ejecución. Si es necesario, detenlas primero.</value>
+  </data>
+  <data name="_new" xml:space="preserve">
+    <value>Nuevo</value>
+  </data>
+  <data name="keep_db_selection_explanation" xml:space="preserve">
+    <value>Si esta opción no está activada, al ejecutar los comandos SQL introducidos, se reiniciará la selección de bases de datos, lo que requerirá que vuelva a seleccionarlas de nuevo la próxima vez que ejecute comandos. Esto puede evitar descuidos y ejecuciones en bases de datos no deseadas.</value>
+  </data>
+  <data name="autocomplete_explanation" xml:space="preserve">
+    <value>La función autocompletar muestra sugerencias mientras escribe código SQL. 
+Puede cambiar el tiempo que tardan en mostrarse las sugerencias o puede desactivarlas para que no aparezcan automáticamente. 
+Estén o no activadas, siempre puede mostrarlas manualmente pulsando la combinación de teclas ctrl + espacio.
+</value>
+  </data>
+  <data name="merge_tables_explanation" xml:space="preserve">
+    <value>Si activa esta opción y ejecuta una consulta en varias bases de datos simultáneamente, las tablas de resultados se integrarán en una única tabla, que incluirá una nueva columna con el nombre de la base de datos de la que procede cada fila.</value>
+  </data>
+  <data name="max_rows_explanation" xml:space="preserve">
+    <value>Para evitar un uso excesivo de RAM y sobrecargar el servidor, el número de filas que se muestran en esta aplicación cuando se ejecuta una consulta SELECT está limitado al número que se indica en el siguiente campo.
+Normalmente 100 filas es más que suficiente. Si necesita un número mayor, probablemente debería añadir otras condiciones en la cláusula WHERE.
+No obstante, puede editar este límite si lo desea.
+Nota: este límite no afecta a la exportación de resultados en CSV, en cuyo caso siempre se incluyen todas las filas.</value>
+  </data>
+  <data name="auto_coordinated_transaction_mode_explanation" xml:space="preserve">
+    <value>Todo el script se ejecuta automáticamente en una única transacción para cada una de las bases de datos seleccionadas.
+A diferencia de la opción anterior, la transacciones de todas las conexiones se coordinan mediante el mecanismo de confirmación en dos fases de PostgreSQL. Esto asegura con una alta probabilidad que todas ellas se comporten atómicamente, como una única transacción global. Es decir, o el script se confirma en todas las bases de datos, o todas quedan en el mismo estado previo a la ejecución.
+Para usar esta modalidad, debe configurar el parámetro max_prepared_transactions del servidor y será necesario reiniciarlo.</value>
+  </data>
+  <data name="auto_single_transaction_mode_explanation" xml:space="preserve">
+    <value>Todo el script se ejecuta automáticamente en una única transacción para cada una de las bases de datos seleccionadas.
+En caso de error durante la ejecución de cualquier comando en una base de datos, todos los cambios en esa base de datos se revertirán automáticamente, sin afectar a su ejecución en otras bases de datos, si los hay.</value>
+  </data>
+  <data name="manual_transaction_mode_explanation" xml:space="preserve">
+    <value>Cada comando del script se ejecutará en una transacción indepediente, salvo que incluya entre ellos los comandos BEGIN, COMMIT y ROLLBACK, en cuyo caso lo hará de la forma esperada.
+A diferencia de otras herramientas, esta aplicación no reutiliza la conexión entre diferentes ejecuciones, lo que implica que no puede continuar una transacción iniciada en una ejecución anterior. Cualquier transacción que inicie, deberá confirmarla en el mismo texto o se revertirá automáticamente al completarse la ejecución.</value>
+  </data>
+  <data name="functions" xml:space="preserve">
+    <value>Funciones</value>
+  </data>
+  <data name="indexes" xml:space="preserve">
+    <value>Índices</value>
+  </data>
+  <data name="source_code" xml:space="preserve">
+    <value>código fuente</value>
+  </data>
+  <data name="triggers" xml:space="preserve">
+    <value>Triggers</value>
+  </data>
+  <data name="function_arguments" xml:space="preserve">
+    <value>Argumentos</value>
+  </data>
+  <data name="function_returns" xml:space="preserve">
+    <value>Devuelve</value>
+  </data>
+  <data name="warning_run_selected_text" xml:space="preserve">
+    <value>Ha seleccionado una porción del texto. Si continúa, solo se ejecutará ese texto y este mensaje no se volverá a mostrar.</value>
+  </data>
+  <data name="run" xml:space="preserve">
+    <value>Ejecutar</value>
+  </data>
+  <data name="copy_text" xml:space="preserve">
+    <value>Copiar texto</value>
+  </data>
+	<data name="import_databases" xml:space="preserve">
+    <value>Importar lista de bases de datos</value>
+  </data>
+	<data name="export_databases" xml:space="preserve">
+    <value>Exportar lista de bases de datos</value>
+  </data>
+	<data name="export_password" xml:space="preserve">
+    <value>Contraseña de exportación</value>
+  </data>
+	<data name="chk_export_passwords" xml:space="preserve">
+    <value>Exportar las contraseñas de las bases de datos</value>
+  </data>
+	<data name="chk_encrypt_passwords" xml:space="preserve">
+    <value>Encriptar las contraseñas de las bases de datos</value>
+  </data>
+	<data name="export_ok" xml:space="preserve">
+    <value>Exportación correcta</value>
+  </data>
+	<data name="export_ok_msg" xml:space="preserve">
+    <value>La configuración se ha exportado al fichero:
+{0}</value>
+  </data>
+	<data name="warning_dbalias_import_conflict" xml:space="preserve">
+    <value>El fichero a importar contiene al menos un nombre de base de datos que entra en conflicto con una que ya existe. ¿Desea sobreescribirlas?</value>
+  </data>
+	<data name="warning_bad_format_export_file" xml:space="preserve">
+    <value>El fichero a importar no es válido</value>
+  </data>
+	<data name="current_tab_last_task" xml:space="preserve">
+    <value>Seleccionar última tarea de la solapa activa</value>
+  </data>
+	<data name="basic_parse_error" xml:space="preserve">
+    <value>La secuencia de comandos no se puede ejecutar porque el analizador sintáctico no es capaz de individualizar los comandos que la componen.</value>
+  </data>
+	<data name="line_column" xml:space="preserve">
+    <value>Línea {0}, columna {1}</value>
+  </data>
+	<data name="show_closed_tabs" xml:space="preserve">
+    <value>Mostrar las solapas cerradas</value>
+  </data>
+	<data name="reopen_selected_tab" xml:space="preserve">
+    <value>Reabrir solapa seleccionada</value>
+  </data>
+	<data name="closed_tabs_log" xml:space="preserve">
+    <value>Historial de solapas cerradas</value>
+  </data>
+	<data name="warning_no_table_selected" xml:space="preserve">
+    <value>Debe seleccionar al menos una tabla</value>
+  </data>
+	<data name="select_tables" xml:space="preserve">
+    <value>Seleccionar tablas</value>
+  </data>
+	<data name="pgdx_file_filter" xml:space="preserve">
+    <value>Ficheros PGDX de diagramas de pgMulti (*.pgdx)|*.pgdx|All files|*.*</value>
+  </data>
+	<data name="warning_bad_format_diagram_file" xml:space="preserve">
+    <value>El fichero no es un diagrama de pgMulti válido</value>
+  </data>
+	<data name="diagram_title" xml:space="preserve">
+    <value>{0} - Diagrama de pgMulti</value>
+  </data>
+	<data name="add_tables" xml:space="preserve">
+    <value>Añadir tablas</value>
+  </data>
+	<data name="new_diagram" xml:space="preserve">
+    <value>Nuevo diagrama</value>
+  </data>
+	<data name="open_diagram" xml:space="preserve">
+    <value>Abrir diagrama</value>
+  </data>
+	<data name="diagrams" xml:space="preserve">
+    <value>Diagramas</value>
+  </data>
+</root>

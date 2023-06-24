@@ -1,0 +1,11 @@
+*.suo
+*.user
+*.bak
+*.orig
+*.nupkg
+/**/bin
+/**/obj
+/.vs
+/.vscode
+/packages
+/TestResults

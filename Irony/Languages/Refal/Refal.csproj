@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <RootNamespace>Refal</RootNamespace>
+    <AssemblyName>Refal</AssemblyName>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Irony\010.Irony.csproj" />
+    <ProjectReference Include="..\..\Irony.Interpreter\015.Irony.Interpreter.csproj" />
+  </ItemGroup>
+
+</Project>

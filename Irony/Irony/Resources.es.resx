@@ -1,0 +1,457 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ConsoleNoChars" xml:space="preserve">
+    <value>Nn</value>
+  </data>
+  <data name="ConsoleYesChars" xml:space="preserve">
+    <value>Yy</value>
+  </data>
+  <data name="ErrArgListNotFound" xml:space="preserve">
+    <value>La lista de argumentos no se encuentra en la pila. Se esperaba: ValueList, encontrado: {0}.</value>
+  </data>
+  <data name="ErrCannotConvertValue" xml:space="preserve">
+    <value>No se puede convertir el valor del tipo {0} al tipo {1}, el convertidor de tipo no está definido.</value>
+  </data>
+  <data name="ErrConsoleFatalError" xml:space="preserve">
+    <value>Error fatal:</value>
+  </data>
+  <data name="ErrConstructNotSupported" xml:space="preserve">
+    <value>La construcción '{0}' no es compatible (todavía) con la implementación del lenguaje.</value>
+  </data>
+  <data name="ErrInternalErrDataPopFailed" xml:space="preserve">
+    <value>Error del intérprete, la operación DataStack.Pop() falló: la pila está vacía.</value>
+  </data>
+  <data name="ErrInterpreterIsBusy" xml:space="preserve">
+    <value>El intérprete está ocupado.</value>
+  </data>
+  <data name="ErrInvalidAstMode" xml:space="preserve">
+    <value>Valor de AstMode no válido en la llamada al método Evaluate. Nodo: {0}, modo: {1}.</value>
+  </data>
+  <data name="ErrInvalidChar" xml:space="preserve">
+    <value>Carácter no válido: '{0}'.</value>
+  </data>
+  <data name="ErrNoImplForUnaryOp" xml:space="preserve">
+    <value>UnExprNode: sin implementación para el operador unario '{0}'.</value>
+  </data>
+  <data name="ErrNullNodeEval" xml:space="preserve">
+    <value>Intento de evaluar nodo NULL AST. El nodo AST para el término '{0}' no se creó durante el análisis.</value>
+  </data>
+  <data name="ErrOpNotDefinedForTypes" xml:space="preserve">
+    <value>El operador '{0}' no está definido para los tipos {1} y {2}.</value>
+  </data>
+  <data name="ErrOpNotImplemented" xml:space="preserve">
+    <value>Operador '{0} no implementado.</value>
+  </data>
+  <data name="ErrOutErrorPrintFormat" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>Location: ErrorMessage</comment>
+  </data>
+  <data name="ErrParseTreeNull" xml:space="preserve">
+    <value>El árbol analizado es nulo, no se puede evaluar.</value>
+  </data>
+  <data name="ErrParseTreeRootNull" xml:space="preserve">
+    <value>La raíz del árbol de análisis es nula, no se puede evaluar.</value>
+  </data>
+  <data name="ErrRootAstNodeNull" xml:space="preserve">
+    <value>El nodo AST raíz es nulo, no se puede evaluar.</value>
+  </data>
+  <data name="ErrRootAstNoInterface" xml:space="preserve">
+    <value>El nodo AST raíz no implementa la interfaz IInterpretedAstNode, no se puede evaluar.</value>
+  </data>
+  <data name="ErrVarIsNotCallable" xml:space="preserve">
+    <value>La variable {0} no es una función invocable.</value>
+  </data>
+  <data name="ErrVarNotDefined" xml:space="preserve">
+    <value>Variable {0} no definida.</value>
+  </data>
+  <data name="ErrWrongArgCount" xml:space="preserve">
+    <value>Número de argumentos no válido. Se esperaba {0}, se encontró {1}.</value>
+  </data>
+  <data name="FmtRowCol" xml:space="preserve">
+    <value>({0}:{1})</value>
+  </data>
+  <data name="LabelLocation" xml:space="preserve">
+    <value>Ubicación:</value>
+  </data>
+  <data name="LabelNone" xml:space="preserve">
+    <value>Ninguno</value>
+  </data>
+  <data name="MsgAbortScriptYN" xml:space="preserve">
+    <value>¿Cancelar secuencia de comandos (s/n)?</value>
+  </data>
+  <data name="MsgExitConsoleYN" xml:space="preserve">
+    <value>¿Salir de la consola (s/n)?</value>
+  </data>
+  <data name="MsgPressAnyKeyToExit" xml:space="preserve">
+    <value>Pulse cualquier tecla para finalizar el programa.</value>
+  </data>
+  <data name="ErrAmbigGrammarRR" xml:space="preserve">
+    <value>Gramática ambigua, conflictos irresolubles de reducir-reducir. Estado {0}, anticipaciones [{1}]</value>
+  </data>
+  <data name="ErrAmbigGrammarSR" xml:space="preserve">
+    <value>Gramática ambigua, conflictos de cambio-reducción irresolubles. Estado {0}, anticipaciones [{1}]</value>
+  </data>
+  <data name="ErrConflictMsgTemplate" xml:space="preserve">
+    <value>{0} Estado {1} en las entradas: {2}</value>
+  </data>
+  <data name="ErrNodeTypeNotSetOn" xml:space="preserve">
+    <value>AstNodeType o AstNodeCreator no están configurados en no terminales: {0}. Configure Term.AstConfig.NodeType o proporcione valores predeterminados en AstContext.</value>
+  </data>
+  <data name="ErrNoLkhds" xml:space="preserve">
+    <value>Error de ParserDataBuilder: estado inadecuado {0}, reducir el elemento '{1}' no tiene anticipación.</value>
+  </data>
+  <data name="ErrNtRuleIsNull" xml:space="preserve">
+    <value>No terminal {0} tiene propiedad Rule sin inicializar.</value>
+  </data>
+  <data name="ErrRootNotSet" xml:space="preserve">
+    <value>La propiedad raíz de la gramática no está establecida.</value>
+  </data>
+  <data name="ErrRRConflict" xml:space="preserve">
+    <value>Conflicto reducir-reducir. Estado {0}, anticipaciones: {1}. Reducción seleccionada en la primera producción en un conjunto de conflictos.</value>
+  </data>
+  <data name="ErrRuleContainsNull" xml:space="preserve">
+    <value>Rule para NonTerminal {0} contiene un valor nulo como operando en la posición {1} en una de las producciones.</value>
+  </data>
+  <data name="ErrSRConflict" xml:space="preserve">
+    <value>Conflicto cambiar-reducir. Estado {0}, anticipación [{1}]. Cambio seleccionado como acción preferida.</value>
+  </data>
+  <data name="MsgNLALRAdvice" xml:space="preserve">
+    <value>Transformación NLALR: Añadir WrapTail() en '.' posición a [{0}].</value>
+  </data>
+  <data name="ErrSyntaxErrorExpected" xml:space="preserve">
+    <value>Error de sintaxis, se esperaba: {0}</value>
+  </data>
+  <data name="LabelEosLabel" xml:space="preserve">
+    <value>[fin de sentencia]</value>
+  </data>
+  <data name="LabelUnnamed" xml:space="preserve">
+    <value>(sin nombre)</value>
+  </data>
+  <data name="MsgDefaultConsoleGreeting" xml:space="preserve">
+    <value>Consola {0}.\r\nPresiona Ctrl-C para salir del programa.\r\n</value>
+  </data>
+  <data name="MsgDefaultConsoleTitle" xml:space="preserve">
+    <value>Consola</value>
+  </data>
+  <data name="ErrFailedCreateNode" xml:space="preserve">
+    <value>No se pudo crear el nodo AST para el no terminal [{0}], error: {1}</value>
+  </data>
+  <data name="ErrSyntaxErrorNoInfo" xml:space="preserve">
+    <value>Error de sintaxis.</value>
+  </data>
+  <data name="ErrUnexpEof" xml:space="preserve">
+    <value>Final inesperado.</value>
+  </data>
+  <data name="ErrUnexpIndent" xml:space="preserve">
+    <value>Indentación inesperada.</value>
+  </data>
+  <data name="ErrUnmatchedCloseBrace" xml:space="preserve">
+    <value>Llave de cierre no emparejada '{0}'.</value>
+  </data>
+  <data name="LabelActionAccept" xml:space="preserve">
+    <value>Aceptar</value>
+  </data>
+  <data name="LabelActionOp" xml:space="preserve">
+    <value>Operador, cambio a {0}/reducir en {1}.</value>
+  </data>
+  <data name="LabelActionReduce" xml:space="preserve">
+    <value>Reducir en {0}</value>
+  </data>
+  <data name="LabelActionShift" xml:space="preserve">
+    <value>Cambiar a {0}</value>
+  </data>
+  <data name="LabelActionUnknown" xml:space="preserve">
+    <value>(Tipo de acción desconocido)</value>
+  </data>
+  <data name="LabelInitialState" xml:space="preserve">
+    <value>(ESTADO INICIAL)</value>
+  </data>
+  <data name="MsgTraceConflictResolved" xml:space="preserve">
+    <value>Conflicto de análisis resuelto en el código.</value>
+  </data>
+  <data name="MsgTraceOpResolved" xml:space="preserve">
+    <value>Operador - resuelto a {0}</value>
+  </data>
+  <data name="MsgTracePoppedState" xml:space="preserve">
+    <value>Estado extraído de la pila, empujando {0}</value>
+  </data>
+  <data name="MsgTraceRecoverFailed" xml:space="preserve">
+    <value>FALLÓ AL RECUPERAR</value>
+  </data>
+  <data name="MsgTraceRecovering" xml:space="preserve">
+    <value>RECUPERACIÓN: sacando de pila, buscando estado con cambio de error</value>
+  </data>
+  <data name="MsgTraceRecoverSuccess" xml:space="preserve">
+    <value>RECUPERADO</value>
+  </data>
+  <data name="LabelEofMark" xml:space="preserve">
+    <value>(EOF)</value>
+  </data>
+  <data name="LabelSrcHaveMore" xml:space="preserve">
+    <value>...</value>
+  </data>
+  <data name="MsgSrcPosToString" xml:space="preserve">
+    <value>"[{0}], en {1}</value>
+  </data>
+  <data name="ErrBadChar" xml:space="preserve">
+    <value>Longitud no válida del literal char: debe ser un solo carácter.</value>
+  </data>
+  <data name="ErrBadStrLiteral" xml:space="preserve">
+    <value>Literal de cadena mal formado: no se puede encontrar el símbolo de terminación.</value>
+  </data>
+  <data name="ErrBadUnEscape" xml:space="preserve">
+    <value>Escape Unicode no válido ({0}), se esperaban {1} dígitos hexadecimales.</value>
+  </data>
+  <data name="ErrBadXEscape" xml:space="preserve">
+    <value>Escape \x no válido, se esperaba al menos un dígito.</value>
+  </data>
+  <data name="ErrDupRegexSwitch" xml:space="preserve">
+    <value>Interruptor duplicado '{0}' para expresión regular.</value>
+  </data>
+  <data name="ErrCannotConvertValueToType" xml:space="preserve">
+    <value>No se puede convertir el literal {0} al tipo {1}.</value>
+  </data>
+  <data name="ErrInvEscape" xml:space="preserve">
+    <value>Secuencia de escape no válida: \{0}.</value>
+  </data>
+  <data name="ErrInvEscSeq" xml:space="preserve">
+    <value>Secuencia de escape no válida.</value>
+  </data>
+  <data name="ErrInvEscSymbol" xml:space="preserve">
+    <value>Símbolo de escape no válido, solo se esperaba 'u' o 'U'.</value>
+  </data>
+  <data name="ErrInvNumber" xml:space="preserve">
+    <value>Número invalido.</value>
+  </data>
+  <data name="ErrInvRegexSwitch" xml:space="preserve">
+    <value>Interruptor no válido '{0}' para expresión regular</value>
+  </data>
+  <data name="ErrInvStrDef" xml:space="preserve">
+    <value>Error en el literal de cadena [{0}]: no se especificaron símbolos de inicio/fin.</value>
+  </data>
+  <data name="ErrNoEndForRegex" xml:space="preserve">
+    <value>Sin símbolo final para el literal regex.</value>
+  </data>
+  <data name="ErrNoLetterAfterNum" xml:space="preserve">
+    <value>El número no puede ir seguido de una letra.</value>
+  </data>
+  <data name="ErrUnclosedComment" xml:space="preserve">
+    <value>Bloque de comentarios sin cerrar</value>
+  </data>
+  <data name="LabelKeySymbol" xml:space="preserve">
+    <value>(Símbolo de clave)</value>
+  </data>
+  <data name="LabelKeyword" xml:space="preserve">
+    <value>(Palabra clave)</value>
+  </data>
+  <data name="LabelLineBreak" xml:space="preserve">
+    <value>[Salto de línea]</value>
+  </data>
+  <data name="ErrInvDedent" xml:space="preserve">
+    <value>Nivel de dedentación no válido, no se encontró ninguna indentación anterior coincidente.</value>
+  </data>
+  <data name="ErrOutlineFilterContSymbol" xml:space="preserve">
+    <value>CodeOutlineFilter: el símbolo de continuación de línea '{0}' debe agregarse a la lista Grammar.NonGrammarTerminals.</value>
+  </data>
+  <data name="MsgTraceRecoverAction" xml:space="preserve">
+    <value>RECUPERANDO: {0}</value>
+  </data>
+  <data name="MsgTraceRecoverFoundState" xml:space="preserve">
+    <value>RECUPERANDO: Estado encontrado con cambio en error: {0}</value>
+  </data>
+  <data name="MsgTraceRecoverReducing" xml:space="preserve">
+    <value>RECUPERANDO: Se llegó al final de la producción de errores, reduciendo.</value>
+  </data>
+  <data name="MsgTraceRecoverShiftError" xml:space="preserve">
+    <value>RECUPERANDO: Cambiando término Error, {0}</value>
+  </data>
+  <data name="MsgTraceRecoverShiftTillEnd" xml:space="preserve">
+    <value>RECUPERANDO: cambiando hasta el final de la producción de errores.</value>
+  </data>
+  <data name="ErrDsvNoClosingQuote" xml:space="preserve">
+    <value>No se pudo encontrar una comilla de cierre para el valor entrecomillado.</value>
+  </data>
+  <data name="ErrInvalidArgsForIncDec" xml:space="preserve">
+    <value>Argumentos no válidos para el nodo AST IncDecNode: el primer o segundo argumento debe ser '--' o '++'.</value>
+  </data>
+  <data name="ErrAssignLiteralValue" xml:space="preserve">
+    <value>Operación no válida, intento de asignar a un valor constante o literal.</value>
+  </data>
+  <data name="ErrTemplNoSettings" xml:space="preserve">
+    <value>Error en el literal de cadena [{0}]: el indicador IsTemplate está establecido, pero TemplateSettings no se proporciona en la propiedad AstNodeConfig.</value>
+  </data>
+  <data name="ErrDupStartSymbolStr" xml:space="preserve">
+    <value>Símbolo de inicio duplicado {0} en el literal de cadena [{1}].</value>
+  </data>
+  <data name="ErrInvalidEmbeddedPrefix" xml:space="preserve">
+    <value>Expresión incrustada no válida. </value>
+  </data>
+  <data name="ErrNoEndTagInEmbExpr" xml:space="preserve">
+    <value>No se encontró la etiqueta final '{0}' en la expresión incrustada.</value>
+  </data>
+  <data name="ErrTemplExprNotRoot" xml:space="preserve">
+    <value>La expresión raíz no terminal en la configuración de la plantilla (propiedad AstNodeConfig) en el literal de cadena con plantilla [{0}] no está agregado al conjunto Roots. Agréguelo a SnippetRoots en el constructor de la gramática.</value>
+  </data>
+  <data name="ErrTemplMissingExprRoot" xml:space="preserve">
+    <value>La raíz de la expresión no está especificada en la configuración de la plantilla (propiedad AstNode Config) en la plantilla del literal de cadena [{0}]. </value>
+  </data>
+  <data name="ErrRootNotRegistered" xml:space="preserve">
+    <value>({0}) el término pasado como parámetro 'root' al analizador no es Root ni la raíz del fragmento de la gramática. Agréguelo a SnippetRoots en el constructor de gramática.</value>
+  </data>
+  <data name="ErrImpliedOpUseParserLink" xml:space="preserve">
+    <value>ImpliedSymbolTerminal no se puede usar en gramática con el indicador DisableScannerParserLink establecido</value>
+  </data>
+  <data name="ErrListCannotBeTransient" xml:space="preserve">
+    <value>La lista de no terminales no se puede marcar como transitoria; lista: ({0})</value>
+  </data>
+  <data name="ErrTransientNtMustHaveOneTerm" xml:space="preserve">
+    <value>Los no terminales transitorios deben tener cero o uno nodos hijos sin puntuación; no terminales: {0}.</value>
+  </data>
+  <data name="ErrLastTermOfErrorProd" xml:space="preserve">
+    <value>El último término de producción que contiene SyntaxError debe ser terminal. No terminal: {0}</value>
+  </data>
+  <data name="ErrTerminalHasEmptyPrefix" xml:space="preserve">
+    <value>Un terminal {0} tiene prefijo vacío.</value>
+  </data>
+  <data name="ErrNoClosingBrace" xml:space="preserve">
+    <value>Sin par de cierre para el símbolo de apertura {0}</value>
+  </data>
+  <data name="ErrOpNotDefinedForType" xml:space="preserve">
+    <value>El operador '{0}' no está definido para los tipos {1}.</value>
+  </data>
+  <data name="ErrFreeTextNoEndTag" xml:space="preserve">
+    <value>No se pudo encontrar la etiqueta final '{0}' para un literal de texto. </value>
+  </data>
+  <data name="ErrNewLineExpected" xml:space="preserve">
+    <value>Se esperaba un símbolo de nueva línea.</value>
+  </data>
+  <data name="MsgErrorCustomActionDidNotAdvance" xml:space="preserve">
+    <value>La acción personalizada no se ejecutó: el estado del analizador o la entrada no cambiaron.</value>
+  </data>
+  <data name="MsgTraceExecCustomAction" xml:space="preserve">
+    <value>Ejecutando acción personalizada</value>
+  </data>
+  <data name="ErrCannotMoveBackInSource" xml:space="preserve">
+    <value>Error fatal en el analizador: intento de retroceder en el fuente.</value>
+  </data>
+  <data name="ErrParserUnexpectedInput" xml:space="preserve">
+    <value>Error de sintaxis, entrada inesperada.</value>
+  </data>
+</root>
