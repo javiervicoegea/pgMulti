@@ -326,7 +326,14 @@ namespace PgMulti
 
         private void tsmiUpdates_Click(object sender, EventArgs e)
         {
-            Process.Start(new ProcessStartInfo((string)tsmiUpdates.Tag) { UseShellExecute = true });
+            try
+            {
+                Process.Start(new ProcessStartInfo((string)tsmiUpdates.Tag) { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(Properties.Text.unable_to_open_url, (string)tsmiUpdates.Tag, ex.Message), Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private async void CheckUpdates()

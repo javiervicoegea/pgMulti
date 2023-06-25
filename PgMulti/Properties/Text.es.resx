@@ -852,4 +852,7 @@ A diferencia de otras herramientas, esta aplicación no reutiliza la conexión e
 	<data name="update_available" xml:space="preserve">
     <value>Actualización disponible</value>
   </data>
+	<data name="unable_to_open_url" xml:space="preserve">
+    <value>No se pudo abrir la URL {0}: {1}</value>
+  </data>
 </root>

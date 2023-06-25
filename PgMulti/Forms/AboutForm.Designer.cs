@@ -88,6 +88,7 @@
             this.llUrl.Size = new System.Drawing.Size(663, 51);
             this.llUrl.TabIndex = 3;
             this.llUrl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.llUrl.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llUrl_LinkClicked);
             // 
             // pictureBox1
             // 

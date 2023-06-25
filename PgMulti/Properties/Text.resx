@@ -901,4 +901,7 @@ Unlike other tools, this application does not reuse the connection between diffe
 	<data name="update_available" xml:space="preserve">
     <value>Update available</value>
   </data>
+	<data name="unable_to_open_url" xml:space="preserve">
+    <value>Could not open URL {0}: {1}</value>
+  </data>
 </root>

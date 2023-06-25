@@ -2101,6 +2101,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Could not open URL {0}: {1}.
+        /// </summary>
+        internal static string unable_to_open_url {
+            get {
+                return ResourceManager.GetString("unable_to_open_url", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Undo (ctrl + z).
         /// </summary>
         internal static string undo_sc {

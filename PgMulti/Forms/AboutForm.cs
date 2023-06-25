@@ -1,4 +1,5 @@
 ﻿using PgMulti.Properties;
+using System.Diagnostics;
 
 namespace PgMulti
 {
@@ -8,6 +9,18 @@ namespace PgMulti
         {
             InitializeComponent();
             InitializeText();
+        }
+
+        private void llUrl_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo(AppSettings.Default.ProjectUrl) { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(Properties.Text.unable_to_open_url, AppSettings.Default.ProjectUrl, ex.Message), Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void frmAcercaDe_Load(object sender, EventArgs e)
