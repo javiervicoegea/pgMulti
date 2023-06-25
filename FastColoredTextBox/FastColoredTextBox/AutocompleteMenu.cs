@@ -365,59 +365,61 @@ namespace FastColoredTextBoxNS
             };
         }
 
-        private Size MeasureToolTipText(string text, Font f, int maxWidth)
+        private SizeF MeasureToolTipText(Control control, string text, Font f, int maxWidth, int fn)
         {
+            Graphics g = Graphics.FromHwnd(control.Handle);
             StringBuilder sbCurrentLine = new StringBuilder();
-            StringBuilder sbLines = new StringBuilder();
+            //StringBuilder sbLines = new StringBuilder();
 
-            int w = 0;
-            int h = 0;
-            int currentLineWidth = 0;
+            float w = 0;
+            float h = 0;
+            float currentLineWidth = 0;
             for (int i = 0; i < text.Length; i++)
             {
                 char c = text[i];
                 sbCurrentLine.Append(c);
-                Size currentSize = TextRenderer.MeasureText(sbCurrentLine.ToString(), f);
+
+                SizeF currentSize = g.MeasureString(sbCurrentLine.ToString(), f);
                 if (currentSize.Width > maxWidth)
                 {
                     w = Math.Max(w, currentLineWidth);
                     h += currentSize.Height;
                     sbCurrentLine.Clear();
                     i--;
-                    sbLines.Append("\r\n");
+                    //sbLines.Append("\r\n");
                 }
                 else if (i == text.Length - 1)
                 {
                     w = Math.Max(w, currentLineWidth);
                     h += currentSize.Height;
-                    sbLines.Append(c);
+                    //sbLines.Append(c);
                 }
                 else
                 {
                     currentLineWidth = currentSize.Width;
-                    sbLines.Append(c);
+                    //sbLines.Append(c);
                 }
             }
 
-            return new Size(w, h);
+            return new SizeF(w, h);
         }
 
         private void ToolTip_Popup(object sender, PopupEventArgs e)
         {
             if (MaxToolTipSize.Width > 0 || MaxToolTipSize.Height > 0)
             {
-                int w = e.ToolTipSize.Width;
-                int h = e.ToolTipSize.Height;
+                float w = e.ToolTipSize.Width;
+                float h = e.ToolTipSize.Height;
 
                 if (MaxToolTipSize.Width > 0 && MaxToolTipSize.Height == 0)
                 {
                     Font f1 = tb.ParentForm.Font;
                     Font f2 = new Font(f1, FontStyle.Bold);
 
-                    const int ToolTipPadding = 11;
+                    const int ToolTipPadding = 20;
 
-                    Size s1 = MeasureToolTipText((string)toolTip.Tag, f1, MaxToolTipSize.Width - ToolTipPadding);
-                    Size s2 = MeasureToolTipText(toolTip.ToolTipTitle, f2, MaxToolTipSize.Width - ToolTipPadding);
+                    SizeF s1 = MeasureToolTipText(e.AssociatedControl, (string)toolTip.Tag, f1, MaxToolTipSize.Width - ToolTipPadding, 1);
+                    SizeF s2 = MeasureToolTipText(e.AssociatedControl, toolTip.ToolTipTitle, f2, MaxToolTipSize.Width - ToolTipPadding, 2);
 
                     w = Math.Max(s1.Width, s2.Width) + ToolTipPadding;
                     h = s1.Height + s2.Height + ToolTipPadding;
@@ -434,7 +436,7 @@ namespace FastColoredTextBoxNS
                     }
                 }
 
-                e.ToolTipSize = new Size(w, h);
+                e.ToolTipSize = new Size((int)w, (int)h);
             }
         }
 
@@ -909,8 +911,10 @@ namespace FastColoredTextBoxNS
                 }
                 else
                 {
+                    text = "asdfg hijklm nñopqrst uv wxyz";
                     toolTip.Tag = text;
                     toolTip.ToolTipTitle = title;
+                    toolTip.Show(text, window, location.X, location.Y, ToolTipDuration);
                     toolTip.Show(text, window, location.X, location.Y, ToolTipDuration);
                     toolTip.Show(text, window, location.X, location.Y, ToolTipDuration);
                 }
