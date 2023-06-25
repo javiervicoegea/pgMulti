@@ -34,5 +34,23 @@ namespace PgMulti.Properties {
                 this["LanguageId"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://api.github.com/repos/javiervicoegea/pgMulti/releases/latest")]
+        public string LatestReleaseInfoUrl {
+            get {
+                return ((string)(this["LatestReleaseInfoUrl"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://github.com/javiervicoegea/pgMulti/")]
+        public string ProjectUrl {
+            get {
+                return ((string)(this["ProjectUrl"]));
+            }
+        }
     }
 }

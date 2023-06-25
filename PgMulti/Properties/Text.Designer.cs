@@ -310,6 +310,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Check updates.
+        /// </summary>
+        internal static string check_updates {
+            get {
+                return ResourceManager.GetString("check_updates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a child table.
         /// </summary>
         internal static string child_table {
@@ -2106,6 +2115,15 @@ namespace PgMulti.Properties {
         internal static string up {
             get {
                 return ResourceManager.GetString("up", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Update available.
+        /// </summary>
+        internal static string update_available {
+            get {
+                return ResourceManager.GetString("update_available", resourceCulture);
             }
         }
         

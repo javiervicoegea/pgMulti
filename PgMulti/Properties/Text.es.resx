@@ -846,4 +846,10 @@ A diferencia de otras herramientas, esta aplicación no reutiliza la conexión e
 	<data name="diagrams" xml:space="preserve">
     <value>Diagramas</value>
   </data>
+	<data name="check_updates" xml:space="preserve">
+    <value>Comprobar actualizaciones</value>
+  </data>
+	<data name="update_available" xml:space="preserve">
+    <value>Actualización disponible</value>
+  </data>
 </root>

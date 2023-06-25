@@ -87,8 +87,6 @@
             this.llUrl.Name = "llUrl";
             this.llUrl.Size = new System.Drawing.Size(663, 51);
             this.llUrl.TabIndex = 3;
-            this.llUrl.TabStop = true;
-            this.llUrl.Text = "https://github.com/javiervicoegea/multidb";
             this.llUrl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // pictureBox1

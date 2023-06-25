@@ -1,4 +1,6 @@
-﻿namespace PgMulti
+﻿using PgMulti.Properties;
+
+namespace PgMulti
 {
     public partial class AboutForm : Form
     {
@@ -10,6 +12,7 @@
 
         private void frmAcercaDe_Load(object sender, EventArgs e)
         {
+            llUrl.Text = AppSettings.Default.ProjectUrl;
             lblTitle.Text += Application.ProductVersion;
             txtAttributions.SelectionStart = 0;
             txtAttributions.SelectionLength = 0;

@@ -196,6 +196,7 @@ namespace PgMulti
             this.tsmiOpenDiagram = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiOptions = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiHistory = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiUpdates = new System.Windows.Forms.ToolStripMenuItem();
             this.ofdImportConfig = new System.Windows.Forms.OpenFileDialog();
             this.ofdOpenDiagram = new System.Windows.Forms.OpenFileDialog();
             this.sfdSaveDiagram = new System.Windows.Forms.SaveFileDialog();
@@ -1383,175 +1384,175 @@ namespace PgMulti
             // 
             this.tsmiAbout.Image = global::PgMulti.Properties.Resources.about;
             this.tsmiAbout.Name = "tsmiAbout";
-            this.tsmiAbout.Size = new System.Drawing.Size(83, 26);
+            this.tsmiAbout.Size = new System.Drawing.Size(224, 26);
             this.tsmiAbout.Click += new System.EventHandler(this.tsmiAbout_Click);
             // 
             // tsmiNew
             // 
             this.tsmiNew.Image = global::PgMulti.Properties.Resources.nuevo_documento;
             this.tsmiNew.Name = "tsmiNew";
-            this.tsmiNew.Size = new System.Drawing.Size(83, 26);
+            this.tsmiNew.Size = new System.Drawing.Size(224, 26);
             this.tsmiNew.Click += new System.EventHandler(this.tsmiNew_Click);
             // 
             // tsmiOpen
             // 
             this.tsmiOpen.Image = global::PgMulti.Properties.Resources.abrir;
             this.tsmiOpen.Name = "tsmiOpen";
-            this.tsmiOpen.Size = new System.Drawing.Size(83, 26);
+            this.tsmiOpen.Size = new System.Drawing.Size(224, 26);
             this.tsmiOpen.Click += new System.EventHandler(this.tsmiOpen_Click);
             // 
             // tsmiSave
             // 
             this.tsmiSave.Image = global::PgMulti.Properties.Resources.guardar;
             this.tsmiSave.Name = "tsmiSave";
-            this.tsmiSave.Size = new System.Drawing.Size(83, 26);
+            this.tsmiSave.Size = new System.Drawing.Size(224, 26);
             this.tsmiSave.Click += new System.EventHandler(this.tsmiSave_Click);
             // 
             // tsmiSaveAs
             // 
             this.tsmiSaveAs.Image = global::PgMulti.Properties.Resources.guardar_como;
             this.tsmiSaveAs.Name = "tsmiSaveAs";
-            this.tsmiSaveAs.Size = new System.Drawing.Size(83, 26);
+            this.tsmiSaveAs.Size = new System.Drawing.Size(224, 26);
             this.tsmiSaveAs.Click += new System.EventHandler(this.tsmiSaveAs_Click);
             // 
             // tsmiSaveAll
             // 
             this.tsmiSaveAll.Image = global::PgMulti.Properties.Resources.guardar_todo;
             this.tsmiSaveAll.Name = "tsmiSaveAll";
-            this.tsmiSaveAll.Size = new System.Drawing.Size(83, 26);
+            this.tsmiSaveAll.Size = new System.Drawing.Size(224, 26);
             this.tsmiSaveAll.Click += new System.EventHandler(this.tsmiSaveAll_Click);
             // 
             // tsmiClose
             // 
             this.tsmiClose.Image = global::PgMulti.Properties.Resources.cerrar;
             this.tsmiClose.Name = "tsmiClose";
-            this.tsmiClose.Size = new System.Drawing.Size(83, 26);
+            this.tsmiClose.Size = new System.Drawing.Size(224, 26);
             this.tsmiClose.Click += new System.EventHandler(this.tsmiClose_Click);
             // 
             // tsmiCloseAll
             // 
             this.tsmiCloseAll.Image = global::PgMulti.Properties.Resources.cerrar_todo;
             this.tsmiCloseAll.Name = "tsmiCloseAll";
-            this.tsmiCloseAll.Size = new System.Drawing.Size(83, 26);
+            this.tsmiCloseAll.Size = new System.Drawing.Size(224, 26);
             this.tsmiCloseAll.Click += new System.EventHandler(this.tsmiCloseAll_Click);
             // 
             // tsmiBack
             // 
             this.tsmiBack.Image = global::PgMulti.Properties.Resources.atras;
             this.tsmiBack.Name = "tsmiBack";
-            this.tsmiBack.Size = new System.Drawing.Size(83, 26);
+            this.tsmiBack.Size = new System.Drawing.Size(224, 26);
             this.tsmiBack.Click += new System.EventHandler(this.tsmiBack_Click);
             // 
             // tsmiForward
             // 
             this.tsmiForward.Image = global::PgMulti.Properties.Resources.adelante;
             this.tsmiForward.Name = "tsmiForward";
-            this.tsmiForward.Size = new System.Drawing.Size(83, 26);
+            this.tsmiForward.Size = new System.Drawing.Size(224, 26);
             this.tsmiForward.Click += new System.EventHandler(this.tsmiForward_Click);
             // 
             // tsmiUndo
             // 
             this.tsmiUndo.Image = global::PgMulti.Properties.Resources.undo;
             this.tsmiUndo.Name = "tsmiUndo";
-            this.tsmiUndo.Size = new System.Drawing.Size(83, 26);
+            this.tsmiUndo.Size = new System.Drawing.Size(224, 26);
             this.tsmiUndo.Click += new System.EventHandler(this.tsmiUndo_Click);
             // 
             // tsmiRedo
             // 
             this.tsmiRedo.Image = global::PgMulti.Properties.Resources.redo;
             this.tsmiRedo.Name = "tsmiRedo";
-            this.tsmiRedo.Size = new System.Drawing.Size(83, 26);
+            this.tsmiRedo.Size = new System.Drawing.Size(224, 26);
             this.tsmiRedo.Click += new System.EventHandler(this.tsmiRedo_Click);
             // 
             // tsmiCut
             // 
             this.tsmiCut.Image = global::PgMulti.Properties.Resources.cortar;
             this.tsmiCut.Name = "tsmiCut";
-            this.tsmiCut.Size = new System.Drawing.Size(83, 26);
+            this.tsmiCut.Size = new System.Drawing.Size(224, 26);
             this.tsmiCut.Click += new System.EventHandler(this.tsmiCut_Click);
             // 
             // tsmiCopy
             // 
             this.tsmiCopy.Image = global::PgMulti.Properties.Resources.copiar;
             this.tsmiCopy.Name = "tsmiCopy";
-            this.tsmiCopy.Size = new System.Drawing.Size(83, 26);
+            this.tsmiCopy.Size = new System.Drawing.Size(224, 26);
             this.tsmiCopy.Click += new System.EventHandler(this.tsmiCopy_Click);
             // 
             // tsmiPaste
             // 
             this.tsmiPaste.Image = global::PgMulti.Properties.Resources.pegar;
             this.tsmiPaste.Name = "tsmiPaste";
-            this.tsmiPaste.Size = new System.Drawing.Size(83, 26);
+            this.tsmiPaste.Size = new System.Drawing.Size(224, 26);
             this.tsmiPaste.Click += new System.EventHandler(this.tsmiPaste_Click);
             // 
             // tsmiFind
             // 
             this.tsmiFind.Image = global::PgMulti.Properties.Resources.buscar;
             this.tsmiFind.Name = "tsmiFind";
-            this.tsmiFind.Size = new System.Drawing.Size(83, 26);
+            this.tsmiFind.Size = new System.Drawing.Size(224, 26);
             this.tsmiFind.Click += new System.EventHandler(this.tsmiFind_Click);
             // 
             // tsmiReplace
             // 
             this.tsmiReplace.Image = global::PgMulti.Properties.Resources.reemplazar;
             this.tsmiReplace.Name = "tsmiReplace";
-            this.tsmiReplace.Size = new System.Drawing.Size(83, 26);
+            this.tsmiReplace.Size = new System.Drawing.Size(224, 26);
             this.tsmiReplace.Click += new System.EventHandler(this.tsmiReplace_Click);
             // 
             // tsmiGoTo
             // 
             this.tsmiGoTo.Image = global::PgMulti.Properties.Resources.linea;
             this.tsmiGoTo.Name = "tsmiGoTo";
-            this.tsmiGoTo.Size = new System.Drawing.Size(83, 26);
+            this.tsmiGoTo.Size = new System.Drawing.Size(224, 26);
             this.tsmiGoTo.Click += new System.EventHandler(this.tsmiGoTo_Click);
             // 
             // tsmiFormat
             // 
             this.tsmiFormat.Image = global::PgMulti.Properties.Resources.autoformato;
             this.tsmiFormat.Name = "tsmiFormat";
-            this.tsmiFormat.Size = new System.Drawing.Size(83, 26);
+            this.tsmiFormat.Size = new System.Drawing.Size(224, 26);
             this.tsmiFormat.Click += new System.EventHandler(this.tsmiFormat_Click);
             // 
             // tsmiIncreaseFont
             // 
             this.tsmiIncreaseFont.Image = global::PgMulti.Properties.Resources.zoomin;
             this.tsmiIncreaseFont.Name = "tsmiIncreaseFont";
-            this.tsmiIncreaseFont.Size = new System.Drawing.Size(83, 26);
+            this.tsmiIncreaseFont.Size = new System.Drawing.Size(224, 26);
             this.tsmiIncreaseFont.Click += new System.EventHandler(this.tsmiIncreaseFont_Click);
             // 
             // tsmiReduceFont
             // 
             this.tsmiReduceFont.Image = global::PgMulti.Properties.Resources.zoomout;
             this.tsmiReduceFont.Name = "tsmiReduceFont";
-            this.tsmiReduceFont.Size = new System.Drawing.Size(83, 26);
+            this.tsmiReduceFont.Size = new System.Drawing.Size(224, 26);
             this.tsmiReduceFont.Click += new System.EventHandler(this.tsmiReduceFont_Click);
             // 
             // tsmiChangePassword
             // 
             this.tsmiChangePassword.Image = global::PgMulti.Properties.Resources.password;
             this.tsmiChangePassword.Name = "tsmiChangePassword";
-            this.tsmiChangePassword.Size = new System.Drawing.Size(83, 26);
+            this.tsmiChangePassword.Size = new System.Drawing.Size(224, 26);
             this.tsmiChangePassword.Click += new System.EventHandler(this.tsmiChangePassword_Click);
             // 
             // tsmiImportConnections
             // 
             this.tsmiImportConnections.Image = global::PgMulti.Properties.Resources.import;
             this.tsmiImportConnections.Name = "tsmiImportConnections";
-            this.tsmiImportConnections.Size = new System.Drawing.Size(83, 26);
+            this.tsmiImportConnections.Size = new System.Drawing.Size(224, 26);
             this.tsmiImportConnections.Click += new System.EventHandler(this.tsmiImportConnections_Click);
             // 
             // tsmiExportConnections
             // 
             this.tsmiExportConnections.Image = global::PgMulti.Properties.Resources.export;
             this.tsmiExportConnections.Name = "tsmiExportConnections";
-            this.tsmiExportConnections.Size = new System.Drawing.Size(83, 26);
+            this.tsmiExportConnections.Size = new System.Drawing.Size(224, 26);
             this.tsmiExportConnections.Click += new System.EventHandler(this.tsmiExportConnections_Click);
             // 
             // tsmiMoreOptions
             // 
             this.tsmiMoreOptions.Image = global::PgMulti.Properties.Resources.opciones;
             this.tsmiMoreOptions.Name = "tsmiMoreOptions";
-            this.tsmiMoreOptions.Size = new System.Drawing.Size(83, 26);
+            this.tsmiMoreOptions.Size = new System.Drawing.Size(224, 26);
             this.tsmiMoreOptions.Click += new System.EventHandler(this.tsmMoreOptions_Click);
             // 
             // cmsTabs
@@ -1770,7 +1771,8 @@ namespace PgMulti
             this.tsmiEdit,
             this.tsmiRunMenu,
             this.tsmiDiagrams,
-            this.tsmiOptions});
+            this.tsmiOptions,
+            this.tsmiUpdates});
             this.mm.Location = new System.Drawing.Point(0, 0);
             this.mm.Name = "mm";
             this.mm.Size = new System.Drawing.Size(1539, 28);
@@ -1791,6 +1793,7 @@ namespace PgMulti
             this.tsmiFile.Image = global::PgMulti.Properties.Resources.archivo;
             this.tsmiFile.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsmiFile.Name = "tsmiFile";
+            this.tsmiFile.Overflow = System.Windows.Forms.ToolStripItemOverflow.AsNeeded;
             this.tsmiFile.Size = new System.Drawing.Size(93, 24);
             this.tsmiFile.Text = "Archivo";
             // 
@@ -1811,6 +1814,7 @@ namespace PgMulti
             this.tsmiEdit.Image = global::PgMulti.Properties.Resources.editar;
             this.tsmiEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsmiEdit.Name = "tsmiEdit";
+            this.tsmiEdit.Overflow = System.Windows.Forms.ToolStripItemOverflow.AsNeeded;
             this.tsmiEdit.Size = new System.Drawing.Size(82, 24);
             this.tsmiEdit.Text = "Editar";
             // 
@@ -1821,6 +1825,7 @@ namespace PgMulti
             this.tsmiExportCsv});
             this.tsmiRunMenu.Image = global::PgMulti.Properties.Resources.ejecutar;
             this.tsmiRunMenu.Name = "tsmiRunMenu";
+            this.tsmiRunMenu.Overflow = System.Windows.Forms.ToolStripItemOverflow.AsNeeded;
             this.tsmiRunMenu.Size = new System.Drawing.Size(68, 24);
             this.tsmiRunMenu.Text = "Run";
             // 
@@ -1847,6 +1852,7 @@ namespace PgMulti
             this.tsmiOpenDiagram});
             this.tsmiDiagrams.Image = global::PgMulti.Properties.Resources.diagram;
             this.tsmiDiagrams.Name = "tsmiDiagrams";
+            this.tsmiDiagrams.Overflow = System.Windows.Forms.ToolStripItemOverflow.AsNeeded;
             this.tsmiDiagrams.Size = new System.Drawing.Size(115, 24);
             this.tsmiDiagrams.Text = "Diagramas";
             // 
@@ -1854,7 +1860,7 @@ namespace PgMulti
             // 
             this.tsmiNewDiagram.Image = global::PgMulti.Properties.Resources.new_diagram;
             this.tsmiNewDiagram.Name = "tsmiNewDiagram";
-            this.tsmiNewDiagram.Size = new System.Drawing.Size(203, 26);
+            this.tsmiNewDiagram.Size = new System.Drawing.Size(224, 26);
             this.tsmiNewDiagram.Text = "Nuevo diagrama";
             this.tsmiNewDiagram.Click += new System.EventHandler(this.tsmiNewDiagram_Click);
             // 
@@ -1862,7 +1868,7 @@ namespace PgMulti
             // 
             this.tsmiOpenDiagram.Image = global::PgMulti.Properties.Resources.open_diagram;
             this.tsmiOpenDiagram.Name = "tsmiOpenDiagram";
-            this.tsmiOpenDiagram.Size = new System.Drawing.Size(203, 26);
+            this.tsmiOpenDiagram.Size = new System.Drawing.Size(224, 26);
             this.tsmiOpenDiagram.Text = "Abrir diagrama";
             this.tsmiOpenDiagram.Click += new System.EventHandler(this.tsmiOpenDiagram_Click);
             // 
@@ -1879,6 +1885,7 @@ namespace PgMulti
             this.tsmiOptions.Image = global::PgMulti.Properties.Resources.opciones;
             this.tsmiOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsmiOptions.Name = "tsmiOptions";
+            this.tsmiOptions.Overflow = System.Windows.Forms.ToolStripItemOverflow.AsNeeded;
             this.tsmiOptions.Size = new System.Drawing.Size(105, 24);
             this.tsmiOptions.Text = "Opciones";
             // 
@@ -1886,8 +1893,18 @@ namespace PgMulti
             // 
             this.tsmiHistory.Image = global::PgMulti.Properties.Resources.historial;
             this.tsmiHistory.Name = "tsmiHistory";
-            this.tsmiHistory.Size = new System.Drawing.Size(83, 26);
+            this.tsmiHistory.Size = new System.Drawing.Size(224, 26);
             this.tsmiHistory.Click += new System.EventHandler(this.tsmiHistory_Click);
+            // 
+            // tsmiUpdates
+            // 
+            this.tsmiUpdates.Image = global::PgMulti.Properties.Resources.updates;
+            this.tsmiUpdates.Name = "tsmiUpdates";
+            this.tsmiUpdates.Overflow = System.Windows.Forms.ToolStripItemOverflow.AsNeeded;
+            this.tsmiUpdates.Size = new System.Drawing.Size(191, 24);
+            this.tsmiUpdates.Text = "Buscar actualizaciones";
+            this.tsmiUpdates.Visible = false;
+            this.tsmiUpdates.Click += new System.EventHandler(this.tsmiUpdates_Click);
             // 
             // ofdImportConfig
             // 
@@ -2165,5 +2182,6 @@ namespace PgMulti
         private System.Windows.Forms.Timer tmrReenableRunButton;
         private ToolStripMenuItem tsmiReopenLastClosedTab;
         private ToolStripButton tsbCreateTableDiagram;
+        private ToolStripMenuItem tsmiUpdates;
     }
 }

@@ -17,6 +17,8 @@ using PgMulti.Export;
 using PgMulti.Forms;
 using System.Windows.Forms;
 using PgMulti.Diagrams;
+using Newtonsoft.Json;
+using PgMulti.Properties;
 
 namespace PgMulti
 {
@@ -41,6 +43,7 @@ namespace PgMulti
         {
             InitializeComponent();
             InitializeText();
+            mm.CanOverflow = true;
             _TreeModel = new MainFormTreeModel();
             tvaConnections.Model = _TreeModel;
             _NRoot = new Node(Properties.Text.all_databases);
@@ -130,6 +133,7 @@ namespace PgMulti
 
             RefreshTransactionsConfig();
             UpdateRunButton(null);
+            CheckUpdates();
         }
 
         private void RefreshTransactionsConfig()
@@ -318,6 +322,41 @@ namespace PgMulti
         private void tsbNewDiagram_Click(object sender, EventArgs e)
         {
             CreateDiagram(null);
+        }
+
+        private void tsmiUpdates_Click(object sender, EventArgs e)
+        {
+            Process.Start(new ProcessStartInfo((string)tsmiUpdates.Tag) { UseShellExecute = true });
+        }
+
+        private async void CheckUpdates()
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                client.DefaultRequestHeaders.Add("User-Agent", "pgMulti");
+                HttpResponseMessage response = await client.GetAsync(AppSettings.Default.LatestReleaseInfoUrl);
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                dynamic? json = JsonConvert.DeserializeObject(responseBody);
+
+                if (json != null)
+                {
+                    if (Application.ProductVersion != (string)json.tag_name)
+                    {
+                        tsmiUpdates.Visible = true;
+                        tsmiUpdates.Text = Properties.Text.update_available + ": " + Application.ProductVersion + " >> " + (string)json.tag_name;
+                        tsmiUpdates.Image = global::PgMulti.Properties.Resources.updates_found;
+                        tsmiUpdates.Tag = (string)json.html_url;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                tsmiUpdates.Visible = true;
+                tsmiUpdates.Text = Properties.Text.check_updates;
+                tsmiUpdates.Tag = AppSettings.Default.ProjectUrl;
+            }
         }
 
         /// <summary>

@@ -8,9 +8,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <StartupObject>PgMulti.Program</StartupObject>
-    <Version>1.5.6</Version>
-    <AssemblyVersion>1.5.6</AssemblyVersion>
-    <FileVersion>1.5.6</FileVersion>
+    <Version>1.5.7</Version>
+    <AssemblyVersion>1.5.7</AssemblyVersion>
+    <FileVersion>1.5.7</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -28,6 +28,7 @@
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="30.0.1" />
     <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="7.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Npgsql" Version="7.0.0" />
     <PackageReference Include="SqlitePCLRaw.bundle_e_sqlcipher" Version="2.1.3" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="7.0.0" />

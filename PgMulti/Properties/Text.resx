@@ -895,4 +895,10 @@ Unlike other tools, this application does not reuse the connection between diffe
 	<data name="repulsion_force" xml:space="preserve">
     <value>Fuerza de repulsión:</value>
   </data>
+	<data name="check_updates" xml:space="preserve">
+    <value>Check updates</value>
+  </data>
+	<data name="update_available" xml:space="preserve">
+    <value>Update available</value>
+  </data>
 </root>
