@@ -34,7 +34,6 @@ namespace PgMulti.QueryEditor
             _AutocompleteMenu.SelectedColor = Color.FromArgb(196, 213, 255);
             _AutocompleteMenu.SearchPattern = @"[\w\.]";
             _AutocompleteMenu.AllowTabKey = true;
-            _AutocompleteMenu.AlwaysShowTooltip = true;
             _AutocompleteMenu.Items.SetAutocompleteItems(new PGAutocompleteEnumerable(_AutocompleteMenu, _Fctb, mainForm, _Data.PGLanguageData, _Data.PGSimpleLanguageData));
             _AutocompleteMenu.MinFragmentLength = 0;
             _AutocompleteMenu.ImageList = mainForm.ilAutocompleteMenu;
@@ -43,7 +42,7 @@ namespace PgMulti.QueryEditor
             _AutocompleteMenu.PreselectedFont = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
             _AutocompleteMenu.MinimumSize = new Size(400, 100);
             _AutocompleteMenu.MaximumSize = new Size(500, 400);
-            _AutocompleteMenu.MaxTooltipSize = new Size(300, 0);
+            _AutocompleteMenu.MaxTooltipWidth = 500;
             _AutocompleteMenu.ToolTipDuration = 30000;
             _AutocompleteMenu.AppearInterval = (_Data.Config.AutocompleteDelay == 0 ? int.MaxValue : _Data!.Config.AutocompleteDelay);
             _AutocompleteMenu.ProcessKeyDown += _AutocompleteMenu_ProcessKeyDown;

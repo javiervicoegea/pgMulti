@@ -127,6 +127,12 @@
       <DependentUpon>Texts.resx</DependentUpon>
     </Compile>
     <Compile Include="TextSource.cs" />
+    <Compile Include="ToolTipForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ToolTipForm.Designer.cs">
+      <DependentUpon>ToolTipForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="TypeDescriptor.cs" />
     <Compile Include="FileTextSource.cs" />
     <Compile Include="UnfocusablePanel.cs">
@@ -163,6 +169,9 @@
     <EmbeddedResource Include="Texts\Texts.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Texts.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ToolTipForm.resx">
+      <DependentUpon>ToolTipForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
