@@ -323,11 +323,12 @@ namespace PgMulti.Diagrams
             {
                 if (activeRelation.ParentTable == this)
                 {
-                    keys = activeRelation.ParentTableColumns;
+                    keys.AddRange(activeRelation.ParentTableColumns);
                 }
-                else
+
+                if (activeRelation.ChildTable == this)
                 {
-                    keys = activeRelation.ChildTableColumns;
+                    keys.AddRange(activeRelation.ChildTableColumns);
                 }
             }
 
