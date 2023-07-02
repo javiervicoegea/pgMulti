@@ -1043,5 +1043,11 @@ namespace PgMulti.Forms
             }
         }
         #endregion
+
+        private void editToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TableForm f = new TableForm();
+            f.ShowDialog(this);
+        }
     }
 }

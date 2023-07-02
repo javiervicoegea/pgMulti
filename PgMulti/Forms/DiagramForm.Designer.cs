@@ -42,10 +42,10 @@
             this.tscbTables = new System.Windows.Forms.ToolStripComboBox();
             this.tmrSave = new System.Windows.Forms.Timer(this.components);
             this.cms = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.añadirTablaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.añadirRelaciónToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.eliminarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addRelationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ms.SuspendLayout();
             this.tsc.TopToolStripPanel.SuspendLayout();
             this.tsc.SuspendLayout();
@@ -162,36 +162,37 @@
             // 
             this.cms.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.cms.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.añadirTablaToolStripMenuItem,
-            this.añadirRelaciónToolStripMenuItem,
-            this.eliminarToolStripMenuItem,
-            this.editarToolStripMenuItem});
+            this.addTableToolStripMenuItem,
+            this.addRelationToolStripMenuItem,
+            this.removeToolStripMenuItem,
+            this.editToolStripMenuItem});
             this.cms.Name = "cms";
-            this.cms.Size = new System.Drawing.Size(180, 100);
+            this.cms.Size = new System.Drawing.Size(211, 128);
             // 
-            // añadirTablaToolStripMenuItem
+            // addTableToolStripMenuItem
             // 
-            this.añadirTablaToolStripMenuItem.Name = "añadirTablaToolStripMenuItem";
-            this.añadirTablaToolStripMenuItem.Size = new System.Drawing.Size(179, 24);
-            this.añadirTablaToolStripMenuItem.Text = "Añadir tabla";
+            this.addTableToolStripMenuItem.Name = "addTableToolStripMenuItem";
+            this.addTableToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.addTableToolStripMenuItem.Text = "Añadir tabla";
             // 
-            // añadirRelaciónToolStripMenuItem
+            // addRelationToolStripMenuItem
             // 
-            this.añadirRelaciónToolStripMenuItem.Name = "añadirRelaciónToolStripMenuItem";
-            this.añadirRelaciónToolStripMenuItem.Size = new System.Drawing.Size(179, 24);
-            this.añadirRelaciónToolStripMenuItem.Text = "Añadir relación";
+            this.addRelationToolStripMenuItem.Name = "addRelationToolStripMenuItem";
+            this.addRelationToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.addRelationToolStripMenuItem.Text = "Añadir relación";
             // 
-            // eliminarToolStripMenuItem
+            // removeToolStripMenuItem
             // 
-            this.eliminarToolStripMenuItem.Name = "eliminarToolStripMenuItem";
-            this.eliminarToolStripMenuItem.Size = new System.Drawing.Size(179, 24);
-            this.eliminarToolStripMenuItem.Text = "Eliminar";
+            this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.removeToolStripMenuItem.Text = "Eliminar";
             // 
-            // editarToolStripMenuItem
+            // editToolStripMenuItem
             // 
-            this.editarToolStripMenuItem.Name = "editarToolStripMenuItem";
-            this.editarToolStripMenuItem.Size = new System.Drawing.Size(179, 24);
-            this.editarToolStripMenuItem.Text = "Editar";
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.editToolStripMenuItem.Text = "Editar";
+            this.editToolStripMenuItem.Click += new System.EventHandler(this.editToolStripMenuItem_Click);
             // 
             // DiagramForm
             // 
@@ -201,11 +202,11 @@
             this.Controls.Add(this.tsc);
             this.Controls.Add(this.ms);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
             this.MainMenuStrip = this.ms;
             this.Name = "DiagramForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.KeyPreview = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DiagramForm_FormClosing);
             this.Load += new System.EventHandler(this.DiagramForm_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DiagramForm_KeyDown);
@@ -234,10 +235,10 @@
         private ToolStripButton tsbAddTables;
         private System.Windows.Forms.Timer tmrSave;
         private ContextMenuStrip cms;
-        private ToolStripMenuItem añadirTablaToolStripMenuItem;
-        private ToolStripMenuItem añadirRelaciónToolStripMenuItem;
-        private ToolStripMenuItem eliminarToolStripMenuItem;
-        private ToolStripMenuItem editarToolStripMenuItem;
+        private ToolStripMenuItem addTableToolStripMenuItem;
+        private ToolStripMenuItem addRelationToolStripMenuItem;
+        private ToolStripMenuItem removeToolStripMenuItem;
+        private ToolStripMenuItem editToolStripMenuItem;
         private ToolStripButton tsbExpandDiagram;
         private ToolStripButton tsbZoomFull;
         private ToolStripComboBox tscbTables;
