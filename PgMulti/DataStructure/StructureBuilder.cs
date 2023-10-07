@@ -241,7 +241,16 @@ namespace PgMulti.DataStructure
             {
                 while (drd.Read())
                 {
-                    Trigger tg = new Trigger(drd, _Parser);
+                    Trigger tg;
+
+                    try
+                    {
+                        tg = new Trigger(drd, _Parser);
+                    }
+                    catch (Trigger.NotSupportedTriggerSqlDefinition)
+                    {
+                        continue;
+                    }
 
                     if (!_DictSchemas.ContainsKey(tg.IdSchemaFunction)) continue;
 

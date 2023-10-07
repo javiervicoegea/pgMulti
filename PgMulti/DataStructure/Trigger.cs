@@ -40,7 +40,16 @@ namespace PgMulti.DataStructure
 
             string def = drd.Ref<string>("triggerdef")!.ToLower();
             ParseTree parseTree = parser.Parse(def + ";");
-            AstNode nCreateTriggerStmt = AstNode.ProcesarParseTree(parseTree)[0][0][0][0];
+            AstNode nCreateTriggerStmt;
+
+            try
+            {
+                nCreateTriggerStmt = AstNode.ProcesarParseTree(parseTree)[0][0][0][0];
+            }
+            catch (Exception ex)
+            {
+                throw new NotSupportedTriggerSqlDefinition(def, ex);
+            }
 
             _Momentum = nCreateTriggerStmt["createTriggerMomentumClause"]!.SingleLineText;
 
@@ -58,6 +67,11 @@ namespace PgMulti.DataStructure
             {
                 throw new Exception($"Function {nIdFunction.SingleLineText} of trigger {_IdSchema}.{_Id} is missing schema name");
             }
+        }
+
+        public class NotSupportedTriggerSqlDefinition : Exception
+        {
+            public NotSupportedTriggerSqlDefinition(string definition, Exception innerException) : base("Not supported trigger definition '" + definition + "'", innerException) { }
         }
     }
 }
