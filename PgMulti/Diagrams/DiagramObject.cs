@@ -42,6 +42,14 @@ namespace PgMulti.Diagrams
             set => _Suggested = value;
         }
 
+        public Diagram Diagram
+        {
+            get
+            {
+                return _Diagram;
+            }
+        }
+
         public static Rectangle AddMargins(Rectangle r, int margin)
         {
             return AddMargins(r, margin, margin, margin, margin);

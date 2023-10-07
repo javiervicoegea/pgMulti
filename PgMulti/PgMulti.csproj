@@ -8,9 +8,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <StartupObject>PgMulti.Program</StartupObject>
-    <Version>1.5.8</Version>
-    <AssemblyVersion>1.5.8</AssemblyVersion>
-    <FileVersion>1.5.8</FileVersion>
+    <Version>1.5.9</Version>
+    <AssemblyVersion>1.5.9</AssemblyVersion>
+    <FileVersion>1.5.9</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -901,7 +901,85 @@ Unlike other tools, this application does not reuse the connection between diffe
 	<data name="update_available" xml:space="preserve">
     <value>Update available</value>
   </data>
-	<data name="unable_to_open_url" xml:space="preserve">
+  <data name="unable_to_open_url" xml:space="preserve">
     <value>Could not open URL {0}: {1}</value>
+  </data>
+  <data name="edit_table_x" xml:space="preserve">
+    <value>Edit table {0}</value>
+  </data>
+  <data name="new_table" xml:space="preserve">
+    <value>New table</value>
+  </data>
+  <data name="general" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="columns" xml:space="preserve">
+    <value>Columns</value>
+  </data>
+  <data name="table_name" xml:space="preserve">
+    <value>Table name</value>
+  </data>
+  <data name="schema_name" xml:space="preserve">
+    <value>Schema:</value>
+  </data>
+  <data name="new_column" xml:space="preserve">
+    <value>New column</value>
+  </data>
+  <data name="remove_column" xml:space="preserve">
+    <value>Remove column</value>
+  </data>
+  <data name="type_name" xml:space="preserve">
+    <value>Data type</value>
+  </data>
+  <data name="pk" xml:space="preserve">
+    <value>Primary key</value>
+  </data>
+  <data name="not_null" xml:space="preserve">
+    <value>Not null</value>
+  </data>
+  <data name="column_name" xml:space="preserve">
+    <value>Column name</value>
+  </data>
+  <data name="type_initials" xml:space="preserve">
+    <value>Type initials</value>
+  </data>
+  <data name="identity" xml:space="preserve">
+    <value>Identity</value>
+  </data>
+  <data name="column_default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="warning_empty_table_name" xml:space="preserve">
+    <value>Debe escribir un nombre para la tabla</value>
+  </data>
+  <data name="warning_empty_schema" xml:space="preserve">
+    <value>Debe escribir el nombre del esquema</value>
+  </data>
+  <data name="warning_empty_column_name" xml:space="preserve">
+    <value>Debe escribir el nombre de la columna</value>
+  </data>
+  <data name="warning_empty_type_name" xml:space="preserve">
+    <value>Debe introducir el tipo de la columna</value>
+  </data>
+  <data name="warning_empty_type_initials" xml:space="preserve">
+    <value>Debe introducir una abreviatura para el tipo de la columna</value>
+  </data>
+  <data name="warning_table_already_exists" xml:space="preserve">
+    <value>La tabla indicada ya existe en el diagrama</value>
+  </data>
+  <data name="warning_relations_to_remove" xml:space="preserve">
+    <value>Si acepta los cambios realizados, se eliminarán las siguientes relaciones de esta tabla: {0}</value>
+  </data>
+  <data name="add_relation" xml:space="preserve">
+    <value>Añadir relación</value>
+  </data>
+  <data name="add_table" xml:space="preserve">
+    <value>Añadir tabla</value>
+  </data>
+  <data name="confirm_table_deletion" xml:space="preserve">
+    <value>¿Está seguro de que quiere eliminar la tabla {0}?</value>
+  </data>
+  <data name="confirm_relation_deletion" xml:space="preserve">
+    <value>¿Está seguro de que quiere eliminar la relación {0}?</value>
   </data>
 </root>

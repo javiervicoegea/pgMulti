@@ -855,4 +855,49 @@ A diferencia de otras herramientas, esta aplicación no reutiliza la conexión e
 	<data name="unable_to_open_url" xml:space="preserve">
     <value>No se pudo abrir la URL {0}: {1}</value>
   </data>
+  <data name="edit_table_x" xml:space="preserve">
+    <value>Editar tabla {0}</value>
+  </data>
+  <data name="new_table" xml:space="preserve">
+    <value>Nueva tabla</value>
+  </data>
+  <data name="general" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="columns" xml:space="preserve">
+    <value>Columnas</value>
+  </data>
+  <data name="table_name" xml:space="preserve">
+    <value>Nombre de la tabla</value>
+  </data>
+  <data name="schema_name" xml:space="preserve">
+    <value>Esquema:</value>
+  </data>
+  <data name="new_column" xml:space="preserve">
+    <value>Nueva columna</value>
+  </data>
+  <data name="remove_column" xml:space="preserve">
+    <value>Borrar columna</value>
+  </data>
+  <data name="type_name" xml:space="preserve">
+    <value>Tipo</value>
+  </data>
+  <data name="pk" xml:space="preserve">
+    <value>Clave primaria</value>
+  </data>
+  <data name="not_null" xml:space="preserve">
+    <value>No nulo</value>
+  </data>
+  <data name="column_name" xml:space="preserve">
+    <value>Nombre de la columna</value>
+  </data>
+  <data name="type_initials" xml:space="preserve">
+    <value>Abreviatura del tipo</value>
+  </data>
+  <data name="identity" xml:space="preserve">
+    <value>Identidad (autoincremental)</value>
+  </data>
+  <data name="column_default" xml:space="preserve">
+    <value>Valor predeterminado</value>
+  </data>
 </root>

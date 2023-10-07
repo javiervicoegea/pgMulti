@@ -109,8 +109,7 @@ namespace PgMulti.Forms
             _Diagram.RecalculateLocations();
 
             _Canvas.Invalidate();
-            _PendingSave = true;
-            tmrSave.Enabled = true;
+            SetPendingSave();
             UpdateItemsInTscbTables();
 
             Rectangle dcRectangleViewPort = _Diagram.UnProject(new Rectangle(0, 0, _Canvas.Width, _Canvas.Height));
@@ -121,6 +120,12 @@ namespace PgMulti.Forms
         {
             tsbExpandDiagram.Checked = true;
             return _ExpandDiagramPanel!;
+        }
+
+        private void SetPendingSave()
+        {
+            _PendingSave = true;
+            tmrSave.Enabled = true;
         }
 
         public void Save()
@@ -383,6 +388,123 @@ namespace PgMulti.Forms
             else if (e.KeyCode == Keys.ShiftKey)
             {
                 _ShiftKeyPressed = false;
+            }
+        }
+
+        private void cms_Opening(object sender, CancelEventArgs e)
+        {
+            tsmiAddRelation.Visible = false;
+            tsmiAddTable.Visible = false;
+            tsmiEdit.Visible = false;
+            tsmiRemove.Visible = false;
+
+            if (_SelectedObject == null)
+            {
+                tsmiAddTable.Visible = true;
+            }
+            else
+            {
+                if (_SelectedObject is DiagramTable)
+                {
+                    tsmiAddRelation.Visible = true;
+                    tsmiEdit.Visible = true;
+                    tsmiRemove.Visible = true;
+                }
+                else if (_SelectedObject is DiagramTableRelation)
+                {
+                    tsmiEdit.Visible = false;
+                    tsmiRemove.Visible = false;
+                }
+                else
+                {
+                    e.Cancel = true;
+                }
+            }
+        }
+
+        private void tsmiEdit_Click(object sender, EventArgs e)
+        {
+            if (_SelectedObject == null)
+            {
+                return;
+            }
+            else
+            {
+                if (_SelectedObject is DiagramTable)
+                {
+                    TableForm f = new TableForm(_Diagram, (DiagramTable)_SelectedObject);
+                    f.ShowDialog(this);
+                    if (f.DialogResult == DialogResult.OK)
+                    {
+                        _Diagram.Refresh();
+                        _Invalidate();
+                        SetPendingSave();
+                    }
+                }
+                else if (_SelectedObject is DiagramTableRelation)
+                {
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+        }
+
+        private void tsmiAddTable_Click(object sender, EventArgs e)
+        {
+            TableForm f = new TableForm(_Diagram);
+            f.ShowDialog(this);
+            if (f.DialogResult == DialogResult.OK)
+            {
+                _Diagram.AddTable(f.DiagramTable);
+                f.DiagramTable.MoveTo((Point)cms.Tag!);
+                _Invalidate();
+                SetPendingSave();
+            }
+        }
+
+        private void tsmiRemove_Click(object sender, EventArgs e)
+        {
+            if (_SelectedObject == null)
+            {
+                return;
+            }
+            else
+            {
+                if (_SelectedObject is DiagramTable)
+                {
+                    DiagramTable dt = (DiagramTable)_SelectedObject;
+                    if (MessageBox.Show(
+                            string.Format(Properties.Text.confirm_table_deletion, dt.SchemaName + "." + dt.TableName),
+                            Properties.Text.warning, MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) != DialogResult.OK)
+                    {
+                        return;
+                    }
+
+                    _Diagram.RemoveTable(dt);
+                    _Invalidate();
+                    SetPendingSave();
+                }
+                else if (_SelectedObject is DiagramTableRelation)
+                {
+                    DiagramTableRelation dtr = (DiagramTableRelation)_SelectedObject;
+                    if (MessageBox.Show(
+                            string.Format(Properties.Text.confirm_relation_deletion, dtr.ChildTable.TableName + "." + dtr.Id),
+                            Properties.Text.warning, MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) != DialogResult.OK)
+                    {
+                        return;
+                    }
+
+                    _Diagram.RemoveRelation(dtr);
+                    _Invalidate();
+                    SetPendingSave();
+                }
+                else
+                {
+                    return;
+                }
             }
         }
 
@@ -741,8 +863,7 @@ namespace PgMulti.Forms
                 _ResizingTable = null;
                 _ResizingTableInitY = null;
                 _ResizingTableInitVisibleColumns = null;
-                _PendingSave = true;
-                tmrSave.Enabled = true;
+                SetPendingSave();
             }
             else if (_DraggingObject != null)
             {
@@ -765,8 +886,7 @@ namespace PgMulti.Forms
                 }
 
                 _DraggingObject = null;
-                _PendingSave = true;
-                tmrSave.Enabled = true;
+                SetPendingSave();
             }
             else if (_Diagram.Dragging)
             {
@@ -782,6 +902,7 @@ namespace PgMulti.Forms
             {
                 //_Diagram.CancelDrag();
                 ClickOnPoint(e.Location, dcMouseLocation, _CtrlKeyPressed || _ShiftKeyPressed, false);
+                cms.Tag = dcMouseLocation;
                 cms.Show(_Canvas, e.Location);
             }
 
@@ -1025,6 +1146,10 @@ namespace PgMulti.Forms
             this.tsbAddTables.Text = Properties.Text.add_tables;
             this.tsbExpandDiagram.Text = Properties.Text.expand_diagram;
             this.tsbZoomFull.Text = Properties.Text.zoom_full;
+            this.tsmiAddRelation.Text = Properties.Text.add_relation;
+            this.tsmiAddTable.Text = Properties.Text.add_table;
+            this.tsmiEdit.Text = Properties.Text.edit;
+            this.tsmiRemove.Text = Properties.Text.remove;
         }
         #endregion
 
@@ -1043,11 +1168,5 @@ namespace PgMulti.Forms
             }
         }
         #endregion
-
-        private void editToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            TableForm f = new TableForm();
-            f.ShowDialog(this);
-        }
     }
 }

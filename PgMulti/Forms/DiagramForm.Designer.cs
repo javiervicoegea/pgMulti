@@ -42,10 +42,10 @@
             this.tscbTables = new System.Windows.Forms.ToolStripComboBox();
             this.tmrSave = new System.Windows.Forms.Timer(this.components);
             this.cms = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.addTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.addRelationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiAddTable = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiAddRelation = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiRemove = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.ms.SuspendLayout();
             this.tsc.TopToolStripPanel.SuspendLayout();
             this.tsc.SuspendLayout();
@@ -162,37 +162,40 @@
             // 
             this.cms.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.cms.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addTableToolStripMenuItem,
-            this.addRelationToolStripMenuItem,
-            this.removeToolStripMenuItem,
-            this.editToolStripMenuItem});
+            this.tsmiAddTable,
+            this.tsmiAddRelation,
+            this.tsmiRemove,
+            this.tsmiEdit});
             this.cms.Name = "cms";
-            this.cms.Size = new System.Drawing.Size(211, 128);
+            this.cms.Size = new System.Drawing.Size(162, 100);
+            this.cms.Opening += new System.ComponentModel.CancelEventHandler(this.cms_Opening);
             // 
-            // addTableToolStripMenuItem
+            // tsmiAddTable
             // 
-            this.addTableToolStripMenuItem.Name = "addTableToolStripMenuItem";
-            this.addTableToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
-            this.addTableToolStripMenuItem.Text = "Añadir tabla";
+            this.tsmiAddTable.Name = "tsmiAddTable";
+            this.tsmiAddTable.Size = new System.Drawing.Size(161, 24);
+            this.tsmiAddTable.Text = "Add table";
+            this.tsmiAddTable.Click += new System.EventHandler(this.tsmiAddTable_Click);
             // 
-            // addRelationToolStripMenuItem
+            // tsmiAddRelation
             // 
-            this.addRelationToolStripMenuItem.Name = "addRelationToolStripMenuItem";
-            this.addRelationToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
-            this.addRelationToolStripMenuItem.Text = "Añadir relación";
+            this.tsmiAddRelation.Name = "tsmiAddRelation";
+            this.tsmiAddRelation.Size = new System.Drawing.Size(161, 24);
+            this.tsmiAddRelation.Text = "Add relation";
             // 
-            // removeToolStripMenuItem
+            // tsmiRemove
             // 
-            this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            this.removeToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
-            this.removeToolStripMenuItem.Text = "Eliminar";
+            this.tsmiRemove.Name = "tsmiRemove";
+            this.tsmiRemove.Size = new System.Drawing.Size(161, 24);
+            this.tsmiRemove.Text = "Remove";
+            this.tsmiRemove.Click += new System.EventHandler(this.tsmiRemove_Click);
             // 
-            // editToolStripMenuItem
+            // tsmiEdit
             // 
-            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
-            this.editToolStripMenuItem.Text = "Editar";
-            this.editToolStripMenuItem.Click += new System.EventHandler(this.editToolStripMenuItem_Click);
+            this.tsmiEdit.Name = "tsmiEdit";
+            this.tsmiEdit.Size = new System.Drawing.Size(161, 24);
+            this.tsmiEdit.Text = "Edit";
+            this.tsmiEdit.Click += new System.EventHandler(this.tsmiEdit_Click);
             // 
             // DiagramForm
             // 
@@ -235,14 +238,14 @@
         private ToolStripButton tsbAddTables;
         private System.Windows.Forms.Timer tmrSave;
         private ContextMenuStrip cms;
-        private ToolStripMenuItem addTableToolStripMenuItem;
-        private ToolStripMenuItem addRelationToolStripMenuItem;
-        private ToolStripMenuItem removeToolStripMenuItem;
-        private ToolStripMenuItem editToolStripMenuItem;
+        private ToolStripMenuItem tsmiAddTable;
+        private ToolStripMenuItem tsmiRemove;
+        private ToolStripMenuItem tsmiEdit;
         private ToolStripButton tsbExpandDiagram;
         private ToolStripButton tsbZoomFull;
         private ToolStripComboBox tscbTables;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripLabel toolStripLabel1;
+        private ToolStripMenuItem tsmiAddRelation;
     }
 }

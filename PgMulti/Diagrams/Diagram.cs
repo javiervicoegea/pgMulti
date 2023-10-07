@@ -228,19 +228,8 @@ namespace PgMulti.Diagrams
             if (dt == null)
             {
                 dt = new DiagramTable(this, t);
-                _Tables.Add(dt);
-                UpdateBoundingBox();
                 AddTableRelations(dt, t);
-                dt.ReorderColumns();
-                ReorderZIndex();
-
-                if (DiagramRelocator != null)
-                {
-                    List<DiagramTable> l = new List<DiagramTable>();
-                    l.Add(dt);
-                    DiagramRelocator.Add(l);
-                }
-                UpdateDiagramRelocator(dt);
+                AddTable(dt);
             }
             else
             {
@@ -250,6 +239,21 @@ namespace PgMulti.Diagrams
                 // Clear dt relations in dt and also in _Relations
                 // AddTableRelations(dt, t);
             }
+        }
+
+        public void AddTable(DiagramTable dt)
+        {
+            _Tables.Add(dt);
+            dt.ReorderColumns();
+            Refresh();
+
+            if (DiagramRelocator != null)
+            {
+                List<DiagramTable> l = new List<DiagramTable>();
+                l.Add(dt);
+                DiagramRelocator.Add(l);
+            }
+            UpdateDiagramRelocator(dt);
         }
 
         public void RemoveTable(DiagramTable dt)
@@ -262,6 +266,20 @@ namespace PgMulti.Diagrams
 
             _Tables.Remove(dt);
 
+            Refresh();
+        }
+
+        public void RemoveRelation(DiagramTableRelation dr)
+        {
+            _Relations.Remove(dr);
+            dr.ParentTable.Relations.Remove(dr);
+            dr.ChildTable.Relations.Remove(dr);
+
+            Refresh();
+        }
+
+        public void Refresh()
+        {
             ReorderZIndex();
             UpdateBoundingBox();
         }

@@ -88,6 +88,24 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Añadir relación.
+        /// </summary>
+        internal static string add_relation {
+            get {
+                return ResourceManager.GetString("add_relation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Añadir tabla.
+        /// </summary>
+        internal static string add_table {
+            get {
+                return ResourceManager.GetString("add_table", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Add tables.
         /// </summary>
         internal static string add_tables {
@@ -418,6 +436,24 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Default.
+        /// </summary>
+        internal static string column_default {
+            get {
+                return ResourceManager.GetString("column_default", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Column name.
+        /// </summary>
+        internal static string column_name {
+            get {
+                return ResourceManager.GetString("column_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Columns.
         /// </summary>
         internal static string columns {
@@ -490,6 +526,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a ¿Está seguro de que quiere eliminar la relación {0}?.
+        /// </summary>
+        internal static string confirm_relation_deletion {
+            get {
+                return ResourceManager.GetString("confirm_relation_deletion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Confirm deletion.
         /// </summary>
         internal static string confirm_remove {
@@ -532,6 +577,15 @@ namespace PgMulti.Properties {
         internal static string confirm_stop_selected {
             get {
                 return ResourceManager.GetString("confirm_stop_selected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a ¿Está seguro de que quiere eliminar la tabla {0}?.
+        /// </summary>
+        internal static string confirm_table_deletion {
+            get {
+                return ResourceManager.GetString("confirm_table_deletion", resourceCulture);
             }
         }
         
@@ -703,6 +757,15 @@ namespace PgMulti.Properties {
         internal static string edit_selected_script {
             get {
                 return ResourceManager.GetString("edit_selected_script", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Edit table {0}.
+        /// </summary>
+        internal static string edit_table_x {
+            get {
+                return ResourceManager.GetString("edit_table_x", resourceCulture);
             }
         }
         
@@ -1053,6 +1116,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Identity.
+        /// </summary>
+        internal static string identity {
+            get {
+                return ResourceManager.GetString("identity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Import database list.
         /// </summary>
         internal static string import_databases {
@@ -1300,6 +1372,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a New column.
+        /// </summary>
+        internal static string new_column {
+            get {
+                return ResourceManager.GetString("new_column", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a New database.
         /// </summary>
         internal static string new_db {
@@ -1345,6 +1426,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a New table.
+        /// </summary>
+        internal static string new_table {
+            get {
+                return ResourceManager.GetString("new_table", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a No errors.
         /// </summary>
         internal static string no_errors {
@@ -1368,6 +1458,15 @@ namespace PgMulti.Properties {
         internal static string no_selected_rows {
             get {
                 return ResourceManager.GetString("no_selected_rows", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Not null.
+        /// </summary>
+        internal static string not_null {
+            get {
+                return ResourceManager.GetString("not_null", resourceCulture);
             }
         }
         
@@ -1471,6 +1570,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Primary key.
+        /// </summary>
+        internal static string pk {
+            get {
+                return ResourceManager.GetString("pk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Port.
         /// </summary>
         internal static string port {
@@ -1548,6 +1656,15 @@ namespace PgMulti.Properties {
         internal static string remove {
             get {
                 return ResourceManager.GetString("remove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Remove column.
+        /// </summary>
+        internal static string remove_column {
+            get {
+                return ResourceManager.GetString("remove_column", resourceCulture);
             }
         }
         
@@ -1777,6 +1894,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Schema:.
+        /// </summary>
+        internal static string schema_name {
+            get {
+                return ResourceManager.GetString("schema_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a A total of {0} scripts will be executed.
         /// </summary>
         internal static string script_count_message {
@@ -1966,6 +2092,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Table name.
+        /// </summary>
+        internal static string table_name {
+            get {
+                return ResourceManager.GetString("table_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Task in {0}.
         /// </summary>
         internal static string task_in {
@@ -2101,6 +2236,24 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Type initials.
+        /// </summary>
+        internal static string type_initials {
+            get {
+                return ResourceManager.GetString("type_initials", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Data type.
+        /// </summary>
+        internal static string type_name {
+            get {
+                return ResourceManager.GetString("type_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Could not open URL {0}: {1}.
         /// </summary>
         internal static string unable_to_open_url {
@@ -2218,6 +2371,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Debe escribir el nombre de la columna.
+        /// </summary>
+        internal static string warning_empty_column_name {
+            get {
+                return ResourceManager.GetString("warning_empty_column_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a The database field cannot be blank.
         /// </summary>
         internal static string warning_empty_db {
@@ -2254,11 +2416,47 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Debe escribir el nombre del esquema.
+        /// </summary>
+        internal static string warning_empty_schema {
+            get {
+                return ResourceManager.GetString("warning_empty_schema", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a The server field cannot be blank.
         /// </summary>
         internal static string warning_empty_server {
             get {
                 return ResourceManager.GetString("warning_empty_server", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Debe escribir un nombre para la tabla.
+        /// </summary>
+        internal static string warning_empty_table_name {
+            get {
+                return ResourceManager.GetString("warning_empty_table_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Debe introducir una abreviatura para el tipo de la columna.
+        /// </summary>
+        internal static string warning_empty_type_initials {
+            get {
+                return ResourceManager.GetString("warning_empty_type_initials", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Debe introducir el tipo de la columna.
+        /// </summary>
+        internal static string warning_empty_type_name {
+            get {
+                return ResourceManager.GetString("warning_empty_type_name", resourceCulture);
             }
         }
         
@@ -2362,6 +2560,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Si acepta los cambios realizados, se eliminarán las siguientes relaciones de esta tabla: {0}.
+        /// </summary>
+        internal static string warning_relations_to_remove {
+            get {
+                return ResourceManager.GetString("warning_relations_to_remove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a You have selected a portion of the text. If you continue, only that text will be executed and this message will not be displayed again..
         /// </summary>
         internal static string warning_run_selected_text {
@@ -2376,6 +2583,15 @@ namespace PgMulti.Properties {
         internal static string warning_runnig_tasks {
             get {
                 return ResourceManager.GetString("warning_runnig_tasks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a La tabla indicada ya existe en el diagrama.
+        /// </summary>
+        internal static string warning_table_already_exists {
+            get {
+                return ResourceManager.GetString("warning_table_already_exists", resourceCulture);
             }
         }
         

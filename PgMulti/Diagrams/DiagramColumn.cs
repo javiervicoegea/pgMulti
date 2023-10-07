@@ -98,7 +98,7 @@ namespace PgMulti.Diagrams
         public bool PrimaryKey { get => _PrimaryKey; set => _PrimaryKey = value; }
         public bool ForeignKey { get => _ForeignKey; internal set => _ForeignKey = value; }
         public bool NotNull { get => _NotNull; set => _NotNull = value; }
-        public string TypeInitials { get => _TypeInitials; }
+        public string TypeInitials { get => _TypeInitials; set => _TypeInitials = value; }
 
         public XmlElement ToXml(XmlDocument xd)
         {
@@ -139,7 +139,7 @@ namespace PgMulti.Diagrams
             return ColumnName.GetHashCode();
         }
 
-        private static string GetTypeInitials(string typeName, string? typeParams)
+        public static string GetTypeInitials(string typeName, string? typeParams)
         {
             string ti;
             switch (typeName)

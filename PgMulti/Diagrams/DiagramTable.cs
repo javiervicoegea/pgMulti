@@ -66,7 +66,7 @@ namespace PgMulti.Diagrams
             _Relations = relations;
             _VisibleColumns = Columns.Count;
 
-            InitDimensions();
+            RefreshDimensions();
         }
 
         public DiagramTable(Diagram diagram, Table t) : base(diagram)
@@ -83,7 +83,7 @@ namespace PgMulti.Diagrams
             _Relations = new List<DiagramTableRelation>();
             _VisibleColumns = Columns.Count;
 
-            InitDimensions();
+            RefreshDimensions();
         }
 
         public DiagramTable(Diagram diagram, XmlElement xeTable) : base(diagram)
@@ -119,7 +119,7 @@ namespace PgMulti.Diagrams
                 _VisibleColumns = Columns.Count;
             }
 
-            InitDimensions();
+            RefreshDimensions();
 
             v = xeTable.GetAttribute("x");
             if (string.IsNullOrEmpty(v) || !int.TryParse(v, out n)) throw new BadFormatException();
@@ -427,7 +427,7 @@ namespace PgMulti.Diagrams
             }
         }
 
-        protected void InitDimensions()
+        public void RefreshDimensions()
         {
             _MaxColumnNameWidth = 0;
             foreach (DiagramColumn dc in Columns)
