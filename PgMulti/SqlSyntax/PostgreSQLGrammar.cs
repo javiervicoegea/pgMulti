@@ -212,6 +212,7 @@ namespace PgMulti.SqlSyntax
             var createTriggerMomentumClause = new NonTerminal("createTriggerMomentumClause");
             var createTriggerActionClause = new NonTerminal("createTriggerActionClause");
             var createTriggerRepetitionClause = new NonTerminal("createTriggerRepetitionClause");
+            var createTriggerWhenClauseOpt = new NonTerminal("createTriggerWhenClauseOpt");
             var createTriggerExecuteClause = new NonTerminal("createTriggerExecuteClause");
             var createSchemaStmt = new NonTerminal("createSchemaStmt");
             var dropTriggerStmt = new NonTerminal("dropTriggerStmt");
@@ -320,10 +321,11 @@ namespace PgMulti.SqlSyntax
             createSchemaStmt.Rule = CREATE + "SCHEMA" + id_simple;
 
             //Create trigger
-            createTriggerStmt.Rule = CREATE + (ToTerm("OR") + "REPLACE" | Empty) + "TRIGGER" + id_simple + createTriggerMomentumClause + createTriggerActionClause + ON + id + createTriggerRepetitionClause + createTriggerExecuteClause;
+            createTriggerStmt.Rule = CREATE + (ToTerm("OR") + "REPLACE" | Empty) + "TRIGGER" + id_simple + createTriggerMomentumClause + createTriggerActionClause + ON + id + createTriggerRepetitionClause + createTriggerWhenClauseOpt + createTriggerExecuteClause;
             createTriggerMomentumClause.Rule = ToTerm("AFTER") | "BEFORE" | ToTerm("INSTEAD") + "OF";
             createTriggerActionClause.Rule = MakePlusRule(createTriggerActionClause, ToTerm("OR"), INSERT | UPDATE | DELETE | TRUNCATE);
             createTriggerRepetitionClause.Rule = "FOR" + ("EACH" | Empty) + (ToTerm("ROW") | "STATEMENT");
+            createTriggerWhenClauseOpt.Rule = Empty | "WHEN" + ToTerm("(") + expression + ToTerm(")");
             createTriggerExecuteClause.Rule = ToTerm("EXECUTE") + (ToTerm("PROCEDURE") | "FUNCTION") + id + ToTerm("(") + ")";
 
             //Create function
