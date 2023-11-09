@@ -52,7 +52,7 @@ namespace PgMulti.SqlSyntax
             stmt.Rule = stmtContent + semi;
             stmtContent.Rule = MakeStarRule(stmtContent, stmtContentPart);
             stmtContentPart.Rule = word | dollarString;
-            word.Rule = number | string_literal | escaped_string_literal | id_simple | dot | comma | "*" | "/" | "%" | "+" | "-" | "=" | ":=" | ">" | "<" | ">=" | "<=" | "<>" | "!=" | "!<" | "!>" | "^" | "&" | "|" | "(" | ")" | "[" | "]" | "::" | "~" | "@@" | "..";
+            word.Rule = number | string_literal | escaped_string_literal | id_simple | dot | comma | "*" | "/" | "%" | "+" | "-" | "=" | ":=" | ">" | "<" | ">=" | "<=" | "<>" | "!=" | "!<" | "!>" | "^" | "&" | "|" | "(" | ")" | "[" | "]" | "::" | "~" | "!~" | "@@" | "..";
             
             dollarString.Rule = dollar_string_tag + dollarStringContent + dollar_string_tag;
             dollarStringContent.Rule = MakePlusRule(dollarStringContent, word | semi);

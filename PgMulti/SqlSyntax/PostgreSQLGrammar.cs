@@ -559,7 +559,7 @@ namespace PgMulti.SqlSyntax
                        | "&" | "|" | "^"                     //bit
                        | "=" | ">" | "<" | ">=" | "<=" | "<>" | "!=" | "!<" | "!>"
                        | "AND" | "OR" | "LIKE" | binOpNot + "LIKE" | "ILIKE" | "@@"
-                       | binOpNot + "ILIKE" | "||" | "~" | binOpIsDistinct;
+                       | binOpNot + "ILIKE" | "||" | "~" | "!~" | binOpIsDistinct;
 
             binOpIsDistinct.Rule = "IS" + (Empty | (binOpNotIsDistinct | Empty) + DISTINCT + "FROM");
             binOpNotIsDistinct.Rule = CustomActionHere(ResolveNotIsDistinctConflict) + NOT;
