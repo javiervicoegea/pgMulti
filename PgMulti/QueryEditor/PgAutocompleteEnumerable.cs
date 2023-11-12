@@ -410,63 +410,43 @@ namespace PgMulti.QueryEditor
 
                 AstNode? nStmt = currentNode.GetRecursiveParentNamedAs("stmtContent");
                 if (nStmt != null) nStmt = nStmt.Children[0];
-                if (nStmt != null && nStmt.Name == "selectStmt" && nStmt[0] != null && nStmt[0]["selectBaseClauses"] != null && nStmt[0]["selectBaseClauses"]!["fromClauseOpt"] == null)
+
+                if (currentFragmentAlias == null && (nStmt == null || nStmt.Name != "createIndexStmt"))
                 {
-                    // SELECT W/O FROM
-
-                    if (DB == null)
+                    foreach (string alias in tablas.Keys.OrderBy(k => k))
                     {
-                        yield break;
+                        yield return new AutocompleteItemId(alias, 1, true, _AutocompleteMenu.PreselectedFont);
                     }
+                }
 
-                    foreach (Schema schema in DB.Schemas.OrderBy(e => e.Id))
-                    {
-                        foreach (Table table in schema.Tables.OrderBy(t => t.Id))
-                        {
-                            yield return new AutocompleteItemSelectFrom(nStmt[0]["selectBaseClauses"]!, schema.Id + "." + table.Id, _CreateTableAlias(tablas.Keys, table.Id));
-                        }
-                    }
+                List<string> tablesWhereSearchForColumns = new List<string>();
+
+                if (currentFragmentAlias == null)
+                {
+                    tablesWhereSearchForColumns.AddRange(tablas.Values.Select(v => v.Item1).Distinct());
+                }
+                else if (tablas.ContainsKey(currentFragmentAlias))
+                {
+                    tablesWhereSearchForColumns.Add(tablas[currentFragmentAlias].Item1);
                 }
                 else
                 {
+                    yield break;
+                }
 
-                    if (currentFragmentAlias == null && (nStmt == null || nStmt.Name != "createIndexStmt"))
-                    {
-                        foreach (string alias in tablas.Keys.OrderBy(k => k))
-                        {
-                            yield return new AutocompleteItemId(alias, 1, true, _AutocompleteMenu.PreselectedFont);
-                        }
-                    }
+                if (DB == null)
+                {
+                    yield break;
+                }
 
-                    List<string> tablesWhereSearchForColumns = new List<string>();
+                foreach (string tablaFqId in tablesWhereSearchForColumns)
+                {
+                    Table? table = _GetTableFromFqId(tablaFqId);
+                    if (table == null) continue;
 
-                    if (currentFragmentAlias == null)
+                    foreach (DataStructure.Column columna in table.Columns.OrderBy(c => !c.PK).ThenBy<DataStructure.Column, string>(c => c.Id))
                     {
-                        tablesWhereSearchForColumns.AddRange(tablas.Values.Select(v => v.Item1).Distinct());
-                    }
-                    else if (tablas.ContainsKey(currentFragmentAlias))
-                    {
-                        tablesWhereSearchForColumns.Add(tablas[currentFragmentAlias].Item1);
-                    }
-                    else
-                    {
-                        yield break;
-                    }
-
-                    if (DB == null)
-                    {
-                        yield break;
-                    }
-
-                    foreach (string tablaFqId in tablesWhereSearchForColumns)
-                    {
-                        Table? table = _GetTableFromFqId(tablaFqId);
-                        if (table == null) continue;
-
-                        foreach (DataStructure.Column columna in table.Columns.OrderBy(c => !c.PK).ThenBy<DataStructure.Column, string>(c => c.Id))
-                        {
-                            yield return new AutocompleteItemId(columna.Id, _GetImageIndexForColumn(columna), true, _AutocompleteMenu.PreselectedFont, columna.Info);
-                        }
+                        yield return new AutocompleteItemId(columna.Id, _GetImageIndexForColumn(columna), true, _AutocompleteMenu.PreselectedFont, columna.Info);
                     }
                 }
             }
@@ -725,7 +705,7 @@ namespace PgMulti.QueryEditor
             // Search for tables
 
             List<AstNode> fromItems = new List<AstNode>();
-            AstNode n = currentNode;
+            AstNode? n = currentNode;
 
             while (n != null)
             {
@@ -737,6 +717,8 @@ namespace PgMulti.QueryEditor
                     }
                     n = n.Parent;
                 }
+
+                if (n.Parent == null) break;
 
                 if (!excludeMain)
                 {
@@ -783,7 +765,7 @@ namespace PgMulti.QueryEditor
 
                 if (!upwards) break;
 
-                n = n.Parent!;
+                n = n.Parent;
             }
 
             foreach (AstNode fromItem in fromItems)
