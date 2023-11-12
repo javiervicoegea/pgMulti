@@ -1950,11 +1950,29 @@ namespace PgMulti
             }
         }
 
+        private TabPage? _MouseDownTabPage = null;
         private void tcSql_MouseDown(object sender, MouseEventArgs e)
         {
-            if (tcSql.SelectedTab == tpNewTab)
+            var mousePosition = new Point(e.X, e.Y);
+            int index = tcSql.GetActiveIndex(mousePosition);
+
+            _MouseDownTabPage = null;
+
+            if (index != -1)
             {
-                CreateEditorTab(new CreateEditorTabOptions() { Focus = true });
+                TabPage tp = tcSql.TabPages[index];
+
+                if (tp == tpNewTab)
+                {
+                    if (e.Button == MouseButtons.Left)
+                    {
+                        CreateEditorTab(new CreateEditorTabOptions() { Focus = true });
+                    }
+                }
+                else
+                {
+                    _MouseDownTabPage = tp;
+                }
             }
         }
 
@@ -1964,27 +1982,37 @@ namespace PgMulti
             {
                 var mousePosition = new Point(e.X, e.Y);
                 int index = tcSql.GetActiveIndex(mousePosition);
-                TabPage tp = tcSql.TabPages[index];
 
-                if (e.Button == MouseButtons.Right)
+                if (index != -1)
                 {
-                    cmsTabs.Tag = tp;
-                    tsmiCloseTab.Visible = tp != tpNewTab;
-                    tsmiCloseAllTabsExceptThisOne.Visible = tp != tpNewTab;
-                    cmsTabs.Show(Cursor.Position);
-                }
-                else if (e.Button == MouseButtons.Middle)
-                {
-                    if (tp != tpNewTab)
+                    TabPage tp = tcSql.TabPages[index];
+
+                    if (tp == _MouseDownTabPage)
                     {
-                        CloseTab(tp);
+                        if (e.Button == MouseButtons.Right)
+                        {
+                            cmsTabs.Tag = tp;
+                            tsmiCloseTab.Visible = tp != tpNewTab;
+                            tsmiCloseAllTabsExceptThisOne.Visible = tp != tpNewTab;
+                            cmsTabs.Show(Cursor.Position);
+                        }
+                        else if (e.Button == MouseButtons.Middle)
+                        {
+                            if (tp != tpNewTab)
+                            {
+                                CloseTab(tp);
+                            }
+                        }
+                        else
+                        {
+                            throw new NotSupportedException();
+                        }
                     }
-                }
-                else
-                {
-                    throw new NotSupportedException();
+
                 }
             }
+
+            _MouseDownTabPage = null;
         }
 
         private void tsmiCloseTab_Click(object sender, EventArgs e)
