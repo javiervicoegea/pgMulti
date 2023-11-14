@@ -1217,6 +1217,7 @@ namespace PgMulti
             this.gvTable.ShowRowErrors = false;
             this.gvTable.Size = new System.Drawing.Size(1016, 137);
             this.gvTable.TabIndex = 0;
+            this.gvTable.CellToolTipTextNeeded += new System.Windows.Forms.DataGridViewCellToolTipTextNeededEventHandler(this.gvTable_CellToolTipTextNeeded);
             this.gvTable.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gvTable_CellMouseDown);
             this.gvTable.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gvTable_CellMouseUp);
             this.gvTable.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.gvTable_CellPainting);

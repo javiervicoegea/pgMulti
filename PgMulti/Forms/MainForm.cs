@@ -3157,6 +3157,17 @@ namespace PgMulti
             e.Cancel = true;
         }
 
+        private void gvTable_CellToolTipTextNeeded(object sender, DataGridViewCellToolTipTextNeededEventArgs e)
+        {
+            if (e.RowIndex == -1 || e.ColumnIndex == -1) return;
+            DataGridViewCell cell = gvTable.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            cell.ToolTipText = "";
+            if (cell.Value == DBNull.Value) return;
+            string text = Data.AutoEllipsis(cell.Value.ToString(), 300)!;
+            if (text == "") return;
+            e.ToolTipText = text;
+        }
+
         private void tsbRemoveSelected_Click(object sender, EventArgs e)
         {
             RemoveResults(true);
