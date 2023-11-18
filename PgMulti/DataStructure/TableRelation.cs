@@ -13,6 +13,8 @@ namespace PgMulti.DataStructure
         private Table? _ChildTable;
         private string _Id;
         private string _Definition;
+        private bool _InitiallyDeferred;
+        private bool _Deferrable;
 
         public string IdParentTable { get => _IdParentTable; internal set => _IdParentTable = value; }
         public string IdParentSchema { get => _IdParentSchema; internal set => _IdParentSchema = value; }
@@ -22,6 +24,8 @@ namespace PgMulti.DataStructure
         public Table? ChildTable { get => _ChildTable; internal set => _ChildTable = value; }
         public string Id { get => _Id; internal set => _Id = value; }
         public string Definition { get => _Definition; internal set => _Definition = value; }
+        public bool InitiallyDeferred { get => _InitiallyDeferred; internal set => _InitiallyDeferred = value; }
+        public bool Deferrable { get => _Deferrable; internal set => _Deferrable = value; }
 
         public readonly string[] ParentColumns;
         public readonly string[] ChildColumns;
@@ -62,6 +66,34 @@ namespace PgMulti.DataStructure
             else
             {
                 OnUpdate = "NO ACTION";
+            }
+
+            m = Regex.Match(Definition, @"NOT DEFERRABLE");
+            if (m.Success)
+            {
+                _Deferrable = false;
+            }
+            else
+            {
+                m = Regex.Match(Definition, @"DEFERRABLE");
+                if (m.Success)
+                {
+                    _Deferrable = true;
+                }
+                else
+                {
+                    _Deferrable = false;
+                }
+            }
+
+            m = Regex.Match(Definition, @"INITIALLY DEFERRED");
+            if (m.Success)
+            {
+                _InitiallyDeferred = true;
+            }
+            else
+            {
+                _InitiallyDeferred = false;
             }
         }
     }

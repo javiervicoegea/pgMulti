@@ -337,6 +337,18 @@ namespace PgMulti.AppData
                     node.Nodes.Add(n);
                     n.Tag = new Tuple<TableRelation, string>(rt, "on_update");
                     yield return n;
+
+                    n = new Node(rt.Deferrable ? "deferrable" : "not deferrable");
+                    n.Image = Properties.Resources.tva_element;
+                    node.Nodes.Add(n);
+                    n.Tag = new Tuple<TableRelation, string>(rt, "deferrable");
+                    yield return n;
+
+                    n = new Node(rt.InitiallyDeferred ? "initially deferred" : "initially immediate");
+                    n.Image = Properties.Resources.tva_element;
+                    node.Nodes.Add(n);
+                    n.Tag = new Tuple<TableRelation, string>(rt, "initially deferred");
+                    yield return n;
                 }
                 else if (node.Tag is Tuple<Function, string>)
                 {
