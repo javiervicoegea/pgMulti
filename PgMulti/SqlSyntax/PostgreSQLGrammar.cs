@@ -514,7 +514,7 @@ namespace PgMulti.SqlSyntax
 
             //Insert stmt
             insertStmt.Rule = cteClauseOpt + INSERT + INTO + id + idlistPar + insertData + insertOnConflictClauseOpt + insertReturningClauseOpt;
-            insertOnConflictClauseOpt.Rule = Empty | ON + "CONFLICT" + (ON + "CONSTRAINT" + id_simple | Empty) + ToTerm("DO") + ("NOTHING" | UPDATE + SET + assignList);
+            insertOnConflictClauseOpt.Rule = Empty | ON + "CONFLICT" + (ON + "CONSTRAINT" + id_simple | tuple) + ToTerm("DO") + ("NOTHING" | UPDATE + SET + assignList);
             insertReturningClauseOpt.Rule = Empty | "RETURNING" + selList;
             insertData.Rule = selectStmt | VALUES + valuesList;
             valuesList.Rule = MakePlusRule(valuesList, comma, "(" + exprList + ")");
