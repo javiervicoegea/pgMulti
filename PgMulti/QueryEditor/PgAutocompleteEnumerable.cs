@@ -476,11 +476,11 @@ namespace PgMulti.QueryEditor
                     yield return new AutocompleteItemId(column.Id, _GetImageIndexForColumn(column), true, _AutocompleteMenu.PreselectedFont, column.Info);
                 }
             }
-            else if (currentNode.Name == "id_simple" && currentNode.Parent.Parent!.Parent!.Name == "insertStmt")
+            else if (currentNode.Name == "id_simple" && currentNode.Parent.Parent!.Parent!.Parent!.Name == "insertStmt")
             {
                 // Autocomplete Id to assign in INSERT
 
-                string tableFqId = currentNode.Parent.Parent.Parent[currentNode.Parent.Parent.Parent["INTO"]!.Index + 1].SingleLineText;
+                string tableFqId = currentNode.Parent.Parent.Parent.Parent[currentNode.Parent.Parent.Parent.Parent["INTO"]!.Index + 1].SingleLineText;
 
                 Table? table = _GetTableFromFqId(tableFqId);
                 if (table == null) yield break;

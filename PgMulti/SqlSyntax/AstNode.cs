@@ -635,7 +635,7 @@ namespace PgMulti.SqlSyntax
                 }
 
                 sb.Append(comment.Text);
-                lastCommentIsLineComment = (comment.Terminal.Name== "line_comment");
+                lastCommentIsLineComment = (comment.Terminal.Name == "line_comment");
 
                 nextCommentIndex++;
             }
@@ -721,9 +721,15 @@ namespace PgMulti.SqlSyntax
                         n._NextFormatDefinition.Indentation = -4;
                         break;
                     case "insertStmt":
-                        AstNode nIdlistPar = n["idlistPar"]!;
-                        nIdlistPar._PrevFormatDefinition = new FormatDefinition();
-                        nIdlistPar._PrevFormatDefinition.CR = true;
+                        if (n["idlistParOpt"] != null && n["idlistParOpt"]!["idlistPar"] != null)
+                        {
+                            AstNode nIdlistPar = n["idlistParOpt"]!["idlistPar"]!;
+                            if (nIdlistPar != null)
+                            {
+                                nIdlistPar._PrevFormatDefinition = new FormatDefinition();
+                                nIdlistPar._PrevFormatDefinition.CR = true;
+                            }
+                        }
 
                         break;
                     case "joinChainOpt":

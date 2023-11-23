@@ -123,6 +123,7 @@ namespace PgMulti.SqlSyntax
             var tableConstraintDef = new NonTerminal("tableConstraintDef");
             var constraintId = new NonTerminal("constraintId");
             var idSimpleList = new NonTerminal("idSimpleList");
+            var idlistParOpt = new NonTerminal("idlistParOpt");
             var idlistPar = new NonTerminal("idlistPar");
             var uniqueOpt = new NonTerminal("uniqueOpt");
             var orderList = new NonTerminal("orderList");
@@ -385,7 +386,7 @@ namespace PgMulti.SqlSyntax
             //functionCode.Rule = MakePlusRule(functionCode, number | string_literal | escaped_string_literal | id_simple | dot | comma | semi | "*" | "/" | "%" | "+" | "-" | "=" | ">" | "<" | ">=" | "<=" | "<>" | "!=" | "!<" | "!>" | "^" | "&" | "|" | "(" | ")" | "[" | "]" | "::" | "~" | "@@" | ":=");
 
             //Create table
-            createTableStmt.Rule = CREATE + TABLE
+            createTableStmt.Rule = CREATE + (Empty | ToTerm("TEMPORARY") | ToTerm("TEMP") | ToTerm("UNLOGGED")) + TABLE
                 + (Empty | IF + NOT + "EXISTS") + id
                 + (
                     "(" + createTableDefList + ")" + createTableWithClauseOpt + createTableTablespaceClauseOpt
@@ -429,6 +430,7 @@ namespace PgMulti.SqlSyntax
             deferrable.Rule = Empty | NOT + "DEFERRABLE" | "DEFERRABLE";
             initiallyDeferred.Rule = Empty | ToTerm("INITIALLY") + deferred;
             deferred.Rule = ToTerm("DEFERRED") | "IMMEDIATE";
+            idlistParOpt.Rule = idlistPar | Empty;
             idlistPar.Rule = "(" + idSimpleList + ")";
             idSimpleList.Rule = MakePlusRule(idSimpleList, comma, id_simple);
             idList.Rule = MakePlusRule(idList, comma, id);
@@ -513,7 +515,7 @@ namespace PgMulti.SqlSyntax
             dropSchemaStmt.Rule = DROP + "SCHEMA" + (Empty | IF + "EXISTS") + id_simple + ("CASCADE" | Empty);
 
             //Insert stmt
-            insertStmt.Rule = cteClauseOpt + INSERT + INTO + id + idlistPar + insertData + insertOnConflictClauseOpt + insertReturningClauseOpt;
+            insertStmt.Rule = cteClauseOpt + INSERT + INTO + id + idlistParOpt + insertData + insertOnConflictClauseOpt + insertReturningClauseOpt;
             insertOnConflictClauseOpt.Rule = Empty | ON + "CONFLICT" + (ON + "CONSTRAINT" + id_simple | Empty) + ToTerm("DO") + ("NOTHING" | UPDATE + SET + assignList);
             insertReturningClauseOpt.Rule = Empty | "RETURNING" + selList;
             insertData.Rule = selectStmt | VALUES + valuesList;
