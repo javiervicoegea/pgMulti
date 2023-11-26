@@ -42,6 +42,7 @@ namespace PgMulti
             this.tscmiNewGroup = new System.Windows.Forms.ToolStripMenuItem();
             this.tscmiNewDB = new System.Windows.Forms.ToolStripMenuItem();
             this.tscmiExploreTable = new System.Windows.Forms.ToolStripMenuItem();
+            this.tscmiRecursiveRemove = new System.Windows.Forms.ToolStripMenuItem();
             this.tscmiCreateTableDiagram = new System.Windows.Forms.ToolStripMenuItem();
             this.tscmiEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.tscmiRemove = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,6 +58,7 @@ namespace PgMulti
             this.tsbNewDB = new System.Windows.Forms.ToolStripButton();
             this.tssNew = new System.Windows.Forms.ToolStripSeparator();
             this.tsbExploreTable = new System.Windows.Forms.ToolStripButton();
+            this.tsbRecursiveRemove = new System.Windows.Forms.ToolStripButton();
             this.tsbCreateTableDiagram = new System.Windows.Forms.ToolStripButton();
             this.tsbEdit = new System.Windows.Forms.ToolStripButton();
             this.tsbRemove = new System.Windows.Forms.ToolStripButton();
@@ -345,6 +347,7 @@ namespace PgMulti
             this.tscmiNewGroup,
             this.tscmiNewDB,
             this.tscmiExploreTable,
+            this.tscmiRecursiveRemove,
             this.tscmiCreateTableDiagram,
             this.tscmiEdit,
             this.tscmiRemove,
@@ -375,6 +378,13 @@ namespace PgMulti
             this.tscmiExploreTable.Name = "tscmiExploreTable";
             this.tscmiExploreTable.Size = new System.Drawing.Size(73, 26);
             this.tscmiExploreTable.Click += new System.EventHandler(this.tscmiExploreTable_Click);
+            // 
+            // tscmiRecursiveRemove
+            // 
+            this.tscmiRecursiveRemove.Image = global::PgMulti.Properties.Resources.borrar_todos;
+            this.tscmiRecursiveRemove.Name = "tscmiRecursiveRemove";
+            this.tscmiRecursiveRemove.Size = new System.Drawing.Size(73, 26);
+            this.tscmiRecursiveRemove.Click += new System.EventHandler(this.tscmiRecursiveRemove_Click);
             // 
             // tscmiCreateTableDiagram
             // 
@@ -456,6 +466,7 @@ namespace PgMulti
             this.tsbNewDB,
             this.tssNew,
             this.tsbExploreTable,
+            this.tsbRecursiveRemove,
             this.tsbCreateTableDiagram,
             this.tsbEdit,
             this.tsbRemove,
@@ -505,6 +516,16 @@ namespace PgMulti
             this.tsbExploreTable.Size = new System.Drawing.Size(34, 34);
             this.tsbExploreTable.Visible = false;
             this.tsbExploreTable.Click += new System.EventHandler(this.tsbExploreTable_Click);
+            // 
+            // tsbRecursiveRemove
+            // 
+            this.tsbRecursiveRemove.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbRecursiveRemove.Image = global::PgMulti.Properties.Resources.borrar_todos;
+            this.tsbRecursiveRemove.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbRecursiveRemove.Name = "tsbRecursiveRemove";
+            this.tsbRecursiveRemove.Size = new System.Drawing.Size(34, 34);
+            this.tsbRecursiveRemove.Visible = false;
+            this.tsbRecursiveRemove.Click += new System.EventHandler(this.tsbRecursiveRemove_Click);
             // 
             // tsbCreateTableDiagram
             // 
@@ -2117,6 +2138,7 @@ namespace PgMulti
         private ToolStripMenuItem tscmiNewGroup;
         private ToolStripMenuItem tscmiNewDB;
         private ToolStripMenuItem tscmiExploreTable;
+        private ToolStripMenuItem tscmiRecursiveRemove;
         private ToolStripMenuItem tscmiCreateTableDiagram;
         private ToolStripMenuItem tscmiCopyText;
         private ToolStripMenuItem tscmiEdit;
@@ -2133,6 +2155,7 @@ namespace PgMulti
         private ToolStripMenuItem tsmiMoreOptions;
         private ToolStripMenuItem tsmiAbout;
         private ToolStripButton tsbExploreTable;
+        private ToolStripButton tsbRecursiveRemove;
         private TabPage tpNewTab;
         private ImageList ilTabControl;
         private ContextMenuStrip cmsTabs;

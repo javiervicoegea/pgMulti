@@ -19,6 +19,7 @@ using System.Windows.Forms;
 using PgMulti.Diagrams;
 using Newtonsoft.Json;
 using PgMulti.Properties;
+using System;
 
 namespace PgMulti
 {
@@ -570,6 +571,7 @@ namespace PgMulti
             bool tsbUpVisible = false;
             bool tsbDownVisible = false;
             bool tsbExploreTableVisible = false;
+            bool tsbRecursiveRemoveVisible = false;
             bool tsbCreateTableDiagramVisible = false;
             bool tsbUpEnabled = false;
             bool tsbDownEnabled = false;
@@ -631,6 +633,7 @@ namespace PgMulti
                     if (tn.Tag is Table)
                     {
                         tsbExploreTableVisible = true;
+                        tsbRecursiveRemoveVisible = true;
                         tsbCreateTableDiagramVisible = true;
                         tssEditVisible = true;
                     }
@@ -660,6 +663,8 @@ namespace PgMulti
             tscmiDown.Enabled = tsbDownEnabled;
             tsbExploreTable.Visible = tsbExploreTableVisible;
             tscmiExploreTable.Visible = tsbExploreTableVisible;
+            tsbRecursiveRemove.Visible = tsbRecursiveRemoveVisible;
+            tscmiRecursiveRemove.Visible = tsbRecursiveRemoveVisible;
             tsbCreateTableDiagram.Visible = tsbCreateTableDiagramVisible;
             tscmiCreateTableDiagram.Visible = tsbCreateTableDiagramVisible;
             tscmiCopyText.Visible = tssCopyTextVisible;
@@ -813,6 +818,56 @@ namespace PgMulti
 
             h.Save();
             _Data.CheckAppDbFileSize();
+        }
+
+        private void tsbRecursiveRemove_Click(object sender, EventArgs e)
+        {
+            Node tn = (Node)tvaConnections.SelectedNode.Tag;
+
+            if (tn.Tag is Table)
+            {
+                RecursiveRemoverToolForm f = new RecursiveRemoverToolForm((Table)tn.Tag);
+
+                f.ShowDialog(this);
+
+                if (f.DialogResult == DialogResult.OK)
+                {
+                    PgMulti.RecursiveRemover.RecursiveRemover rr = f.RecursiveRemover!;
+
+                    StringBuilder sb;
+                    CreateEditorTabOptions o;
+
+
+                    sb = new StringBuilder();
+
+                    rr.WriteCollectTuplesScript(sb);
+
+                    o = new CreateEditorTabOptions();
+                    o.Title = Properties.Text.collect_tuples_script_name;
+                    o.Text = sb.ToString();
+                    o.Focus = true;
+
+                    CreateEditorTab(o);
+
+
+                    sb = new StringBuilder();
+
+                    rr.WriteDeleteScript(sb);
+
+                    o = new CreateEditorTabOptions();
+                    o.Title = Properties.Text.delete_tuples_script_name;
+                    o.Text = sb.ToString();
+                    o.Focus = false;
+
+                    CreateEditorTab(o);
+
+                    ClearSelectedNodesTreeView();
+                }
+            }
+            else
+            {
+                throw new NotSupportedException();
+            }
         }
 
         private void tsbCreateTableDiagram_Click(object sender, EventArgs e)
@@ -1212,6 +1267,11 @@ namespace PgMulti
         private void tscmiExploreTable_Click(object sender, EventArgs e)
         {
             tsbExploreTable_Click(sender, e);
+        }
+
+        private void tscmiRecursiveRemove_Click(object sender, EventArgs e)
+        {
+            tsbRecursiveRemove_Click(sender, e);
         }
 
         private void tscmiCreateTableDiagram_Click(object sender, EventArgs e)
@@ -3627,6 +3687,7 @@ namespace PgMulti
             this.tscmiNewGroup.Text = Properties.Text.new_group;
             this.tscmiNewDB.Text = Properties.Text.new_db;
             this.tscmiExploreTable.Text = Properties.Text.explore_table;
+            this.tscmiRecursiveRemove.Text = Properties.Text.recursive_remove;
             this.tscmiCreateTableDiagram.Text = Properties.Text.create_table_diagram;
             this.tscmiCopyText.Text = Properties.Text.copy_text;
             this.tscmiEdit.Text = Properties.Text.edit;
@@ -3637,6 +3698,7 @@ namespace PgMulti
             this.tsbNewGroup.Text = Properties.Text.new_group;
             this.tsbNewDB.Text = Properties.Text.new_db;
             this.tsbExploreTable.Text = Properties.Text.explore_table;
+            this.tsbRecursiveRemove.Text = Properties.Text.recursive_remove;
             this.tsbCreateTableDiagram.Text = Properties.Text.create_table_diagram;
             this.tsbEdit.Text = Properties.Text.edit;
             this.tsbRemove.Text = Properties.Text.remove;

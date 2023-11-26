@@ -436,6 +436,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Determinar tuplas afectadas.
+        /// </summary>
+        internal static string collect_tuples_script_name {
+            get {
+                return ResourceManager.GetString("collect_tuples_script_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Default.
         /// </summary>
         internal static string column_default {
@@ -703,6 +712,24 @@ namespace PgMulti.Properties {
         internal static string delete_rows {
             get {
                 return ResourceManager.GetString("delete_rows", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Eliminar tuplas.
+        /// </summary>
+        internal static string delete_tuples_script_name {
+            get {
+                return ResourceManager.GetString("delete_tuples_script_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Filtro de las tuplas a eliminar.
+        /// </summary>
+        internal static string delete_tuples_where_clause {
+            get {
+                return ResourceManager.GetString("delete_tuples_where_clause", resourceCulture);
             }
         }
         
@@ -1597,11 +1624,38 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Filtro de las tuplas a preservar.
+        /// </summary>
+        internal static string preserve_tuples_where_clause {
+            get {
+                return ResourceManager.GetString("preserve_tuples_where_clause", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a QUERY Nº {0} OF {1} - LINE {2}.
         /// </summary>
         internal static string query_counter {
             get {
                 return ResourceManager.GetString("query_counter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Eliminar en cascada algunas tuplas.
+        /// </summary>
+        internal static string recursive_remove {
+            get {
+                return ResourceManager.GetString("recursive_remove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Nombre del esquema a crear.
+        /// </summary>
+        internal static string recursive_remover_schema {
+            get {
+                return ResourceManager.GetString("recursive_remover_schema", resourceCulture);
             }
         }
         
@@ -2389,6 +2443,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a El filtro de tuplas a eliminar no puede estar vacío.
+        /// </summary>
+        internal static string warning_empty_delete_filter {
+            get {
+                return ResourceManager.GetString("warning_empty_delete_filter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a The password field cannot be blank.
         /// </summary>
         internal static string warning_empty_password {
@@ -2407,6 +2470,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a El filtro de tuplas a preservar no puede estar vacío.
+        /// </summary>
+        internal static string warning_empty_preserve_filter {
+            get {
+                return ResourceManager.GetString("warning_empty_preserve_filter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a The SQL query to execute cannot be blank.
         /// </summary>
         internal static string warning_empty_query {
@@ -2416,7 +2488,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Debe escribir el nombre del esquema.
+        ///   Busca una cadena traducida similar a El nombre del esquema a crear.
         /// </summary>
         internal static string warning_empty_schema {
             get {

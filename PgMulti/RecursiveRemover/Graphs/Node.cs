@@ -34,5 +34,10 @@ namespace PgMulti.RecursiveRemover.Graphs
                 return OutgoingArrows.Select(a => a.Target).ToList();
             }
         }
+
+        public override string? ToString()
+        {
+            return Value?.ToString();
+        }
     }
 }

@@ -982,4 +982,31 @@ Unlike other tools, this application does not reuse the connection between diffe
   <data name="confirm_relation_deletion" xml:space="preserve">
     <value>¿Está seguro de que quiere eliminar la relación {0}?</value>
   </data>
+  <data name="recursive_remove" xml:space="preserve">
+    <value>Eliminar en cascada algunas tuplas</value>
+  </data>
+  <data name="delete_tuples_where_clause" xml:space="preserve">
+    <value>Filtro de las tuplas a eliminar</value>
+  </data>
+  <data name="preserve_tuples_where_clause" xml:space="preserve">
+    <value>Filtro de las tuplas a preservar</value>
+  </data>
+  <data name="recursive_remover_schema" xml:space="preserve">
+    <value>Nombre del esquema a crear</value>
+  </data>
+  <data name="warning_empty_delete_filter" xml:space="preserve">
+    <value>El filtro de tuplas a eliminar no puede estar vacío</value>
+  </data>
+  <data name="warning_empty_preserve_filter" xml:space="preserve">
+    <value>El filtro de tuplas a preservar no puede estar vacío</value>
+  </data>
+  <data name="warning_empty_schema" xml:space="preserve">
+    <value>El nombre del esquema a crear</value>
+  </data>
+  <data name="collect_tuples_script_name" xml:space="preserve">
+    <value>Determinar tuplas afectadas</value>
+  </data>
+  <data name="delete_tuples_script_name" xml:space="preserve">
+    <value>Eliminar tuplas</value>
+  </data>
 </root>

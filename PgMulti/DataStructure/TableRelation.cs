@@ -51,7 +51,7 @@ namespace PgMulti.DataStructure
             m = Regex.Match(Definition, @"ON DELETE ((NO ACTION|RESTRICT|CASCADE|SET (NULL|DEFAULT))( \([^\)]+\))?)");
             if (m.Success)
             {
-                OnDelete = m.Groups[1].Value;
+                OnDelete = m.Groups[1].Value.ToUpperInvariant();
             }
             else
             {
@@ -61,7 +61,7 @@ namespace PgMulti.DataStructure
             m = Regex.Match(Definition, @"ON UPDATE ((NO ACTION|RESTRICT|CASCADE|SET (NULL|DEFAULT))( \([^\)]+\))?)");
             if (m.Success)
             {
-                OnUpdate = m.Groups[1].Value;
+                OnUpdate = m.Groups[1].Value.ToUpperInvariant();
             }
             else
             {
@@ -95,6 +95,11 @@ namespace PgMulti.DataStructure
             {
                 _InitiallyDeferred = false;
             }
+        }
+
+        public override string ToString()
+        {
+            return Id + " (" + _ChildTable!.ToString() + " -> " + _ParentTable!.ToString() + ")";
         }
     }
 }

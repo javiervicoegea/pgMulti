@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace PgMulti.RecursiveRemover.Graphs
 {
@@ -49,17 +50,19 @@ namespace PgMulti.RecursiveRemover.Graphs
                     }
                 }
 
-
                 Node<T>? firstNonVisitableNodeQueuedAfterLastReturn = null;
 
                 while (queue.Count > 0)
                 {
                     Node<T> node = queue.Dequeue();
-                    if (node == firstNonVisitableNodeQueuedAfterLastReturn) throw new NotSupportedException("This graph is not a directed acyclic graph because it must contain a loop");
+
+                    if (visited.Contains(node)) continue;
+
+                    if (node == firstNonVisitableNodeQueuedAfterLastReturn) throw new NotSupportedException("This graph is not a directed acyclic graph because it contains a loop");
 
                     List<Node<T>> prevNodes = _DirectOrder ? node.IncomingNodes : node.OutgoingNodes;
 
-                    if (prevNodes.Any(incNode => !visited.Contains(node)))
+                    if (prevNodes.Any(prevNode => !visited.Contains(prevNode)))
                     {
                         // Not visitable
                         queue.Enqueue(node);
@@ -69,6 +72,8 @@ namespace PgMulti.RecursiveRemover.Graphs
                     {
                         // Visitable
                         yield return node;
+
+                        visited.Add(node);
                         firstNonVisitableNodeQueuedAfterLastReturn = null;
 
                         List<Node<T>> nextNodes = _DirectOrder ? node.OutgoingNodes : node.IncomingNodes;

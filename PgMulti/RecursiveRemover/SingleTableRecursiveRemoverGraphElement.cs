@@ -7,7 +7,10 @@ namespace PgMulti.RecursiveRemover
     {
         protected Table _Table { get; }
 
-        public SingleTableRecursiveRemoverGraphElement(Table table) { _Table = table; }
+        public SingleTableRecursiveRemoverGraphElement(string schemaName, Table table) : base(schemaName)
+        {
+            _Table = table;
+        }
 
         public override List<Table> Tables
         {
@@ -45,14 +48,22 @@ namespace PgMulti.RecursiveRemover
             list.Add(_Table);
         }
 
-        public override void WriteCollectTuplesSqlCommands(StringBuilder sb)
+        public override void WriteCollectTuplesSqlCommands(StringBuilder sb, bool delete)
         {
             sb.AppendLine("-- TABLE " + _Table.IdSchema + "." + _Table.Id + ":\r\n");
-            _WriteCreateTableSqlCommand(sb, 3, _Table);
-            _WriteInsertSqlCommand(sb);
+            _WriteCreateTableSqlCommand(sb, 3, _Table, delete);
+            _WriteInsertSqlCommand(sb, delete);
         }
 
-        protected virtual void _WriteInsertSqlCommand(StringBuilder sb)
+        public override void WriteDeleteTuplesSqlCommands(StringBuilder sb)
+        {
+            sb.AppendLine("-- TABLE " + _Table.IdSchema + "." + _Table.Id + ":\r\n");
+
+            sb.AppendLine("   DELETE FROM " + _Table.IdSchema + "." + _Table.Id + " t");
+            sb.AppendLine("   WHERE EXISTS(SELECT 1 FROM " + SchemaName + ".delete_" + _Table.IdSchema + "_" + _Table.Id + " r WHERE r.id=t.id);\r\n");
+        }
+
+        protected virtual void _WriteInsertSqlCommand(StringBuilder sb, bool delete)
         {
             foreach (TableRelation tr in _Table.Relations.Where(tri => tri.ChildTable == _Table))
             {
@@ -64,18 +75,23 @@ namespace PgMulti.RecursiveRemover
                 }
 
                 sb.AppendLine("--- FK " + _Table.IdSchema + "." + _Table.Id + "." + tr.Id + ":\r\n");
-                sb.AppendLine("    INSERT INTO recursiveremover." + _Table.IdSchema + "_" + _Table.Id);
+                sb.AppendLine("    INSERT INTO " + GetCollectTableName(_Table, delete));
                 sb.AppendLine("    (" + string.Join(",", _Table.Columns.Where(c => c.PK).Select(c => c.Id)) + ")");
                 sb.AppendLine("    SELECT " + string.Join(",", _Table.Columns.Where(c => c.PK).Select(c => "t." + c.Id).ToArray()));
                 sb.AppendLine("    FROM " + _Table!.IdSchema + "." + _Table!.Id + " t");
                 sb.AppendLine("    WHERE EXISTS");
                 sb.AppendLine("    (");
                 sb.AppendLine("        SELECT 1");
-                sb.AppendLine("        FROM recursiveremover." + tr.ParentTable!.IdSchema + "." + tr.ParentTable!.Id + " r");
+                sb.AppendLine("        FROM " + GetCollectTableName(tr.ParentTable!, delete) + " r");
                 sb.AppendLine("        WHERE " + string.Join(" AND ", fkColumnMatch.Select(mi => "r." + mi.Item1 + " = t." + mi.Item2)));
                 sb.AppendLine("    )");
-                sb.AppendLine("    ON CONFLICT DO NOTHING;");
+                sb.AppendLine("    ON CONFLICT DO NOTHING;\r\n");
             }
+        }
+
+        public override string ToString()
+        {
+            return _Table.ToString();
         }
     }
 }

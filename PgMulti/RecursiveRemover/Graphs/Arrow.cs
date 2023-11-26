@@ -16,5 +16,10 @@ namespace PgMulti.RecursiveRemover.Graphs
             Source = source;
             Target = target;
         }
+
+        public override string ToString()
+        {
+            return Source.ToString() + " -> " + Target.ToString();
+        }
     }
 }

@@ -30,5 +30,10 @@ namespace PgMulti.DataStructure
             _IdSchema = drd.Ref<string>("schemaname")!.ToLower();
             _Id = drd.Ref<string>("tablename")!.ToLower();
         }
+
+        public override string ToString()
+        {
+            return IdSchema + "." + Id;
+        }
     }
 }
