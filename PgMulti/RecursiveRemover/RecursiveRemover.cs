@@ -24,29 +24,29 @@ namespace PgMulti.RecursiveRemover
             List<Node<RecursiveRemoverGraphElement>> nodes = new List<Node<RecursiveRemoverGraphElement>>();
             List<Arrow<RecursiveRemoverGraphElement>> arrows = new List<Arrow<RecursiveRemoverGraphElement>>();
 
-            Stack<Tuple<List<Node<RecursiveRemoverGraphElement>>, Node<RecursiveRemoverGraphElement>>> stack = new Stack<Tuple<List<Node<RecursiveRemoverGraphElement>>, Node<RecursiveRemoverGraphElement>>>();
-            stack.Push(new Tuple<List<Node<RecursiveRemoverGraphElement>>, Node<RecursiveRemoverGraphElement>>(new List<Node<RecursiveRemoverGraphElement>>(), rootNode));
+            List<List<Node<RecursiveRemoverGraphElement>>> stack = new List<List<Node<RecursiveRemoverGraphElement>>>();
+            stack.Add(new List<Node<RecursiveRemoverGraphElement>>(new List<Node<RecursiveRemoverGraphElement>>() { rootNode }));
 
             nodes.Add(rootNode);
 
             while (stack.Count > 0)
             {
-                Tuple<List<Node<RecursiveRemoverGraphElement>>, Node<RecursiveRemoverGraphElement>> currentTuple = stack.Pop();
-                List<Node<RecursiveRemoverGraphElement>> currentParents = currentTuple.Item1;
-                Node<RecursiveRemoverGraphElement> currentNode = currentTuple.Item2;
+                List<Node<RecursiveRemoverGraphElement>> childParents = stack.Last();
+                stack.RemoveAt(stack.Count - 1);
 
-                List<Node<RecursiveRemoverGraphElement>> childParents = new List<Node<RecursiveRemoverGraphElement>>(currentParents);
-                childParents.Add(currentNode);
+                Node<RecursiveRemoverGraphElement> currentNode = childParents.Last();
+                Node<RecursiveRemoverGraphElement> replacedCurrentNode = currentNode;
 
                 foreach (TableRelation tr in currentNode.Value.ChildRelations)
                 {
-                    int index = childParents.FindIndex(n => n.Value.ContainsTable(tr.ChildTable!));
+                    Table childTable = tr.ChildTable!;
+                    int index = childParents.FindIndex(n => n.Value.ContainsTable(childTable));
 
                     if (index == -1)
                     {
-                        // It is not a loop
+                        // It is not closing a new loop
 
-                        int index2 = nodes.FindIndex(n => n.Value.ContainsTable(tr.ChildTable!));
+                        int index2 = nodes.FindIndex(n => n.Value.ContainsTable(childTable));
 
                         Node<RecursiveRemoverGraphElement> childNode;
 
@@ -54,13 +54,14 @@ namespace PgMulti.RecursiveRemover
                         {
                             // New node
 
-                            childNode = new Node<RecursiveRemoverGraphElement>(new SingleTableRecursiveRemoverGraphElement(collectTablesSchemaName, tr.ChildTable!));
+                            childNode = new Node<RecursiveRemoverGraphElement>(new SingleTableRecursiveRemoverGraphElement(collectTablesSchemaName, childTable));
 
                             nodes.Add(childNode);
 
-                            Tuple<List<Node<RecursiveRemoverGraphElement>>, Node<RecursiveRemoverGraphElement>> childTuple = new Tuple<List<Node<RecursiveRemoverGraphElement>>, Node<RecursiveRemoverGraphElement>>(childParents, childNode);
+                            List<Node<RecursiveRemoverGraphElement>> childChildParents = new List<Node<RecursiveRemoverGraphElement>>(childParents);
+                            childChildParents.Add(childNode);
 
-                            stack.Push(childTuple);
+                            stack.Add(childChildParents);
                         }
                         else
                         {
@@ -69,25 +70,36 @@ namespace PgMulti.RecursiveRemover
                             childNode = nodes[index2];
                         }
 
-                        Arrow<RecursiveRemoverGraphElement> incomingArrow = new Arrow<RecursiveRemoverGraphElement>(childNode, currentNode);
-                        currentNode.IncomingArrows.Add(incomingArrow);
+                        Arrow<RecursiveRemoverGraphElement> incomingArrow = new Arrow<RecursiveRemoverGraphElement>(childNode, replacedCurrentNode);
+                        replacedCurrentNode.IncomingArrows.Add(incomingArrow);
                         childNode.OutgoingArrows.Add(incomingArrow);
 
                         arrows.Add(incomingArrow);
                     }
                     else
                     {
-                        // Loop found
+                        // New loop closure found
 
                         List<Table> loopTables = new List<Table>();
+                        List<Node<RecursiveRemoverGraphElement>> loopNodes = new List<Node<RecursiveRemoverGraphElement>>();
 
                         for (int i = index; i < childParents.Count; i++)
                         {
-                            Node<RecursiveRemoverGraphElement> loopInnerNode = childParents[i];
-                            loopInnerNode.Value.AddTablesToList(loopTables);
+                            Node<RecursiveRemoverGraphElement> innerLoopNode = childParents[i];
+                            innerLoopNode.Value.AddTablesToList(loopTables);
+                            loopNodes.Add(innerLoopNode);
                         }
 
-                        Node<RecursiveRemoverGraphElement> loopNode = new Node<RecursiveRemoverGraphElement>(new LoopTablesRecursiveRemoverGraphElement(collectTablesSchemaName, loopTables));
+                        Node<RecursiveRemoverGraphElement> loopNode;
+
+                        if (loopTables.Contains(rootTable))
+                        {
+                            loopNode = new Node<RecursiveRemoverGraphElement>(new LoopTablesWithRootTableRecursiveRemoverGraphElement(collectTablesSchemaName, loopTables, rootTable, rootDeleteWhereClause, rootPreserveTableWhereClause));
+                        }
+                        else
+                        {
+                            loopNode = new Node<RecursiveRemoverGraphElement>(new LoopTablesRecursiveRemoverGraphElement(collectTablesSchemaName, loopTables));
+                        }
 
                         for (int i = index; i < childParents.Count; i++)
                         {
@@ -125,6 +137,25 @@ namespace PgMulti.RecursiveRemover
                         }
 
                         nodes.Add(loopNode);
+
+                        // Replace referenced old inner loop nodes with new loopNode
+                        replacedCurrentNode = loopNode;
+                        foreach (List<Node<RecursiveRemoverGraphElement>> stackNodes in stack)
+                        {
+                            for (int stackNodexIndex = stackNodes.Count - 1; stackNodexIndex >= 0; stackNodexIndex--)
+                            {
+                                if (loopNodes.Contains(stackNodes[stackNodexIndex]))
+                                {
+                                    do
+                                    {
+                                        stackNodes.RemoveAt(stackNodexIndex);
+                                        stackNodexIndex--;
+                                    } while (stackNodexIndex >= 0 && loopNodes.Contains(stackNodes[stackNodexIndex]));
+
+                                    stackNodes.Insert(stackNodexIndex + 1, loopNode);
+                                }
+                            }
+                        }
                     }
                 }
             }

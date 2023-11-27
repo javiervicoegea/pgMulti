@@ -81,6 +81,8 @@ namespace PgMulti.RecursiveRemover
             return "fk_" + tr.ChildTable!.IdSchema + "_" + tr.ChildTable!.Id + "_" + tr.Id + "_references_" + tr.ParentTable!.IdSchema + "_" + tr.ParentTable!.Id + "_steptuples";
         }
 
+        protected virtual void _WriteRootInsertSqlCommand(Table t, StringBuilder sb, bool delete, string stepTuplesTableName) { }
+
         public override void WriteCollectTuplesSqlCommands(StringBuilder sb, bool delete)
         {
             sb.AppendLine("-- LOOP FOR TABLES " + string.Join(", ", _Tables.Select(t => t.IdSchema + "." + t.Id)) + ":\r\n");
@@ -112,6 +114,8 @@ namespace PgMulti.RecursiveRemover
                     sb.AppendLine("     " + tablePKColumnsDef);
                     sb.AppendLine("     );\r\n");
                 }
+
+                _WriteRootInsertSqlCommand(t, sb, delete, stepTuplesTableName);
 
                 sb.AppendLine("---- Tuples of parent tables external to the loop:\r\n");
 
