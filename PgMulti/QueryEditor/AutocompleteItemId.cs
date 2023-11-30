@@ -1,40 +1,40 @@
 ﻿using FastColoredTextBoxNS;
+using PgMulti.SqlSyntax;
 
 namespace PgMulti.QueryEditor
 {
     public class AutocompleteItemId : AutocompleteItemCustom
     {
+        string? _IdNamespace;
         string _Id;
-        string? _FirstPart = null;
+        private PostgreSqlIdParser _IdParser;
 
-        public AutocompleteItemId(string id, int imageIndex, bool autoSelectOnSymbol, Font f, string? tooltipTitle = null, string? tooltip = null)
-            : base(id, imageIndex, id, tooltipTitle, tooltip)
+        public AutocompleteItemId(string? idNamespace, string id, int imageIndex, Font f, PostgreSqlIdParser idParser, string? tooltipTitle = null, string? tooltip = null)
+            : base(id, imageIndex, id, tooltipTitle, tooltip, f)
         {
-            Font = f;
-            _Id = id.ToLower();
-            //NoAutoSelectIfEmpty = !autoSelectOnSymbol;
+            _IdNamespace = idNamespace;
+            _Id = id;
+            _IdParser = idParser;
         }
 
         public override CompareResult Compare(string fragmentText)
         {
-            int i = fragmentText.LastIndexOf('.');
+            string lastIdSimple;
+            PostgreSqlId? pid = _IdParser.TryParse(fragmentText);
 
-            string lastPart;
-            if (i == -1)
+            if (pid == null)
             {
-                _FirstPart = null;
-                lastPart = fragmentText.ToLower();
+                lastIdSimple = "";
             }
             else
             {
-                _FirstPart = fragmentText.Substring(0, i);
-                lastPart = fragmentText.Substring(i + 1).ToLower();
+                lastIdSimple = pid.Values.Last();
             }
 
-            if (lastPart == "") return CompareResult.Visible;
-            if (_Id.StartsWith(lastPart, StringComparison.InvariantCultureIgnoreCase))
+            if (lastIdSimple == "") return CompareResult.Visible;
+            if (_Id.StartsWith(lastIdSimple, StringComparison.InvariantCultureIgnoreCase))
                 return CompareResult.VisibleAndSelected;
-            if (_Id.Contains(lastPart.ToLower()))
+            if (_Id.Contains(lastIdSimple, StringComparison.InvariantCultureIgnoreCase))
                 return CompareResult.Visible;
 
             return CompareResult.Hidden;
@@ -42,13 +42,13 @@ namespace PgMulti.QueryEditor
 
         public override string GetTextForReplace()
         {
-            if (_FirstPart == null)
+            if (_IdNamespace == null)
             {
-                return Text;
+                return SqlSyntax.PostgreSqlGrammar.IdToString(_Id);
             }
             else
             {
-                return _FirstPart + "." + Text;
+                return SqlSyntax.PostgreSqlGrammar.IdToString(_IdNamespace) + "." + SqlSyntax.PostgreSqlGrammar.IdToString(_Id);
             }
         }
     }

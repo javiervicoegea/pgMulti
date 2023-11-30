@@ -91,15 +91,15 @@ namespace PgMulti.AppData
                     }
                     else
                     {
-                        try
-                        {
+                        //try
+                        //{
                             eb.Build();
                             _Schemas = eb.Schemas;
-                        }
-                        catch (Exception)
-                        {
-                            _Schemas = new List<Schema>();
-                        }
+                        //}
+                        //catch (Exception)
+                        //{
+                        //    _Schemas = new List<Schema>();
+                        //}
                     }
                 }
 
@@ -129,7 +129,7 @@ namespace PgMulti.AppData
 
                         foreach (string idSchema in searchPath.Split(','))
                         {
-                            string idSchema2 = idSchema.ToLower().Trim();
+                            string idSchema2 = SqlSyntax.PostgreSqlGrammar.IdFromString(idSchema);
 
                             foreach (Schema s in Schemas)
                             {

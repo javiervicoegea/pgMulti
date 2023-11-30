@@ -32,7 +32,7 @@ namespace PgMulti.QueryEditor
             _AutocompleteMenu.ForeColor = Color.FromArgb(30, 30, 30);
             _AutocompleteMenu.BackColor = Color.FromArgb(247, 249, 254);
             _AutocompleteMenu.SelectedColor = Color.FromArgb(196, 213, 255);
-            _AutocompleteMenu.SearchPattern = @"[\w\.]";
+            _AutocompleteMenu.SearchPattern = @"[\w\.\""]";
             _AutocompleteMenu.AllowTabKey = true;
             _AutocompleteMenu.Items.SetAutocompleteItems(new PGAutocompleteEnumerable(_AutocompleteMenu, _Fctb, mainForm, _Data.PGLanguageData, _Data.PGSimpleLanguageData));
             _AutocompleteMenu.MinFragmentLength = 0;

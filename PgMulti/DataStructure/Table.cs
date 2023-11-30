@@ -27,13 +27,27 @@ namespace PgMulti.DataStructure
             _Indexes = new List<TableIndex>();
             _Triggers = new List<Trigger>();
 
-            _IdSchema = drd.Ref<string>("schemaname")!.ToLower();
-            _Id = drd.Ref<string>("tablename")!.ToLower();
+            _IdSchema = drd.Ref<string>("schemaname")!;
+            _Id = drd.Ref<string>("tablename")!;
         }
 
         public override string ToString()
         {
             return IdSchema + "." + Id;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj == null || !(obj is Table)) return false;
+
+            Table objTable = (Table)obj;
+
+            return objTable.IdSchema == IdSchema && objTable.Id == Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return (_IdSchema + "." + _Id).GetHashCode();
         }
     }
 }

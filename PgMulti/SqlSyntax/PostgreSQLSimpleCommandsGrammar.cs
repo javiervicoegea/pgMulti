@@ -10,9 +10,9 @@ using Irony.Parsing;
 namespace PgMulti.SqlSyntax
 {
     [Language("PostgreSQL", "15", "PostgreSQL simple commands grammar")]
-    public class PostgreSQLSimpleCommandsGrammar : Grammar
+    public class PostgreSqlSimpleCommandsGrammar : Grammar
     {
-        public PostgreSQLSimpleCommandsGrammar(CultureInfo cu) : base(false)
+        public PostgreSqlSimpleCommandsGrammar(CultureInfo cu) : base(false)
         {
             DefaultCulture = cu;
 
@@ -29,6 +29,9 @@ namespace PgMulti.SqlSyntax
             var string_literal = new StringLiteral("string", "'", StringOptions.AllowsDoubledQuote | StringOptions.NoEscapes | StringOptions.AllowsLineBreak);
             var escaped_string_literal = new StringLiteral("escaped_string", "E'", "'", StringOptions.AllowsDoubledQuote | StringOptions.AllowsAllEscapes | StringOptions.AllowsLineBreak);
             var dollar_string_tag = new StringLiteral("dollar_string_tag", "$");
+            var dollar_variable = new IdentifierTerminal("dollar_variable");
+            dollar_variable.AllFirstChars = "$";
+            dollar_variable.AllChars = Irony.Strings.DecimalDigits;
             var id_simple = CreateIdentifier("id_simple");
             var comma = ToTerm(",");
             var dot = ToTerm(".");
@@ -52,7 +55,7 @@ namespace PgMulti.SqlSyntax
             stmt.Rule = stmtContent + semi;
             stmtContent.Rule = MakeStarRule(stmtContent, stmtContentPart);
             stmtContentPart.Rule = word | dollarString;
-            word.Rule = number | string_literal | escaped_string_literal | id_simple | dot | comma | "*" | "/" | "%" | "+" | "-" | "=" | ":=" | ">" | "<" | ">=" | "<=" | "<>" | "!=" | "!<" | "!>" | "^" | "&" | "|" | "(" | ")" | "[" | "]" | "::" | "~" | "!~" | "@@" | "..";
+            word.Rule = number | string_literal | escaped_string_literal | id_simple | dollar_variable | dot | comma | "*" | "/" | "%" | "+" | "-" | "=" | ":=" | ">" | "<" | ">=" | "<=" | "<>" | "!=" | "!<" | "!>" | "^" | "&" | "|" | "(" | ")" | "[" | "]" | "::" | "~" | "!~" | "@@" | "..";
             
             dollarString.Rule = dollar_string_tag + dollarStringContent + dollar_string_tag;
             dollarStringContent.Rule = MakePlusRule(dollarStringContent, word | semi);
@@ -61,8 +64,11 @@ namespace PgMulti.SqlSyntax
         private IdentifierTerminal CreateIdentifier(string name)
         {
             var id = new IdentifierTerminal(name);
+            id.AllFirstChars = Irony.Strings.AllLatinLetters + "_ÑÁÉÍÓÚÝÄËÏÖÜÀÈÌÒÙÂÊÎÔÛñáéíóúýäëïöüÿàèìòùâêîôû";
+            id.AllChars = Irony.Strings.AllLatinLetters + Irony.Strings.DecimalDigits + "_$ÑÁÉÍÓÚÝÄËÏÖÜÀÈÌÒÙÂÊÎÔÛñáéíóúýäëïöüÿàèìòùâêîôû";
+
             StringLiteral term = new StringLiteral(name + "_qouted");
-            term.AddStartEnd("\"", StringOptions.NoEscapes);
+            term.AddStartEnd("\"", StringOptions.AllowsDoubledQuote | StringOptions.NoEscapes);
             term.SetOutputTerminal(this, id);
             return id;
         }

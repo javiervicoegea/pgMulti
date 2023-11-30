@@ -7,9 +7,10 @@ namespace PgMulti.QueryEditor
         //public bool NoAutoSelectIfEmpty = false;
         public bool NeverAutoSelectOnSymbol = false;
 
-        public AutocompleteItemCustom(string text, int imageIndex, string menuText, string? tooltipTitle, string? tooltip)
+        public AutocompleteItemCustom(string text, int imageIndex, string menuText, string? tooltipTitle, string? tooltip, Font? f = null)
             : base(text, imageIndex, menuText, tooltipTitle, tooltip)
         {
+            Font = f;
         }
     }
 }

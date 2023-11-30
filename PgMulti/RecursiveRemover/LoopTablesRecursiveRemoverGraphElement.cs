@@ -1,5 +1,6 @@
 ﻿using PgMulti.DataStructure;
 using PgMulti.RecursiveRemover.Graphs;
+using PgMulti.SqlSyntax;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,29 +13,10 @@ namespace PgMulti.RecursiveRemover
     public class LoopTablesRecursiveRemoverGraphElement : RecursiveRemoverGraphElement
     {
         private List<Table> _Tables { get; }
-        private List<TableRelation> _ParentRelations;
-        private List<TableRelation> _ChildRelations;
 
-        public LoopTablesRecursiveRemoverGraphElement(string schemaName, List<Table> tables) : base(schemaName)
+        public LoopTablesRecursiveRemoverGraphElement(string schemaName, RecursiveRemover recursiveRemover, List<Table> tables) : base(schemaName, recursiveRemover)
         {
             _Tables = tables;
-            _ParentRelations = new List<TableRelation>();
-            _ChildRelations = new List<TableRelation>();
-
-            foreach (Table t in _Tables)
-            {
-                foreach (TableRelation tr in t.Relations)
-                {
-                    if (!ContainsTable(tr.ParentTable!))
-                    {
-                        _ParentRelations.Add(tr);
-                    }
-                    else if (!ContainsTable(tr.ChildTable!))
-                    {
-                        _ChildRelations.Add(tr);
-                    }
-                }
-            }
         }
 
         public override List<Table> Tables
@@ -45,22 +27,6 @@ namespace PgMulti.RecursiveRemover
             }
         }
 
-        public override List<TableRelation> ParentRelations
-        {
-            get
-            {
-                return _ParentRelations;
-            }
-        }
-
-        public override List<TableRelation> ChildRelations
-        {
-            get
-            {
-                return _ChildRelations;
-            }
-        }
-
         public override bool ContainsTable(Table t)
         {
             return _Tables.Contains(t);
@@ -68,17 +34,10 @@ namespace PgMulti.RecursiveRemover
 
         public override void AddTablesToList(List<Table> list)
         {
-            list.AddRange(_Tables);
-        }
-
-        private static string GetStepTableTuplesTableName(Table t, bool delete)
-        {
-            return (delete ? "delete_" : "preserve_") + t.IdSchema + "_" + t.Id + "_steptuples";
-        }
-
-        private static string GetStepRelationTuplesTableName(TableRelation tr, bool delete)
-        {
-            return "fk_" + tr.ChildTable!.IdSchema + "_" + tr.ChildTable!.Id + "_" + tr.Id + "_references_" + tr.ParentTable!.IdSchema + "_" + tr.ParentTable!.Id + "_steptuples";
+            foreach (Table t in _Tables)
+            {
+                if (!list.Contains(t)) list.Add(t);
+            }
         }
 
         protected virtual void _WriteRootInsertSqlCommand(Table t, StringBuilder sb, bool delete, string stepTuplesTableName) { }
@@ -90,13 +49,13 @@ namespace PgMulti.RecursiveRemover
             foreach (Table t in _Tables)
             {
                 string collectTuplesTableName = GetCollectTableName(t, delete);
-                string stepTuplesTableName = GetStepTableTuplesTableName(t, delete);
+                string stepTuplesTableName = RecursiveRemover.GetStepTableTuplesTableName(t, delete);
 
-                sb.AppendLine("--- Table " + t.IdSchema + "." + t.Id + ":\r\n");
+                sb.AppendLine("--- Table " + SqlSyntax.PostgreSqlGrammar.IdToString(t.IdSchema) + "." + SqlSyntax.PostgreSqlGrammar.IdToString(t.Id) + ":\r\n");
 
                 _WriteCreateTableSqlCommand(sb, 4, t, delete);
 
-                string tablePKColumnsDef = string.Join(",\r\n", t.Columns.Where(c => c.PK).Select(c => "    " + c.Id + " " + c.Type + c.TypeParams + " PRIMARY KEY").ToArray());
+                string tablePKColumnsDef = string.Join(",\r\n", t.Columns.Where(c => c.PK).Select(c => "    " + SqlSyntax.PostgreSqlGrammar.IdToString(c.Id) + " " + c.Type + c.TypeParams + " PRIMARY KEY").ToArray());
 
                 sb.AppendLine("    CREATE TEMPORARY TABLE " + stepTuplesTableName);
                 sb.AppendLine("    (");
@@ -107,7 +66,7 @@ namespace PgMulti.RecursiveRemover
 
                 foreach (TableRelation tr in t.Relations.Where(tri => tri.ParentTable == t && _Tables.Contains(tri.ChildTable!)))
                 {
-                    string stepRelationTuplesTableName = GetStepRelationTuplesTableName(tr, delete);
+                    string stepRelationTuplesTableName = RecursiveRemover.GetStepRelationTuplesTableName(tr, delete);
 
                     sb.AppendLine("     CREATE TEMPORARY TABLE " + stepRelationTuplesTableName);
                     sb.AppendLine("     (");
@@ -119,10 +78,10 @@ namespace PgMulti.RecursiveRemover
 
                 sb.AppendLine("---- Tuples of parent tables external to the loop:\r\n");
 
-                foreach (TableRelation tr in t.Relations.Where(tri => tri.ChildTable == t && !_Tables.Contains(tri.ParentTable!)))
+                foreach (TableRelation tr in t.Relations.Where(tri => tri.ChildTable == t && !_Tables.Contains(tri.ParentTable!) && RecursiveRemover.Graph.Nodes.Any(ni => ni.Value.ContainsTable(tri.ParentTable!))))
                 {
                     string collectTuplesParentTableName = GetCollectTableName(tr.ParentTable!, delete);
-                    string stepRelationTuplesTableName = GetStepRelationTuplesTableName(tr, delete);
+                    string stepRelationTuplesTableName = RecursiveRemover.GetStepRelationTuplesTableName(tr, delete);
                     Tuple<string, string>[] fkColumnMatch = new Tuple<string, string>[tr.ParentColumns.Length];
 
                     for (int i = 0; i < tr.ParentColumns.Length; i++)
@@ -132,9 +91,9 @@ namespace PgMulti.RecursiveRemover
 
                     sb.AppendLine("----- FK " + tr.Id + " to " + tr.ParentTable!.IdSchema + "." + tr.ParentTable!.Id + ":\r\n");
                     sb.AppendLine("      INSERT INTO " + stepTuplesTableName);
-                    sb.AppendLine("      (" + string.Join(",", t.Columns.Where(c => c.PK).Select(c => c.Id)) + ")");
-                    sb.AppendLine("      SELECT " + string.Join(",", t.Columns.Where(c => c.PK).Select(c => "t." + c.Id).ToArray()));
-                    sb.AppendLine("      FROM " + t!.IdSchema + "." + t!.Id + " t");
+                    sb.AppendLine("      (" + string.Join(",", t.Columns.Where(c => c.PK).Select(c => SqlSyntax.PostgreSqlGrammar.IdToString(c.Id))) + ")");
+                    sb.AppendLine("      SELECT " + string.Join(",", t.Columns.Where(c => c.PK).Select(c => "t." + SqlSyntax.PostgreSqlGrammar.IdToString(c.Id)).ToArray()));
+                    sb.AppendLine("      FROM " + SqlSyntax.PostgreSqlGrammar.IdToString(t!.IdSchema) + "." + SqlSyntax.PostgreSqlGrammar.IdToString(t!.Id) + " t");
                     sb.AppendLine("      WHERE EXISTS");
                     sb.AppendLine("      (");
                     sb.AppendLine("          SELECT 1");
@@ -152,7 +111,7 @@ namespace PgMulti.RecursiveRemover
 
                 foreach (TableRelation tr in t.Relations.Where(tri => tri.ParentTable == t && _Tables.Contains(tri.ChildTable!)))
                 {
-                    string stepRelationTuplesTableName = GetStepRelationTuplesTableName(tr, delete);
+                    string stepRelationTuplesTableName = RecursiveRemover.GetStepRelationTuplesTableName(tr, delete);
 
                     sb.AppendLine("----- FK " + tr.Id + " from " + tr.ChildTable!.IdSchema + "." + tr.ChildTable!.Id + ":\r\n");
                     sb.AppendLine("      INSERT INTO " + stepRelationTuplesTableName);
@@ -176,8 +135,8 @@ namespace PgMulti.RecursiveRemover
             foreach (Table t in _Tables)
             {
                 string collectTuplesTableName = GetCollectTableName(t, delete);
-                string stepTuplesTableName = GetStepTableTuplesTableName(t, delete);
-                string tablePKColumns = "(" + string.Join(",", t.Columns.Where(c => c.PK).Select(c => c.Id).ToArray()) + ")";
+                string stepTuplesTableName = RecursiveRemover.GetStepTableTuplesTableName(t, delete);
+                string tablePKColumns = "(" + string.Join(",", t.Columns.Where(c => c.PK).Select(c => SqlSyntax.PostgreSqlGrammar.IdToString(c.Id)).ToArray()) + ")";
 
                 sb.AppendLine("                -- Table " + t.IdSchema + "." + t.Id + ":\r\n");
 
@@ -187,7 +146,7 @@ namespace PgMulti.RecursiveRemover
 
                 foreach (TableRelation tr in t.Relations.Where(tri => tri.ChildTable == t && _Tables.Contains(tri.ParentTable!)))
                 {
-                    string stepRelationTuplesTableName = GetStepRelationTuplesTableName(tr, delete);
+                    string stepRelationTuplesTableName = RecursiveRemover.GetStepRelationTuplesTableName(tr, delete);
                     Tuple<string, string>[] fkColumnMatch = new Tuple<string, string>[tr.ParentColumns.Length];
 
                     for (int i = 0; i < tr.ParentColumns.Length; i++)
@@ -199,8 +158,8 @@ namespace PgMulti.RecursiveRemover
 
                     sb.AppendLine("                     INSERT INTO " + stepTuplesTableName);
                     sb.AppendLine("                     " + tablePKColumns + "");
-                    sb.AppendLine("                     SELECT " + string.Join(",", t.Columns.Where(c => c.PK).Select(c => "t." + c.Id).ToArray()) + "");
-                    sb.AppendLine("                     FROM " + t.IdSchema + "." + t.Id + " t");
+                    sb.AppendLine("                     SELECT " + string.Join(",", t.Columns.Where(c => c.PK).Select(c => "t." + SqlSyntax.PostgreSqlGrammar.IdToString(c.Id)).ToArray()) + "");
+                    sb.AppendLine("                     FROM " + SqlSyntax.PostgreSqlGrammar.IdToString(t.IdSchema) + "." + SqlSyntax.PostgreSqlGrammar.IdToString(t.Id) + " t");
                     sb.AppendLine("                     WHERE EXISTS");
                     sb.AppendLine("                     (");
                     sb.AppendLine("                         SELECT 1");
@@ -211,7 +170,7 @@ namespace PgMulti.RecursiveRemover
                     sb.AppendLine("                     (");
                     sb.AppendLine("                         SELECT 1");
                     sb.AppendLine("                         FROM " + collectTuplesTableName + " r");
-                    sb.AppendLine("                         WHERE " + string.Join(" AND ", t.Columns.Where(c => c.PK).Select(c => "r." + c.Id + " = t." + c.Id)));
+                    sb.AppendLine("                         WHERE " + string.Join(" AND ", t.Columns.Where(c => c.PK).Select(c => "r." + SqlSyntax.PostgreSqlGrammar.IdToString(c.Id) + " = t." + SqlSyntax.PostgreSqlGrammar.IdToString(c.Id))));
                     sb.AppendLine("                     )");
                     sb.AppendLine("                     ON CONFLICT DO NOTHING;\r\n");
 
@@ -229,7 +188,7 @@ namespace PgMulti.RecursiveRemover
 
                 foreach (TableRelation tr in t.Relations.Where(tri => tri.ParentTable == t && _Tables.Contains(tri.ChildTable!)))
                 {
-                    string stepRelationTuplesTableName = GetStepRelationTuplesTableName(tr, delete);
+                    string stepRelationTuplesTableName = RecursiveRemover.GetStepRelationTuplesTableName(tr, delete);
 
                     sb.AppendLine("                ---- FK " + tr.Id + " from " + tr.ChildTable!.IdSchema + "." + tr.ChildTable!.Id + ":\r\n");
 
@@ -259,13 +218,13 @@ namespace PgMulti.RecursiveRemover
 
             foreach (Table t in _Tables)
             {
-                string stepTuplesTableName = GetStepTableTuplesTableName(t, delete);
+                string stepTuplesTableName = RecursiveRemover.GetStepTableTuplesTableName(t, delete);
 
                 sb.AppendLine("    DROP TABLE " + stepTuplesTableName + ";\r\n");
 
                 foreach (TableRelation tr in t.Relations.Where(tri => tri.ParentTable == t && _Tables.Contains(tri.ChildTable!)))
                 {
-                    string stepRelationTuplesTableName = GetStepRelationTuplesTableName(tr, delete);
+                    string stepRelationTuplesTableName = RecursiveRemover.GetStepRelationTuplesTableName(tr, delete);
 
                     sb.AppendLine("    DROP TABLE " + stepRelationTuplesTableName + ";\r\n");
                 }
@@ -289,8 +248,8 @@ namespace PgMulti.RecursiveRemover
                         newDefinition = Regex.Replace(newDefinition, @" ON DELETE ((NO ACTION|RESTRICT|CASCADE|SET (NULL|DEFAULT))( \([^\)]+\))?)", "");
                         newDefinition = Regex.Replace(newDefinition, @" NOT DEFERRABLE", "");
 
-                        sb.AppendLine("    ALTER TABLE " + tr.ChildTable!.IdSchema + "." + tr.ChildTable!.Id + " DROP CONSTRAINT " + tr.Id + ";\r\n");
-                        sb.AppendLine("    ALTER TABLE " + tr.ChildTable!.IdSchema + "." + tr.ChildTable!.Id + " ADD CONSTRAINT " + tr.Id);
+                        sb.AppendLine("    ALTER TABLE " + SqlSyntax.PostgreSqlGrammar.IdToString(tr.ChildTable!.IdSchema) + "." + SqlSyntax.PostgreSqlGrammar.IdToString(tr.ChildTable!.Id) + " DROP CONSTRAINT " + PostgreSqlGrammar.IdToString(tr.Id) + ";\r\n");
+                        sb.AppendLine("    ALTER TABLE " + SqlSyntax.PostgreSqlGrammar.IdToString(tr.ChildTable!.IdSchema) + "." + SqlSyntax.PostgreSqlGrammar.IdToString(tr.ChildTable!.Id) + " ADD CONSTRAINT " + PostgreSqlGrammar.IdToString(tr.Id));
                         sb.AppendLine("    " + newDefinition + " DEFERRABLE;\r\n");
                     }
                 }
@@ -304,8 +263,8 @@ namespace PgMulti.RecursiveRemover
 
             foreach (Table t in _Tables)
             {
-                sb.AppendLine("    DELETE FROM " + t.IdSchema + "." + t.Id + " t");
-                sb.AppendLine("    WHERE EXISTS(SELECT 1 FROM " + SchemaName + ".delete_" + t.IdSchema + "_" + t.Id + " r WHERE r.id=t.id);\r\n");
+                sb.AppendLine("    DELETE FROM " + SqlSyntax.PostgreSqlGrammar.IdToString(t.IdSchema) + "." + SqlSyntax.PostgreSqlGrammar.IdToString(t.Id) + " t");
+                sb.AppendLine("    WHERE EXISTS(SELECT 1 FROM " + RecursiveRemover.GetCollectTableName(SchemaName, t, true) + " r WHERE " + string.Join(" AND ", t.Columns.Where(c => c.PK).Select(c => "r." + SqlSyntax.PostgreSqlGrammar.IdToString(c.Id) + " = t." + SqlSyntax.PostgreSqlGrammar.IdToString(c.Id))) + ");\r\n");
             }
 
             sb.AppendLine("    COMMIT;\r\n");
@@ -318,8 +277,8 @@ namespace PgMulti.RecursiveRemover
                 {
                     if (tr.OnDelete != "NO ACTION" || !tr.Deferrable)
                     {
-                        sb.AppendLine("    ALTER TABLE " + tr.ChildTable!.IdSchema + "." + tr.ChildTable!.Id + " DROP CONSTRAINT " + tr.Id + ";\r\n");
-                        sb.AppendLine("    ALTER TABLE " + tr.ChildTable!.IdSchema + "." + tr.ChildTable!.Id + " ADD CONSTRAINT " + tr.Id);
+                        sb.AppendLine("    ALTER TABLE " + SqlSyntax.PostgreSqlGrammar.IdToString(tr.ChildTable!.IdSchema) + "." + SqlSyntax.PostgreSqlGrammar.IdToString(tr.ChildTable!.Id) + " DROP CONSTRAINT " + PostgreSqlGrammar.IdToString(tr.Id) + ";\r\n");
+                        sb.AppendLine("    ALTER TABLE " + SqlSyntax.PostgreSqlGrammar.IdToString(tr.ChildTable!.IdSchema) + "." + SqlSyntax.PostgreSqlGrammar.IdToString(tr.ChildTable!.Id) + " ADD CONSTRAINT " + PostgreSqlGrammar.IdToString(tr.Id));
                         sb.AppendLine("    " + tr.Definition + ";\r\n");
                     }
                 }

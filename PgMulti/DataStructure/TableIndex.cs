@@ -18,6 +18,11 @@ namespace PgMulti.DataStructure
 
         private Table? _Table;
 
+        public static Parser CreateParser(LanguageData languageData)
+        {
+            return new Parser(languageData, languageData.Grammar.SnippetRoots.First(nt => nt.Name == "createIndexStmt"));
+        }
+
         public string Id { get => _Id; internal set => _Id = value; }
         public string IdTable { get => _IdTable; internal set => _IdTable = value; }
         public string IdSchema { get => _IdSchema; internal set => _IdSchema = value; }
@@ -30,13 +35,13 @@ namespace PgMulti.DataStructure
 
         internal TableIndex(NpgsqlDataReader drd, Parser parser)
         {
-            _Id = drd.Ref<string>("indexname")!.ToLower();
-            _IdSchema = drd.Ref<string>("schemaname")!.ToLower();
-            _IdTable = drd.Ref<string>("tablename")!.ToLower();
-            
-            string def = drd.Ref<string>("indexdef")!.ToLower();
-            ParseTree parseTree = parser.Parse(def + ";");
-            AstNode nCreateIndexStmt = AstNode.ProcesarParseTree(parseTree)[0][0][0][0];
+            _Id = drd.Ref<string>("indexname")!;
+            _IdSchema = drd.Ref<string>("schemaname")!;
+            _IdTable = drd.Ref<string>("tablename")!;
+
+            string def = drd.Ref<string>("indexdef")!;
+            ParseTree parseTree = parser.Parse(def);
+            AstNode nCreateIndexStmt = AstNode.ProcesarParseTree(parseTree);
 
             _OrderList = nCreateIndexStmt["orderList"]!.SingleLineText;
 

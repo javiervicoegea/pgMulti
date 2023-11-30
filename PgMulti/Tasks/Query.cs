@@ -202,7 +202,7 @@ namespace PgMulti.Tasks
                 switch (dr.RowState)
                 {
                     case DataRowState.Added:
-                        sb.Append("INSERT INTO " + Table!.IdSchema + "." + Table!.Id);
+                        sb.Append("INSERT INTO " + SqlSyntax.PostgreSqlGrammar.IdToString(Table!.IdSchema) + "." + SqlSyntax.PostgreSqlGrammar.IdToString(Table!.Id));
 
                         List<string> cols = new List<string>();
                         List<string> vals = new List<string>();
@@ -212,7 +212,7 @@ namespace PgMulti.Tasks
                             QueryColumn c = Columns[int.Parse(dc.ColumnName.Substring(1))];
                             if (c.Editable || c.Column != null && dr[c.Index] != null && dr[c.Index] != DBNull.Value)
                             {
-                                cols.Add(c.Column!.Id);
+                                cols.Add(SqlSyntax.PostgreSqlGrammar.IdToString(c.Column!.Id));
                                 vals.Add(c.Column.GetSqlLiteralValue(dr[c.Index]));
                             }
                         }
@@ -220,12 +220,12 @@ namespace PgMulti.Tasks
                         sb.AppendLine(string.Join(",", vals) + ");");
                         break;
                     case DataRowState.Deleted:
-                        sb.Append("DELETE FROM " + Table!.IdSchema + "." + Table!.Id);
+                        sb.Append("DELETE FROM " + SqlSyntax.PostgreSqlGrammar.IdToString(Table!.IdSchema) + "." + SqlSyntax.PostgreSqlGrammar.IdToString(Table!.Id));
                         BuildQueryWhereClause(sb, dr, columnasPK);
                         sb.AppendLine(";");
                         break;
                     case DataRowState.Modified:
-                        sb.Append("UPDATE " + Table!.IdSchema + "." + Table!.Id + " SET ");
+                        sb.Append("UPDATE " + SqlSyntax.PostgreSqlGrammar.IdToString(Table!.IdSchema) + "." + SqlSyntax.PostgreSqlGrammar.IdToString(Table!.Id) + " SET ");
 
                         List<string> sets = new List<string>();
                         foreach (DataColumn dc in dr.Table.Columns)
@@ -234,7 +234,7 @@ namespace PgMulti.Tasks
                             QueryColumn c = Columns[int.Parse(dc.ColumnName.Substring(1))];
                             if (c.Column != null && GetEditedCell(dr, c.Index))
                             {
-                                sets.Add(c.Column.Id + "=" + c.Column.GetSqlLiteralValue(dr[c.Index]));
+                                sets.Add(SqlSyntax.PostgreSqlGrammar.IdToString(c.Column.Id) + "=" + c.Column.GetSqlLiteralValue(dr[c.Index]));
                             }
                         }
                         sb.Append(string.Join(",", sets));
@@ -278,7 +278,7 @@ namespace PgMulti.Tasks
                     v = dr[c.Index];
                 }
 
-                sb.Append(c.Column!.Id + "=" + c.Column.GetSqlLiteralValue(v));
+                sb.Append(SqlSyntax.PostgreSqlGrammar.IdToString(c.Column!.Id) + "=" + c.Column.GetSqlLiteralValue(v));
             }
         }
 
@@ -352,7 +352,7 @@ namespace PgMulti.Tasks
 
             public QueryColumn(int index, string titulo)
             {
-                Title = titulo.ToLower();
+                Title = titulo;
                 Column = null;
                 Index = index;
             }

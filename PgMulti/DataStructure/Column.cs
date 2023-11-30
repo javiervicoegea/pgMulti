@@ -35,9 +35,9 @@ namespace PgMulti.DataStructure
         internal Column(NpgsqlDataReader drd)
         {
             _PK = false;
-            _IdSchema = drd.Ref<string>("table_schema")!.ToLower();
-            _IdTable = drd.Ref<string>("table_name")!.ToLower();
-            _Id = drd.Ref<string>("column_name")!.ToLower();
+            _IdSchema = drd.Ref<string>("table_schema")!;
+            _IdTable = drd.Ref<string>("table_name")!;
+            _Id = drd.Ref<string>("column_name")!;
             _DefaultValue = drd.Ref<string>("column_default");
             _IsIdentity = drd.Val<bool>("is_identity")!.Value;
             _NotNull = drd.Ref<string>("is_nullable")! == "NO";

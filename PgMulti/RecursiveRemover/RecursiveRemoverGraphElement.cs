@@ -1,4 +1,5 @@
 ﻿using PgMulti.DataStructure;
+using PgMulti.RecursiveRemover.Graphs;
 using System.Text;
 
 namespace PgMulti.RecursiveRemover
@@ -6,14 +7,14 @@ namespace PgMulti.RecursiveRemover
     public abstract class RecursiveRemoverGraphElement
     {
         public abstract List<Table> Tables { get; }
-        public abstract List<TableRelation> ParentRelations { get; }
-        public abstract List<TableRelation> ChildRelations { get; }
 
         public readonly string SchemaName;
+        public readonly RecursiveRemover RecursiveRemover;
 
-        protected RecursiveRemoverGraphElement(string schemaName)
+        protected RecursiveRemoverGraphElement(string schemaName, RecursiveRemover recursiveRemover)
         {
             SchemaName = schemaName;
+            RecursiveRemover = recursiveRemover;
         }
 
         public abstract bool ContainsTable(Table t);

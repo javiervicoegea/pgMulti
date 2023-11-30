@@ -8,16 +8,18 @@ namespace PgMulti.QueryEditor
         private AstNode _AstNode;
         private string _ConditionText;
         private bool _CondicionEnWhere;
+        private PostgreSqlIdParser _IdParser;
 
-        public AutocompleteItemRelation(AstNode n, string currentTableAlias, string fqForeignTable, string fromText, string conditionText, bool conditionInWhere, bool n1)
+        public AutocompleteItemRelation(AstNode n, string currentTableAlias, string fqForeignTable, string fromText, string conditionText, bool conditionInWhere, bool isManyToOneRelation, PostgreSqlIdParser idParser)
             : base(
-                  fromText, n1 ? 3 : 2, fqForeignTable + " [" + currentTableAlias + "]", 
-                  string.Format(Properties.Text.relation_type, n1 ? "n:1" : "1:n"), 
+                  fromText, isManyToOneRelation ? 3 : 2, fqForeignTable + " [" + currentTableAlias + "]",
+                  string.Format(Properties.Text.relation_type, isManyToOneRelation ? "n:1" : "1:n"),
                   fromText + (conditionInWhere ? " WHERE " : " ON ") + conditionText)
         {
             _AstNode = n;
             _ConditionText = conditionText;
             _CondicionEnWhere = conditionInWhere;
+            _IdParser = idParser;
         }
 
         public override CompareResult Compare(string fragmentText)
@@ -25,9 +27,12 @@ namespace PgMulti.QueryEditor
             if (Font == null) Font = Parent.PreselectedFont;
 
             if (fragmentText == "") return CompareResult.Visible;
-            if (MenuText.StartsWith(fragmentText, StringComparison.InvariantCultureIgnoreCase))
+
+            string cleanId = _IdParser.Sql2CleanDefinition(fragmentText);
+
+            if (MenuText.StartsWith(cleanId, StringComparison.InvariantCultureIgnoreCase))
                 return CompareResult.VisibleAndSelected;
-            if (MenuText.Contains(fragmentText.ToLower()))
+            if (MenuText.Contains(cleanId))
                 return CompareResult.Visible;
 
             return CompareResult.Hidden;

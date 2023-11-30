@@ -23,7 +23,7 @@ namespace PgMulti.Forms
             InitializeText();
 
             _Table = t;
-            txtRootTableName.Text = t.IdSchema + "." + t.Id;
+            txtRootTableName.Text = SqlSyntax.PostgreSqlGrammar.IdToString(t.IdSchema) + "." + SqlSyntax.PostgreSqlGrammar.IdToString(t.Id);
         }
 
         private void btnOk_Click(object sender, EventArgs e)

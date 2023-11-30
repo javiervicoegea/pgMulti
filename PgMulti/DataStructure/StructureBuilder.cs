@@ -16,7 +16,6 @@ namespace PgMulti.DataStructure
         protected Dictionary<Tuple<string, string>, Table> _DictTables = new Dictionary<Tuple<string, string>, Table>();
         protected Dictionary<Tuple<string, string, string>, Column> _DictColumns = new Dictionary<Tuple<string, string, string>, Column>();
         protected List<string> _HiddenSchemas = new List<string>();
-        protected Parser _Parser;
 
         public static StructureBuilder? CreateStructureBuilder(Data d, DB db)
         {
@@ -52,7 +51,6 @@ namespace PgMulti.DataStructure
             _DB = db;
             _Schemas = new List<Schema>();
             _Data = d;
-            _Parser = new Parser(_Data.PGLanguageData);
         }
 
         public List<Schema> Schemas
@@ -168,7 +166,7 @@ namespace PgMulti.DataStructure
             {
                 while (drd.Read())
                 {
-                    Column columna = _DictColumns[new Tuple<string, string, string>(drd.GetString("table_schema").ToLower(), drd.GetString("table_name").ToLower(), drd.GetString("column_name").ToLower())];
+                    Column columna = _DictColumns[new Tuple<string, string, string>(drd.GetString("table_schema"), drd.GetString("table_name"), drd.GetString("column_name"))];
                     columna.PK = true;
                 }
             }
@@ -178,6 +176,7 @@ namespace PgMulti.DataStructure
         {
             NpgsqlDataReader drd;
             NpgsqlCommand cmd = c.CreateCommand();
+            Parser parser = TableRelation.CreateParser(_Data.PGLanguageData);
 
             cmd.CommandText = "SELECT ns1.nspname parent_schema,c1.relname parent_table,ns2.nspname child_schema,c2.relname child_table,confrelid::regclass AS table_name2,conname AS fk,pg_get_constraintdef(cons.oid) def FROM pg_constraint cons INNER JOIN pg_catalog.pg_class AS c1 ON c1.oid=cons.confrelid INNER JOIN pg_catalog.pg_namespace AS ns1 ON c1.relnamespace = ns1.oid INNER JOIN pg_catalog.pg_class AS c2 ON c2.oid=cons.conrelid INNER JOIN pg_catalog.pg_namespace AS ns2 ON c2.relnamespace = ns2.oid WHERE contype = 'f' AND ns1.nspname <> ALL (:hiddenSchemas) AND ns2.nspname <> ALL (:hiddenSchemas)";
             cmd.Parameters.AddWithValue("hiddenSchemas", _HiddenSchemas);
@@ -185,7 +184,7 @@ namespace PgMulti.DataStructure
             {
                 while (drd.Read())
                 {
-                    TableRelation tr = new TableRelation(drd);
+                    TableRelation tr = new TableRelation(drd, parser);
                     tr.ParentTable = _DictTables[new Tuple<string, string>(tr.IdParentSchema, tr.IdParentTable)];
                     tr.ChildTable = _DictTables[new Tuple<string, string>(tr.IdChildSchema, tr.IdChildTable)];
                     tr.ParentTable.Relations.Add(tr);
@@ -198,6 +197,7 @@ namespace PgMulti.DataStructure
         {
             NpgsqlDataReader drd;
             NpgsqlCommand cmd = c.CreateCommand();
+            Parser parser = TableIndex.CreateParser(_Data.PGLanguageData);
 
             cmd.CommandText = "select indexname,schemaname,tablename,indexdef from pg_indexes WHERE schemaname <> ALL (:hiddenSchemas)";
             cmd.Parameters.AddWithValue("hiddenSchemas", _HiddenSchemas);
@@ -205,7 +205,7 @@ namespace PgMulti.DataStructure
             {
                 while (drd.Read())
                 {
-                    TableIndex ind = new TableIndex(drd, _Parser);
+                    TableIndex ind = new TableIndex(drd, parser);
                     ind.Table = _DictTables[new Tuple<string, string>(ind.IdSchema, ind.IdTable)];
                     ind.Table.Indexes.Add(ind);
                 }
@@ -234,6 +234,7 @@ namespace PgMulti.DataStructure
         {
             NpgsqlDataReader drd;
             NpgsqlCommand cmd = c.CreateCommand();
+            Parser parser = Trigger.CreateParser(_Data.PGLanguageData);
 
             cmd.CommandText = "SELECT ns.nspname,c.relname,t.tgname,pg_catalog.pg_get_triggerdef(t.oid,true) triggerdef FROM pg_catalog.pg_trigger t INNER JOIN pg_catalog.pg_class AS c ON c.oid = t.tgrelid INNER JOIN pg_catalog.pg_namespace AS ns ON c.relnamespace = ns.oid WHERE NOT t.tgisinternal AND t.tgenabled != 'D' AND ns.nspname <> ALL (:hiddenSchemas)";
             cmd.Parameters.AddWithValue("hiddenSchemas", _HiddenSchemas);
@@ -245,7 +246,7 @@ namespace PgMulti.DataStructure
 
                     try
                     {
-                        tg = new Trigger(drd, _Parser);
+                        tg = new Trigger(drd, parser);
                     }
                     catch (Trigger.NotSupportedTriggerSqlDefinition)
                     {

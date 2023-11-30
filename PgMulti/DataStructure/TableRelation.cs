@@ -1,4 +1,6 @@
-﻿using Npgsql;
+﻿using Irony.Parsing;
+using Npgsql;
+using PgMulti.SqlSyntax;
 using System.Text.RegularExpressions;
 
 namespace PgMulti.DataStructure
@@ -15,6 +17,11 @@ namespace PgMulti.DataStructure
         private string _Definition;
         private bool _InitiallyDeferred;
         private bool _Deferrable;
+
+        public static Parser CreateParser(LanguageData languageData)
+        {
+            return new Parser(languageData, languageData.Grammar.SnippetRoots.First(nt => nt.Name == "alterTableAddConstraint"));
+        }
 
         public string IdParentTable { get => _IdParentTable; internal set => _IdParentTable = value; }
         public string IdParentSchema { get => _IdParentSchema; internal set => _IdParentSchema = value; }
@@ -33,67 +40,56 @@ namespace PgMulti.DataStructure
         public readonly string OnDelete;
         public readonly string OnUpdate;
 
-        internal TableRelation(NpgsqlDataReader drd)
+        internal TableRelation(NpgsqlDataReader drd, Parser parser)
         {
-            _IdParentTable = drd.Ref<string>("parent_table")!.ToLower();
-            _IdParentSchema = drd.Ref<string>("parent_schema")!.ToLower();
-            _IdChildTable = drd.Ref<string>("child_table")!.ToLower();
-            _IdChildSchema = drd.Ref<string>("child_schema")!.ToLower();
-            _Id = drd.Ref<string>("fk")!.ToLower();
+            _IdParentTable = drd.Ref<string>("parent_table")!;
+            _IdParentSchema = drd.Ref<string>("parent_schema")!;
+            _IdChildTable = drd.Ref<string>("child_table")!;
+            _IdChildSchema = drd.Ref<string>("child_schema")!;
+            _Id = drd.Ref<string>("fk")!;
             _Definition = drd.Ref<string>("def")!;
 
-            Match m;
+            ParseTree parseTree = parser.Parse(_Definition);
+            AstNode nAlterTableAddConstraint = AstNode.ProcesarParseTree(parseTree);
 
-            m = Regex.Match(Definition, @"^FOREIGN KEY \(([^\)]+)\) REFERENCES [^\(]+\(([^\)]+)\)");
-            ParentColumns = m.Groups[2].Value.Split(',');
-            ChildColumns = m.Groups[1].Value.Split(',');
+            ChildColumns = nAlterTableAddConstraint["tableConstraintDef"]!["tableConstraintDefClause"]!["fkTableConstraint"]!["idlistPar"]!["idSimpleList"]!.Children.Where(ni => ni.Name== "id_simple").Select(ni => SqlSyntax.PostgreSqlGrammar.IdFromString(ni.SingleLineText)).ToArray();
+            ParentColumns = nAlterTableAddConstraint["tableConstraintDef"]!["tableConstraintDefClause"]!["fkTableConstraint"]!["fkConstraint"]!["idlistPar"]!["idSimpleList"]!.Children.Where(ni => ni.Name == "id_simple").Select(ni => SqlSyntax.PostgreSqlGrammar.IdFromString(ni.SingleLineText)).ToArray();
 
-            m = Regex.Match(Definition, @"ON DELETE ((NO ACTION|RESTRICT|CASCADE|SET (NULL|DEFAULT))( \([^\)]+\))?)");
-            if (m.Success)
+            OnDelete = "NO ACTION";
+            OnUpdate = "NO ACTION";
+            _Deferrable = false;
+            _InitiallyDeferred = false;
+            
+            AstNode? nFkTableConstraintOpt = nAlterTableAddConstraint["tableConstraintDef"]!["tableConstraintDefClause"]!["fkTableConstraint"]!["fkConstraint"]!["fkTableConstraintOpt"];
+            if (nFkTableConstraintOpt != null)
             {
-                OnDelete = m.Groups[1].Value.ToUpperInvariant();
-            }
-            else
-            {
-                OnDelete = "NO ACTION";
-            }
+                AstNode? nOnActionClauseListOpt = nFkTableConstraintOpt["onActionClauseListOpt"];
+                if (nOnActionClauseListOpt != null)
+                {
+                    AstNode? nOnActionClauseListItemDelete = nOnActionClauseListOpt.Children.FirstOrDefault(ni => ni.Name == "onActionClauseListItem" && ni[1].SingleLineText.ToUpperInvariant() == "DELETE");
+                    if (nOnActionClauseListItemDelete != null)
+                    {
+                        OnDelete = nOnActionClauseListItemDelete[2].SingleLineText.ToUpperInvariant();
+                    }
 
-            m = Regex.Match(Definition, @"ON UPDATE ((NO ACTION|RESTRICT|CASCADE|SET (NULL|DEFAULT))( \([^\)]+\))?)");
-            if (m.Success)
-            {
-                OnUpdate = m.Groups[1].Value.ToUpperInvariant();
-            }
-            else
-            {
-                OnUpdate = "NO ACTION";
-            }
+                    AstNode? nOnActionClauseListItemUpdate = nOnActionClauseListOpt.Children.FirstOrDefault(ni => ni.Name == "onActionClauseListItem" && ni[1].SingleLineText.ToUpperInvariant() == "UPDATE");
+                    if (nOnActionClauseListItemUpdate != null)
+                    {
+                        OnDelete = nOnActionClauseListItemUpdate[2].SingleLineText.ToUpperInvariant();
+                    }
+                }
 
-            m = Regex.Match(Definition, @"NOT DEFERRABLE");
-            if (m.Success)
-            {
-                _Deferrable = false;
-            }
-            else
-            {
-                m = Regex.Match(Definition, @"DEFERRABLE");
-                if (m.Success)
+                AstNode? nDeferrable = nFkTableConstraintOpt["deferrable"];
+                if (nDeferrable != null && nDeferrable.SingleLineText.ToUpperInvariant() == "DEFERRABLE")
                 {
                     _Deferrable = true;
                 }
-                else
-                {
-                    _Deferrable = false;
-                }
-            }
 
-            m = Regex.Match(Definition, @"INITIALLY DEFERRED");
-            if (m.Success)
-            {
-                _InitiallyDeferred = true;
-            }
-            else
-            {
-                _InitiallyDeferred = false;
+                AstNode? nInitiallyDeferred = nFkTableConstraintOpt["initiallyDeferred"]?["deferred"];
+                if (nInitiallyDeferred != null && nInitiallyDeferred.SingleLineText.ToUpperInvariant() == "DEFERRED")
+                {
+                    _InitiallyDeferred = true;
+                }
             }
         }
 

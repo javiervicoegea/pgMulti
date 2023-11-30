@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -12,14 +13,15 @@ using FastColoredTextBoxNS;
 using Irony.Parsing;
 using Microsoft.VisualBasic.ApplicationServices;
 using PgMulti.DataAccess;
+using PgMulti.DataStructure;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PgMulti.SqlSyntax
 {
     [Language("PostgreSQL", "15", "PostgreSQL grammar")]
-    public class PostgreSQLGrammar : Grammar
+    public class PostgreSqlGrammar : Grammar
     {
-        public PostgreSQLGrammar(CultureInfo cu) : base(false)
+        public PostgreSqlGrammar(CultureInfo cu) : base(false)
         {
             DefaultCulture = cu;
 
@@ -43,6 +45,11 @@ namespace PgMulti.SqlSyntax
             var string_literal = new StringLiteral("string", "'", StringOptions.AllowsDoubledQuote | StringOptions.NoEscapes | StringOptions.AllowsLineBreak);
             var escaped_string_literal = new StringLiteral("escaped_string", "E'", "'", StringOptions.AllowsDoubledQuote | StringOptions.AllowsAllEscapes | StringOptions.AllowsLineBreak);
             var dollar_string_tag = new StringLiteral("dollar_string_tag", "$");
+
+            var dollar_variable = new IdentifierTerminal("dollar_variable");
+            dollar_variable.AllFirstChars = "$";
+            dollar_variable.AllChars = Irony.Strings.DecimalDigits;
+
             var id_simple = CreateIdentifier("id_simple");
             var comma = ToTerm(",");
             var dot = ToTerm(".");
@@ -50,6 +57,10 @@ namespace PgMulti.SqlSyntax
             var CREATE = ToTerm("CREATE");
             var NOT = ToTerm("NOT");
             var IN = ToTerm("IN");
+            var AND = ToTerm("AND");
+            var OR = ToTerm("OR");
+            var LIKE = ToTerm("LIKE");
+            var ILIKE = ToTerm("ILIKE");
             var UNIQUE = ToTerm("UNIQUE");
             var WITH = ToTerm("WITH");
             var TABLE = ToTerm("TABLE");
@@ -86,6 +97,20 @@ namespace PgMulti.SqlSyntax
             var IF = ToTerm("IF");
             var END = ToTerm("END");
             var WHEN = ToTerm("WHEN");
+            var SCHEMA = ToTerm("SCHEMA");
+            var EXECUTE = ToTerm("EXECUTE");
+            var ALL = ToTerm("ALL");
+            var ORDER = ToTerm("ORDER");
+            var TRIGGER = ToTerm("TRIGGER");
+            var VALID = ToTerm("VALID");
+            var DEFERRABLE = ToTerm("DEFERRABLE");
+            var IS = ToTerm("IS");
+            var SUBSTRING = ToTerm("SUBSTRING");
+            var POSITION = ToTerm("POSITION");
+            var ARRAY = ToTerm("ARRAY");
+            var CASE = ToTerm("CASE");
+            var EXISTS = ToTerm("EXISTS");
+            var EXTRACT = ToTerm("EXTRACT");
 
             //Non-terminals
             var id = new NonTerminal("id");
@@ -121,16 +146,19 @@ namespace PgMulti.SqlSyntax
             var typeSpec = new NonTerminal("typeSpec");
             var typeParamsOpt = new NonTerminal("typeParamsOpt");
             var tableConstraintDef = new NonTerminal("tableConstraintDef");
+            var tableConstraintDefClause = new NonTerminal("tableConstraintDefClause");
             var constraintId = new NonTerminal("constraintId");
             var idSimpleList = new NonTerminal("idSimpleList");
             var idlistParOpt = new NonTerminal("idlistParOpt");
             var idlistPar = new NonTerminal("idlistPar");
             var uniqueOpt = new NonTerminal("uniqueOpt");
+            var tableId = new NonTerminal("tableId");
             var orderList = new NonTerminal("orderList");
             var orderMember = new NonTerminal("orderMember");
             var orderDirOpt = new NonTerminal("orderDirOpt");
             var withClauseOpt = new NonTerminal("withClauseOpt");
             var alterTable = new NonTerminal("alterTable");
+            var alterTableAddConstraint = new NonTerminal("alterTableAddConstraint");
             var insertData = new NonTerminal("insertData");
             var assignList = new NonTerminal("assignList");
             var whereClauseOpt = new NonTerminal("whereClauseOpt");
@@ -158,12 +186,13 @@ namespace PgMulti.SqlSyntax
             var betweenExpr = new NonTerminal("betweenExpr");
             var inExpr = new NonTerminal("inExpr");
             var parSelectStmtExpr = new NonTerminal("parSelectStmtExpr");
-            var notOpt = new NonTerminal("notOpt");
             var funCall = new NonTerminal("funCall");
-            var stmtListOpt = new NonTerminal("stmtListOpt");
+            var winFunOpt = new NonTerminal("winFunOpt");
             var funArgs = new NonTerminal("funArgs");
+            var funExprList = new NonTerminal("funExprList");
             var dropSequenceStmt = new NonTerminal("dropSequenceStmt");
             var dropFunctionStmt = new NonTerminal("dropFunctionStmt");
+            var stmtListOpt = new NonTerminal("stmtListOpt");
 
             var cteClauseOpt = new NonTerminal("cteClauseOpt");
             var cteClauseList = new NonTerminal("cteClauseList");
@@ -181,6 +210,8 @@ namespace PgMulti.SqlSyntax
             var grantObjectSchema = new NonTerminal("grantObjectSchema");
             var createTriggerStmt = new NonTerminal("createTriggerStmt");
             var createSequenceStmt = new NonTerminal("createSequenceStmt");
+            var createSequenceClauseList = new NonTerminal("createSequenceClauseList");
+            var createSequenceClause = new NonTerminal("createSequenceClause");
             var caseExpression = new NonTerminal("caseExpression");
             var caseWhenElseList = new NonTerminal("caseWhenElseList");
             var caseWhenList = new NonTerminal("caseWhenList");
@@ -194,10 +225,8 @@ namespace PgMulti.SqlSyntax
             var setTransactionStmt = new NonTerminal("setTransactionStmt");
             var setConstraintsStmt = new NonTerminal("setConstraintsStmt");
             var valuesList = new NonTerminal("valuesList");
-            var winFunOpt = new NonTerminal("winFunOpt");
             var createExtensionStmt = new NonTerminal("createExtensionStmt");
             var opIn = new NonTerminal("opIn");
-            var stmtContent = new NonTerminal("stmtContent");
             var root = new NonTerminal("root");
             var binOpIsDistinct = new NonTerminal("binOpIsDistinct");
             var binOpNotIsDistinct = new NonTerminal("binOpNotIsDistinct");
@@ -207,7 +236,7 @@ namespace PgMulti.SqlSyntax
             var join = new NonTerminal("join");
             var usingClauseOpt = new NonTerminal("usingClauseOpt");
             var idList = new NonTerminal("idList");
-            var idColumna = new NonTerminal("idColumna");
+            var columnId = new NonTerminal("columnId");
             var fkTableConstraint = new NonTerminal("fkTableConstraint");
             var fkConstraint = new NonTerminal("fkConstraint");
             var fkTableConstraintOpt = new NonTerminal("fkTableConstraintOpt");
@@ -221,6 +250,7 @@ namespace PgMulti.SqlSyntax
             var createTriggerRepetitionClause = new NonTerminal("createTriggerRepetitionClause");
             var createTriggerWhenClauseOpt = new NonTerminal("createTriggerWhenClauseOpt");
             var createTriggerExecuteClause = new NonTerminal("createTriggerExecuteClause");
+            var createText = new NonTerminal("createText");
             var createSchemaStmt = new NonTerminal("createSchemaStmt");
             var dropTriggerStmt = new NonTerminal("dropTriggerStmt");
             var dropSchemaStmt = new NonTerminal("dropSchemaStmt");
@@ -237,10 +267,12 @@ namespace PgMulti.SqlSyntax
             var castExpr = new NonTerminal("castExpr");
             var notNull = new NonTerminal("notNull");
             var showStmt = new NonTerminal("showStmt");
+            var commentStmt = new NonTerminal("commentStmt");
 
             var plStmtList = new NonTerminal("plStmtList");
             var plStmt = new NonTerminal("plStmt");
-            var plStmtContent = new NonTerminal("plStmtContent");
+            var sqlStmtList = new NonTerminal("sqlStmtList");
+            var sqlStmt = new NonTerminal("sqlStmt");
             var plBlockCodeStmt = new NonTerminal("plBlockCodeStmt");
             var plDeclareClauseOpt = new NonTerminal("plDeclareClauseOpt");
             var plDeclareStmts = new NonTerminal("plDeclareStmts");
@@ -262,47 +294,51 @@ namespace PgMulti.SqlSyntax
             var plExitStmt = new NonTerminal("plExitStmt");
             var plRaiseStmt = new NonTerminal("plRaiseStmt");
             var plExpressionList = new NonTerminal("plExpressionList");
+            var plExecuteStmt = new NonTerminal("plExecuteStmt");
 
             //BNF Rules
             Root = root;
+            SnippetRoots.Add(id);
+            SnippetRoots.Add(createIndexStmt);
+            SnippetRoots.Add(alterTableAddConstraint);
+            SnippetRoots.Add(createTriggerStmt);
 
             root.Rule = stmtList;
-            stmtList.Rule = MakeStarRule(stmtList, stmt | Empty + semi);
+            stmtList.Rule = MakeStarRule(stmtList, semi, stmt);
 
             //ID
-            id.Rule = id_simple | id_simple + dot + id_simple;
-            idColumna.Rule = id_simple + dot + id_simple | id_simple + dot + id_simple + dot + id_simple;
-            stmtContent.Rule = createTableStmt | createIndexStmt | createExtensionStmt | createRoleStmt | alterStmt
+            id.Rule = id_simple | id_simple + dot + id_simple | id_simple + dot + id_simple + dot + id_simple; //MakePlusRule(id, dot, id_simple);
+            columnId.Rule = id_simple + dot + id_simple | id_simple + dot + id_simple + dot + id_simple;
+            stmt.Rule = Empty | createTableStmt | createIndexStmt | createExtensionStmt | createRoleStmt | alterStmt
                       | dropTableStmt | dropIndexStmt | dropSequenceStmt | dropFunctionStmt
                       | selectStmt | insertStmt | updateStmt | deleteStmt
                       | "GO" | "BEGIN" + (Empty | isolationLevel) | "COMMIT" | "ROLLBACK" | setStmt | setTransactionStmt | setConstraintsStmt
-                      | truncateStmt | grantStmt | revokeStmt | createTriggerStmt | createSequenceStmt | createSchemaStmt
-                      | dropTriggerStmt | dropSchemaStmt | showStmt | createFunctionStmt;
-            stmt.Rule = stmtContent + semi;
+                      | truncateStmt | grantStmt | revokeStmt | createTriggerStmt | createSequenceStmt | createSchemaStmt | createText
+                      | dropTriggerStmt | dropSchemaStmt | showStmt | createFunctionStmt | commentStmt;
 
             stmt.ErrorRule = SyntaxError + semi; //skip all until semicolon
 
             setStmt.Rule = SET + (Empty | "SESSION" | "BEGIN") + id_simple + (TO | "=") + (exprList | DEFAULT);
             setTransactionStmt.Rule = SET + "TRANSACTION" + isolationLevel;
-            setConstraintsStmt.Rule = SET + "CONSTRAINTS" + ("ALL" | idList) + deferred;
+            setConstraintsStmt.Rule = SET + "CONSTRAINTS" + (ALL | idList) + deferred;
             isolationLevel.Rule = ToTerm("ISOLATION") + "LEVEL" + ("SERIALIZABLE" | ToTerm("REPEATABLE") + "READ" | ToTerm("READ") + "COMMITTED" | ToTerm("READ") + "UNCOMMITTED");
 
             showStmt.Rule = "SHOW" + id_simple;
 
-            truncateStmt.Rule = TRUNCATE + (Empty | "TABLE") + (Empty | "ONLY") + id;
+            truncateStmt.Rule = TRUNCATE + (Empty | "TABLE") + (Empty | "ONLY") + tableId;
 
             grantStmt.Rule = ToTerm("GRANT") +
                 (
-                    "ALL" + ("PRIVILEGES" | Empty)
+                    ALL + ("PRIVILEGES" | Empty)
                     | SELECT | INSERT | UPDATE | DELETE | TRUNCATE | REFERENCES
-                    | "TRIGGER" | "USAGE" | CREATE | "CONNECT" | "TEMPORARY" | "TEMP"
+                    | TRIGGER | "USAGE" | CREATE | "CONNECT" | "TEMPORARY" | "TEMP"
                     | SET | ALTER + "SYSTEM"
                 ) + "ON" +
                 (
-                    "SCHEMA" + id_simple
+                    SCHEMA + id_simple
                     | grantObjectTable
                     | grantObjectSchema
-                    | "ALL" + (ToTerm("TABLES") | "SEQUENCES") + IN + "SCHEMA" + id_simple
+                    | ALL + (ToTerm("TABLES") | "SEQUENCES") + IN + SCHEMA + id_simple
                     | "DATABASE" + id_simple
                 ) + TO + id_simple;
 
@@ -311,30 +347,48 @@ namespace PgMulti.SqlSyntax
 
             revokeStmt.Rule = ToTerm("REVOKE") +
                 (
-                    "ALL" + ("PRIVILEGES" | Empty)
+                    ALL + ("PRIVILEGES" | Empty)
                     | SELECT | INSERT | UPDATE | DELETE | TRUNCATE | REFERENCES
-                    | "TRIGGER" | "USAGE" | CREATE | "CONNECT" | "TEMPORARY" | "TEMP"
+                    | TRIGGER | "USAGE" | CREATE | "CONNECT" | "TEMPORARY" | "TEMP"
                     | SET | ALTER + "SYSTEM"
                 ) + "ON" +
                 (
-                    "SCHEMA" + id_simple
+                    SCHEMA + id_simple
                     | "TABLE" + id
                     | "SEQUENCE" + id
-                    | "ALL" + (ToTerm("TABLES") | "SEQUENCES") + IN + "SCHEMA" + id_simple
+                    | ALL + (ToTerm("TABLES") | "SEQUENCES") + IN + SCHEMA + id_simple
                     | "DATABASE" + id_simple
                 ) + FROM + id_simple;
 
-            createSequenceStmt.Rule = CREATE + SEQUENCE + id + (Empty | "OWNED" + BY + idColumna);
-            createExtensionStmt.Rule = CREATE + "EXTENSION" + id_simple;
-            createSchemaStmt.Rule = CREATE + "SCHEMA" + id_simple;
+            createSequenceStmt.Rule = CREATE + (ToTerm("TEMPORARY") | "TEMP" | "UNLOGGED" | Empty) + SEQUENCE
+                + (Empty | IF + NOT + EXISTS) + id
+                + (Empty | AS + typeName)
+                + createSequenceClauseList;
+
+            createSequenceClauseList.Rule = MakeStarRule(createSequenceClauseList, createSequenceClause);
+            createSequenceClause.Rule = "INCREMENT" + BY + expression
+                | "MINVALUE" + expression
+                | ToTerm("NO") + "MINVALUE"
+                | "MAXVALUE" + expression
+                | ToTerm("NO") + "MAXVALUE"
+                | "START" + (Empty | WITH) + expression
+                | "CACHE" + expression
+                | "CYCLE" | ToTerm("NO") + "CYCLE"
+                | "OWNED" + BY + columnId;
+
+            createExtensionStmt.Rule = CREATE + "EXTENSION" + (IF + NOT + EXISTS | Empty) + id_simple + (Empty | WITH + SCHEMA + id_simple);
+            createSchemaStmt.Rule = CREATE + SCHEMA + id_simple;
 
             //Create trigger
-            createTriggerStmt.Rule = CREATE + (ToTerm("OR") + "REPLACE" | Empty) + "TRIGGER" + id_simple + createTriggerMomentumClause + createTriggerActionClause + ON + id + createTriggerRepetitionClause + createTriggerWhenClauseOpt + createTriggerExecuteClause;
+            createTriggerStmt.Rule = CREATE + (ToTerm("OR") + "REPLACE" | Empty) + TRIGGER + id_simple + createTriggerMomentumClause + createTriggerActionClause + ON + tableId + createTriggerRepetitionClause + createTriggerWhenClauseOpt + createTriggerExecuteClause;
             createTriggerMomentumClause.Rule = ToTerm("AFTER") | "BEFORE" | ToTerm("INSTEAD") + "OF";
-            createTriggerActionClause.Rule = MakePlusRule(createTriggerActionClause, ToTerm("OR"), INSERT | UPDATE | DELETE | TRUNCATE);
+            createTriggerActionClause.Rule = MakePlusRule(createTriggerActionClause, ToTerm("OR"), INSERT | UPDATE + (Empty | ToTerm("OF") + idList) | DELETE | TRUNCATE);
             createTriggerRepetitionClause.Rule = "FOR" + ("EACH" | Empty) + (ToTerm("ROW") | "STATEMENT");
             createTriggerWhenClauseOpt.Rule = Empty | "WHEN" + ToTerm("(") + expression + ToTerm(")");
-            createTriggerExecuteClause.Rule = ToTerm("EXECUTE") + (ToTerm("PROCEDURE") | "FUNCTION") + id + ToTerm("(") + ")";
+            createTriggerExecuteClause.Rule = EXECUTE + (ToTerm("PROCEDURE") | "FUNCTION") + id + ToTerm("(") + ")";
+
+            //Create text
+            createText.Rule = CREATE + "TEXT" + "SEARCH" + "CONFIGURATION" + id + "(" + id_simple + "=" + expression + ")";
 
             //Create function
             createFunctionStmt.Rule =
@@ -342,39 +396,46 @@ namespace PgMulti.SqlSyntax
                 + "(" + createFunctionArgs + ")" + createFunctionReturns
                 + createFunctionClauses;
             createFunctionArgs.Rule = MakeStarRule(createFunctionArgs, comma, createFunctionArg);
-            createFunctionArg.Rule = createFunctionArgMode + id_simple + typeName + typeParamsOpt + createFunctionArgDefault;
-            createFunctionArgMode.Rule = ToTerm("IN") | "OUT" | "INOUT" | "VARIADIC" | Empty;
+            createFunctionArg.Rule = createFunctionArgMode + (id_simple | Empty) + typeName + typeParamsOpt + createFunctionArgDefault;
+            createFunctionArgMode.Rule = IN | "OUT" | "INOUT" | "VARIADIC" | Empty;
             createFunctionArgDefault.Rule = ((DEFAULT | "=") + expression) | Empty;
-            createFunctionReturns.Rule = "RETURNS" + (typeName + typeParamsOpt | "TRIGGER" | "VOID") | ToTerm("RETURNS") + "TABLE" + "(" + createFunctionReturnsTableColumns + ")" | Empty;
+            createFunctionReturns.Rule = "RETURNS" + (typeName + typeParamsOpt | TRIGGER | "VOID") | ToTerm("RETURNS") + "TABLE" + "(" + createFunctionReturnsTableColumns + ")" | Empty;
             createFunctionReturnsTableColumns.Rule = MakeStarRule(createFunctionReturnsTableColumns, comma, id_simple + typeName + typeParamsOpt);
             createFunctionClauses.Rule = MakePlusRule(createFunctionClauses, createFunctionClause);
             createFunctionClause.Rule =
                 "LANGUAGE" + (string_literal | id_simple)
                 | "IMMUTABLE" | "STABLE" | "VOLATILE"
-                | ("NOT" | Empty) + "LEAKPROOF"
+                | (NOT | Empty) + "LEAKPROOF"
                 | "COST" + number
                 | "ROWS" + number
                 | AS + (string_literal | escaped_string_literal | dollarStringBodyFunction);
-            dollarStringBodyFunction.Rule = dollar_string_tag + plBlockCodeStmt + (semi | Empty) + dollar_string_tag;
+            dollarStringBodyFunction.Rule = dollar_string_tag + (plBlockCodeStmt + (Empty | semi) | sqlStmtList) + dollar_string_tag;
             plBlockCodeStmt.Rule = plDeclareClauseOpt + plBeginClause + plExceptionClauseOpt + END;
             plDeclareClauseOpt.Rule = Empty | "DECLARE" + plDeclareStmts;
             plDeclareStmts.Rule = MakeStarRule(plDeclareStmts, id_simple + (Empty | "CONSTANT") + typeName + typeParamsOpt + (Empty | notNull) + (Empty | (DEFAULT | ToTerm(":=") | "=") + expression) + semi);
             plBeginClause.Rule = "BEGIN" + plStmtList;
-            plStmtList.Rule = MakeStarRule(plStmtList, plStmt);
+            plStmtList.Rule = MakeStarRule(plStmtList, plStmt + semi);
 
-            plStmt.Rule = stmt | plStmtContent + semi;
-            plStmtContent.Rule = plBlockCodeStmt | plAssignmentStmt | plReturnStmt | plIfStmt | plCaseStmt | plForStmt | plWhileLoopStmt | plLoopStmt | plRaiseStmt;
-            plAssignmentStmt.Rule = id_simple + (ToTerm("=") | ToTerm(":=")) + expression;
+            sqlStmtList.Rule = MakeStarRule(sqlStmtList, semi, sqlStmt);
+            sqlStmt.Rule = Empty | createTableStmt | createIndexStmt | createExtensionStmt | createRoleStmt | alterStmt
+                | dropTableStmt | dropIndexStmt | dropSequenceStmt | dropFunctionStmt
+                | selectStmt | insertStmt | updateStmt | deleteStmt
+                | "GO" | setStmt | setTransactionStmt | setConstraintsStmt
+                | truncateStmt | grantStmt | revokeStmt | createTriggerStmt | createSequenceStmt | createSchemaStmt
+                | dropTriggerStmt | dropSchemaStmt | showStmt | createFunctionStmt | commentStmt;
+
+            plStmt.Rule = plBlockCodeStmt | plAssignmentStmt | plReturnStmt | plIfStmt | plCaseStmt | plForStmt | plWhileLoopStmt | plLoopStmt | plRaiseStmt | plExecuteStmt | sqlStmt;
+            plAssignmentStmt.Rule = id + (ToTerm("=") | ToTerm(":=")) + expression;
             plReturnStmt.Rule = "RETURN" + expression;
             plIfStmt.Rule = IF + expression + "THEN" + plStmtList + (Empty | "ELSIF" + expression + "THEN" + plStmtList) + (Empty | "ELSE" + plStmtList) + END + IF;
-            plCaseStmt.Rule = "CASE" + (Empty | expression) + plCaseWhenElseList + END + "CASE";
+            plCaseStmt.Rule = CASE + (Empty | expression) + plCaseWhenElseList + END + CASE;
             plCaseWhenElseList.Rule = plCaseWhenList + (Empty | "ELSE" + plStmtList);
             plCaseWhenList.Rule = MakePlusRule(plCaseWhenList, WHEN + plExpressionList + "THEN" + plStmtList);
             plForStmt.Rule = "FOR" + id_simple + IN + ("REVERSE" | Empty) + expression + ".." + expression + (Empty | BY + expression) + "LOOP" + plLoopStmtList + END + "LOOP";
             plWhileLoopStmt.Rule = "WHILE" + expression + plLoopStmt;
             plLoopStmt.Rule = "LOOP" + plLoopStmtList + END + "LOOP";
-            plLoopStmtList.Rule = MakeStarRule(plLoopStmtList, plLoopStmtListStmt);
-            plLoopStmtListStmt.Rule = plStmt | plExitStmt + semi;
+            plLoopStmtList.Rule = MakeStarRule(plLoopStmtList, plLoopStmtListStmt + semi);
+            plLoopStmtListStmt.Rule = plStmt | plExitStmt;
             plExitStmt.Rule = "EXIT" + (Empty | WHEN + expression);
             plRaiseStmt.Rule = "RAISE" + (Empty | "DEBUG" | "LOG" | "INFO" | "NOTICE" | "WARNING" | "EXCEPTION") + plExpressionList + (Empty | USING + assignList);
             plExpressionList.Rule = MakePlusRule(plExpressionList, comma, expression);
@@ -383,11 +444,13 @@ namespace PgMulti.SqlSyntax
             plExceptionClauseStruct.Rule = MakePlusRule(plExceptionClauseStruct, WHEN + plExceptionClauseConditions + "THEN" + plStmtList);
             plExceptionClauseConditions.Rule = MakePlusRule(plExceptionClauseConditions, ToTerm("OR"), id_simple);
 
+            plExecuteStmt.Rule = EXECUTE + expression;
+
             //functionCode.Rule = MakePlusRule(functionCode, number | string_literal | escaped_string_literal | id_simple | dot | comma | semi | "*" | "/" | "%" | "+" | "-" | "=" | ">" | "<" | ">=" | "<=" | "<>" | "!=" | "!<" | "!>" | "^" | "&" | "|" | "(" | ")" | "[" | "]" | "::" | "~" | "@@" | ":=");
 
             //Create table
             createTableStmt.Rule = CREATE + (Empty | ToTerm("TEMPORARY") | ToTerm("TEMP") | ToTerm("UNLOGGED")) + TABLE
-                + (Empty | IF + NOT + "EXISTS") + id
+                + (Empty | IF + NOT + EXISTS) + id
                 + (
                     "(" + createTableDefList + ")" + createTableWithClauseOpt + createTableTablespaceClauseOpt
                     | createTableWithClauseOpt + createTableTablespaceClauseOpt + AS + selectStmt
@@ -409,25 +472,27 @@ namespace PgMulti.SqlSyntax
             fkColumnConstraint.Rule = constraintId + fkConstraint;
             typeName.Rule = ToTerm("BIT") + (Empty | "VARYING") | "VARBIT" | "DATE"
                 | "TIME" + (Empty | (ToTerm("WITHOUT") | "WITH") + "TIME" + "ZONE")
-                | "TIMESTAMP" + (Empty | (ToTerm("WITHOUT") | "WITH") + "TIME" + "ZONE")
+                | "TIMESTAMP"
                 | "DECIMAL" | "REAL" | "FLOAT" | "FLOAT4" | "FLOAT8"
                 | "SMALLINT" | "INTEGER" | "INT" | "INTERVAL" | "CHARACTER" + (Empty | ToTerm("VARYING")) | "DATETIME"
                 | "INT2" | "INT4" | "INT8" | "SERIAL2" | "SERIAL4" | "SERIAL8"
                 | ToTerm("DOUBLE") + "PRECISION" | "CHAR" | "VARCHAR" | "BYTEA" | "TEXT" | "SERIAL" | "BIGSERIAL"
                 | "BIGINT" | "BOOLEAN" | "BOOL" | "INET" | "CIDR" | "JSON" | "JSONB" | "MONEY" | "NUMERIC"
-                | "SMALLSERIAL" | "TSQUERY" | "TSVECTOR" | "XML" | "POINT" | "REGCONFIG" | "REGCLASS" | "REGNAMESPACE";
+                | "SMALLSERIAL" | "TSQUERY" | "TSVECTOR" | "XML" | "POINT" | "REGCONFIG" | "REGCLASS" | "REGNAMESPACE"
+                | "NAME" | "BPCHAR";
 
-            typeParamsOpt.Rule = "(" + number + ")" | "(" + number + comma + number + ")" | Empty;
-            tableConstraintDef.Rule = constraintId + (
-                    PRIMARY + KEY + idlistPar
+            typeParamsOpt.Rule = (Empty | "(" + number + ")") + (Empty | (ToTerm("WITHOUT") | "WITH") + "TIME" + "ZONE")
+                | "(" + number + comma + number + ")";
+
+            tableConstraintDef.Rule = constraintId + tableConstraintDefClause;
+            tableConstraintDefClause.Rule = PRIMARY + KEY + idlistPar
                     | UNIQUE + idlistPar | notNull + idlistPar
-                    | fkTableConstraint
-                );
+                    | fkTableConstraint;
             constraintId.Rule = Empty | CONSTRAINT + id;
             fkTableConstraint.Rule = "FOREIGN" + KEY + idlistPar + fkConstraint;
             fkConstraint.Rule = REFERENCES + id + idlistPar + fkTableConstraintOpt;
             fkTableConstraintOpt.Rule = (Empty | "MATCH" + (FULL | "SIMPLE")) + onActionClauseListOpt + deferrable + initiallyDeferred;
-            deferrable.Rule = Empty | NOT + "DEFERRABLE" | "DEFERRABLE";
+            deferrable.Rule = Empty | CustomActionHere(ResolveNotDeferrableConflict) + NOT + DEFERRABLE | DEFERRABLE;
             initiallyDeferred.Rule = Empty | ToTerm("INITIALLY") + deferred;
             deferred.Rule = ToTerm("DEFERRED") | "IMMEDIATE";
             idlistParOpt.Rule = idlistPar | Empty;
@@ -442,8 +507,9 @@ namespace PgMulti.SqlSyntax
             createTableTablespaceClauseOpt.Rule = Empty | "TABLESPACE" + id_simple;
 
             //Create Index
-            createIndexStmt.Rule = CREATE + uniqueOpt + INDEX + id + ON + id + usingIndexClauseOpt + "(" + orderList + ")" + withClauseOpt + whereClauseOpt + tablespaceClauseOpt;
+            createIndexStmt.Rule = CREATE + uniqueOpt + INDEX + ("CONCURRENTLY" | Empty) + ((IF + NOT + EXISTS | Empty) + id | Empty) + ON + ("ONLY" | Empty) + tableId + usingIndexClauseOpt + "(" + orderList + ")" + withClauseOpt + whereClauseOpt + tablespaceClauseOpt;
             uniqueOpt.Rule = Empty | UNIQUE;
+            tableId.Rule = id;
             orderList.Rule = MakePlusRule(orderList, comma, orderMember);
             orderMember.Rule = expression + orderDirOpt + (Empty | ToTerm("NULLS") + (ToTerm("FIRST") | "LAST"));
             orderDirOpt.Rule = Empty | "ASC" | "DESC" | id_simple;
@@ -463,23 +529,24 @@ namespace PgMulti.SqlSyntax
             //Alter 
             alterStmt.Rule = ALTER
                 + (
-                    TABLE + (Empty | IF + "EXISTS") + (Empty | "ONLY") + id + alterTable
-                    | INDEX + (Empty | IF + "EXISTS") + id + "RENAME" + TO + id
-                    | SEQUENCE + (Empty | IF + "EXISTS") + id
+                    TABLE + (Empty | IF + EXISTS) + (Empty | "ONLY") + id + alterTable
+                    | INDEX + (Empty | IF + EXISTS) + id + "RENAME" + TO + id
+                    | SEQUENCE + (Empty | IF + EXISTS) + id
                         + (
-                            "OWNED" + BY + idColumna
+                            "OWNED" + BY + columnId
                             | AS + typeName + (Empty | "MAXVALUE" + number)
                         )
                     | (ToTerm("ROLE") | "USER") + (
                         (id_simple | "CURRENT_ROLE" | "CURRENT_USER" | "SESSION_USER") + (WITH | Empty) + alterRoleOptions
                         | id_simple + "RENAME" + TO + id_simple
-                        | (id_simple | "CURRENT_ROLE" | "CURRENT_USER" | "SESSION_USER" | "ALL") + (Empty | IN + "DATABASE" + id_simple)
+                        | (id_simple | "CURRENT_ROLE" | "CURRENT_USER" | "SESSION_USER" | ALL) + (Empty | IN + "DATABASE" + id_simple)
                             + (
                                 SET + id_simple + ((TO | "=") + ("DEFAULT" | expression) | FROM + "CURRENT")
-                                | "RESET" + (id_simple | "ALL")
+                                | "RESET" + (id_simple | ALL)
                             )
                         )
-                    | "SCHEMA" + id_simple + "RENAME" + TO + id_simple
+                    | SCHEMA + id_simple + "RENAME" + TO + id_simple
+                    | ToTerm("TEXT") + "SEARCH" + "CONFIGURATION" + id + "ADD" + "MAPPING" + "FOR" + id_simple + WITH + exprList
                 );
 
             alterRoleOptions.Rule = MakePlusRule(createRoleOptions, createRoleOption);
@@ -490,60 +557,68 @@ namespace PgMulti.SqlSyntax
                 | "NOREPLICATION" | "BYPASSRLS" | "NOBYPASSRLS" | ToTerm("CONNECTION") + "LIMIT" + number
                 | ToTerm("ENCRYPTED") + "PASSWORD" + expression
                 | "PASSWORD" + (NULL | expression)
-                | ToTerm("VALID") + "UNTIL" + expression;
+                | VALID + "UNTIL" + expression;
 
             alterTable.Rule =
-                ADD + (Empty | COLUMN) + (Empty | IF + NOT + "EXISTS") + fieldDef
-                | ADD + tableConstraintDef
-                | ALTER + COLUMN + id_simple + (SET + (notNull | DEFAULT + expression) | DROP + (DEFAULT | notNull) | ("TYPE" | ToTerm("SET") + "DATA" + "TYPE") + typeName + typeParamsOpt)
+                ADD + (Empty | COLUMN) + (Empty | IF + NOT + EXISTS) + fieldDef
+                | ADD + alterTableAddConstraint
+                | ALTER + COLUMN + id_simple
+                    + (
+                        SET + (notNull | DEFAULT + expression)
+                        | DROP + (DEFAULT | notNull)
+                        | ("TYPE" | ToTerm("SET") + "DATA" + "TYPE") + typeName + typeParamsOpt
+                        | ADD + "GENERATED" + "ALWAYS" + AS + "IDENTITY" + (Empty | "(" + SEQUENCE + "NAME" + id + createSequenceClauseList + ")")
+                    )
                 | ALTER + CONSTRAINT + id_simple + deferrable + initiallyDeferred
                 | DROP + COLUMN + id_simple + (Empty | "CASCADE")
                 | DROP + CONSTRAINT + id_simple
                 | ToTerm("RENAME") + TO + id_simple
                 | "RENAME" + COLUMN + id_simple + TO + id_simple
-                | ToTerm("SET") + "SCHEMA" + id_simple
-                | ToTerm("ENABLE") + "TRIGGER" + id_simple
-                | ToTerm("DISABLE") + "TRIGGER" + id_simple
+                | ToTerm("SET") + SCHEMA + id_simple
+                | ToTerm("ENABLE") + TRIGGER + id_simple
+                | ToTerm("DISABLE") + TRIGGER + id_simple
                 | "OWNER" + TO + id_simple;
 
+            alterTableAddConstraint.Rule = tableConstraintDef + (Empty | CustomActionHere(ResolveNotValidConflict) + NOT + VALID);
+
             //Drop stmts
-            dropTableStmt.Rule = DROP + TABLE + (Empty | IF + "EXISTS") + id;
-            dropIndexStmt.Rule = DROP + INDEX + (Empty | IF + "EXISTS") + id;
-            dropSequenceStmt.Rule = DROP + SEQUENCE + (Empty | IF + "EXISTS") + id;
-            dropFunctionStmt.Rule = DROP + FUNCTION + (Empty | IF + "EXISTS") + id + (Empty | "(" + createFunctionArgs + ")");
-            dropTriggerStmt.Rule = DROP + "TRIGGER" + (Empty | IF + "EXISTS") + id_simple + ON + id + ("CASCADE" | Empty);
-            dropSchemaStmt.Rule = DROP + "SCHEMA" + (Empty | IF + "EXISTS") + id_simple + ("CASCADE" | Empty);
+            dropTableStmt.Rule = DROP + TABLE + (Empty | IF + EXISTS) + tableId;
+            dropIndexStmt.Rule = DROP + INDEX + (Empty | IF + EXISTS) + id;
+            dropSequenceStmt.Rule = DROP + SEQUENCE + (Empty | IF + EXISTS) + id;
+            dropFunctionStmt.Rule = DROP + FUNCTION + (Empty | IF + EXISTS) + id + (Empty | "(" + createFunctionArgs + ")");
+            dropTriggerStmt.Rule = DROP + TRIGGER + (Empty | IF + EXISTS) + id_simple + ON + id + ("CASCADE" | Empty);
+            dropSchemaStmt.Rule = DROP + SCHEMA + (Empty | IF + EXISTS) + id_simple + ("CASCADE" | Empty);
 
             //Insert stmt
-            insertStmt.Rule = cteClauseOpt + INSERT + INTO + id + idlistParOpt + insertData + insertOnConflictClauseOpt + insertReturningClauseOpt;
-            insertOnConflictClauseOpt.Rule = Empty | ON + "CONFLICT" + (ON + "CONSTRAINT" + id_simple | Empty) + ToTerm("DO") + ("NOTHING" | UPDATE + SET + assignList);
+            insertStmt.Rule = cteClauseOpt + INSERT + INTO + tableId + idlistParOpt + insertData + insertOnConflictClauseOpt + insertReturningClauseOpt;
+            insertOnConflictClauseOpt.Rule = Empty | ON + "CONFLICT" + (ON + "CONSTRAINT" + id_simple | "(" + exprList + ")" | Empty) + ToTerm("DO") + ("NOTHING" | UPDATE + SET + assignList);
             insertReturningClauseOpt.Rule = Empty | "RETURNING" + selList;
             insertData.Rule = selectStmt | VALUES + valuesList;
             valuesList.Rule = MakePlusRule(valuesList, comma, "(" + exprList + ")");
 
             //Update stmt
-            updateStmt.Rule = cteClauseOpt + UPDATE + id + aliasOpt + SET + assignList + fromClauseOpt + whereClauseOpt;
+            updateStmt.Rule = cteClauseOpt + UPDATE + tableId + aliasOpt + SET + assignList + fromClauseOpt + whereClauseOpt;
             assignList.Rule = MakePlusRule(assignList, comma, assignment);
             assignment.Rule = id_simple + "=" + expression;
 
             //Delete stmt
-            deleteStmt.Rule = cteClauseOpt + DELETE + FROM + id + aliasOpt + usingClauseOpt + whereClauseOpt;
+            deleteStmt.Rule = cteClauseOpt + DELETE + FROM + tableId + aliasOpt + usingClauseOpt + whereClauseOpt;
 
             //Select stmt
             selectStmt.Rule = cteClauseOpt + selectBody + selectCombineClauseOpt + orderClauseOpt + limitClauseOpt + offsetClauseOpt;
             selectBody.Rule = selectBaseClauses | "(" + selectStmt + ")";
             selectBaseClauses.Rule = SELECT + selRestrOpt + selList + intoClauseOpt + fromClauseOpt + whereClauseOpt + groupClauseOpt + havingClauseOpt;
-            selectCombineClauseOpt.Rule = Empty | ((ToTerm("UNION") | "INTERSECT" | "EXCEPT") + ("ALL" | Empty) + selectBody);
+            selectCombineClauseOpt.Rule = Empty | ((ToTerm("UNION") | "INTERSECT" | "EXCEPT") + (ALL | Empty) + selectBody);
             cteClauseOpt.Rule = Empty | WITH + cteClauseList;
             cteClauseList.Rule = MakeStarRule(cteClauseList, comma, id + AS + "(" + (selectStmt | insertStmt | updateStmt | deleteStmt) + ")");
-            selRestrOpt.Rule = Empty | "ALL" | DISTINCT;
+            selRestrOpt.Rule = Empty | ALL | DISTINCT + (Empty | ON + tuple);
             selList.Rule = MakeStarRule(selList, comma, selItem);
-            selItem.Rule = expression + aliasOpt | "*" | id_simple + dot + "*";
+            selItem.Rule = expression + aliasOpt | "*" | id + dot + "*";
             aliasOpt.Rule = Empty | asOpt + id_simple;
             asOpt.Rule = Empty | AS;
             intoClauseOpt.Rule = Empty | INTO + id;
             fromItemList.Rule = fromItem + joinChainOpt;
-            fromItem.Rule = (id | parSelectStmtExpr | funCall) + aliasOpt;
+            fromItem.Rule = (id + (funCall | Empty) | parSelectStmtExpr) + aliasOpt;
             usingClauseOpt.Rule = Empty | USING + fromItemList;
             fromClauseOpt.Rule = Empty | FROM + fromItemList;
             joinChainOpt.Rule = MakeStarRule(joinChainOpt, join);
@@ -552,48 +627,51 @@ namespace PgMulti.SqlSyntax
             whereClauseOpt.Rule = Empty | "WHERE" + expression;
             groupClauseOpt.Rule = Empty | "GROUP" + BY + idList + havingClauseOpt;
             havingClauseOpt.Rule = Empty | "HAVING" + expression;
-            orderClauseOpt.Rule = Empty | "ORDER" + BY + orderList;
+            orderClauseOpt.Rule = Empty | ORDER + BY + orderList;
             limitClauseOpt.Rule = Empty | "LIMIT" + expression;
             offsetClauseOpt.Rule = Empty | "OFFSET" + expression;
 
             //Expression
             exprList.Rule = MakePlusRule(exprList, comma, expression);
-            expression.Rule = term | unExpr | binExpr | inExpr;// | betweenExpr; //-- BETWEEN doesn't work - yet; brings a few parsing conflicts 
-            term.Rule = NULL | boolLit | id | string_literal | escaped_string_literal | number
-                | ToTerm("EXISTS") + parSelectStmtExpr | ToTerm("ARRAY") + parSelectStmtExpr | funCall
+            expression.Rule = term | unExpr | binExpr | inExpr;
+            term.Rule = NULL | boolLit | id + (funCall | Empty)
+                | string_literal | escaped_string_literal | number
+                | EXISTS + parSelectStmtExpr | ToTerm("ARRAY") + parSelectStmtExpr
                 | tuple | parSelectStmtExpr | caseExpression
                 | term + "::" + typeName + typeParamsOpt
                 | term + "[" + expression + "]" | extractExpr | castExpr
-                | ToTerm("SUBSTRING") + "(" + expression + FROM + expression + "FOR" + expression + ")";
+                | SUBSTRING + "(" + expression + FROM + expression + "FOR" + expression + ")"
+                | POSITION + "(" + expression + IN + expression + ")"
+                //| ARRAY + "(" + selectBaseClauses + ")"
+                | dollar_variable;
+            funCall.Rule = "(" + funArgs + ")" + winFunOpt;
+            winFunOpt.Rule = Empty | ToTerm("OVER") + "(" + (Empty | ToTerm("PARTITION") + BY + exprList) + orderClauseOpt + ")";
             tuple.Rule = "(" + exprList + ")";
             parSelectStmtExpr.Rule = "(" + selectStmt + ")";
             unExpr.Rule = unOp + term;
-            unOp.Rule = NOT | "+" | "-" | "~";
+            unOp.Rule = CustomActionHere(ResolveUnOpNotConflict) + NOT | "+" | "-" | "~";
             binExpr.Rule = expression + binOp + expression;
             binOp.Rule = ToTerm("+") | "-" | "*" | "/" | "%" //arithmetic
                        | "&" | "|" | "^"                     //bit
                        | "=" | ">" | "<" | ">=" | "<=" | "<>" | "!=" | "!<" | "!>"
-                       | "AND" | "OR" | "LIKE" | binOpNot + "LIKE" | "ILIKE" | "@@"
-                       | binOpNot + "ILIKE" | "||" | "~" | "!~" | binOpIsDistinct;
+                       | AND | OR | LIKE | binOpNot + LIKE | ILIKE | "@@"
+                       | binOpNot + ILIKE | "||" | "~" | "!~" | binOpIsDistinct;
 
-            binOpIsDistinct.Rule = "IS" + (Empty | (binOpNotIsDistinct | Empty) + DISTINCT + "FROM");
+            binOpIsDistinct.Rule = IS + (Empty | (Empty | binOpNotIsDistinct) + DISTINCT + FROM);
             binOpNotIsDistinct.Rule = CustomActionHere(ResolveNotIsDistinctConflict) + NOT;
-            binOpNot.Rule = CustomActionHere(ResolveNotConflict) + NOT;
+            binOpNot.Rule = CustomActionHere(ResolveBinOpNotConflict) + NOT;
 
-            betweenExpr.Rule = expression + notOpt + "BETWEEN" + expression + "AND" + expression;
-            notOpt.Rule = Empty | NOT;
-            funCall.Rule = (COUNT | "AVG" | "MIN" | "MAX" | "SUM" | id) + "(" + funArgs + ")" + winFunOpt;
-            winFunOpt.Rule = Empty | ToTerm("OVER") + "(" + (Empty | ToTerm("PARTITION") + "BY" + exprList) + (Empty | ToTerm("ORDER") + "BY" + orderList) + ")";
-            funArgs.Rule = "*" | exprList | Empty;
+            funArgs.Rule = "*" | funExprList | Empty;
+            funExprList.Rule = MakePlusRule(funExprList, comma, (ALL | DISTINCT | Empty) + expression + orderClauseOpt);
             inExpr.Rule = expression + opIn + (tuple | parSelectStmtExpr);
             opIn.Rule = IN | binOpNot + IN;
 
-            caseExpression.Rule = "CASE" + (Empty | expression) + caseWhenElseList + END;
+            caseExpression.Rule = CASE + (Empty | expression) + caseWhenElseList + END;
             caseWhenElseList.Rule = caseWhenList + (Empty | caseElse);
             caseWhenList.Rule = MakePlusRule(caseWhenList, caseWhen);
             caseWhen.Rule = WHEN + expression + "THEN" + expression;
             caseElse.Rule = "ELSE" + expression;
-            extractExpr.Rule = ToTerm("EXTRACT") + "(" + extractField + "FROM" + term + ")";
+            extractExpr.Rule = EXTRACT + "(" + extractField + FROM + term + ")";
             extractField.Rule = ToTerm("CENTURY") | "DAY" | "DECADE" | "DOW" | "DOY" | "EPOCH"
                 | "HOUR" | "ISODOW" | "ISOYEAR" | "JULIAN" | "MICROSECONDS" | "MILLENNIUM"
                 | "MILLISECONDS" | "MINUTE" | "MONTH" | "QUARTER" | "SECOND" | "TIMEZONE"
@@ -601,6 +679,11 @@ namespace PgMulti.SqlSyntax
             castExpr.Rule = ToTerm("CAST") + "(" + expression + "AS" + typeName + ")";
 
             notNull.Rule = NOT + NULL;
+
+            commentStmt.Rule = "COMMENT" + ON + (
+                    "EXTENSION" + id_simple + IS + string_literal
+                    | COLUMN + columnId + IS + string_literal
+                );
 
             //Operators
             RegisterOperators(10, "*", "/", "%");
@@ -620,11 +703,24 @@ namespace PgMulti.SqlSyntax
             // in conflict resolution when binOp node is sitting on the stack
             //base.MarkTransient(stmt, term, asOpt, aliasOpt, stmtListOpt, semiOpt, expression, unOp, tuple);
             binOp.SetFlag(TermFlags.InheritPrecedence);
-            //IN.Priority = TerminalPriority.High;
+            AND.Priority = TerminalPriority.High;
+            OR.Priority = TerminalPriority.High;
+            LIKE.Priority = TerminalPriority.High;
+            ILIKE.Priority = TerminalPriority.High;
+            IN.Priority = TerminalPriority.High;
+            NOT.Priority = TerminalPriority.High;
             DISTINCT.Priority = TerminalPriority.High;
+            VALID.Priority = TerminalPriority.High;
+            DEFERRABLE.Priority = TerminalPriority.High;
+            SUBSTRING.Priority = TerminalPriority.High;
+            POSITION.Priority = TerminalPriority.High;
+            ARRAY.Priority = TerminalPriority.High;
+            CASE.Priority = TerminalPriority.High;
+            EXISTS.Priority = TerminalPriority.High;
+            EXTRACT.Priority = TerminalPriority.High;
         }//constructor
 
-        private void ResolveNotConflict(ParsingContext context, CustomParserAction customAction)
+        private void ResolveUnOpNotConflict(ParsingContext context, CustomParserAction customAction)
         {
             var scanner = context.Parser.Scanner;
 
@@ -644,9 +740,9 @@ namespace PgMulti.SqlSyntax
 
                 scanner.EndPreview(true); //keep previewed tokens; important to keep ">>" matched to two ">" symbols, not one combined symbol (see method below)
 
-                if (previewSym == "NULL")
+                if (previewSym == "DISTINCT" || previewSym == "LIKE" || previewSym == "ILIKE" || previewSym == "IN")
                 {
-                    action = customAction.ReduceActions.First();
+                    action = customAction.ReduceActions.FirstOrDefault();
                 }
                 else
                 {
@@ -658,10 +754,42 @@ namespace PgMulti.SqlSyntax
                 action = customAction.ShiftActions.FirstOrDefault(a => a.Term.Name == context.CurrentParserInput.Term.Name);
             }
 
-            //foreach (ShiftParserAction pai in customAction.ShiftActions)
-            //{
-            //    Debug.WriteLine(pai.Term.Name + " - " + pai.Term.Flags + " - " + (pai.Term.Flags & TermFlags.IsKeyword));
-            //}
+            if (action != null) action.Execute(context);
+        }
+
+        private void ResolveBinOpNotConflict(ParsingContext context, CustomParserAction customAction)
+        {
+            var scanner = context.Parser.Scanner;
+
+            ParserAction? action;
+
+            if (context.CurrentParserInput.Term.Name == "NOT")
+            {
+                scanner.BeginPreview();
+
+                Token preview = scanner.GetToken();
+                string? previewSym = null;
+
+                if (preview.Terminal != Eof)
+                {
+                    previewSym = preview.Terminal.Name;
+                }
+
+                scanner.EndPreview(true); //keep previewed tokens; important to keep ">>" matched to two ">" symbols, not one combined symbol (see method below)
+
+                if (previewSym != "LIKE" && previewSym != "ILIKE" && previewSym != "IN")
+                {
+                    action = customAction.ReduceActions.FirstOrDefault();
+                }
+                else
+                {
+                    action = customAction.ShiftActions.FirstOrDefault(a => a.Term.Name == context.CurrentParserInput.Term.Name);
+                }
+            }
+            else
+            {
+                action = customAction.ShiftActions.FirstOrDefault(a => a.Term.Name == context.CurrentParserInput.Term.Name);
+            }
 
             if (action != null) action.Execute(context);
         }
@@ -688,7 +816,7 @@ namespace PgMulti.SqlSyntax
 
                 if (previewSym != "DISTINCT")
                 {
-                    action = customAction.ReduceActions.First();
+                    action = customAction.ReduceActions.FirstOrDefault();
                 }
                 else
                 {
@@ -700,10 +828,79 @@ namespace PgMulti.SqlSyntax
                 action = customAction.ShiftActions.FirstOrDefault(a => a.Term.Name == context.CurrentParserInput.Term.Name);
             }
 
-            //foreach (ShiftParserAction pai in customAction.ShiftActions)
-            //{
-            //    Debug.WriteLine(pai.Term.Name + " - " + pai.Term.Flags + " - " + (pai.Term.Flags & TermFlags.IsKeyword));
-            //}
+            if (action != null) action.Execute(context);
+        }
+
+        private void ResolveNotDeferrableConflict(ParsingContext context, CustomParserAction customAction)
+        {
+            var scanner = context.Parser.Scanner;
+
+            ParserAction? action;
+
+            if (context.CurrentParserInput.Term.Name == "NOT")
+            {
+                scanner.BeginPreview();
+
+                string? previewSym = null;
+
+                Token preview = scanner.GetToken();
+                if (preview.Terminal != Eof)
+                {
+                    previewSym = preview.Terminal.Name;
+                }
+
+                scanner.EndPreview(true); //keep previewed tokens; important to keep ">>" matched to two ">" symbols, not one combined symbol (see method below)
+
+                if (previewSym != "DEFERRABLE")
+                {
+                    action = customAction.ReduceActions.FirstOrDefault();
+                }
+                else
+                {
+                    action = customAction.ShiftActions.FirstOrDefault(a => a.Term.Name == context.CurrentParserInput.Term.Name);
+                }
+            }
+            else
+            {
+                action = customAction.ShiftActions.FirstOrDefault(a => a.Term.Name == context.CurrentParserInput.Term.Name);
+            }
+
+            if (action != null) action.Execute(context);
+        }
+
+        private void ResolveNotValidConflict(ParsingContext context, CustomParserAction customAction)
+        {
+            var scanner = context.Parser.Scanner;
+
+            ParserAction? action;
+
+            if (context.CurrentParserInput.Term.Name == "NOT")
+            {
+                scanner.BeginPreview();
+
+                string? previewSym = null;
+
+                Token preview = scanner.GetToken();
+                if (preview.Terminal != Eof)
+                {
+                    previewSym = preview.Terminal.Name;
+                }
+
+                scanner.EndPreview(true); //keep previewed tokens; important to keep ">>" matched to two ">" symbols, not one combined symbol (see method below)
+
+                if (previewSym != "VALID")
+                {
+                    action = customAction.ReduceActions.FirstOrDefault();
+                }
+                else
+                {
+                    action = customAction.ShiftActions.FirstOrDefault(a => a.Term.Name == context.CurrentParserInput.Term.Name);
+                }
+            }
+            else
+            {
+                action = customAction.ShiftActions.FirstOrDefault(a => a.Term.Name == context.CurrentParserInput.Term.Name);
+            }
 
             if (action != null) action.Execute(context);
         }
@@ -711,8 +908,11 @@ namespace PgMulti.SqlSyntax
         private IdentifierTerminal CreateIdentifier(string name)
         {
             var id = new IdentifierTerminal(name);
+            id.AllFirstChars = Irony.Strings.AllLatinLetters + "_ÑÁÉÍÓÚÝÄËÏÖÜÀÈÌÒÙÂÊÎÔÛñáéíóúýäëïöüÿàèìòùâêîôû";
+            id.AllChars = Irony.Strings.AllLatinLetters + Irony.Strings.DecimalDigits + "_$ÑÁÉÍÓÚÝÄËÏÖÜÀÈÌÒÙÂÊÎÔÛñáéíóúýäëïöüÿàèìòùâêîôû";
+
             StringLiteral term = new StringLiteral(name + "_qouted");
-            term.AddStartEnd("\"", StringOptions.NoEscapes);
+            term.AddStartEnd("\"", StringOptions.AllowsDoubledQuote | StringOptions.NoEscapes);
             term.SetOutputTerminal(this, id);
             return id;
         }
@@ -742,5 +942,38 @@ namespace PgMulti.SqlSyntax
             }
         }
 
+        public static bool IdRequiresDoubleQuotes(string id)
+        {
+            if (id == null) throw new ArgumentException();
+            const string LowerCaseAlphabet = "_1234567890abcdefghijklmnopqrstuvwxyz";
+            return id.Any(c => !LowerCaseAlphabet.Contains(c));
+        }
+
+        public static string IdToString(string id)
+        {
+            if (id == null) throw new ArgumentException();
+            if (IdRequiresDoubleQuotes(id))
+            {
+                return "\"" + id + "\"";
+            }
+            else
+            {
+                return id;
+            }
+        }
+
+        public static string IdFromString(string id)
+        {
+            if (id == null) throw new ArgumentException();
+            id = id.Trim();
+            if (id.StartsWith("\"") && id.EndsWith("\"") && id.Length >= 2)
+            {
+                return id.Substring(1, id.Length - 2);
+            }
+            else
+            {
+                return id.ToLower();
+            }
+        }
     }
 }

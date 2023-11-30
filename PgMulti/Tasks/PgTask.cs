@@ -84,7 +84,10 @@ namespace PgMulti.Tasks
         {
             get
             {
-                return _StringBuilder.ToString();
+                lock (_StringBuilder)
+                {
+                    return _StringBuilder.ToString();
+                }
             }
         }
 

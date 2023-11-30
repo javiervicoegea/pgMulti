@@ -20,6 +20,11 @@ namespace PgMulti.DataStructure
         private Table? _Table;
         private Function? _Function;
 
+        public static Parser CreateParser(LanguageData languageData)
+        {
+            return new Parser(languageData, languageData.Grammar.SnippetRoots.First(nt => nt.Name == "createTriggerStmt"));
+        }
+
         public string Id { get => _Id; internal set => _Id = value; }
         public string IdTable { get => _IdTable; internal set => _IdTable = value; }
         public string IdSchema { get => _IdSchema; internal set => _IdSchema = value; }
@@ -34,12 +39,13 @@ namespace PgMulti.DataStructure
 
         internal Trigger(NpgsqlDataReader drd, Parser parser)
         {
-            _Id = drd.Ref<string>("tgname")!.ToLower();
-            _IdSchema = drd.Ref<string>("nspname")!.ToLower();
-            _IdTable = drd.Ref<string>("relname")!.ToLower();
+            _Id = drd.Ref<string>("tgname")!;
+            _IdSchema = drd.Ref<string>("nspname")!;
+            _IdTable = drd.Ref<string>("relname")!;
 
-            string def = drd.Ref<string>("triggerdef")!.ToLower();
-            ParseTree parseTree = parser.Parse(def + ";");
+            string def = drd.Ref<string>("triggerdef")!;
+
+            ParseTree parseTree = parser.Parse(def);
             AstNode nCreateTriggerStmt;
 
             try
@@ -60,8 +66,8 @@ namespace PgMulti.DataStructure
             AstNode nIdFunction = nCreateTriggerStmt["createTriggerExecuteClause"]!["id"]!;
             if (nIdFunction.Count == 3)
             {
-                _IdFunction = nIdFunction[2].SingleLineText;
-                _IdSchemaFunction = nIdFunction[0].SingleLineText;
+                _IdFunction = SqlSyntax.PostgreSqlGrammar.IdFromString(nIdFunction[2].SingleLineText);
+                _IdSchemaFunction = SqlSyntax.PostgreSqlGrammar.IdFromString(nIdFunction[0].SingleLineText);
             }
             else
             {

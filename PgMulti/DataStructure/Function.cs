@@ -30,8 +30,8 @@ namespace PgMulti.DataStructure
         {
             _Triggers = new List<Trigger>();
 
-            _Id = drd.Ref<string>("proname")!.ToLower();
-            _IdSchema = drd.Ref<string>("nspname")!.ToLower();
+            _Id = drd.Ref<string>("proname")!;
+            _IdSchema = drd.Ref<string>("nspname")!;
             _Arguments = drd.Ref<string>("arguments")!.ToLower();
             _Returns = drd.Ref<string>("returns")!.ToLower();
             _SourceCode = drd.Ref<string>("source_code")!;

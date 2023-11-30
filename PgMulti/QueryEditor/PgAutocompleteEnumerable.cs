@@ -24,6 +24,7 @@ namespace PgMulti.QueryEditor
         private MainForm _MainForm;
         private LanguageData _PGLanguageData;
         private LanguageData _PGSimpleLanguageData;
+        private PostgreSqlIdParser _IdParser;
 
         public PGAutocompleteEnumerable(AutocompleteMenu autocompleteMenu, FastColoredTextBox fctb, MainForm mainForm, LanguageData ld, LanguageData sld)
         {
@@ -32,6 +33,7 @@ namespace PgMulti.QueryEditor
             _MainForm = mainForm;
             _PGLanguageData = ld;
             _PGSimpleLanguageData = sld;
+            _IdParser = new PostgreSqlIdParser(ld);
         }
 
         public IEnumerator<AutocompleteItem> GetEnumerator()
@@ -74,7 +76,7 @@ namespace PgMulti.QueryEditor
             Place endLastWordQuery;
             while (r.Start.iChar > startQuery.iChar || r.Start.iLine > startQuery.iLine)
             {
-                if (!Regex.Match(r.CharBeforeStart.ToString(), @"[\w]").Success)
+                if (!Regex.Match(r.CharBeforeStart.ToString(), @"[\w\""]").Success)
                 {
                     break;
                 }
@@ -131,14 +133,14 @@ namespace PgMulti.QueryEditor
                         || Regex.Match(beforeCurrentSql, @"^\s*REVOKE\s+", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
 
                     )
-                    && Regex.Match(beforeCurrentSql, @"\s+SCHEMA\s+[\w]+$", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
+                    && Regex.Match(beforeCurrentSql, @"\s+SCHEMA\s+[\w\""]+$", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
                 )
             {
                 // List schemas
 
                 foreach (Schema schema in DB!.Schemas.OrderBy(e => e.Id))
                 {
-                    yield return new AutocompleteItemId(schema.Id, 0, true, _AutocompleteMenu.PreselectedFont);
+                    yield return new AutocompleteItemId(null, schema.Id, 0, _AutocompleteMenu.PreselectedFont, _IdParser);
                 }
 
                 yield break;
@@ -151,17 +153,21 @@ namespace PgMulti.QueryEditor
                             || Regex.Match(beforeCurrentSql, @"^\s*REVOKE\s+", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
 
                         )
-                        && Regex.Match(beforeCurrentSql, @"\s+ON\s+(TABLE\s+)?[\w\.]+$", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
+                        && Regex.Match(beforeCurrentSql, @"\s+ON\s+(TABLE\s+)?[\w\""\.]+$", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
 
-                    || Regex.Match(beforeCurrentSql, @"^\s*ALTER\s+TABLE\s+[\w\.]+$", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
-                    || Regex.Match(beforeCurrentSql, @"^\s*(ALTER|CREATE)\s+TABLE\s+.*REFERENCES\s+[\w\.]+$", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
+                    || Regex.Match(beforeCurrentSql, @"^\s*ALTER\s+TABLE\s+[\w\""\.]+$", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
+                    || Regex.Match(beforeCurrentSql, @"^\s*(ALTER|CREATE)\s+TABLE\s+.*REFERENCES\s+[\w\""\.]+$", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
                 )
             {
                 // List tables
 
                 using (IEnumerator<AutocompleteItem> ie = _GetEnumeratorAllTables(currentFragment))
+                {
                     while (ie.MoveNext())
+                    {
                         yield return ie.Current;
+                    }
+                }
 
                 yield break;
             }
@@ -169,7 +175,7 @@ namespace PgMulti.QueryEditor
             string? tableColumns = null;
             List<string>? alreadyColumns = null;
 
-            Match m = Regex.Match(beforeCurrentSql, @"^\s*ALTER\s+TABLE\s+([\w\.]+)\s+(ALTER|DROP)\s+COLUMN\s+[\w]+$", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            Match m = Regex.Match(beforeCurrentSql, @"^\s*ALTER\s+TABLE\s+([\w\""\.]+)\s+(ALTER|DROP)\s+COLUMN\s+[\w\""]+$", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
             if (m.Success)
             {
@@ -177,20 +183,20 @@ namespace PgMulti.QueryEditor
             }
             else
             {
-                m = Regex.Match(beforeCurrentSql, @"^\s*(ALTER|CREATE)\s+TABLE\s+([\w\.]+)(\s|\()", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                m = Regex.Match(beforeCurrentSql, @"^\s*(ALTER|CREATE)\s+TABLE\s+([\w\""\.]+)(\s|\()", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
                 if (m.Success)
                 {
                     tableColumns = m.Groups[2].Value;
 
-                    m = Regex.Match(beforeCurrentSql, @"\s+FOREIGN\s+KEY\s*\((([\w]+\s*\,\s*)*)[\w]+$", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                    m = Regex.Match(beforeCurrentSql, @"\s+FOREIGN\s+KEY\s*\((([\w\""]+\s*\,\s*)*)[\w\""]+$", RegexOptions.IgnoreCase | RegexOptions.Singleline);
                     if (m.Success)
                     {
                         alreadyColumns = m.Groups[1].Value.Split(',').Select(s => s.Trim()).ToList();
                     }
                     else
                     {
-                        m = Regex.Match(beforeCurrentSql, @"\s+REFERENCES\s+([\w\.]+)\s*\((([\w]+\s*\,\s*)*)[\w]+$", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                        m = Regex.Match(beforeCurrentSql, @"\s+REFERENCES\s+([\w\""\.]+)\s*\((([\w\""]+\s*\,\s*)*)[\w\""]+$", RegexOptions.IgnoreCase | RegexOptions.Singleline);
                         if (m.Success)
                         {
                             tableColumns = m.Groups[1].Value;
@@ -210,7 +216,7 @@ namespace PgMulti.QueryEditor
                 foreach (DataStructure.Column column in table.Columns.OrderBy(c => !c.PK).ThenBy<DataStructure.Column, string>(c => c.Id))
                 {
                     if (alreadyColumns != null && alreadyColumns.Contains(column.Id)) continue;
-                    yield return new AutocompleteItemId(column.Id, _GetImageIndexForColumn(column), true, _AutocompleteMenu.PreselectedFont, column.Info);
+                    yield return new AutocompleteItemId(null, column.Id, _GetImageIndexForColumn(column), _AutocompleteMenu.PreselectedFont, _IdParser, column.Info);
                 }
 
                 yield break;
@@ -259,7 +265,7 @@ namespace PgMulti.QueryEditor
                 // Diferent corrections according to statement type and writting position
 
                 if (
-                        Regex.Match(beforeCurrentSql, @"JOIN\s+[\w\.]+$", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
+                        Regex.Match(beforeCurrentSql, @"JOIN\s+[\w\""\.]+$", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
                         && !Regex.Match(afterCurrentSql, @"^\s+ON\s+", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
                     )
                 {
@@ -271,8 +277,8 @@ namespace PgMulti.QueryEditor
                     parseTree = parser.Parse(currentSql + ";");
                 }
                 else if (
-                        Regex.Match(beforeCurrentSql, @"UPDATE\s+[\w]+(\s*\.\s*[\w]+)?$", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
-                        && !Regex.Match(afterCurrentSql, @"^\s+SET\s+[\w]+\s*\=", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
+                        Regex.Match(beforeCurrentSql, @"UPDATE\s+[\w\""]+(\s*\.\s*[\w\""]+)?$", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
+                        && !Regex.Match(afterCurrentSql, @"^\s+SET\s+[\w\""]+\s*\=", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
                     )
                 {
                     afterCurrentSql = " SET x=x" + afterCurrentSql;
@@ -283,11 +289,11 @@ namespace PgMulti.QueryEditor
                     parseTree = parser.Parse(currentSql + ";");
                 }
                 else if (
-                        Regex.Match(beforeCurrentSql, @"UPDATE\s+[\w]+(\s*\.\s*[\w]+)?\s+([\w]+\s+)?SET\s+.+$", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
+                        Regex.Match(beforeCurrentSql, @"UPDATE\s+[\w\""]+(\s*\.\s*[\w\""]+)?\s+([\w\""]+\s+)?SET\s+.+$", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
                         &&
                         (
-                            Regex.Match(beforeCurrentSql, @"SET\s+[\w]+$", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
-                            || Regex.Match(beforeCurrentSql, @"\,\s*[\w]+$", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
+                            Regex.Match(beforeCurrentSql, @"SET\s+[\w\""]+$", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
+                            || Regex.Match(beforeCurrentSql, @"\,\s*[\w\""]+$", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
                         )
                         && !Regex.Match(afterCurrentSql, @"^\s*\=", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
                     )
@@ -300,8 +306,8 @@ namespace PgMulti.QueryEditor
                     parseTree = parser.Parse(currentSql + ";");
                 }
                 else if (
-                        Regex.Match(beforeCurrentSql, @"INSERT\s+INTO\s+[\w\.]+$", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
-                        && !Regex.Match(afterCurrentSql, @"^\s*\([\w]+(\s*\,\s*[\w]+)*\)\s*VALUES\s*\(", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
+                        Regex.Match(beforeCurrentSql, @"INSERT\s+INTO\s+[\w\""\.]+$", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
+                        && !Regex.Match(afterCurrentSql, @"^\s*\([\w\""]+(\s*\,\s*[\w\""]+)*\)\s*VALUES\s*\(", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
                     )
                 {
                     afterCurrentSql = " (x) VALUES (x)" + afterCurrentSql;
@@ -312,8 +318,8 @@ namespace PgMulti.QueryEditor
                     parseTree = parser.Parse(currentSql + ";");
                 }
                 else if (
-                        Regex.Match(beforeCurrentSql, @"INSERT\s+INTO\s+[\w\.]+\s*\([\w]+(\s*\,\s*[\w]+)*$", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
-                        && !Regex.Match(afterCurrentSql, @"^(\s*\,\s*[\w]+)*\)\s*VALUES\s*\(", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
+                        Regex.Match(beforeCurrentSql, @"INSERT\s+INTO\s+[\w\""\.]+\s*\([\w\""]+(\s*\,\s*[\w\""]+)*$", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
+                        && !Regex.Match(afterCurrentSql, @"^(\s*\,\s*[\w\""]+)*\)\s*VALUES\s*\(", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
                     )
                 {
                     afterCurrentSql = ") VALUES (x" + afterCurrentSql;
@@ -324,7 +330,7 @@ namespace PgMulti.QueryEditor
                     parseTree = parser.Parse(currentSql + ";");
                 }
                 else if (
-                        Regex.Match(beforeCurrentSql, @"WITH\s+[\w\.]+\s+AS\s*\(", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
+                        Regex.Match(beforeCurrentSql, @"WITH\s+[\w\""\.]+\s+AS\s*\(", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
                         && Regex.Match(afterCurrentSql, @"\)$", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
                     )
                 {
@@ -335,7 +341,7 @@ namespace PgMulti.QueryEditor
                     parseTree = parser.Parse(currentSql + ";");
                 }
                 else if (
-                        Regex.Match(beforeCurrentSql, @"^\s*CREATE\s+([\w\.]+\s+)?INDEX\s+([\w]+)\s+ON\s+[\w\.]+$", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
+                        Regex.Match(beforeCurrentSql, @"^\s*CREATE\s+(UNIQUE\s+)?INDEX\s+(CONCURRENTLY\s+)?((IF\s+NOT\s+EXISTS\s+)?[\w\""])?\s+ON\s+(ONLY\s+)?[\w\""\.]+$", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
                         && !Regex.Match(afterCurrentSql, @"^\s*\(", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
                     )
                 {
@@ -346,7 +352,7 @@ namespace PgMulti.QueryEditor
                     parseTree = parser.Parse(currentSql + ";");
                 }
                 else if (
-                        Regex.Match(beforeCurrentSql, @"^\s*CREATE\s+(.*\s+)?TRIGGER\s+.*\s+ON\s+[\w\.]+$", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
+                        Regex.Match(beforeCurrentSql, @"^\s*CREATE\s+(.*\s+)?TRIGGER\s+.*\s+ON\s+[\w\""\.]+$", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
                         && !Regex.Match(afterCurrentSql, @"^\s+FOR\s+.*\s+EXECUTE", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
                     )
                 {
@@ -401,21 +407,22 @@ namespace PgMulti.QueryEditor
                 int dotPosition = currentFragment.IndexOf('.');
                 if (dotPosition != -1)
                 {
-                    currentFragmentAlias = currentFragment.Substring(0, dotPosition);
+                    currentFragmentAlias = _IdParser.Sql2CleanDefinition(currentFragment.Substring(0, dotPosition));
 
                     if (currentFragment.IndexOf('.', dotPosition + 1) != -1) yield break;
                 }
 
-                Dictionary<string, Tuple<string, bool>> tablas = _ListFromClauseTables(currentNode, true, false);
+                Dictionary<string, Tuple<string, bool>> tables = _ListFromClauseTables(currentNode, true, false);
 
-                AstNode? nStmt = currentNode.GetRecursiveParentNamedAs("stmtContent");
+                AstNode? nStmt = currentNode.GetRecursiveParentNamedAs("stmt");
+                if (nStmt == null) nStmt = currentNode.GetRecursiveParentNamedAs("sqlStmt");
                 if (nStmt != null) nStmt = nStmt.Children[0];
 
                 if (currentFragmentAlias == null && (nStmt == null || nStmt.Name != "createIndexStmt"))
                 {
-                    foreach (string alias in tablas.Keys.OrderBy(k => k))
+                    foreach (string alias in tables.Keys.OrderBy(k => k))
                     {
-                        yield return new AutocompleteItemId(alias, 1, true, _AutocompleteMenu.PreselectedFont);
+                        yield return new AutocompleteItemId(null, alias, 1, _AutocompleteMenu.PreselectedFont, _IdParser);
                     }
                 }
 
@@ -423,11 +430,11 @@ namespace PgMulti.QueryEditor
 
                 if (currentFragmentAlias == null)
                 {
-                    tablesWhereSearchForColumns.AddRange(tablas.Values.Select(v => v.Item1).Distinct());
+                    tablesWhereSearchForColumns.AddRange(tables.Values.Select(v => v.Item1).Distinct());
                 }
-                else if (tablas.ContainsKey(currentFragmentAlias))
+                else if (tables.ContainsKey(currentFragmentAlias))
                 {
-                    tablesWhereSearchForColumns.Add(tablas[currentFragmentAlias].Item1);
+                    tablesWhereSearchForColumns.Add(tables[currentFragmentAlias].Item1);
                 }
                 else
                 {
@@ -444,15 +451,15 @@ namespace PgMulti.QueryEditor
                     Table? table = _GetTableFromFqId(tablaFqId);
                     if (table == null) continue;
 
-                    foreach (DataStructure.Column columna in table.Columns.OrderBy(c => !c.PK).ThenBy<DataStructure.Column, string>(c => c.Id))
+                    foreach (DataStructure.Column column in table.Columns.OrderBy(c => !c.PK).ThenBy<DataStructure.Column, string>(c => c.Id))
                     {
-                        yield return new AutocompleteItemId(columna.Id, _GetImageIndexForColumn(columna), true, _AutocompleteMenu.PreselectedFont, columna.Info);
+                        yield return new AutocompleteItemId(currentFragmentAlias, column.Id, _GetImageIndexForColumn(column), _AutocompleteMenu.PreselectedFont, _IdParser, column.Info);
                     }
                 }
             }
             else if (currentNode.Name == "id_simple" && currentNode.Parent.Name == "assignment")
             {
-                // Autocomplete Id to assign in UPDATE's SET
+                // Autocomplete Id to assign in UPDATE's SET clause
 
                 string tableFqId = currentNode.Parent!.Parent!.Parent![currentNode.Parent!.Parent!.Parent!["UPDATE"]!.Index + 1].SingleLineText;
 
@@ -465,7 +472,7 @@ namespace PgMulti.QueryEditor
                     foreach (AstNode n in currentNode.Parent.Parent.Children)
                     {
                         if (n == currentNode.Parent || n.Name != "assignment") continue;
-                        if (n.Children[0].Token!.Text.ToLower() == column.Id.ToLower())
+                        if (n.Children[0].Token!.Text == column.Id)
                         {
                             alreadyAssigned = true;
                             break;
@@ -473,7 +480,7 @@ namespace PgMulti.QueryEditor
                     }
                     if (alreadyAssigned) continue;
 
-                    yield return new AutocompleteItemId(column.Id, _GetImageIndexForColumn(column), true, _AutocompleteMenu.PreselectedFont, column.Info);
+                    yield return new AutocompleteItemId(null, column.Id, _GetImageIndexForColumn(column), _AutocompleteMenu.PreselectedFont, _IdParser, column.Info);
                 }
             }
             else if (currentNode.Name == "id_simple" && currentNode.Parent.Parent!.Parent!.Parent!.Name == "insertStmt")
@@ -491,7 +498,7 @@ namespace PgMulti.QueryEditor
                     foreach (AstNode n in currentNode.Parent.Children)
                     {
                         if (n == currentNode || n.Name != "id_simple") continue;
-                        if (n.Token!.Text.ToLower() == column.Id.ToLower())
+                        if (n.Token!.Text == column.Id)
                         {
                             alreadyAssigned = true;
                             break;
@@ -499,18 +506,10 @@ namespace PgMulti.QueryEditor
                     }
                     if (alreadyAssigned) continue;
 
-                    yield return new AutocompleteItemId(column.Id, _GetImageIndexForColumn(column), true, _AutocompleteMenu.PreselectedFont, column.Info);
+                    yield return new AutocompleteItemId(null, column.Id, _GetImageIndexForColumn(column), _AutocompleteMenu.PreselectedFont, _IdParser, column.Info);
                 }
             }
-            else if (currentNode.Parent.Name == "id" && (
-                currentNode.Parent.Parent!.Name == "updateStmt"
-                || currentNode.Parent.Parent.Name == "deleteStmt"
-                || currentNode.Parent.Parent.Name == "insertStmt"
-                || currentNode.Parent.Parent.Name == "truncateStmt"
-                || currentNode.Parent.Parent.Name == "dropTableStmt"
-                || currentNode.Parent.Parent.Name == "createIndexStmt" && currentNode.Parent.Parent[currentNode.Parent.Index - 1].Name == "ON"
-                || currentNode.Parent.Parent.Name == "createTriggerStmt" && currentNode.Parent.Parent[currentNode.Parent.Index - 1].Name == "ON"
-                || currentNode.Parent.Parent.Parent != null && currentNode.Parent.Parent.Parent.Name == "fromItem"))
+            else if (currentNode.Parent.Name == "id" && (currentNode.Parent.Parent!.Name == "tableId" || (currentNode.Parent.Parent.Parent != null && currentNode.Parent.Parent.Parent.Name == "fromItem")))
             {
                 // Autocomplete Ids in FROM / USING or main table in statements like UPDATE, INSERT, DELETE, etc
 
@@ -559,16 +558,18 @@ namespace PgMulti.QueryEditor
                                 }
 
                                 string aliasRel = _CreateTableAlias(allTables.Keys, relatedTable.Id);
-                                string condRel = kvpTabla.Key + "." + curTableColumns[0] + "=" + aliasRel + "." + relatedTableColumns[0];
+                                string condRel = PostgreSqlGrammar.IdToString(kvpTabla.Key) + "." + PostgreSqlGrammar.IdToString(curTableColumns[0]) + "=" + PostgreSqlGrammar.IdToString(aliasRel) + "." + PostgreSqlGrammar.IdToString(relatedTableColumns[0]);
 
                                 for (int i = 1; i < curTableColumns.Length; i++)
                                 {
-                                    condRel += " AND " + kvpTabla.Key + "." + curTableColumns[i] + "=" + aliasRel + "." + relatedTableColumns[i];
+                                    condRel += " AND " + PostgreSqlGrammar.IdToString(kvpTabla.Key) + "." + PostgreSqlGrammar.IdToString(curTableColumns[i])
+                                        + "=" + PostgreSqlGrammar.IdToString(aliasRel) + "." + PostgreSqlGrammar.IdToString(relatedTableColumns[i]);
                                 }
 
                                 string fqTablaRel = relatedTable.IdSchema + "." + relatedTable.Id;
+                                string fromText = PostgreSqlGrammar.IdToString(relatedTable.IdSchema) + "." + PostgreSqlGrammar.IdToString(relatedTable.Id) + " " + aliasRel;
 
-                                yield return new AutocompleteItemRelation(currentNode, kvpTabla.Key, fqTablaRel, fqTablaRel + " " + aliasRel, condRel, crossJoinOrFirstTable || kvpTabla.Value.Item2, n1);
+                                yield return new AutocompleteItemRelation(currentNode, kvpTabla.Key, fqTablaRel, fromText, condRel, crossJoinOrFirstTable || kvpTabla.Value.Item2, n1, _IdParser);
                             }
                         }
                     }
@@ -601,23 +602,24 @@ namespace PgMulti.QueryEditor
 
                 foreach (Schema esquema in DB!.Schemas.OrderBy(e => e.Id))
                 {
-                    yield return new AutocompleteItemId(esquema.Id, 0, true, _AutocompleteMenu.PreselectedFont);
+                    yield return new AutocompleteItemId(null, esquema.Id, 0, _AutocompleteMenu.PreselectedFont, _IdParser);
                 }
                 currentFragmentSearchPath = DB!.SearchPathSchemas;
             }
             else
             {
                 currentFragmentSearchPath = new List<Schema>();
-                currentFragmentSchema = currentFragmentSchema.ToLower();
-                Schema? currentSchema = DB!.Schemas.FirstOrDefault(ei => ei.Id.ToLower() == currentFragmentSchema);
+                Schema? currentSchema = DB!.Schemas.FirstOrDefault(ei => ei.Id == PostgreSqlGrammar.IdFromString(currentFragmentSchema));
                 if (currentSchema != null) currentFragmentSearchPath.Add(currentSchema);
             }
 
             foreach (Schema s in currentFragmentSearchPath.OrderBy(e => e.Id))
-                foreach (Table tabla in s.Tables.OrderBy(t => t.Id))
+            {
+                foreach (Table table in s.Tables.OrderBy(t => t.Id))
                 {
-                    yield return new AutocompleteItemId(tabla.Id, 1, true, _AutocompleteMenu.PreselectedFont);
+                    yield return new AutocompleteItemId(s.Id, table.Id, 1, _AutocompleteMenu.PreselectedFont, _IdParser);
                 }
+            }
         }
 
         private string _CreateTableAlias(IEnumerable<string> prevAlias, string tableName)
@@ -666,12 +668,12 @@ namespace PgMulti.QueryEditor
             if (dotPosition == -1)
             {
                 string tableId;
-                tableId = tableFqId.ToLower();
+                tableId = tableFqId;
 
                 List<Table> tables = new List<Table>();
                 foreach (Schema s in DB!.SearchPathSchemas)
                 {
-                    tables.AddRange(s.Tables.Where(ti => ti.Id.ToLower() == tableId));
+                    tables.AddRange(s.Tables.Where(ti => ti.Id == tableId));
                 }
 
                 if (tables.Count == 1)
@@ -686,20 +688,20 @@ namespace PgMulti.QueryEditor
             else
             {
                 string schemaId;
-                schemaId = tableFqId.Substring(0, dotPosition).ToLower();
+                schemaId = tableFqId.Substring(0, dotPosition);
                 string tableId;
-                tableId = tableFqId.Substring(dotPosition + 1).ToLower();
+                tableId = tableFqId.Substring(dotPosition + 1);
 
-                Schema? schema = DB!.Schemas.FirstOrDefault(ei => ei.Id.ToLower() == schemaId);
+                Schema? schema = DB!.Schemas.FirstOrDefault(ei => ei.Id == schemaId);
                 if (schema == null) return null;
 
-                return schema.Tables.FirstOrDefault(ti => ti.Id.ToLower() == tableId);
+                return schema.Tables.FirstOrDefault(ti => ti.Id == tableId);
             }
         }
 
         private Dictionary<string, Tuple<string, bool>> _ListFromClauseTables(AstNode currentNode, bool upwards, bool excludeMain)
         {
-            Dictionary<string, Tuple<string, bool>> tablas = new Dictionary<string, Tuple<string, bool>>();
+            Dictionary<string, Tuple<string, bool>> tables = new Dictionary<string, Tuple<string, bool>>();
 
 
             // Search for tables
@@ -711,7 +713,7 @@ namespace PgMulti.QueryEditor
             {
                 while (n.Parent != null)
                 {
-                    if (n.Name == "selectBaseClauses" || n.Parent.Name == "stmtContent")
+                    if (n.Name == "selectBaseClauses" || n.Parent.Name == "stmt" || n.Parent.Name == "sqlStmt")
                     {
                         break;
                     }
@@ -726,10 +728,10 @@ namespace PgMulti.QueryEditor
                     {
                         case "deleteStmt":
                         case "updateStmt":
-                            _ProcessTableAlias(n["id"], n["aliasOpt"], tablas, true);
+                            _ProcessTableAlias(n["id"], n["aliasOpt"], tables, true);
                             break;
                         case "createIndexStmt":
-                            _ProcessTableAlias(n[n["ON"]!.Index + 1], null, tablas, true);
+                            _ProcessTableAlias(n["tableId"]!["id"], null, tables, true);
                             break;
                     }
                 }
@@ -770,27 +772,31 @@ namespace PgMulti.QueryEditor
 
             foreach (AstNode fromItem in fromItems)
             {
-                _ProcessTableAlias(fromItem[0]["id"], fromItem["aliasOpt"], tablas, false);
+                _ProcessTableAlias(fromItem[0]["id"], fromItem["aliasOpt"], tables, false);
             }
 
-            return tablas;
+            return tables;
         }
 
         private void _ProcessTableAlias(AstNode? nodeId, AstNode? nodeAliasOpt, Dictionary<string, Tuple<string, bool>> tables, bool main)
         {
-            string? tabla = null;
-            string? alias = null;
+            if (nodeId == null) return;
+            PostgreSqlId? id = _IdParser.TryParse(nodeId);
+            if (id == null) return;
 
-            if (nodeId == null || nodeId.Count > 3) return;
-            tabla = nodeId.SingleLineText;
-            alias = nodeId[nodeId.Count - 1].SingleLineText;
+            string table = id.ToString();
+            string alias;
 
-            if (nodeAliasOpt != null)
+            if (nodeAliasOpt == null)
             {
-                alias = nodeAliasOpt["id_simple"]!.SingleLineText;
+                alias = id.Values.Last();
+            }
+            else
+            {
+                alias = PostgreSqlGrammar.IdFromString(nodeAliasOpt["id_simple"]!.SingleLineText);
             }
 
-            tables[alias] = new Tuple<string, bool>(tabla, main);
+            tables[alias] = new Tuple<string, bool>(table, main);
         }
 
         private IEnumerator<AutocompleteItem> _GetEnumeratorKeywords(Parser parser, string lastCompletedWordsBeforeCurrentSql, string currentFragment, bool anyId)
@@ -825,13 +831,12 @@ namespace PgMulti.QueryEditor
                     case ")":
                         continue;
                     case "dollar_string_tag":
-                        yield return new AutocompleteItemId("$$", 13, false, _AutocompleteMenu.Font);
+                        yield return new AutocompleteItemCustom("$$", 13, "$$", null, null, _AutocompleteMenu.Font);
                         break;
                     default:
-                        yield return new AutocompleteItemId(s, 13, false, _AutocompleteMenu.Font);
+                        yield return new AutocompleteItemCustom(s, 13, s, null, null, _AutocompleteMenu.Font);
                         break;
                 }
-
             }
         }
 

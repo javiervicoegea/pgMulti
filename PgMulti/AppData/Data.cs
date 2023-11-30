@@ -18,8 +18,8 @@ namespace PgMulti.AppData
 
         private Group _RootGroup;
         private List<DB> _AllDBs;
-        private PostgreSQLGrammar _PGGrammar;
-        private PostgreSQLSimpleCommandsGrammar _PGSimpleCommandsGrammar;
+        private PostgreSqlGrammar _PGGrammar;
+        private PostgreSqlSimpleCommandsGrammar _PGSimpleCommandsGrammar;
         private ConnectionData _ConnectionData;
         private const string FileName = "pgMulti.sqlite";
         private static string? _Path = null;
@@ -36,8 +36,8 @@ namespace PgMulti.AppData
 
             CultureInfo cu = AppLanguage.CurrentLanguage.CultureInfo;
 
-            _PGGrammar = new PostgreSQLGrammar(cu);
-            _PGSimpleCommandsGrammar = new PostgreSQLSimpleCommandsGrammar(cu);
+            _PGGrammar = new PostgreSqlGrammar(cu);
+            _PGSimpleCommandsGrammar = new PostgreSqlSimpleCommandsGrammar(cu);
 
             SqliteConnectionStringBuilder b = new SqliteConnectionStringBuilder()
             {
@@ -192,7 +192,7 @@ namespace PgMulti.AppData
             }
         }
 
-        public PostgreSQLGrammar PGGrammar
+        public PostgreSqlGrammar PGGrammar
         {
             get
             {
@@ -200,7 +200,7 @@ namespace PgMulti.AppData
             }
         }
 
-        public PostgreSQLSimpleCommandsGrammar PGSimpleCommandsGrammar
+        public PostgreSqlSimpleCommandsGrammar PGSimpleCommandsGrammar
         {
             get
             {

@@ -50,15 +50,11 @@ namespace PgMulti.RecursiveRemover.Graphs
                     }
                 }
 
-                Node<T>? firstNonVisitableNodeQueuedAfterLastReturn = null;
-
                 while (queue.Count > 0)
                 {
                     Node<T> node = queue.Dequeue();
 
                     if (visited.Contains(node)) continue;
-
-                    if (node == firstNonVisitableNodeQueuedAfterLastReturn) throw new NotSupportedException("This graph is not a directed acyclic graph because it contains a loop");
 
                     List<Node<T>> prevNodes = _DirectOrder ? node.IncomingNodes : node.OutgoingNodes;
 
@@ -66,7 +62,6 @@ namespace PgMulti.RecursiveRemover.Graphs
                     {
                         // Not visitable
                         queue.Enqueue(node);
-                        if (firstNonVisitableNodeQueuedAfterLastReturn == null) firstNonVisitableNodeQueuedAfterLastReturn = node;
                     }
                     else
                     {
@@ -74,7 +69,6 @@ namespace PgMulti.RecursiveRemover.Graphs
                         yield return node;
 
                         visited.Add(node);
-                        firstNonVisitableNodeQueuedAfterLastReturn = null;
 
                         List<Node<T>> nextNodes = _DirectOrder ? node.OutgoingNodes : node.IncomingNodes;
 

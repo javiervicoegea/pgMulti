@@ -136,27 +136,21 @@ namespace PgMulti.Tasks
             }
 
             AstNode nFromItem = nSelectBaseClauses["fromClauseOpt"]!["fromItemList"]!["fromItem"]!;
-            string idTable = nFromItem[0]["id"]!.SingleLineText.ToLower();
-            string idSchema;
+            PostgreSqlIdParser idParser = new PostgreSqlIdParser(_Data.PGLanguageData);
+            PostgreSqlId? id = idParser.TryParse(nFromItem[0]["id"]!);
 
-            int pos = idTable.IndexOf('.');
-            if (pos == -1)
-            {
-                idSchema = "public";
-            }
-            else
-            {
-                idSchema = idTable.Substring(0, pos);
-                idTable = idTable.Substring(pos + 1);
-            }
+            if (id == null || id.Values.Length > 2) return;
 
-            Schema? schema = DB.Schemas.FirstOrDefault(ei => ei.Id.ToLower() == idSchema);
+            string idTable = id.Values.Last();
+            string idSchema = id.Values.Length == 1 ? "public" : id.Values[0];
+
+            Schema? schema = DB.Schemas.FirstOrDefault(ei => ei.Id == idSchema);
             if (schema == null)
             {
                 return;
             }
 
-            _Table = schema.Tables.FirstOrDefault(ti => ti.Id.ToLower() == idTable);
+            _Table = schema.Tables.FirstOrDefault(ti => ti.Id == idTable);
             if (_Table == null)
             {
                 return;
@@ -164,7 +158,7 @@ namespace PgMulti.Tasks
 
             foreach (AstNode nSelItem in nSelectBaseClauses["selList"]!.Children)
             {
-                if (nSelItem["aliasOpt"] != null && _Table.Columns.Any(ci => ci.Id == nSelItem["aliasOpt"]!["id_simple"]!.SingleLineText.ToLower()))
+                if (nSelItem["aliasOpt"] != null && _Table.Columns.Any(ci => ci.Id == SqlSyntax.PostgreSqlGrammar.IdFromString(nSelItem["aliasOpt"]!["id_simple"]!.SingleLineText)))
                 {
                     return;
                 }
@@ -232,7 +226,7 @@ namespace PgMulti.Tasks
         {
             DataRow drCurrent = DataTable.NewRow();
 
-            foreach(DataColumn dc in DataTable.Columns)
+            foreach (DataColumn dc in DataTable.Columns)
             {
                 if (!dc.AllowDBNull)
                 {

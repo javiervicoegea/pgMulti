@@ -20,7 +20,7 @@ namespace PgMulti.DataStructure
             _DB = db;
             _Tables = new List<Table>();
             _Functions = new List<Function>();
-            _Id = drd.Ref<string>("nspname")!.ToLower();
+            _Id = drd.Ref<string>("nspname")!;
         }
     }
 }

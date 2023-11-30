@@ -1,4 +1,5 @@
 ﻿using PgMulti.DataStructure;
+using PgMulti.RecursiveRemover.Graphs;
 using System.Text;
 
 namespace PgMulti.RecursiveRemover
@@ -7,7 +8,7 @@ namespace PgMulti.RecursiveRemover
     {
         protected Table _Table { get; }
 
-        public SingleTableRecursiveRemoverGraphElement(string schemaName, Table table) : base(schemaName)
+        public SingleTableRecursiveRemoverGraphElement(string schemaName, RecursiveRemover recursiveRemover, Table table) : base(schemaName, recursiveRemover)
         {
             _Table = table;
         }
@@ -22,22 +23,6 @@ namespace PgMulti.RecursiveRemover
             }
         }
 
-        public override List<TableRelation> ParentRelations
-        {
-            get
-            {
-                return _Table.Relations.Where(tr => tr.ChildTable == _Table).ToList();
-            }
-        }
-
-        public override List<TableRelation> ChildRelations
-        {
-            get
-            {
-                return _Table.Relations.Where(tr => tr.ParentTable == _Table).ToList();
-            }
-        }
-
         public override bool ContainsTable(Table t)
         {
             return _Table == t;
@@ -45,7 +30,7 @@ namespace PgMulti.RecursiveRemover
 
         public override void AddTablesToList(List<Table> list)
         {
-            list.Add(_Table);
+            if (!list.Contains(_Table)) list.Add(_Table);
         }
 
         public override void WriteCollectTuplesSqlCommands(StringBuilder sb, bool delete)
@@ -59,13 +44,13 @@ namespace PgMulti.RecursiveRemover
         {
             sb.AppendLine("-- TABLE " + _Table.IdSchema + "." + _Table.Id + ":\r\n");
 
-            sb.AppendLine("   DELETE FROM " + _Table.IdSchema + "." + _Table.Id + " t");
-            sb.AppendLine("   WHERE EXISTS(SELECT 1 FROM " + SchemaName + ".delete_" + _Table.IdSchema + "_" + _Table.Id + " r WHERE r.id=t.id);\r\n");
+            sb.AppendLine("   DELETE FROM " + SqlSyntax.PostgreSqlGrammar.IdToString(_Table.IdSchema) + "." + SqlSyntax.PostgreSqlGrammar.IdToString(_Table.Id) + " t");
+            sb.AppendLine("   WHERE EXISTS(SELECT 1 FROM " + RecursiveRemover.GetCollectTableName(SchemaName, _Table, true) + " r WHERE " + string.Join(" AND ", _Table.Columns.Where(c => c.PK).Select(c => "r." + SqlSyntax.PostgreSqlGrammar.IdToString(c.Id) + " = t." + SqlSyntax.PostgreSqlGrammar.IdToString(c.Id))) + ");\r\n");
         }
 
         protected virtual void _WriteInsertSqlCommand(StringBuilder sb, bool delete)
         {
-            foreach (TableRelation tr in _Table.Relations.Where(tri => tri.ChildTable == _Table))
+            foreach (TableRelation tr in _Table.Relations.Where(tri => tri.ChildTable == _Table && RecursiveRemover.Graph.Nodes.Any(ni => ni.Value.ContainsTable(tri.ParentTable!))))
             {
                 Tuple<string, string>[] fkColumnMatch = new Tuple<string, string>[tr.ParentColumns.Length];
 
@@ -76,9 +61,9 @@ namespace PgMulti.RecursiveRemover
 
                 sb.AppendLine("--- FK " + _Table.IdSchema + "." + _Table.Id + "." + tr.Id + ":\r\n");
                 sb.AppendLine("    INSERT INTO " + GetCollectTableName(_Table, delete));
-                sb.AppendLine("    (" + string.Join(",", _Table.Columns.Where(c => c.PK).Select(c => c.Id)) + ")");
-                sb.AppendLine("    SELECT " + string.Join(",", _Table.Columns.Where(c => c.PK).Select(c => "t." + c.Id).ToArray()));
-                sb.AppendLine("    FROM " + _Table!.IdSchema + "." + _Table!.Id + " t");
+                sb.AppendLine("    (" + string.Join(",", _Table.Columns.Where(c => c.PK).Select(c => SqlSyntax.PostgreSqlGrammar.IdToString(c.Id))) + ")");
+                sb.AppendLine("    SELECT " + string.Join(",", _Table.Columns.Where(c => c.PK).Select(c => "t." + SqlSyntax.PostgreSqlGrammar.IdToString(c.Id)).ToArray()));
+                sb.AppendLine("    FROM " + SqlSyntax.PostgreSqlGrammar.IdToString(_Table!.IdSchema) + "." + SqlSyntax.PostgreSqlGrammar.IdToString(_Table!.Id) + " t");
                 sb.AppendLine("    WHERE EXISTS");
                 sb.AppendLine("    (");
                 sb.AppendLine("        SELECT 1");
