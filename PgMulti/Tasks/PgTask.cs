@@ -168,15 +168,18 @@ namespace PgMulti.Tasks
 
         protected virtual void StringBuilderAppendIndentedLine(string s, bool includeTimestamp)
         {
-            if (includeTimestamp)
+            lock (_StringBuilder)
             {
-                _StringBuilder.Append($"[{DateTime.Now.ToShortTimeString()}] ");
+                if (includeTimestamp)
+                {
+                    _StringBuilder.Append($"[{DateTime.Now.ToShortTimeString()}] ");
+                }
+                else
+                {
+                    _StringBuilder.Append(TimestampGap);
+                }
+                _StringBuilder.AppendLine(s.Replace("\n", "\n" + TimestampGap));
             }
-            else
-            {
-                _StringBuilder.Append(TimestampGap);
-            }
-            _StringBuilder.AppendLine(s.Replace("\n", "\n" + TimestampGap));
         }
 
         private string? _TimestampGap = null;

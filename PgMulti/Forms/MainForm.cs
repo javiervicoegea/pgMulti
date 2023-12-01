@@ -1619,7 +1619,7 @@ namespace PgMulti
 
                     if (dollarStringTagAdded)
                     {
-                        AstNode dollarStringContent = stmts[stmts.Count - 1].Children.First(an => an[0].Name == "dollarString")[0]["dollarStringContent"]!;
+                        AstNode dollarStringContent = stmts[stmts.Count - 1]["stmtContent"]!.Children.First(an => an[0].Name == "dollarString")[0]["dollarStringContent"]!;
                         List<AstNode> dollarStringContentTokens = dollarStringContent.RecursiveTokens;
 
                         if (dollarStringContentTokens[dollarStringContentTokens.Count - 1].Token!.Text == ";")

@@ -51,11 +51,13 @@ namespace PgMulti.RecursiveRemover
                 string collectTuplesTableName = GetCollectTableName(t, delete);
                 string stepTuplesTableName = RecursiveRemover.GetStepTableTuplesTableName(t, delete);
 
-                sb.AppendLine("--- Table " + SqlSyntax.PostgreSqlGrammar.IdToString(t.IdSchema) + "." + SqlSyntax.PostgreSqlGrammar.IdToString(t.Id) + ":\r\n");
+                sb.AppendLine("--- Loop table " + PostgreSqlGrammar.IdToString(t.IdSchema) + "." + PostgreSqlGrammar.IdToString(t.Id) + ":\r\n");
 
                 _WriteCreateTableSqlCommand(sb, 4, t, delete);
 
-                string tablePKColumnsDef = string.Join(",\r\n", t.Columns.Where(c => c.PK).Select(c => "    " + SqlSyntax.PostgreSqlGrammar.IdToString(c.Id) + " " + c.Type + c.TypeParams + " PRIMARY KEY").ToArray());
+                string tablePKColumnsDef = "    " + string.Join(",\r\n        ", t.Columns.Where(c => c.PK).Select(c => "    " + PostgreSqlGrammar.IdToString(c.Id) + " " + c.Type + c.TypeParams).ToArray()) + ",\r\n"
+                    + "        PRIMARY KEY (" + string.Join(",", t.Columns.Where(c => c.PK).Select(c => PostgreSqlGrammar.IdToString(c.Id)).ToArray()) + ")";
+
 
                 sb.AppendLine("    CREATE TEMPORARY TABLE " + stepTuplesTableName);
                 sb.AppendLine("    (");
@@ -91,14 +93,14 @@ namespace PgMulti.RecursiveRemover
 
                     sb.AppendLine("----- FK " + tr.Id + " to " + tr.ParentTable!.IdSchema + "." + tr.ParentTable!.Id + ":\r\n");
                     sb.AppendLine("      INSERT INTO " + stepTuplesTableName);
-                    sb.AppendLine("      (" + string.Join(",", t.Columns.Where(c => c.PK).Select(c => SqlSyntax.PostgreSqlGrammar.IdToString(c.Id))) + ")");
-                    sb.AppendLine("      SELECT " + string.Join(",", t.Columns.Where(c => c.PK).Select(c => "t." + SqlSyntax.PostgreSqlGrammar.IdToString(c.Id)).ToArray()));
-                    sb.AppendLine("      FROM " + SqlSyntax.PostgreSqlGrammar.IdToString(t!.IdSchema) + "." + SqlSyntax.PostgreSqlGrammar.IdToString(t!.Id) + " t");
+                    sb.AppendLine("      (" + string.Join(",", t.Columns.Where(c => c.PK).Select(c => PostgreSqlGrammar.IdToString(c.Id))) + ")");
+                    sb.AppendLine("      SELECT " + string.Join(",", t.Columns.Where(c => c.PK).Select(c => "t." + PostgreSqlGrammar.IdToString(c.Id)).ToArray()));
+                    sb.AppendLine("      FROM " + PostgreSqlGrammar.IdToString(t!.IdSchema) + "." + PostgreSqlGrammar.IdToString(t!.Id) + " t");
                     sb.AppendLine("      WHERE EXISTS");
                     sb.AppendLine("      (");
                     sb.AppendLine("          SELECT 1");
                     sb.AppendLine("          FROM " + collectTuplesParentTableName + " r");
-                    sb.AppendLine("          WHERE " + string.Join(" AND ", fkColumnMatch.Select(mi => "r." + mi.Item1 + " = t." + mi.Item2)));
+                    sb.AppendLine("          WHERE " + string.Join(" AND ", fkColumnMatch.Select(mi => "r." + PostgreSqlGrammar.IdToString(mi.Item1) + " = t." + PostgreSqlGrammar.IdToString(mi.Item2))));
                     sb.AppendLine("      )");
                     sb.AppendLine("      ON CONFLICT DO NOTHING;\r\n");
                 }
@@ -136,7 +138,7 @@ namespace PgMulti.RecursiveRemover
             {
                 string collectTuplesTableName = GetCollectTableName(t, delete);
                 string stepTuplesTableName = RecursiveRemover.GetStepTableTuplesTableName(t, delete);
-                string tablePKColumns = "(" + string.Join(",", t.Columns.Where(c => c.PK).Select(c => SqlSyntax.PostgreSqlGrammar.IdToString(c.Id)).ToArray()) + ")";
+                string tablePKColumns = "(" + string.Join(",", t.Columns.Where(c => c.PK).Select(c => PostgreSqlGrammar.IdToString(c.Id)).ToArray()) + ")";
 
                 sb.AppendLine("                -- Table " + t.IdSchema + "." + t.Id + ":\r\n");
 
@@ -158,19 +160,19 @@ namespace PgMulti.RecursiveRemover
 
                     sb.AppendLine("                     INSERT INTO " + stepTuplesTableName);
                     sb.AppendLine("                     " + tablePKColumns + "");
-                    sb.AppendLine("                     SELECT " + string.Join(",", t.Columns.Where(c => c.PK).Select(c => "t." + SqlSyntax.PostgreSqlGrammar.IdToString(c.Id)).ToArray()) + "");
-                    sb.AppendLine("                     FROM " + SqlSyntax.PostgreSqlGrammar.IdToString(t.IdSchema) + "." + SqlSyntax.PostgreSqlGrammar.IdToString(t.Id) + " t");
+                    sb.AppendLine("                     SELECT " + string.Join(",", t.Columns.Where(c => c.PK).Select(c => "t." + PostgreSqlGrammar.IdToString(c.Id)).ToArray()) + "");
+                    sb.AppendLine("                     FROM " + PostgreSqlGrammar.IdToString(t.IdSchema) + "." + PostgreSqlGrammar.IdToString(t.Id) + " t");
                     sb.AppendLine("                     WHERE EXISTS");
                     sb.AppendLine("                     (");
                     sb.AppendLine("                         SELECT 1");
                     sb.AppendLine("                         FROM " + stepRelationTuplesTableName + " r");
-                    sb.AppendLine("                         WHERE " + string.Join(" AND ", fkColumnMatch.Select(mi => "r." + mi.Item1 + " = t." + mi.Item2)));
+                    sb.AppendLine("                         WHERE " + string.Join(" AND ", fkColumnMatch.Select(mi => "r." + PostgreSqlGrammar.IdToString(mi.Item1) + " = t." + PostgreSqlGrammar.IdToString(mi.Item2))));
                     sb.AppendLine("                     )");
                     sb.AppendLine("                     AND NOT EXISTS");
                     sb.AppendLine("                     (");
                     sb.AppendLine("                         SELECT 1");
                     sb.AppendLine("                         FROM " + collectTuplesTableName + " r");
-                    sb.AppendLine("                         WHERE " + string.Join(" AND ", t.Columns.Where(c => c.PK).Select(c => "r." + SqlSyntax.PostgreSqlGrammar.IdToString(c.Id) + " = t." + SqlSyntax.PostgreSqlGrammar.IdToString(c.Id))));
+                    sb.AppendLine("                         WHERE " + string.Join(" AND ", t.Columns.Where(c => c.PK).Select(c => "r." + PostgreSqlGrammar.IdToString(c.Id) + " = t." + PostgreSqlGrammar.IdToString(c.Id))));
                     sb.AppendLine("                     )");
                     sb.AppendLine("                     ON CONFLICT DO NOTHING;\r\n");
 
@@ -248,8 +250,8 @@ namespace PgMulti.RecursiveRemover
                         newDefinition = Regex.Replace(newDefinition, @" ON DELETE ((NO ACTION|RESTRICT|CASCADE|SET (NULL|DEFAULT))( \([^\)]+\))?)", "");
                         newDefinition = Regex.Replace(newDefinition, @" NOT DEFERRABLE", "");
 
-                        sb.AppendLine("    ALTER TABLE " + SqlSyntax.PostgreSqlGrammar.IdToString(tr.ChildTable!.IdSchema) + "." + SqlSyntax.PostgreSqlGrammar.IdToString(tr.ChildTable!.Id) + " DROP CONSTRAINT " + PostgreSqlGrammar.IdToString(tr.Id) + ";\r\n");
-                        sb.AppendLine("    ALTER TABLE " + SqlSyntax.PostgreSqlGrammar.IdToString(tr.ChildTable!.IdSchema) + "." + SqlSyntax.PostgreSqlGrammar.IdToString(tr.ChildTable!.Id) + " ADD CONSTRAINT " + PostgreSqlGrammar.IdToString(tr.Id));
+                        sb.AppendLine("    ALTER TABLE " + PostgreSqlGrammar.IdToString(tr.ChildTable!.IdSchema) + "." + PostgreSqlGrammar.IdToString(tr.ChildTable!.Id) + " DROP CONSTRAINT " + PostgreSqlGrammar.IdToString(tr.Id) + ";\r\n");
+                        sb.AppendLine("    ALTER TABLE " + PostgreSqlGrammar.IdToString(tr.ChildTable!.IdSchema) + "." + PostgreSqlGrammar.IdToString(tr.ChildTable!.Id) + " ADD CONSTRAINT " + PostgreSqlGrammar.IdToString(tr.Id));
                         sb.AppendLine("    " + newDefinition + " DEFERRABLE;\r\n");
                     }
                 }
@@ -263,8 +265,8 @@ namespace PgMulti.RecursiveRemover
 
             foreach (Table t in _Tables)
             {
-                sb.AppendLine("    DELETE FROM " + SqlSyntax.PostgreSqlGrammar.IdToString(t.IdSchema) + "." + SqlSyntax.PostgreSqlGrammar.IdToString(t.Id) + " t");
-                sb.AppendLine("    WHERE EXISTS(SELECT 1 FROM " + RecursiveRemover.GetCollectTableName(SchemaName, t, true) + " r WHERE " + string.Join(" AND ", t.Columns.Where(c => c.PK).Select(c => "r." + SqlSyntax.PostgreSqlGrammar.IdToString(c.Id) + " = t." + SqlSyntax.PostgreSqlGrammar.IdToString(c.Id))) + ");\r\n");
+                sb.AppendLine("    DELETE FROM " + PostgreSqlGrammar.IdToString(t.IdSchema) + "." + PostgreSqlGrammar.IdToString(t.Id) + " t");
+                sb.AppendLine("    WHERE EXISTS(SELECT 1 FROM " + RecursiveRemover.GetCollectTableName(SchemaName, t, true) + " r WHERE " + string.Join(" AND ", t.Columns.Where(c => c.PK).Select(c => "r." + PostgreSqlGrammar.IdToString(c.Id) + " = t." + PostgreSqlGrammar.IdToString(c.Id))) + ");\r\n");
             }
 
             sb.AppendLine("    COMMIT;\r\n");
@@ -277,8 +279,8 @@ namespace PgMulti.RecursiveRemover
                 {
                     if (tr.OnDelete != "NO ACTION" || !tr.Deferrable)
                     {
-                        sb.AppendLine("    ALTER TABLE " + SqlSyntax.PostgreSqlGrammar.IdToString(tr.ChildTable!.IdSchema) + "." + SqlSyntax.PostgreSqlGrammar.IdToString(tr.ChildTable!.Id) + " DROP CONSTRAINT " + PostgreSqlGrammar.IdToString(tr.Id) + ";\r\n");
-                        sb.AppendLine("    ALTER TABLE " + SqlSyntax.PostgreSqlGrammar.IdToString(tr.ChildTable!.IdSchema) + "." + SqlSyntax.PostgreSqlGrammar.IdToString(tr.ChildTable!.Id) + " ADD CONSTRAINT " + PostgreSqlGrammar.IdToString(tr.Id));
+                        sb.AppendLine("    ALTER TABLE " + PostgreSqlGrammar.IdToString(tr.ChildTable!.IdSchema) + "." + PostgreSqlGrammar.IdToString(tr.ChildTable!.Id) + " DROP CONSTRAINT " + PostgreSqlGrammar.IdToString(tr.Id) + ";\r\n");
+                        sb.AppendLine("    ALTER TABLE " + PostgreSqlGrammar.IdToString(tr.ChildTable!.IdSchema) + "." + PostgreSqlGrammar.IdToString(tr.ChildTable!.Id) + " ADD CONSTRAINT " + PostgreSqlGrammar.IdToString(tr.Id));
                         sb.AppendLine("    " + tr.Definition + ";\r\n");
                     }
                 }

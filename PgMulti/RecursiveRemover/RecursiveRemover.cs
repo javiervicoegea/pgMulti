@@ -209,6 +209,10 @@ namespace PgMulti.RecursiveRemover
                 sb.AppendLine("       (SELECT COUNT(*) FROM " + conflictsTableName + ")");
                 sb.AppendLine("   );\r\n");
             }
+
+            sb.AppendLine("-- Show statistics:\r\n");
+
+            sb.AppendLine("   SELECT * FROM " + CollectTablesSchemaName + ".statistics ORDER BY conflicts DESC;\r\n");
         }
 
         public void WriteDeleteScript(StringBuilder sb)
@@ -244,7 +248,8 @@ namespace PgMulti.RecursiveRemover
             string indentationString = new string(' ', indentation);
             sb.AppendLine(indentationString + "CREATE TABLE " + collectTableName);
             sb.AppendLine(indentationString + "(");
-            sb.AppendLine(indentationString + string.Join(",\r\n", t.Columns.Where(c => c.PK).Select(c => "    " + SqlSyntax.PostgreSqlGrammar.IdToString(c.Id) + " " + c.Type + c.TypeParams + " PRIMARY KEY").ToArray()));
+            sb.AppendLine(indentationString + string.Join(",\r\n" + indentationString, t.Columns.Where(c => c.PK).Select(c => "    " + SqlSyntax.PostgreSqlGrammar.IdToString(c.Id) + " " + c.Type + c.TypeParams).ToArray()) + ",");
+            sb.AppendLine(indentationString + "    PRIMARY KEY (" + string.Join(",", t.Columns.Where(c => c.PK).Select(c => SqlSyntax.PostgreSqlGrammar.IdToString(c.Id)).ToArray()) + ")");
             sb.AppendLine(indentationString + ");\r\n");
         }
 
