@@ -113,12 +113,12 @@ namespace PgMulti.Tasks
             }
 
             AstNode root = AstNode.ProcesarParseTree(pt);
-            if (root["stmtList"]!.Count != 1 || root["stmtList"]![0][0][0].Name != "selectStmt")
+            if (root["stmtList"]!.Children.Where(n => n.Name=="stmt").Count() != 1 || root["stmtList"]!["stmt"]![0].Name != "selectStmt")
             {
                 return;
             }
 
-            AstNode nSelectStmt = root["stmtList"]![0][0][0];
+            AstNode nSelectStmt = root["stmtList"]!["stmt"]![0];
 
             if (nSelectStmt[0] == null || nSelectStmt[0]["selectBaseClauses"] == null) return;
 

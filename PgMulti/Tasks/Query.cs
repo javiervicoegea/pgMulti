@@ -110,12 +110,12 @@ namespace PgMulti.Tasks
             for (int i = 0; i < Columns.Count; i++)
             {
                 QueryColumn qc = Columns[i];
-                DataGridViewColumn dgvc=gv.Columns[i];
+                DataGridViewColumn dgvc = gv.Columns[i];
                 dgvc.HeaderText = qc.Title;
                 dgvc.Tag = qc;
                 dgvc.Resizable = DataGridViewTriState.True;
 
-                if (qc.Column!=null && qc.Column.IsBoolean && !qc.Column.NotNull && dgvc is DataGridViewCheckBoxColumn)
+                if (qc.Column != null && qc.Column.IsBoolean && !qc.Column.NotNull && dgvc is DataGridViewCheckBoxColumn)
                 {
                     DataGridViewCheckBoxColumn dgvcbc = (DataGridViewCheckBoxColumn)dgvc;
                     dgvcbc.ThreeState = true;
@@ -134,11 +134,11 @@ namespace PgMulti.Tasks
 
                 for (int i = 0; i < Columns.Count; i++)
                 {
-                    if (Columns[i].Editable)
+                    if (Columns[i].EditableOnEdit)
                     {
                         gv.Columns[i].ReadOnly = false;
                     }
-                    else if (Columns[i].Column != null && Columns[i].Column!.PK)
+                    else if (Columns[i].Column != null && Columns[i].EditableOnInsert)
                     {
                         gv.Columns[i].ReadOnly = false;
                         for (int j = 0; j < gv.RowCount; j++)
@@ -153,7 +153,6 @@ namespace PgMulti.Tasks
                     {
                         gv.Columns[i].ReadOnly = true;
                     }
-
                 }
             }
             else
@@ -210,7 +209,7 @@ namespace PgMulti.Tasks
                         {
                             if (dc.ColumnName == "__") continue;
                             QueryColumn c = Columns[int.Parse(dc.ColumnName.Substring(1))];
-                            if (c.Editable || c.Column != null && dr[c.Index] != null && dr[c.Index] != DBNull.Value)
+                            if (c.EditableOnEdit || c.Column != null && dr[c.Index] != null && dr[c.Index] != DBNull.Value)
                             {
                                 cols.Add(SqlSyntax.PostgreSqlGrammar.IdToString(c.Column!.Id));
                                 vals.Add(c.Column.GetSqlLiteralValue(dr[c.Index]));
@@ -342,11 +341,19 @@ namespace PgMulti.Tasks
             public Column? Column;
             public int Index;
 
-            public bool Editable
+            public bool EditableOnEdit
             {
                 get
                 {
                     return Column != null && !Column.PK;
+                }
+            }
+
+            public bool EditableOnInsert
+            {
+                get
+                {
+                    return Column != null && !Column.IsGeneratedAlways;
                 }
             }
 

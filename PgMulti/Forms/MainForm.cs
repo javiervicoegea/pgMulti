@@ -3393,7 +3393,7 @@ namespace PgMulti
 
         private void gvTable_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
-            if (e.ColumnIndex != -1 && !gvTable.Columns[e.ColumnIndex].ReadOnly && e.RowIndex == -1)
+            if (e.ColumnIndex != -1 && ((Query.QueryColumn)gvTable.Columns[e.ColumnIndex].Tag!).EditableOnEdit && e.RowIndex == -1)
             {
                 e.PaintBackground(e.ClipBounds, false);
                 e.PaintContent(e.ClipBounds);
@@ -3591,7 +3591,7 @@ namespace PgMulti
                 txt = v.ToString()!;
             }
 
-            TextBoxForm f = new TextBoxForm(nulo, txt, q.Editable && col.Editable);
+            TextBoxForm f = new TextBoxForm(nulo, txt, q.Editable && col.EditableOnEdit);
             f.ShowDialog(this);
 
             if (f.DialogResult == DialogResult.OK)
@@ -3615,7 +3615,7 @@ namespace PgMulti
             Query q = (Query)gvTable.Tag!;
             if (gvTable.RowCount <= cell.RowIndex) return;
             Query.QueryColumn col = q.Columns[cell.ColumnIndex];
-            if (q.Editable && col.Editable && !col.Column!.NotNull)
+            if (q.Editable && col.EditableOnEdit && !col.Column!.NotNull)
             {
                 DataRow drCurrent = ((DataRowView)gvTable.Rows[cell.RowIndex].DataBoundItem).Row;
                 drCurrent[cell.ColumnIndex] = DBNull.Value;
@@ -3639,7 +3639,7 @@ namespace PgMulti
             if (cell.ColumnIndex < q.Columns.Count && cell.RowIndex < gvTable.RowCount)
             {
                 Query.QueryColumn col = q.Columns[cell.ColumnIndex];
-                if (q.Editable && col.Editable && !col.Column!.NotNull)
+                if (q.Editable && col.EditableOnEdit && !col.Column!.NotNull)
                 {
                     tsbSetNull.Enabled = true;
                 }

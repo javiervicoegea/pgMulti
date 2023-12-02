@@ -307,7 +307,7 @@ namespace PgMulti.SqlSyntax
             stmtList.Rule = MakeStarRule(stmtList, semi, stmt);
 
             //ID
-            id.Rule = id_simple | id_simple + dot + id_simple | id_simple + dot + id_simple + dot + id_simple; //MakePlusRule(id, dot, id_simple);
+            id.Rule = id_simple | id_simple + CustomActionHere(ResolveAsteriskConflict) + dot + id_simple | id_simple + dot + id_simple + CustomActionHere(ResolveAsteriskConflict) + dot + id_simple;
             columnId.Rule = id_simple + dot + id_simple | id_simple + dot + id_simple + dot + id_simple;
             stmt.Rule = Empty | createTableStmt | createIndexStmt | createExtensionStmt | createRoleStmt | alterStmt
                       | dropTableStmt | dropIndexStmt | dropSequenceStmt | dropFunctionStmt
@@ -719,6 +719,43 @@ namespace PgMulti.SqlSyntax
             EXISTS.Priority = TerminalPriority.High;
             EXTRACT.Priority = TerminalPriority.High;
         }//constructor
+
+        private void ResolveAsteriskConflict(ParsingContext context, CustomParserAction customAction)
+        {
+            var scanner = context.Parser.Scanner;
+
+            ParserAction? action;
+
+            if (context.CurrentParserInput.Term.Name == ".")
+            {
+                scanner.BeginPreview();
+
+                Token preview = scanner.GetToken();
+                string? previewSym = null;
+
+                if (preview.Terminal != Eof)
+                {
+                    previewSym = preview.Terminal.Name;
+                }
+
+                scanner.EndPreview(true); //keep previewed tokens; important to keep ">>" matched to two ">" symbols, not one combined symbol (see method below)
+
+                if (previewSym == "*")
+                {
+                    action = customAction.ReduceActions.FirstOrDefault();
+                }
+                else
+                {
+                    action = customAction.ShiftActions.FirstOrDefault(a => a.Term.Name == context.CurrentParserInput.Term.Name);
+                }
+            }
+            else
+            {
+                action = customAction.ShiftActions.FirstOrDefault(a => a.Term.Name == context.CurrentParserInput.Term.Name);
+            }
+
+            if (action != null) action.Execute(context);
+        }
 
         private void ResolveUnOpNotConflict(ParsingContext context, CustomParserAction customAction)
         {

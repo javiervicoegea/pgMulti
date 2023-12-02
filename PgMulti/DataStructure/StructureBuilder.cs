@@ -138,7 +138,7 @@ namespace PgMulti.DataStructure
             NpgsqlDataReader drd;
             NpgsqlCommand cmd = c.CreateCommand();
 
-            cmd.CommandText = "SELECT table_schema,table_name,column_name,ordinal_position,column_default,is_identity::bool is_identity,is_nullable,data_type,character_maximum_length,numeric_precision,numeric_scale FROM information_schema.columns WHERE table_schema <> ALL (:hiddenSchemas)";
+            cmd.CommandText = "SELECT table_schema,table_name,column_name,ordinal_position,column_default,is_identity::bool is_identity,identity_generation='ALWAYS' is_generatedalways,is_nullable,data_type,character_maximum_length,numeric_precision,numeric_scale FROM information_schema.columns WHERE table_schema <> ALL (:hiddenSchemas)";
             cmd.Parameters.AddWithValue("hiddenSchemas", _HiddenSchemas);
             using (drd = cmd.ExecuteReader())
             {

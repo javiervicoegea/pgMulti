@@ -11,6 +11,7 @@ namespace PgMulti.DataStructure
         private string? _TypeParams;
         private string? _DefaultValue;
         private bool _IsIdentity;
+        private bool _IsGeneratedAlways;
         private bool _PK;
         private bool _NotNull;
         private int _Position;
@@ -24,7 +25,8 @@ namespace PgMulti.DataStructure
         public string Type { get => _Type; internal set => _Type = value; }
         public string? TypeParams { get => _TypeParams; internal set => _TypeParams = value; }
         public string? DefaultValue { get => _DefaultValue; internal set => _DefaultValue = value; }
-        public bool IsIdentity{ get => _IsIdentity; internal set => _IsIdentity = value; }
+        public bool IsIdentity { get => _IsIdentity; internal set => _IsIdentity = value; }
+        public bool IsGeneratedAlways { get => _IsGeneratedAlways; internal set => _IsGeneratedAlways = value; }
         public bool PK { get => _PK; internal set => _PK = value; }
         public bool NotNull { get => _NotNull; internal set => _NotNull = value; }
         public int Position { get => _Position; internal set => _Position = value; }
@@ -40,6 +42,7 @@ namespace PgMulti.DataStructure
             _Id = drd.Ref<string>("column_name")!;
             _DefaultValue = drd.Ref<string>("column_default");
             _IsIdentity = drd.Val<bool>("is_identity")!.Value;
+            _IsGeneratedAlways = drd.Val<bool>("is_generatedalways")!.Value;
             _NotNull = drd.Ref<string>("is_nullable")! == "NO";
             _Type = drd.Ref<string>("data_type")!;
             _Position = drd.Val<int>("ordinal_position")!.Value;
