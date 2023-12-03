@@ -9,70 +9,76 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
-namespace TradeWright.UI.Forms 
+namespace TradeWright.UI.Forms
 {
     [System.ComponentModel.ToolboxItem(false)]
-	public abstract class TabStyleProvider : Component
-	{
-		#region Constructor
-		
-		protected TabStyleProvider(TabControlExtra tabControl){
-			this.TabControl = tabControl;
-			
-			this._FocusColor = Color.Orange;
-			
-			if (this.TabControl.RightToLeftLayout){
-				this._ImageAlign = ContentAlignment.MiddleRight;
-			} else {
-				this._ImageAlign = ContentAlignment.MiddleLeft;
-			}
-			
-			this.HotTrack = true;
+    public abstract class TabStyleProvider : Component
+    {
+        #region Constructor
+
+        protected TabStyleProvider(TabControlExtra tabControl)
+        {
+            this.TabControl = tabControl;
+
+            this._FocusColor = Color.Orange;
+
+            if (this.TabControl.RightToLeftLayout)
+            {
+                this._ImageAlign = ContentAlignment.MiddleRight;
+            }
+            else
+            {
+                this._ImageAlign = ContentAlignment.MiddleLeft;
+            }
+
+            this.HotTrack = true;
 
             this.Padding = new Point(6, 3);
 
-		}
-		
-		#endregion
+        }
 
-		#region Factory Methods
-		
-		public static TabStyleProvider CreateProvider(TabControlExtra tabControl){
-			TabStyleProvider provider;
-			
-			//	Depending on the display style of the tabControl generate an appropriate provider.
-			switch (tabControl.DisplayStyle) {
-				case TabStyle.None:
-					provider = new TabStyleNoneProvider(tabControl);
-					break;
-					
-				case TabStyle.Default:
-					provider = new TabStyleDefaultProvider(tabControl);
-					break;
-					
-				case TabStyle.Angled:
-					provider = new TabStyleAngledProvider(tabControl);
-					break;
-					
-				case TabStyle.Rounded:
-					provider = new TabStyleRoundedProvider(tabControl);
-					break;
-					
-				case TabStyle.VisualStudio:
-					provider = new TabStyleVisualStudioProvider(tabControl);
-					break;
-					
-				case TabStyle.Chrome:
-					provider = new TabStyleChromeProvider(tabControl);
-					break;
-					
-				case TabStyle.IE8:
-					provider = new TabStyleIE8Provider(tabControl);
-					break;
+        #endregion
 
-				case TabStyle.VS2010:
-					provider = new TabStyleVS2010Provider(tabControl);
-					break;
+        #region Factory Methods
+
+        public static TabStyleProvider CreateProvider(TabControlExtra tabControl)
+        {
+            TabStyleProvider provider;
+
+            //	Depending on the display style of the tabControl generate an appropriate provider.
+            switch (tabControl.DisplayStyle)
+            {
+                case TabStyle.None:
+                    provider = new TabStyleNoneProvider(tabControl);
+                    break;
+
+                case TabStyle.Default:
+                    provider = new TabStyleDefaultProvider(tabControl);
+                    break;
+
+                case TabStyle.Angled:
+                    provider = new TabStyleAngledProvider(tabControl);
+                    break;
+
+                case TabStyle.Rounded:
+                    provider = new TabStyleRoundedProvider(tabControl);
+                    break;
+
+                case TabStyle.VisualStudio:
+                    provider = new TabStyleVisualStudioProvider(tabControl);
+                    break;
+
+                case TabStyle.Chrome:
+                    provider = new TabStyleChromeProvider(tabControl);
+                    break;
+
+                case TabStyle.IE8:
+                    provider = new TabStyleIE8Provider(tabControl);
+                    break;
+
+                case TabStyle.VS2010:
+                    provider = new TabStyleVS2010Provider(tabControl);
+                    break;
 
                 case TabStyle.Rectangular:
                     provider = new TabStyleRectangularProvider(tabControl);
@@ -82,39 +88,39 @@ namespace TradeWright.UI.Forms
                     provider = new TabStyleVS2012Provider(tabControl);
                     break;
 
-            default:
-					provider = new TabStyleDefaultProvider(tabControl);
-					break;
-			}
-			
-			provider._Style = tabControl.DisplayStyle;
-			return provider;
-		}
-		
-		#endregion
-		
-		#region	Instance variables
+                default:
+                    provider = new TabStyleDefaultProvider(tabControl);
+                    break;
+            }
+
+            provider._Style = tabControl.DisplayStyle;
+            return provider;
+        }
+
+        #endregion
+
+        #region	Instance variables
 
         protected TabControlExtra TabControl { get; private set; }
 
-		private Point _Padding;
-		private bool _HotTrack;
-		private TabStyle _Style = TabStyle.Default;
-		
-		
-		private ContentAlignment _ImageAlign;
-		private int _Radius = 1;
-		private int _Overlap;
-		private bool _FocusTrack;
-		private float _Opacity = 1;
-		private bool _ShowTabCloser;
+        private Point _Padding;
+        private bool _HotTrack;
+        private TabStyle _Style = TabStyle.Default;
+
+
+        private ContentAlignment _ImageAlign;
+        private int _Radius = 1;
+        private int _Overlap;
+        private bool _FocusTrack;
+        private float _Opacity = 1;
+        private bool _ShowTabCloser;
         private bool _SelectedTabIsLarger;
 
         private BlendStyle _BlendStyle = BlendStyle.Normal;
 
         private Color _BorderColorDisabled = Color.Empty;
         private Color _BorderColorFocused = Color.Empty;
-		private Color _BorderColorHighlighted = Color.Empty;
+        private Color _BorderColorHighlighted = Color.Empty;
         private Color _BorderColorSelected = Color.Empty;
         private Color _BorderColorUnselected = Color.Empty;
 
@@ -142,7 +148,7 @@ namespace TradeWright.UI.Forms
         private Color _CloserButtonOutlineColorHighlightedActive = Color.Empty;
         private Color _CloserButtonOutlineColorUnselected = Color.Empty;
 
-		private Color _FocusColor = Color.Empty;
+        private Color _FocusColor = Color.Empty;
 
         private Color _PageBackgroundColorDisabled = Color.Empty;
         private Color _PageBackgroundColorFocused = Color.Empty;
@@ -166,17 +172,19 @@ namespace TradeWright.UI.Forms
         private Color _TextColorHighlighted = Color.Empty;
         private Color _TextColorSelected = Color.Empty;
         private Color _TextColorUnselected = Color.Empty;
-		
+
         private Padding _TabPageMargin = new Padding(1);
 
         private int _TabPageRadius = 0;
-		
-		#endregion
-		
-		#region overridable Methods
-		
-		public virtual void AddTabBorder(GraphicsPath path, Rectangle tabBounds) {
-            switch (this.TabControl.Alignment) {
+
+        #endregion
+
+        #region overridable Methods
+
+        public virtual void AddTabBorder(GraphicsPath path, Rectangle tabBounds)
+        {
+            switch (this.TabControl.Alignment)
+            {
                 case TabAlignment.Top:
                     path.AddLine(tabBounds.X, tabBounds.Bottom, tabBounds.X, tabBounds.Y);
                     path.AddLine(tabBounds.X, tabBounds.Y, tabBounds.Right, tabBounds.Y);
@@ -200,11 +208,13 @@ namespace TradeWright.UI.Forms
             }
         }
 
-        public virtual Rectangle GetTabRect(Rectangle baseTabRect, Rectangle pageBounds, bool tabIsSelected) {
+        public virtual Rectangle GetTabRect(Rectangle baseTabRect, Rectangle pageBounds, bool tabIsSelected)
+        {
             var tabRect = baseTabRect;
 
             //	Adjust to meet the tabpage
-            switch (this.TabControl.Alignment) {
+            switch (this.TabControl.Alignment)
+            {
                 case TabAlignment.Top:
                     tabRect.Height += pageBounds.Top - tabRect.Bottom;
                     break;
@@ -224,10 +234,13 @@ namespace TradeWright.UI.Forms
             if (this.SelectedTabIsLarger) tabRect = EnlargeTab(tabRect, tabIsSelected);
 
             //	Create Overlap
-            if (this.TabControl.Alignment <= TabAlignment.Bottom) {
+            if (this.TabControl.Alignment <= TabAlignment.Bottom)
+            {
                 tabRect.X -= this._Overlap;
                 tabRect.Width += this._Overlap;
-            } else {
+            }
+            else
+            {
                 tabRect.Y -= this._Overlap;
                 tabRect.Height += this._Overlap;
             }
@@ -237,12 +250,14 @@ namespace TradeWright.UI.Forms
             return tabRect;
         }
 
-        private Rectangle EnlargeTab(Rectangle tabBounds, bool tabIsSelected) {
+        private Rectangle EnlargeTab(Rectangle tabBounds, bool tabIsSelected)
+        {
             Rectangle newTabBounds = tabBounds;
             int widthIncrement = (int)(tabIsSelected ? 1 : 0);
             int heightIncrement = (int)(tabIsSelected ? 1 : -1);
 
-            switch (this.TabControl.Alignment) {
+            switch (this.TabControl.Alignment)
+            {
                 case TabAlignment.Top:
                     newTabBounds.Y -= heightIncrement;
                     newTabBounds.Height += heightIncrement;
@@ -269,15 +284,17 @@ namespace TradeWright.UI.Forms
             return newTabBounds;
         }
 
-        protected virtual Rectangle EnsureTabIsInView(Rectangle tabBounds, Rectangle pageBounds) {
-			//	Adjust tab to fit within the page bounds.
-			//	Make sure we only reposition visible tabs, as we may have scrolled out of view.
+        protected virtual Rectangle EnsureTabIsInView(Rectangle tabBounds, Rectangle pageBounds)
+        {
+            //	Adjust tab to fit within the page bounds.
+            //	Make sure we only reposition visible tabs, as we may have scrolled out of view.
 
             if (!this.TabControl.IsTabVisible(tabBounds, pageBounds)) return tabBounds;
 
             var newTabBounds = tabBounds;
 
-            switch (this.TabControl.Alignment) {
+            switch (this.TabControl.Alignment)
+            {
                 case TabAlignment.Top:
                 case TabAlignment.Bottom:
                     if (newTabBounds.X <= pageBounds.X + 4) newTabBounds.X = pageBounds.X;
@@ -286,707 +303,958 @@ namespace TradeWright.UI.Forms
                 case TabAlignment.Left:
                 case TabAlignment.Right:
                     if (newTabBounds.Y <= pageBounds.Y + 4) newTabBounds.Y = pageBounds.Y;
-                    newTabBounds.Intersect(new Rectangle(tabBounds.X,pageBounds.Y,tabBounds.Width,pageBounds.Height));
+                    newTabBounds.Intersect(new Rectangle(tabBounds.X, pageBounds.Y, tabBounds.Width, pageBounds.Height));
                     break;
             }
 
             return newTabBounds;
-		}
+        }
 
         #endregion
-		
-		#region	Base Properties
 
-		[Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public TabStyle DisplayStyle {
-			get { return this._Style; }
-			set { 
+        #region	Base Properties
+
+        [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public TabStyle DisplayStyle
+        {
+            get { return this._Style; }
+            set
+            {
                 this._Style = value;
             }
-		}
+        }
 
-        public BlendStyle BlendStyle {
+        public BlendStyle BlendStyle
+        {
             get { return this._BlendStyle; }
-            set {
+            set
+            {
                 this._BlendStyle = value;
                 this.TabControl.Invalidate();
             }
         }
 
         [Category("Appearance")]
-		public ContentAlignment ImageAlign {
-			get { return this._ImageAlign; }
-			set {
-				this._ImageAlign = value;
-			}
-		}
-		
-		[Category("Appearance")]
-		public Point Padding {
-			get { return this._Padding; }
-			set {
-				this._Padding = value;
-				if (this._ShowTabCloser){
-					if (value.X + (int)(this._Radius/2) < -TabControlExtra.TabCloserButtonSize){
-						((TabControl)this.TabControl).Padding = new Point(0, value.Y);
-					} else {
-                        ((TabControl)this.TabControl).Padding = new Point(value.X + this._Radius + (int)(TabControlExtra.TabCloserButtonSize + 10) / 2, value.Y);
-					}
-				} else {
-					if (value.X + (int)(this._Radius/2) < 1){
-						((TabControl)this.TabControl).Padding = new Point(0, value.Y);
-					} else {
-                        ((TabControl)this.TabControl).Padding = new Point(value.X + this._Radius, value.Y);
-					}
-				}
-			}
-		}
-
-
-		[Category("Appearance"), DefaultValue(1), Browsable(true)]
-		public int Radius {
-			get { return this._Radius; }
-			set {
-				if (value < 1) throw new ArgumentException("The radius cannot be less than 1", nameof(value));
-				
-				this._Radius = value;
-				//	Adjust padding
-				this.Padding = this._Padding;
-			}
-		}
-
-		[Category("Appearance")]
-		public int Overlap {
-			get { return this._Overlap; }
-			set {
-				if (value < 0){
-					throw new ArgumentException("The tabs cannot have a negative overlap", nameof(value));
-				}
-				this._Overlap = value;
-			}
-		}
-		
-		
-		[Category("Appearance")]
-		public bool FocusTrack {
-			get { return this._FocusTrack; }
-			set {
-				this._FocusTrack = value;
-			}
-		}
-		
-		[Category("Appearance")]
-		public bool HotTrack {
-			get { return this._HotTrack; }
-			set {
-				this._HotTrack = value;
-				((TabControl)this.TabControl).HotTrack = value;
-			}
-		}
+        public ContentAlignment ImageAlign
+        {
+            get { return this._ImageAlign; }
+            set
+            {
+                this._ImageAlign = value;
+            }
+        }
 
         [Category("Appearance")]
-        public bool SelectedTabIsLarger {
+        public Point Padding
+        {
+            get { return this._Padding; }
+            set
+            {
+                this._Padding = value;
+                if (this._ShowTabCloser)
+                {
+                    if (value.X + (int)(this._Radius / 2) < -TabControlExtra.TabCloserButtonSize)
+                    {
+                        ((TabControl)this.TabControl).Padding = new Point(0, value.Y);
+                    }
+                    else
+                    {
+                        ((TabControl)this.TabControl).Padding = new Point(value.X + this._Radius + (int)(TabControlExtra.TabCloserButtonSize + 10) / 2, value.Y);
+                    }
+                }
+                else
+                {
+                    if (value.X + (int)(this._Radius / 2) < 1)
+                    {
+                        ((TabControl)this.TabControl).Padding = new Point(0, value.Y);
+                    }
+                    else
+                    {
+                        ((TabControl)this.TabControl).Padding = new Point(value.X + this._Radius, value.Y);
+                    }
+                }
+            }
+        }
+
+
+        [Category("Appearance"), DefaultValue(1), Browsable(true)]
+        public int Radius
+        {
+            get { return this._Radius; }
+            set
+            {
+                if (value < 1) throw new ArgumentException("The radius cannot be less than 1", nameof(value));
+
+                this._Radius = value;
+                //	Adjust padding
+                this.Padding = this._Padding;
+            }
+        }
+
+        [Category("Appearance")]
+        public int Overlap
+        {
+            get { return this._Overlap; }
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ArgumentException("The tabs cannot have a negative overlap", nameof(value));
+                }
+                this._Overlap = value;
+            }
+        }
+
+
+        [Category("Appearance")]
+        public bool FocusTrack
+        {
+            get { return this._FocusTrack; }
+            set
+            {
+                this._FocusTrack = value;
+            }
+        }
+
+        [Category("Appearance")]
+        public bool HotTrack
+        {
+            get { return this._HotTrack; }
+            set
+            {
+                this._HotTrack = value;
+                ((TabControl)this.TabControl).HotTrack = value;
+            }
+        }
+
+        [Category("Appearance")]
+        public bool SelectedTabIsLarger
+        {
             get { return this._SelectedTabIsLarger; }
-			set {
+            set
+            {
                 this._SelectedTabIsLarger = value;
                 this.TabControl.Invalidate();
-			}
-		}
-		
-            [Category("Appearance")]
-		public bool ShowTabCloser {
-			get { return this._ShowTabCloser; }
-			set {
-				this._ShowTabCloser = value;
-				//	Adjust padding
-				this.Padding = this._Padding;
-			}
-		}
+            }
+        }
 
-		[Category("Appearance")]
-		public float Opacity {
-			get { return this._Opacity; }
-			set {
-				if (value < 0){
-					throw new ArgumentException("The opacity must be between 0 and 1", nameof(value));
-				}
-				if (value > 1){
-					throw new ArgumentException("The opacity must be between 0 and 1", nameof(value));
-				}
-				this._Opacity = value;
-			}
-		}
+        [Category("Appearance")]
+        public bool ShowTabCloser
+        {
+            get { return this._ShowTabCloser; }
+            set
+            {
+                this._ShowTabCloser = value;
+                //	Adjust padding
+                this.Padding = this._Padding;
+            }
+        }
+
+        [Category("Appearance")]
+        public float Opacity
+        {
+            get { return this._Opacity; }
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ArgumentException("The opacity must be between 0 and 1", nameof(value));
+                }
+                if (value > 1)
+                {
+                    throw new ArgumentException("The opacity must be between 0 and 1", nameof(value));
+                }
+                this._Opacity = value;
+            }
+        }
 
         [Category("Appearance"), DefaultValue(typeof(Color), "")]
-        public Color BorderColorDisabled {
-            get {
-                if (this._BorderColorDisabled.IsEmpty) {
+        public Color BorderColorDisabled
+        {
+            get
+            {
+                if (this._BorderColorDisabled.IsEmpty)
+                {
                     return SystemColors.ControlLight;
-                } else {
+                }
+                else
+                {
                     return this._BorderColorDisabled;
                 }
             }
-            set {
-                if (value.Equals(SystemColors.ControlLight)) {
+            set
+            {
+                if (value.Equals(SystemColors.ControlLight))
+                {
                     this._BorderColorDisabled = Color.Empty;
-                } else {
+                }
+                else
+                {
                     this._BorderColorDisabled = value;
                 }
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(Color), "")]
-        public Color BorderColorFocused {
-            get {
-                if (this._BorderColorFocused.IsEmpty) {
+        public Color BorderColorFocused
+        {
+            get
+            {
+                if (this._BorderColorFocused.IsEmpty)
+                {
                     return ThemedColors.ToolBorder;
-                } else {
+                }
+                else
+                {
                     return this._BorderColorFocused;
                 }
             }
-            set {
-                if (!value.Equals(this.BorderColorFocused)) {
-                    if (value.Equals(ThemedColors.ToolBorder)) {
+            set
+            {
+                if (!value.Equals(this.BorderColorFocused))
+                {
+                    if (value.Equals(ThemedColors.ToolBorder))
+                    {
                         this._BorderColorFocused = Color.Empty;
-                    } else {
+                    }
+                    else
+                    {
                         this._BorderColorFocused = value;
                     }
                 }
             }
         }
 
-		[Category("Appearance"), DefaultValue(typeof(Color), "")]
-		public Color BorderColorHighlighted
-		{
-			get {
-				if (this._BorderColorHighlighted.IsEmpty){
-					return SystemColors.ControlDark;
-				} else {
-					return this._BorderColorHighlighted;
-				}
-			}
-			set {
-				if (value.Equals(SystemColors.ControlDark)){
-					this._BorderColorHighlighted = Color.Empty;
-				} else {
-					this._BorderColorHighlighted = value;
-				}
-			}
-		}
+        [Category("Appearance"), DefaultValue(typeof(Color), "")]
+        public Color BorderColorHighlighted
+        {
+            get
+            {
+                if (this._BorderColorHighlighted.IsEmpty)
+                {
+                    return SystemColors.ControlDark;
+                }
+                else
+                {
+                    return this._BorderColorHighlighted;
+                }
+            }
+            set
+            {
+                if (value.Equals(SystemColors.ControlDark))
+                {
+                    this._BorderColorHighlighted = Color.Empty;
+                }
+                else
+                {
+                    this._BorderColorHighlighted = value;
+                }
+            }
+        }
 
         [Category("Appearance"), DefaultValue(typeof(Color), "")]
-        public Color BorderColorSelected {
-            get {
-                if (this._BorderColorSelected.IsEmpty) {
+        public Color BorderColorSelected
+        {
+            get
+            {
+                if (this._BorderColorSelected.IsEmpty)
+                {
                     return SystemColors.ControlDark;
-                } else {
+                }
+                else
+                {
                     return this._BorderColorSelected;
                 }
             }
-            set {
-                if (value.Equals(SystemColors.ControlDark)) {
+            set
+            {
+                if (value.Equals(SystemColors.ControlDark))
+                {
                     this._BorderColorSelected = Color.Empty;
-                } else {
+                }
+                else
+                {
                     this._BorderColorSelected = value;
                 }
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(Color), "")]
-		public Color BorderColorUnselected
-		{
-			get {
-				if (this._BorderColorUnselected.IsEmpty){
-					return SystemColors.ControlDark;
-				} else {
-					return this._BorderColorUnselected;
-				}
-			}
-			set {
-				if (value.Equals(SystemColors.ControlDark)){
-					this._BorderColorUnselected = Color.Empty;
-				} else {
-					this._BorderColorUnselected = value;
-				}
-			}
-		}
+        public Color BorderColorUnselected
+        {
+            get
+            {
+                if (this._BorderColorUnselected.IsEmpty)
+                {
+                    return SystemColors.ControlDark;
+                }
+                else
+                {
+                    return this._BorderColorUnselected;
+                }
+            }
+            set
+            {
+                if (value.Equals(SystemColors.ControlDark))
+                {
+                    this._BorderColorUnselected = Color.Empty;
+                }
+                else
+                {
+                    this._BorderColorUnselected = value;
+                }
+            }
+        }
 
         [Category("Appearance"), DefaultValue(typeof(Color), "")]
-        public Color PageBackgroundColorDisabled {
-            get {
-                if (this._PageBackgroundColorDisabled.IsEmpty) {
+        public Color PageBackgroundColorDisabled
+        {
+            get
+            {
+                if (this._PageBackgroundColorDisabled.IsEmpty)
+                {
                     return SystemColors.Control;
-                } else {
+                }
+                else
+                {
                     return this._PageBackgroundColorDisabled;
                 }
             }
-            set {
+            set
+            {
                 this._PageBackgroundColorDisabled = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(Color), "")]
-        public Color PageBackgroundColorFocused {
-            get {
-                if (this._PageBackgroundColorFocused.IsEmpty) {
+        public Color PageBackgroundColorFocused
+        {
+            get
+            {
+                if (this._PageBackgroundColorFocused.IsEmpty)
+                {
                     return SystemColors.ControlLight;
-                } else {
+                }
+                else
+                {
                     return this._PageBackgroundColorFocused;
                 }
             }
-            set {
+            set
+            {
                 this._PageBackgroundColorFocused = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(Color), "")]
-        public Color PageBackgroundColorHighlighted {
-            get {
-                if (this._PageBackgroundColorHighlighted.IsEmpty) {
+        public Color PageBackgroundColorHighlighted
+        {
+            get
+            {
+                if (this._PageBackgroundColorHighlighted.IsEmpty)
+                {
                     return PageBackgroundColorUnselected;
-                } else {
+                }
+                else
+                {
                     return this._PageBackgroundColorHighlighted;
                 }
             }
-            set {
+            set
+            {
                 this._PageBackgroundColorHighlighted = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(Color), "")]
-        public Color PageBackgroundColorSelected {
-            get {
-                if (this._PageBackgroundColorSelected.IsEmpty) {
+        public Color PageBackgroundColorSelected
+        {
+            get
+            {
+                if (this._PageBackgroundColorSelected.IsEmpty)
+                {
                     return SystemColors.ControlLightLight;
-                } else {
+                }
+                else
+                {
                     return this._PageBackgroundColorSelected;
                 }
             }
-            set {
+            set
+            {
                 this._PageBackgroundColorSelected = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(Color), "")]
-        public Color PageBackgroundColorUnselected {
-            get {
-                if (this._PageBackgroundColorUnselected.IsEmpty) {
+        public Color PageBackgroundColorUnselected
+        {
+            get
+            {
+                if (this._PageBackgroundColorUnselected.IsEmpty)
+                {
                     return SystemColors.Control;
-                } else {
+                }
+                else
+                {
                     return this._PageBackgroundColorUnselected;
                 }
             }
-            set {
+            set
+            {
                 this._PageBackgroundColorUnselected = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(Color), "")]
-        public Color TabColorDisabled1 {
-            get {
-                if (this._TabColorDisabled1.IsEmpty) {
+        public Color TabColorDisabled1
+        {
+            get
+            {
+                if (this._TabColorDisabled1.IsEmpty)
+                {
                     return PageBackgroundColorDisabled;
-                } else {
+                }
+                else
+                {
                     return this._TabColorDisabled1;
                 }
             }
-            set {
+            set
+            {
                 this._TabColorDisabled1 = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(Color), "")]
-        public Color TabColorDisabled2 {
-            get {
-                if (this._TabColorDisabled2.IsEmpty) {
+        public Color TabColorDisabled2
+        {
+            get
+            {
+                if (this._TabColorDisabled2.IsEmpty)
+                {
                     return TabColorDisabled1;
-                } else {
+                }
+                else
+                {
                     return this._TabColorDisabled2;
                 }
             }
-            set {
+            set
+            {
                 this._TabColorDisabled2 = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(Color), "")]
-        public Color TabColorFocused1 {
-            get {
-                if (this._TabColorFocused1.IsEmpty) {
+        public Color TabColorFocused1
+        {
+            get
+            {
+                if (this._TabColorFocused1.IsEmpty)
+                {
                     return PageBackgroundColorFocused;
-                } else {
+                }
+                else
+                {
                     return this._TabColorFocused1;
                 }
             }
-            set {
+            set
+            {
                 this._TabColorFocused1 = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(Color), "")]
-        public Color TabColorFocused2 {
-            get {
-                if (this._TabColorFocused2.IsEmpty) {
+        public Color TabColorFocused2
+        {
+            get
+            {
+                if (this._TabColorFocused2.IsEmpty)
+                {
                     return TabColorFocused1;
-                } else {
+                }
+                else
+                {
                     return this._TabColorFocused2;
                 }
             }
-            set {
+            set
+            {
                 this._TabColorFocused2 = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(Color), "")]
-        public Color TabColorSelected1 {
-            get {
-                if (this._TabColorSelected1.IsEmpty) {
+        public Color TabColorSelected1
+        {
+            get
+            {
+                if (this._TabColorSelected1.IsEmpty)
+                {
                     return PageBackgroundColorSelected;
-                } else {
+                }
+                else
+                {
                     return this._TabColorSelected1;
                 }
             }
-            set {
+            set
+            {
                 this._TabColorSelected1 = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(Color), "")]
-        public Color TabColorSelected2 {
-            get {
-                if (this._TabColorSelected2.IsEmpty) {
+        public Color TabColorSelected2
+        {
+            get
+            {
+                if (this._TabColorSelected2.IsEmpty)
+                {
                     return TabColorSelected1;
-                } else {
+                }
+                else
+                {
                     return this._TabColorSelected2;
                 }
             }
-            set {
+            set
+            {
                 this._TabColorSelected2 = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(Color), "")]
-        public Color TabColorUnSelected1 {
-            get {
-                if (this._TabColorUnSelected1.IsEmpty) {
+        public Color TabColorUnSelected1
+        {
+            get
+            {
+                if (this._TabColorUnSelected1.IsEmpty)
+                {
                     return PageBackgroundColorUnselected;
-                } else {
+                }
+                else
+                {
                     return this._TabColorUnSelected1;
                 }
             }
-            set {
+            set
+            {
                 this._TabColorUnSelected1 = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(Color), "")]
-        public Color TabColorUnSelected2 {
-            get {
-                if (this._TabColorUnSelected2.IsEmpty) {
+        public Color TabColorUnSelected2
+        {
+            get
+            {
+                if (this._TabColorUnSelected2.IsEmpty)
+                {
                     return TabColorUnSelected1;
-                } else {
+                }
+                else
+                {
                     return this._TabColorUnSelected2;
                 }
             }
-            set {
+            set
+            {
                 this._TabColorUnSelected2 = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(Color), "")]
-        public Color TabColorHighLighted1 {
-            get {
-                if (this._TabColorHighLighted1.IsEmpty) {
+        public Color TabColorHighLighted1
+        {
+            get
+            {
+                if (this._TabColorHighLighted1.IsEmpty)
+                {
                     return PageBackgroundColorHighlighted;
-                } else {
+                }
+                else
+                {
                     return this._TabColorHighLighted1;
                 }
             }
-            set {
+            set
+            {
                 this._TabColorHighLighted1 = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(Color), "")]
-        public Color TabColorHighLighted2 {
-            get {
-                if (this._TabColorHighLighted2.IsEmpty) {
+        public Color TabColorHighLighted2
+        {
+            get
+            {
+                if (this._TabColorHighLighted2.IsEmpty)
+                {
                     return TabColorHighLighted1;
-                } else {
+                }
+                else
+                {
                     return this._TabColorHighLighted2;
                 }
             }
-            set {
+            set
+            {
                 this._TabColorHighLighted2 = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(Color), "")]
-        public Color TextColorDisabled {
-            get {
-                if (this._TextColorUnselected.IsEmpty) {
+        public Color TextColorDisabled
+        {
+            get
+            {
+                if (this._TextColorUnselected.IsEmpty)
+                {
                     return SystemColors.ControlDark;
-                } else {
+                }
+                else
+                {
                     return this._TextColorDisabled;
                 }
             }
-            set {
-                if (value.Equals(SystemColors.ControlDark)) {
+            set
+            {
+                if (value.Equals(SystemColors.ControlDark))
+                {
                     this._TextColorDisabled = Color.Empty;
-                } else {
+                }
+                else
+                {
                     this._TextColorDisabled = value;
                 }
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(Color), "")]
-        public Color TextColorFocused {
-            get {
-                if (this._TextColorFocused.IsEmpty) {
+        public Color TextColorFocused
+        {
+            get
+            {
+                if (this._TextColorFocused.IsEmpty)
+                {
                     return TextColorSelected;
-                } else {
+                }
+                else
+                {
                     return this._TextColorFocused;
                 }
             }
-            set {
+            set
+            {
                 this._TextColorFocused = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(Color), "")]
-        public Color TextColorHighlighted {
-            get {
-                if (this._TextColorHighlighted.IsEmpty) {
+        public Color TextColorHighlighted
+        {
+            get
+            {
+                if (this._TextColorHighlighted.IsEmpty)
+                {
                     return TextColorUnselected;
-                } else {
+                }
+                else
+                {
                     return this._TextColorHighlighted;
                 }
             }
-            set {
+            set
+            {
                 this._TextColorHighlighted = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(Color), "")]
-		public Color TextColorSelected
-		{
-			get {
-				if (this._TextColorSelected.IsEmpty){
-					return SystemColors.ControlText;
-				} else {
-					return this._TextColorSelected;
-				}
-			}
-			set {
-				if (value.Equals(SystemColors.ControlText)){
-					this._TextColorSelected = Color.Empty;
-				} else {
-					this._TextColorSelected = value;
-				}
-			}
-		}
+        public Color TextColorSelected
+        {
+            get
+            {
+                if (this._TextColorSelected.IsEmpty)
+                {
+                    return SystemColors.ControlText;
+                }
+                else
+                {
+                    return this._TextColorSelected;
+                }
+            }
+            set
+            {
+                if (value.Equals(SystemColors.ControlText))
+                {
+                    this._TextColorSelected = Color.Empty;
+                }
+                else
+                {
+                    this._TextColorSelected = value;
+                }
+            }
+        }
 
         [Category("Appearance"), DefaultValue(typeof(Color), "")]
-        public Color TextColorUnselected {
-            get {
-                if (this._TextColorUnselected.IsEmpty) {
+        public Color TextColorUnselected
+        {
+            get
+            {
+                if (this._TextColorUnselected.IsEmpty)
+                {
                     return SystemColors.ControlText;
-                } else {
+                }
+                else
+                {
                     return this._TextColorUnselected;
                 }
             }
-            set {
-                if (value.Equals(SystemColors.ControlText)) {
+            set
+            {
+                if (value.Equals(SystemColors.ControlText))
+                {
                     this._TextColorUnselected = Color.Empty;
-                } else {
+                }
+                else
+                {
                     this._TextColorUnselected = value;
                 }
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(Color), "Orange")]
-		public Color FocusColor
-		{
-			get { return this._FocusColor; }
-			set { this._FocusColor = value;
-			}
-		}
+        public Color FocusColor
+        {
+            get { return this._FocusColor; }
+            set
+            {
+                this._FocusColor = value;
+            }
+        }
 
         [Category("Appearance"), DefaultValue(typeof(SystemColors), "ControlDark")]
-        public Color CloserColorFocused {
+        public Color CloserColorFocused
+        {
             get { return this._CloserColorFocused; }
-            set {
+            set
+            {
                 this._CloserColorFocused = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(SystemColors), "ControlDark")]
-        public Color CloserColorFocusedActive {
+        public Color CloserColorFocusedActive
+        {
             get { return this._CloserColorFocusedActive; }
-            set {
+            set
+            {
                 this._CloserColorFocusedActive = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(SystemColors), "ControlDark")]
-        public Color CloserColorSelected {
+        public Color CloserColorSelected
+        {
             get { return this._CloserColorSelected; }
-            set {
+            set
+            {
                 this._CloserColorSelected = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(SystemColors), "ControlDark")]
-        public Color CloserColorSelectedActive {
+        public Color CloserColorSelectedActive
+        {
             get { return this._CloserColorSelectedActive; }
-            set {
+            set
+            {
                 this._CloserColorSelectedActive = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(SystemColors), "ControlDark")]
-        public Color CloserColorHighlighted {
+        public Color CloserColorHighlighted
+        {
             get { return this._CloserColorHighlighted; }
-            set {
+            set
+            {
                 this._CloserColorHighlighted = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(SystemColors), "ControlDark")]
-        public Color CloserColorHighlightedActive {
+        public Color CloserColorHighlightedActive
+        {
             get { return this._CloserColorHighlightedActive; }
-            set {
+            set
+            {
                 this._CloserColorHighlightedActive = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(SystemColors), "Empty")]
-        public Color CloserColorUnselected {
+        public Color CloserColorUnselected
+        {
             get { return this._CloserColorUnselected; }
-            set {
+            set
+            {
                 this._CloserColorUnselected = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(SystemColors), "Empty")]
-        public Color CloserButtonFillColorFocused {
+        public Color CloserButtonFillColorFocused
+        {
             get { return this._CloserButtonFillColorFocused; }
-            set {
+            set
+            {
                 this._CloserButtonFillColorFocused = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(SystemColors), "Empty")]
-        public Color CloserButtonFillColorFocusedActive {
+        public Color CloserButtonFillColorFocusedActive
+        {
             get { return this._CloserButtonFillColorFocusedActive; }
-            set {
+            set
+            {
                 this._CloserButtonFillColorFocusedActive = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(SystemColors), "Empty")]
-        public Color CloserButtonFillColorSelected {
-            get { return this._CloserButtonFillColorSelected ; }
-            set {
+        public Color CloserButtonFillColorSelected
+        {
+            get { return this._CloserButtonFillColorSelected; }
+            set
+            {
                 this._CloserButtonFillColorSelected = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(SystemColors), "Empty")]
-        public Color CloserButtonFillColorSelectedActive {
+        public Color CloserButtonFillColorSelectedActive
+        {
             get { return this._CloserButtonFillColorSelectedActive; }
-            set {
+            set
+            {
                 this._CloserButtonFillColorSelectedActive = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(SystemColors), "Empty")]
-        public Color CloserButtonFillColorHighlighted {
+        public Color CloserButtonFillColorHighlighted
+        {
             get { return this._CloserButtonFillColorHighlighted; }
-            set {
+            set
+            {
                 this._CloserButtonFillColorHighlighted = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(SystemColors), "Empty")]
-        public Color CloserButtonFillColorHighlightedActive {
+        public Color CloserButtonFillColorHighlightedActive
+        {
             get { return this._CloserButtonFillColorHighlightedActive; }
-            set {
+            set
+            {
                 this._CloserButtonFillColorHighlightedActive = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(SystemColors), "Empty")]
-        public Color CloserButtonFillColorUnselected {
+        public Color CloserButtonFillColorUnselected
+        {
             get { return this._CloserButtonFillColorUnselected; }
-            set {
+            set
+            {
                 this._CloserButtonFillColorUnselected = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(SystemColors), "Empty")]
-        public Color CloserButtonOutlineColorFocused {
+        public Color CloserButtonOutlineColorFocused
+        {
             get { return this._CloserButtonOutlineColorFocused; }
-            set {
+            set
+            {
                 this._CloserButtonOutlineColorFocused = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(SystemColors), "Empty")]
-        public Color CloserButtonOutlineColorFocusedActive {
+        public Color CloserButtonOutlineColorFocusedActive
+        {
             get { return this._CloserButtonOutlineColorFocusedActive; }
-            set {
+            set
+            {
                 this._CloserButtonOutlineColorFocusedActive = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(SystemColors), "Empty")]
-        public Color CloserButtonOutlineColorSelected {
+        public Color CloserButtonOutlineColorSelected
+        {
             get { return this._CloserButtonOutlineColorSelected; }
-            set {
+            set
+            {
                 this._CloserButtonOutlineColorSelected = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(SystemColors), "Empty")]
-        public Color CloserButtonOutlineColorSelectedActive {
+        public Color CloserButtonOutlineColorSelectedActive
+        {
             get { return this._CloserButtonOutlineColorSelectedActive; }
-            set {
+            set
+            {
                 this._CloserButtonOutlineColorSelectedActive = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(SystemColors), "Empty")]
-        public Color CloserButtonOutlineColorHighlighted {
+        public Color CloserButtonOutlineColorHighlighted
+        {
             get { return this._CloserButtonOutlineColorHighlighted; }
-            set {
+            set
+            {
                 this._CloserButtonOutlineColorHighlighted = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(SystemColors), "Empty")]
-        public Color CloserButtonOutlineColorHighlightedActive {
+        public Color CloserButtonOutlineColorHighlightedActive
+        {
             get { return this._CloserButtonOutlineColorHighlightedActive; }
-            set {
+            set
+            {
                 this._CloserButtonOutlineColorHighlightedActive = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(SystemColors), "Empty")]
-        public Color CloserButtonOutlineColorUnselected {
+        public Color CloserButtonOutlineColorUnselected
+        {
             get { return this._CloserButtonOutlineColorUnselected; }
-            set {
+            set
+            {
                 this._CloserButtonOutlineColorUnselected = value;
             }
         }
 
         [Category("Appearance"), DefaultValue(typeof(Padding), "{1,1,1,1}")]
-        public Padding TabPageMargin 
+        public Padding TabPageMargin
         {
-            get {return this._TabPageMargin;}
-            set {
+            get { return this._TabPageMargin; }
+            set
+            {
                 if (value.Left < 0) value.Left = 0;
-                if (value.Right< 0) value.Right = 0;
+                if (value.Right < 0) value.Right = 0;
                 if (value.Top < 0) value.Top = 0;
                 if (value.Bottom < 0) value.Bottom = 0;
 
@@ -1000,9 +1268,11 @@ namespace TradeWright.UI.Forms
         }
 
         [Category("Appearance"), DefaultValue(typeof(int), "0")]
-        public int TabPageRadius {
+        public int TabPageRadius
+        {
             get { return this._TabPageRadius; }
-            set { 
+            set
+            {
                 if (value < 0) value = 0;
                 if (value > 4) value = 4;
                 this._TabPageRadius = value;
@@ -1011,32 +1281,43 @@ namespace TradeWright.UI.Forms
 
         #endregion
 
-		#region Painting
+        #region Painting
 
-        protected internal virtual void DrawTabCloser(GraphicsPath closerPath, GraphicsPath closerButtonPath, Graphics graphics, TabState state, Point mousePosition) {
-            bool active = closerButtonPath.GetBounds().Contains(mousePosition);
-            switch (state) {
+        protected internal virtual void DrawTabCloser(GraphicsPath closerPath, GraphicsPath closerButtonPath, Graphics graphics, TabState state, Point mousePosition, bool draggingTabs)
+        {
+            bool active = !draggingTabs && closerButtonPath.GetBounds().Contains(mousePosition);
+            switch (state)
+            {
                 case TabState.Disabled:
                     DrawTabCloser(closerPath, closerButtonPath, graphics, this.CloserColorUnselected, this.CloserButtonFillColorUnselected, this.CloserButtonOutlineColorUnselected);
                     break;
                 case TabState.Focused:
-                    if (active) {
+                    if (active)
+                    {
                         DrawTabCloser(closerPath, closerButtonPath, graphics, this.CloserColorFocusedActive, this.CloserButtonFillColorFocusedActive, this.CloserButtonOutlineColorFocusedActive);
-                    } else {
+                    }
+                    else
+                    {
                         DrawTabCloser(closerPath, closerButtonPath, graphics, this.CloserColorFocused, this.CloserButtonFillColorFocused, this.CloserButtonOutlineColorFocused);
                     }
                     break;
                 case TabState.Highlighted:
-                    if (active) {
+                    if (active)
+                    {
                         DrawTabCloser(closerPath, closerButtonPath, graphics, this.CloserColorHighlightedActive, this.CloserButtonFillColorHighlightedActive, this.CloserButtonOutlineColorHighlightedActive);
-                    } else {
+                    }
+                    else
+                    {
                         DrawTabCloser(closerPath, closerButtonPath, graphics, this.CloserColorHighlighted, this.CloserButtonFillColorHighlighted, this.CloserButtonOutlineColorHighlighted);
                     }
                     break;
                 case TabState.Selected:
-                    if (active) {
+                    if (active)
+                    {
                         DrawTabCloser(closerPath, closerButtonPath, graphics, this.CloserColorSelectedActive, this.CloserButtonFillColorSelectedActive, this.CloserButtonOutlineColorSelectedActive);
-                    } else {
+                    }
+                    else
+                    {
                         DrawTabCloser(closerPath, closerButtonPath, graphics, this.CloserColorSelected, this.CloserButtonFillColorSelected, this.CloserButtonOutlineColorSelected);
                     }
                     break;
@@ -1046,31 +1327,40 @@ namespace TradeWright.UI.Forms
             }
         }
 
-        private void DrawTabCloser(GraphicsPath closerPath, GraphicsPath closerButtonPath, Graphics graphics, Color closerColor, Color closerFillColor, Color closerOutlineColor) {
-            if (closerButtonPath != null) {
-                if (closerFillColor != Color.Empty) {
+        private void DrawTabCloser(GraphicsPath closerPath, GraphicsPath closerButtonPath, Graphics graphics, Color closerColor, Color closerFillColor, Color closerOutlineColor)
+        {
+            if (closerButtonPath != null)
+            {
+                if (closerFillColor != Color.Empty)
+                {
                     graphics.SmoothingMode = SmoothingMode.None;
-                    using (Brush closerBrush = new SolidBrush(closerFillColor)) {
+                    using (Brush closerBrush = new SolidBrush(closerFillColor))
+                    {
                         graphics.FillPath(closerBrush, closerButtonPath);
                     }
                 }
-                if (closerOutlineColor != Color.Empty) {
+                if (closerOutlineColor != Color.Empty)
+                {
                     graphics.SmoothingMode = SmoothingMode.AntiAlias;
-                    using (Pen closerPen = new Pen(closerOutlineColor)) {
+                    using (Pen closerPen = new Pen(closerOutlineColor, 2.0f))
+                    {
                         graphics.DrawPath(closerPen, closerButtonPath);
                     }
                 }
             }
-            if (closerColor != Color.Empty) {
-                using (Pen closerPen = new Pen(closerColor)) {
-                    closerPen.Width = 1;
+            if (closerColor != Color.Empty)
+            {
+                using (Pen closerPen = new Pen(closerColor))
+                {
+                    closerPen.Width = 2.0f;
                     graphics.SmoothingMode = SmoothingMode.AntiAlias;
                     graphics.DrawPath(closerPen, closerPath);
                 }
             }
         }
 
-        protected internal virtual GraphicsPath GetTabCloserButtonPath(Rectangle closerButtonRect) {
+        protected internal virtual GraphicsPath GetTabCloserButtonPath(Rectangle closerButtonRect)
+        {
             GraphicsPath closerPath = new GraphicsPath();
             closerPath.AddLine(closerButtonRect.X, closerButtonRect.Y, closerButtonRect.Right, closerButtonRect.Y);
             closerPath.AddLine(closerButtonRect.Right, closerButtonRect.Y, closerButtonRect.Right, closerButtonRect.Bottom);
@@ -1080,31 +1370,38 @@ namespace TradeWright.UI.Forms
             return closerPath;
         }
 
-        public void DrawTabCloser(Rectangle closerButtonRect, Graphics graphics, TabState state, Point mousePosition) {
+        public void DrawTabCloser(Rectangle closerButtonRect, Graphics graphics, TabState state, Point mousePosition, bool draggingTabs)
+        {
             if (!this._ShowTabCloser) return;
-            using (var closerPath = GetTabCloserPath(closerButtonRect)) {
-                using (var closerButtonPath = GetTabCloserButtonPath(closerButtonRect)) {
-                    DrawTabCloser(closerPath, closerButtonPath, graphics, state, mousePosition);
+            using (var closerPath = GetTabCloserPath(closerButtonRect))
+            {
+                using (var closerButtonPath = GetTabCloserButtonPath(closerButtonRect))
+                {
+                    DrawTabCloser(closerPath, closerButtonPath, graphics, state, mousePosition, draggingTabs);
                 }
             }
         }
 
-       protected internal virtual GraphicsPath GetTabCloserPath(Rectangle closerButtonRect) {
-           GraphicsPath closerPath = new GraphicsPath();
-           closerPath.AddLine(closerButtonRect.X + 4, closerButtonRect.Y + 4, closerButtonRect.Right - 4, closerButtonRect.Bottom - 4);
-           closerPath.CloseFigure();
-           closerPath.AddLine(closerButtonRect.Right - 4, closerButtonRect.Y + 4, closerButtonRect.X + 4, closerButtonRect.Bottom - 4);
-           closerPath.CloseFigure();
+        protected internal virtual GraphicsPath GetTabCloserPath(Rectangle closerButtonRect)
+        {
+            GraphicsPath closerPath = new GraphicsPath();
+            closerPath.AddLine(closerButtonRect.X + 4, closerButtonRect.Y + 4, closerButtonRect.Right - 4, closerButtonRect.Bottom - 4);
+            closerPath.CloseFigure();
+            closerPath.AddLine(closerButtonRect.Right - 4, closerButtonRect.Y + 4, closerButtonRect.X + 4, closerButtonRect.Bottom - 4);
+            closerPath.CloseFigure();
 
-           return closerPath;
-       }
+            return closerPath;
+        }
 
-        public virtual void DrawTabFocusIndicator(GraphicsPath tabpath, TabState state, Graphics graphics) {
-            if (this._FocusTrack && state == TabState.Focused) {
+        public virtual void DrawTabFocusIndicator(GraphicsPath tabpath, TabState state, Graphics graphics)
+        {
+            if (this._FocusTrack && state == TabState.Focused)
+            {
                 Brush focusBrush = null;
                 RectangleF pathRect = tabpath.GetBounds();
                 Rectangle focusRect = Rectangle.Empty;
-                switch (this.TabControl.Alignment) {
+                switch (this.TabControl.Alignment)
+                {
                     case TabAlignment.Top:
                         focusRect = new Rectangle((int)pathRect.X, (int)pathRect.Y, (int)pathRect.Width, 4);
                         focusBrush = new LinearGradientBrush(focusRect, this.FocusColor, SystemColors.Window, LinearGradientMode.Vertical);
@@ -1132,21 +1429,25 @@ namespace TradeWright.UI.Forms
             }
         }
 
-        protected internal virtual void PaintTabBackground(GraphicsPath tabBorder, TabState state, Graphics graphics) {
-            using (Brush fillBrush = GetTabBackgroundBrush(state, tabBorder)) {
+        protected internal virtual void PaintTabBackground(GraphicsPath tabBorder, TabState state, Graphics graphics)
+        {
+            using (Brush fillBrush = GetTabBackgroundBrush(state, tabBorder))
+            {
                 //	Paint the background
                 graphics.FillPath(fillBrush, tabBorder);
             }
         }
 
         #endregion
-		
-		#region Background brushes
 
-		public virtual Brush GetPageBackgroundBrush(TabState state){
+        #region Background brushes
+
+        public virtual Brush GetPageBackgroundBrush(TabState state)
+        {
             Color color = Color.Empty;
 
-            switch (state) {
+            switch (state)
+            {
                 case TabState.Disabled:
                     color = this.PageBackgroundColorDisabled;
                     break;
@@ -1164,16 +1465,18 @@ namespace TradeWright.UI.Forms
                     break;
             }
             return new SolidBrush(color);
-		}
+        }
 
-        protected internal Brush GetTabBackgroundBrush(TabState state, GraphicsPath tabBorder) {
-            Color color1 = GetTabBackgroundColor1(state,tabBorder);
+        protected internal Brush GetTabBackgroundBrush(TabState state, GraphicsPath tabBorder)
+        {
+            Color color1 = GetTabBackgroundColor1(state, tabBorder);
             Color color2 = GetTabBackgroundColor2(state, tabBorder);
 
             return CreateTabBackgroundBrush(color1, color2, state, tabBorder);
         }
 
-        protected internal virtual Brush CreateTabBackgroundBrush(Color color1, Color color2, TabState state, GraphicsPath tabBorder) {
+        protected internal virtual Brush CreateTabBackgroundBrush(Color color1, Color color2, TabState state, GraphicsPath tabBorder)
+        {
             LinearGradientBrush fillBrush = null;
 
             //	Get the correctly aligned gradient
@@ -1181,7 +1484,8 @@ namespace TradeWright.UI.Forms
             //tabBounds.Inflate(3, 3);
             //tabBounds.X -= 1;
             //tabBounds.Y -= 1;
-            switch (this.TabControl.Alignment) {
+            switch (this.TabControl.Alignment)
+            {
                 case TabAlignment.Top:
                     tabBounds.Height += 1;
                     fillBrush = new LinearGradientBrush(tabBounds, color2, color1, LinearGradientMode.Vertical);
@@ -1202,10 +1506,12 @@ namespace TradeWright.UI.Forms
             return fillBrush;
         }
 
-        protected virtual Color GetTabBackgroundColor1(TabState state, GraphicsPath tabBorder) {
+        protected virtual Color GetTabBackgroundColor1(TabState state, GraphicsPath tabBorder)
+        {
             Color color = Color.Empty;
 
-            switch (state) {
+            switch (state)
+            {
                 case TabState.Disabled:
                     color = this.TabColorDisabled1;
                     break;
@@ -1225,10 +1531,12 @@ namespace TradeWright.UI.Forms
             return color;
         }
 
-        protected virtual Color GetTabBackgroundColor2(TabState state, GraphicsPath tabBorder) {
+        protected virtual Color GetTabBackgroundColor2(TabState state, GraphicsPath tabBorder)
+        {
             Color color = Color.Empty;
 
-            switch (state) {
+            switch (state)
+            {
                 case TabState.Disabled:
                     color = this.TabColorDisabled2;
                     break;
@@ -1248,12 +1556,14 @@ namespace TradeWright.UI.Forms
             return color;
         }
 
-        protected virtual Blend GetBackgroundBlend() {
+        protected virtual Blend GetBackgroundBlend()
+        {
             float[] relativeIntensities = { 0f, 0.7f, 1f };
             float[] relativePositions = { 0f, 0.6f, 1f };
 
             //	Glass look to top aligned tabs
-            if (this.BlendStyle == BlendStyle.Glass) {
+            if (this.BlendStyle == BlendStyle.Glass)
+            {
                 relativeIntensities = new float[] { 0f, 0.5f, 1f, 1f };
                 relativePositions = new float[] { 0f, 0.5f, 0.51f, 1f };
             }
@@ -1266,20 +1576,21 @@ namespace TradeWright.UI.Forms
         }
 
         #endregion
-		
-		#region Tab border and rect
 
-        public GraphicsPath GetTabBorder(Rectangle tabBounds) {
-			
-			GraphicsPath path = new GraphicsPath();
-			
-			this.AddTabBorder(path, tabBounds);
-			
-			path.CloseFigure();
-			return path;
-		}
+        #region Tab border and rect
 
-		#endregion
-		
-	}
+        public GraphicsPath GetTabBorder(Rectangle tabBounds)
+        {
+
+            GraphicsPath path = new GraphicsPath();
+
+            this.AddTabBorder(path, tabBounds);
+
+            path.CloseFigure();
+            return path;
+        }
+
+        #endregion
+
+    }
 }

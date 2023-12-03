@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Reflection;
 using System.Security.Permissions;
 using System.Windows.Forms;
 
@@ -115,6 +116,8 @@ namespace TradeWright.UI.Forms
 
         private int _oldValue;
         private Point _dragStartPosition = Point.Empty;
+        private int? _DragStartTabIndex = null;
+        private int? _DragCurrentTabIndex = null;
 
         private TabStyle _Style;
         private TabStyleProvider _StyleProvider;
@@ -216,6 +219,30 @@ namespace TradeWright.UI.Forms
             set
             {
                 this.DisplayStyleProvider.HotTrack = value;
+            }
+        }
+
+        private bool _AllowReorder = false;
+        //	Allow user to reorder tabs
+        [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
+        public bool AllowReorder
+        {
+            get { return _AllowReorder; }
+            set
+            {
+                _AllowReorder = value;
+            }
+        }
+
+        private bool _NewTabButton = false;
+        //	Allow user to create tabs
+        [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
+        public bool NewTabButton
+        {
+            get { return _NewTabButton; }
+            set
+            {
+                _NewTabButton = value;
             }
         }
 
@@ -456,7 +483,7 @@ namespace TradeWright.UI.Forms
         {
             var mousePosition = new Point(e.X, e.Y);
             int index = this.GetActiveIndex(mousePosition);
-            if (e.Button == MouseButtons.Left && index < TabCount - 1 && !this.DesignMode && index > -1 && this._StyleProvider.ShowTabCloser && this.GetTabCloserButtonRect(index).Contains(mousePosition))
+            if (e.Button == MouseButtons.Left && (!NewTabButton || index < TabCount - 1) && !this.DesignMode && index > -1 && this._StyleProvider.ShowTabCloser && this.GetTabCloserButtonRect(index).Contains(mousePosition))
             {
 
                 //	If we are clicking on a closer then remove the tab instead of raising the standard mouse down event
@@ -468,7 +495,12 @@ namespace TradeWright.UI.Forms
             else
             {
                 base.OnMouseDown(e);
-                if (this.AllowDrop)
+                if (this.AllowReorder && (!this.NewTabButton || index < TabPages.Count - 1))
+                {
+                    this._DragStartTabIndex = index;
+                    this._DragCurrentTabIndex = null;
+                }
+                else if (this.AllowDrop)
                 {
                     this._dragStartPosition = new Point(e.X, e.Y);
                 }
@@ -481,6 +513,53 @@ namespace TradeWright.UI.Forms
             if (this.AllowDrop)
             {
                 this._dragStartPosition = Point.Empty;
+            }
+            if (this.AllowReorder)
+            {
+                if (this._DragCurrentTabIndex.HasValue)
+                {
+                    bool raiseEvent = false;
+                    if (this._DragStartTabIndex.Value != this._DragCurrentTabIndex.Value)
+                    {
+                        _SuspendDrawing = true;
+
+                        // Move tab pages between becouse the effect is smoother than moving the real tab
+                        if (this._DragStartTabIndex.Value < this._DragCurrentTabIndex.Value)
+                        {
+                            // Move to the right
+                            for (int i = this._DragStartTabIndex.Value + 1; i <= this._DragCurrentTabIndex.Value; i++)
+                            {
+                                TabPage tp = TabPages[i];
+                                TabPages.RemoveAt(i);
+                                TabPages.Insert(i - 1, tp);
+                            }
+                        }
+                        else
+                        {
+                            // Move to the left
+                            for (int i = this._DragStartTabIndex.Value - 1; i >= this._DragCurrentTabIndex.Value; i--)
+                            {
+                                TabPage tp = TabPages[i];
+                                TabPages.RemoveAt(i);
+                                TabPages.Insert(i + 1, tp);
+                            }
+                        }
+
+                        _SuspendDrawing = false;
+                        raiseEvent = true;
+                    }
+
+                    this._DragStartTabIndex = null;
+                    this._DragCurrentTabIndex = null;
+
+                    Refresh();
+
+                    if (raiseEvent) ReorderedTabs(this, new EventArgs());
+                }
+                else
+                {
+                    this._DragStartTabIndex = null;
+                }
             }
         }
 
@@ -560,6 +639,8 @@ namespace TradeWright.UI.Forms
         #endregion
 
         #region	Base class event processing
+
+        public event EventHandler<EventArgs> ReorderedTabs;
 
         protected override void OnFontChanged(EventArgs e)
         {
@@ -804,8 +885,27 @@ namespace TradeWright.UI.Forms
                 if (needsRepainting) CustomPaint(mousePos);
             }
 
-            //	Initialise Drag Drop
-            if (this.AllowDrop && e.Button == MouseButtons.Left)
+            if (this._DragStartTabIndex.HasValue)
+            {
+                int index = GetActiveIndex(mousePos);
+                int? newDragTabIndex = null;
+
+                if (index != -1)
+                {
+                    newDragTabIndex = index;
+                    if (this.NewTabButton && index == this.TabCount - 1)
+                    {
+                        newDragTabIndex--;
+                    }
+                }
+
+                if (newDragTabIndex != this._DragCurrentTabIndex)
+                {
+                    this._DragCurrentTabIndex = newDragTabIndex;
+                    Refresh();
+                }
+            }
+            else if (this.AllowDrop && e.Button == MouseButtons.Left)
             {
                 this.StartDragDrop();
             }
@@ -899,9 +999,10 @@ namespace TradeWright.UI.Forms
                     {
                         for (int index = this.TabCount - 1; index >= 0; index--)
                         {
-                            if (index != this.SelectedIndex)
+                            int realIndex = GetRealTabIndex(index);
+                            if (realIndex != this.SelectedIndex)
                             {
-                                this.DrawTabPage(index, mousePosition, this._TabBufferGraphics);
+                                this.DrawTabPage(realIndex, mousePosition, this._TabBufferGraphics);
                             }
                         }
                     }
@@ -990,12 +1091,116 @@ namespace TradeWright.UI.Forms
             }
         }
 
+        private int GetDrawTabIndex(int realIndex)
+        {
+            int drawIndex = realIndex;
+
+            if (this._DragCurrentTabIndex.HasValue && this._DragCurrentTabIndex.Value != this._DragStartTabIndex.Value)
+            {
+                if (realIndex == _DragStartTabIndex.Value)
+                {
+                    drawIndex = _DragCurrentTabIndex.Value;
+                }
+                else if (this._DragCurrentTabIndex.Value > this._DragStartTabIndex.Value)
+                {
+                    // Move to the right
+                    if (realIndex > _DragStartTabIndex.Value && realIndex <= _DragCurrentTabIndex.Value)
+                    {
+                        drawIndex = realIndex - 1;
+                    }
+                }
+                else
+                {
+                    // Move to the left
+                    if (realIndex >= _DragCurrentTabIndex.Value && realIndex < _DragStartTabIndex.Value)
+                    {
+                        drawIndex = realIndex + 1;
+                    }
+                }
+            }
+
+            return drawIndex;
+        }
+
+        private int GetRealTabIndex(int drawIndex)
+        {
+            int realIndex = drawIndex;
+
+            if (this._DragCurrentTabIndex.HasValue && this._DragCurrentTabIndex.Value != this._DragStartTabIndex.Value)
+            {
+                if (drawIndex == _DragCurrentTabIndex.Value)
+                {
+                    realIndex = _DragStartTabIndex.Value;
+                }
+                else if (this._DragCurrentTabIndex.Value > this._DragStartTabIndex.Value)
+                {
+                    // Move to the right
+                    if (drawIndex >= _DragStartTabIndex.Value && drawIndex < _DragCurrentTabIndex.Value)
+                    {
+                        realIndex = drawIndex + 1;
+                    }
+                }
+                else
+                {
+                    // Move to the left
+                    if (drawIndex > _DragCurrentTabIndex.Value && drawIndex <= _DragStartTabIndex.Value)
+                    {
+                        realIndex = drawIndex - 1;
+                    }
+                }
+            }
+
+            return realIndex;
+        }
+
         private void DrawTabPage(int index, Point mousePosition, Graphics graphics)
         {
             graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
             var baseTabRect = this.GetBaseTabRect(index);
             var pageBounds = this.GetPageBounds(index);
+
+            // In case user is dragging the tab
+            if (!Multiline && this._DragCurrentTabIndex.HasValue && this._DragCurrentTabIndex.Value != this._DragStartTabIndex.Value)
+            {
+                if (this._DragCurrentTabIndex.Value > this._DragStartTabIndex.Value)
+                {
+                    // Move to the right
+                    if (index == _DragStartTabIndex.Value)
+                    {
+                        Rectangle prevBaseTabRect = this.GetBaseTabRect(this._DragCurrentTabIndex.Value);
+                        Rectangle prevPageBounds = this.GetPageBounds(this._DragCurrentTabIndex.Value);
+
+                        baseTabRect.X = prevBaseTabRect.Right - baseTabRect.Width;
+                        pageBounds.X = prevPageBounds.Right - pageBounds.Width;
+                    }
+                    else if (index > _DragStartTabIndex.Value && index <= _DragCurrentTabIndex.Value)
+                    {
+                        int draggingTabWidth = this.GetBaseTabRect(_DragStartTabIndex.Value).Width;
+                        baseTabRect.X -= draggingTabWidth;
+                        pageBounds.X -= draggingTabWidth;
+                    }
+                }
+                else
+                {
+                    // Move to the left
+                    if (index == _DragStartTabIndex.Value)
+                    {
+                        Rectangle prevBaseTabRect = this.GetBaseTabRect(this._DragCurrentTabIndex.Value);
+                        Rectangle prevPageBounds = this.GetPageBounds(this._DragCurrentTabIndex.Value);
+
+                        baseTabRect.X = prevBaseTabRect.X;
+                        pageBounds.X = prevPageBounds.X;
+                    }
+                    else if (index >= _DragCurrentTabIndex.Value && index < _DragStartTabIndex.Value)
+                    {
+                        int draggingTabWidth = this.GetBaseTabRect(_DragStartTabIndex.Value).Width;
+                        baseTabRect.X += draggingTabWidth;
+                        pageBounds.X += draggingTabWidth;
+                    }
+                }
+            }
+
 
             var tabBounds = this._StyleProvider.GetTabRect(baseTabRect, pageBounds, this.SelectedIndex == index);
 
@@ -1015,7 +1220,7 @@ namespace TradeWright.UI.Forms
             {
 
                 Rectangle tabCloserButtonRect = Rectangle.Empty;
-                if (index < TabCount - 1 && this._StyleProvider.ShowTabCloser) tabCloserButtonRect = GetTabCloserButtonRect(tabContentRect, tabBorder);
+                if ((!NewTabButton || index < TabCount - 1) && this._StyleProvider.ShowTabCloser) tabCloserButtonRect = GetTabCloserButtonRect(tabContentRect, tabBorder);
 
                 Image tabImage = null;
                 Rectangle tabImageRect = Rectangle.Empty;
@@ -1059,7 +1264,7 @@ namespace TradeWright.UI.Forms
             //	Paint a focus indication
             this._StyleProvider.DrawTabFocusIndicator(tabBorder, state, graphics);
             //	Paint the closer
-            this._StyleProvider.DrawTabCloser(tabCloserButtonRect, graphics, state, mousePosition);
+            this._StyleProvider.DrawTabCloser(tabCloserButtonRect, graphics, state, mousePosition, this._DragStartTabIndex.HasValue);
         }
 
         private void DrawTabPageBorder(GraphicsPath path, TabState state, Graphics graphics)

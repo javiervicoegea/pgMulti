@@ -639,26 +639,26 @@ namespace PgMulti
             this.tcSql.DisplayStyleProvider.BorderColorSelected = System.Drawing.SystemColors.ControlDark;
             this.tcSql.DisplayStyleProvider.BorderColorUnselected = System.Drawing.SystemColors.ControlDark;
             this.tcSql.DisplayStyleProvider.CloserButtonFillColorFocused = System.Drawing.Color.Empty;
-            this.tcSql.DisplayStyleProvider.CloserButtonFillColorFocusedActive = System.Drawing.Color.White;
+            this.tcSql.DisplayStyleProvider.CloserButtonFillColorFocusedActive = System.Drawing.Color.Black;
             this.tcSql.DisplayStyleProvider.CloserButtonFillColorHighlighted = System.Drawing.Color.Empty;
-            this.tcSql.DisplayStyleProvider.CloserButtonFillColorHighlightedActive = System.Drawing.Color.White;
+            this.tcSql.DisplayStyleProvider.CloserButtonFillColorHighlightedActive = System.Drawing.Color.Black;
             this.tcSql.DisplayStyleProvider.CloserButtonFillColorSelected = System.Drawing.Color.Empty;
-            this.tcSql.DisplayStyleProvider.CloserButtonFillColorSelectedActive = System.Drawing.Color.White;
+            this.tcSql.DisplayStyleProvider.CloserButtonFillColorSelectedActive = System.Drawing.Color.Black;
             this.tcSql.DisplayStyleProvider.CloserButtonFillColorUnselected = System.Drawing.Color.Empty;
             this.tcSql.DisplayStyleProvider.CloserButtonOutlineColorFocused = System.Drawing.Color.Empty;
-            this.tcSql.DisplayStyleProvider.CloserButtonOutlineColorFocusedActive = System.Drawing.Color.Black;
+            this.tcSql.DisplayStyleProvider.CloserButtonOutlineColorFocusedActive = System.Drawing.Color.Empty;
             this.tcSql.DisplayStyleProvider.CloserButtonOutlineColorHighlighted = System.Drawing.Color.Empty;
-            this.tcSql.DisplayStyleProvider.CloserButtonOutlineColorHighlightedActive = System.Drawing.Color.Black;
+            this.tcSql.DisplayStyleProvider.CloserButtonOutlineColorHighlightedActive = System.Drawing.Color.Empty;
             this.tcSql.DisplayStyleProvider.CloserButtonOutlineColorSelected = System.Drawing.Color.Empty;
-            this.tcSql.DisplayStyleProvider.CloserButtonOutlineColorSelectedActive = System.Drawing.Color.Black;
+            this.tcSql.DisplayStyleProvider.CloserButtonOutlineColorSelectedActive = System.Drawing.Color.Empty;
             this.tcSql.DisplayStyleProvider.CloserButtonOutlineColorUnselected = System.Drawing.Color.Empty;
             this.tcSql.DisplayStyleProvider.CloserColorFocused = System.Drawing.Color.Black;
-            this.tcSql.DisplayStyleProvider.CloserColorFocusedActive = System.Drawing.Color.Black;
+            this.tcSql.DisplayStyleProvider.CloserColorFocusedActive = System.Drawing.Color.White;
             this.tcSql.DisplayStyleProvider.CloserColorHighlighted = System.Drawing.Color.Black;
-            this.tcSql.DisplayStyleProvider.CloserColorHighlightedActive = System.Drawing.Color.Black;
+            this.tcSql.DisplayStyleProvider.CloserColorHighlightedActive = System.Drawing.Color.White;
             this.tcSql.DisplayStyleProvider.CloserColorSelected = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(102)))), ((int)(((byte)(115)))));
-            this.tcSql.DisplayStyleProvider.CloserColorSelectedActive = System.Drawing.Color.Black;
-            this.tcSql.DisplayStyleProvider.CloserColorUnselected = System.Drawing.Color.Empty;
+            this.tcSql.DisplayStyleProvider.CloserColorSelectedActive = System.Drawing.Color.White;
+            this.tcSql.DisplayStyleProvider.CloserColorUnselected = System.Drawing.Color.Black;
             this.tcSql.DisplayStyleProvider.FocusTrack = false;
             this.tcSql.DisplayStyleProvider.HotTrack = true;
             this.tcSql.DisplayStyleProvider.ImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -691,6 +691,8 @@ namespace PgMulti
             this.tcSql.DisplayStyleProvider.TextColorUnselected = System.Drawing.SystemColors.ControlText;
             this.tcSql.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tcSql.HotTrack = true;
+            this.tcSql.AllowReorder = true;
+            this.tcSql.NewTabButton = true;
             this.tcSql.ImageList = this.ilTabControl;
             this.tcSql.Location = new System.Drawing.Point(0, 0);
             this.tcSql.Name = "tcSql";
@@ -701,6 +703,7 @@ namespace PgMulti
             this.tcSql.SelectedIndexChanged += new System.EventHandler(this.tcSql_SelectedIndexChanged);
             this.tcSql.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tcSql_MouseDown);
             this.tcSql.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tcSql_MouseUp);
+            this.tcSql.ReorderedTabs += new EventHandler<EventArgs>(tcSql_ReorderedTabs);
             // 
             // tpNewTab
             // 

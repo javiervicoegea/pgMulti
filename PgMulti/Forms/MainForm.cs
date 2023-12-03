@@ -355,14 +355,14 @@ namespace PgMulti
 
                     bool obsolete = false;
 
-                    for (int i = 0; i < currentVersion.Length&& i<latestReleaseVersion.Length; i++)
+                    for (int i = 0; i < currentVersion.Length && i < latestReleaseVersion.Length; i++)
                     {
                         if (currentVersion[i] < latestReleaseVersion[i])
                         {
                             obsolete = true;
                             break;
                         }
-                        else if(currentVersion[i] > latestReleaseVersion[i])
+                        else if (currentVersion[i] > latestReleaseVersion[i])
                         {
                             obsolete = false;
                             break;
@@ -2092,6 +2092,11 @@ namespace PgMulti
             }
 
             _MouseDownTabPage = null;
+        }
+
+        private void tcSql_ReorderedTabs(object sender, EventArgs e)
+        {
+            tmrSaveTabs.Enabled = true;
         }
 
         private void tsmiCloseTab_Click(object sender, EventArgs e)
