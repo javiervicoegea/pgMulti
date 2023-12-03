@@ -22,7 +22,7 @@ namespace PgMulti
 
         private void LoginForm_Load(object sender, EventArgs e)
         {
-            lblVersion.Text = "v" + Application.ProductVersion;
+            lblVersion.Text = "v" + Application.ProductVersion.Split('+').First();
         }
 
         private void btnReset_Click(object sender, EventArgs e)

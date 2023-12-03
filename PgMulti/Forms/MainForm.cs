@@ -350,10 +350,29 @@ namespace PgMulti
 
                 if (json != null)
                 {
-                    if (Application.ProductVersion != (string)json.tag_name)
+                    int[] currentVersion = Application.ProductVersion.Split('+').First().Split('.').Select(s => int.Parse(s)).ToArray();
+                    int[] latestReleaseVersion = ((string)json.tag_name).Split('.').Select(s => int.Parse(s)).ToArray();
+
+                    bool obsolete = false;
+
+                    for (int i = 0; i < currentVersion.Length&& i<latestReleaseVersion.Length; i++)
+                    {
+                        if (currentVersion[i] < latestReleaseVersion[i])
+                        {
+                            obsolete = true;
+                            break;
+                        }
+                        else if(currentVersion[i] > latestReleaseVersion[i])
+                        {
+                            obsolete = false;
+                            break;
+                        }
+                    }
+
+                    if (obsolete)
                     {
                         tsmiUpdates.Visible = true;
-                        tsmiUpdates.Text = Properties.Text.update_available + ": " + Application.ProductVersion + " >> " + (string)json.tag_name;
+                        tsmiUpdates.Text = Properties.Text.update_available + ": " + Application.ProductVersion.Split('+').First() + " >> " + (string)json.tag_name;
                         tsmiUpdates.Image = global::PgMulti.Properties.Resources.updates_found;
                         tsmiUpdates.Tag = (string)json.html_url;
                     }
