@@ -2,11 +2,13 @@
 
 namespace PgMulti.QueryEditor
 {
-    public class UpperCaseTextStyle : TextStyle
+    public class CaseTextStyle : TextStyle
     {
+        private bool _UpperCase;
 
-        public UpperCaseTextStyle(Brush foreBrush, Brush? backgroundBrush, FontStyle fontStyle) : base(foreBrush, backgroundBrush, fontStyle)
+        public CaseTextStyle(Brush foreBrush, Brush? backgroundBrush, FontStyle fontStyle, bool upperCase) : base(foreBrush, backgroundBrush, fontStyle)
         {
+            _UpperCase = upperCase;
         }
 
         public override void Draw(Graphics gr, Point position, FastColoredTextBoxNS.Range range)
@@ -31,12 +33,22 @@ namespace PgMulti.QueryEditor
                     for (int i = range.Start.iChar; i < range.End.iChar; i++)
                     {
                         SizeF size = FastColoredTextBox.GetCharSize(f, line[i].c);
+                        string text = line[i].c.ToString();
+
+                        if (_UpperCase)
+                        {
+                            text = text.ToUpperInvariant();
+                        }
+                        else
+                        {
+                            text = text.ToLowerInvariant();
+                        }
 
                         var gs = gr.Save();
                         float k = size.Width > range.tb.CharWidth + 1 ? range.tb.CharWidth / size.Width : 1;
                         gr.TranslateTransform(x, y + (1 - k) * range.tb.CharHeight / 2);
                         gr.ScaleTransform(k, (float)Math.Sqrt(k));
-                        gr.DrawString(line[i].c.ToString().ToUpper(), f, ForeBrush, 0, 0, stringFormat);
+                        gr.DrawString(text, f, ForeBrush, 0, 0, stringFormat);
                         gr.Restore(gs);
                         x += dx;
                     }
@@ -46,8 +58,19 @@ namespace PgMulti.QueryEditor
                     //classic mode 
                     for (int i = range.Start.iChar; i < range.End.iChar; i++)
                     {
+                        string text = line[i].c.ToString();
+                        
+                        if (_UpperCase)
+                        {
+                            text=text.ToUpperInvariant();
+                        }
+                        else
+                        {
+                            text = text.ToLowerInvariant();
+                        }
+
                         //draw char
-                        gr.DrawString(line[i].c.ToString().ToUpper(), f, ForeBrush, x, y, stringFormat);
+                        gr.DrawString(text, f, ForeBrush, x, y, stringFormat);
                         x += dx;
                     }
                 }

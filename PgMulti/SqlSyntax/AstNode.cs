@@ -587,7 +587,14 @@ namespace PgMulti.SqlSyntax
 
                     if ((na.Token.Terminal.Flags & TermFlags.IsKeyword) != 0)
                     {
-                        tokenText = na.Token.Text.ToUpper();
+                        if (na.GetRecursiveParentNamedAs("typeNameAndParams") != null)
+                        {
+                            tokenText = na.Token.Text.ToLowerInvariant();
+                        }
+                        else
+                        {
+                            tokenText = na.Token.Text.ToUpperInvariant();
+                        }
                     }
                     else
                     {

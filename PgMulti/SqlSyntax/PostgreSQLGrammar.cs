@@ -142,8 +142,8 @@ namespace PgMulti.SqlSyntax
             var createTableDefList = new NonTerminal("createTableDefList");
             var nullColumnConstraint = new NonTerminal("nullColumnConstraint");
             var fkColumnConstraint = new NonTerminal("fkColumnConstraint");
+            var typeNameAndParams = new NonTerminal("typeNameAndParams");
             var typeName = new NonTerminal("typeName");
-            var typeSpec = new NonTerminal("typeSpec");
             var typeParamsOpt = new NonTerminal("typeParamsOpt");
             var tableConstraintDef = new NonTerminal("tableConstraintDef");
             var tableConstraintDefClause = new NonTerminal("tableConstraintDefClause");
@@ -362,7 +362,7 @@ namespace PgMulti.SqlSyntax
 
             createSequenceStmt.Rule = CREATE + (ToTerm("TEMPORARY") | "TEMP" | "UNLOGGED" | Empty) + SEQUENCE
                 + (Empty | IF + NOT + EXISTS) + id
-                + (Empty | AS + typeName)
+                + (Empty | AS + typeNameAndParams)
                 + createSequenceClauseList;
 
             createSequenceClauseList.Rule = MakeStarRule(createSequenceClauseList, createSequenceClause);
@@ -396,11 +396,11 @@ namespace PgMulti.SqlSyntax
                 + "(" + createFunctionArgs + ")" + createFunctionReturns
                 + createFunctionClauses;
             createFunctionArgs.Rule = MakeStarRule(createFunctionArgs, comma, createFunctionArg);
-            createFunctionArg.Rule = createFunctionArgMode + (id_simple | Empty) + typeName + typeParamsOpt + createFunctionArgDefault;
+            createFunctionArg.Rule = createFunctionArgMode + (id_simple | Empty) + typeNameAndParams + createFunctionArgDefault;
             createFunctionArgMode.Rule = IN | "OUT" | "INOUT" | "VARIADIC" | Empty;
             createFunctionArgDefault.Rule = ((DEFAULT | "=") + expression) | Empty;
-            createFunctionReturns.Rule = "RETURNS" + (typeName + typeParamsOpt | TRIGGER | "VOID") | ToTerm("RETURNS") + "TABLE" + "(" + createFunctionReturnsTableColumns + ")" | Empty;
-            createFunctionReturnsTableColumns.Rule = MakeStarRule(createFunctionReturnsTableColumns, comma, id_simple + typeName + typeParamsOpt);
+            createFunctionReturns.Rule = "RETURNS" + (typeNameAndParams | TRIGGER | "VOID") | ToTerm("RETURNS") + "TABLE" + "(" + createFunctionReturnsTableColumns + ")" | Empty;
+            createFunctionReturnsTableColumns.Rule = MakeStarRule(createFunctionReturnsTableColumns, comma, id_simple + typeNameAndParams);
             createFunctionClauses.Rule = MakePlusRule(createFunctionClauses, createFunctionClause);
             createFunctionClause.Rule =
                 "LANGUAGE" + (string_literal | id_simple)
@@ -412,7 +412,7 @@ namespace PgMulti.SqlSyntax
             dollarStringBodyFunction.Rule = dollar_string_tag + (plBlockCodeStmt + (Empty | semi) | sqlStmtList) + dollar_string_tag;
             plBlockCodeStmt.Rule = plDeclareClauseOpt + plBeginClause + plExceptionClauseOpt + END;
             plDeclareClauseOpt.Rule = Empty | "DECLARE" + plDeclareStmts;
-            plDeclareStmts.Rule = MakeStarRule(plDeclareStmts, id_simple + (Empty | "CONSTANT") + typeName + typeParamsOpt + (Empty | notNull) + (Empty | (DEFAULT | ToTerm(":=") | "=") + expression) + semi);
+            plDeclareStmts.Rule = MakeStarRule(plDeclareStmts, id_simple + (Empty | "CONSTANT") + typeNameAndParams + (Empty | notNull) + (Empty | (DEFAULT | ToTerm(":=") | "=") + expression) + semi);
             plBeginClause.Rule = "BEGIN" + plStmtList;
             plStmtList.Rule = MakeStarRule(plStmtList, plStmt + semi);
 
@@ -456,7 +456,7 @@ namespace PgMulti.SqlSyntax
                     | createTableWithClauseOpt + createTableTablespaceClauseOpt + AS + selectStmt
                 );
             createTableDefList.Rule = MakePlusRule(createTableDefList, comma, fieldDef | tableConstraintDef);
-            fieldDef.Rule = id_simple + (Empty | "TYPE") + typeName + typeParamsOpt + (Empty | "COLLATE" + id) + columnConstraintListOpt;
+            fieldDef.Rule = id_simple + (Empty | "TYPE") + typeNameAndParams + (Empty | "COLLATE" + id) + columnConstraintListOpt;
             columnConstraintListOpt.Rule = MakeStarRule(columnConstraintListOpt, columnConstraint);
             columnConstraint.Rule =
                 (Empty | CONSTRAINT + id_simple) + (
@@ -470,8 +470,9 @@ namespace PgMulti.SqlSyntax
                 );
             nullColumnConstraint.Rule = NULL | notNull;
             fkColumnConstraint.Rule = constraintId + fkConstraint;
+            typeNameAndParams.Rule = typeName + typeParamsOpt;
             typeName.Rule = ToTerm("BIT") + (Empty | "VARYING") | "VARBIT" | "DATE"
-                | "TIME" + (Empty | (ToTerm("WITHOUT") | "WITH") + "TIME" + "ZONE")
+                | "TIME" + (Empty | (ToTerm("WITHOUT") | "WITH") + "TIME" + ToTerm("ZONE"))
                 | "TIMESTAMP"
                 | "DECIMAL" | "REAL" | "FLOAT" | "FLOAT4" | "FLOAT8"
                 | "SMALLINT" | "INTEGER" | "INT" | "INTERVAL" | "CHARACTER" + (Empty | ToTerm("VARYING")) | "DATETIME"
@@ -481,7 +482,7 @@ namespace PgMulti.SqlSyntax
                 | "SMALLSERIAL" | "TSQUERY" | "TSVECTOR" | "XML" | "POINT" | "REGCONFIG" | "REGCLASS" | "REGNAMESPACE"
                 | "NAME" | "BPCHAR";
 
-            typeParamsOpt.Rule = (Empty | "(" + number + ")") + (Empty | (ToTerm("WITHOUT") | "WITH") + "TIME" + "ZONE")
+            typeParamsOpt.Rule = (Empty | "(" + number + ")") + (Empty | (ToTerm("WITHOUT") | "WITH") + "TIME" + ToTerm("ZONE"))
                 | "(" + number + comma + number + ")";
 
             tableConstraintDef.Rule = constraintId + tableConstraintDefClause;
@@ -534,7 +535,7 @@ namespace PgMulti.SqlSyntax
                     | SEQUENCE + (Empty | IF + EXISTS) + id
                         + (
                             "OWNED" + BY + columnId
-                            | AS + typeName + (Empty | "MAXVALUE" + number)
+                            | AS + typeNameAndParams + (Empty | "MAXVALUE" + number)
                         )
                     | (ToTerm("ROLE") | "USER") + (
                         (id_simple | "CURRENT_ROLE" | "CURRENT_USER" | "SESSION_USER") + (WITH | Empty) + alterRoleOptions
@@ -566,7 +567,7 @@ namespace PgMulti.SqlSyntax
                     + (
                         SET + (notNull | DEFAULT + expression)
                         | DROP + (DEFAULT | notNull)
-                        | ("TYPE" | ToTerm("SET") + "DATA" + "TYPE") + typeName + typeParamsOpt
+                        | ("TYPE" | ToTerm("SET") + "DATA" + "TYPE") + typeNameAndParams
                         | ADD + "GENERATED" + "ALWAYS" + AS + "IDENTITY" + (Empty | "(" + SEQUENCE + "NAME" + id + createSequenceClauseList + ")")
                     )
                 | ALTER + CONSTRAINT + id_simple + deferrable + initiallyDeferred
@@ -638,7 +639,7 @@ namespace PgMulti.SqlSyntax
                 | string_literal | escaped_string_literal | number
                 | EXISTS + parSelectStmtExpr | ToTerm("ARRAY") + parSelectStmtExpr
                 | tuple | parSelectStmtExpr | caseExpression
-                | term + "::" + typeName + typeParamsOpt
+                | term + "::" + typeNameAndParams
                 | term + "[" + expression + "]" | extractExpr | castExpr
                 | SUBSTRING + "(" + expression + FROM + expression + "FOR" + expression + ")"
                 | POSITION + "(" + expression + IN + expression + ")"
@@ -676,7 +677,7 @@ namespace PgMulti.SqlSyntax
                 | "HOUR" | "ISODOW" | "ISOYEAR" | "JULIAN" | "MICROSECONDS" | "MILLENNIUM"
                 | "MILLISECONDS" | "MINUTE" | "MONTH" | "QUARTER" | "SECOND" | "TIMEZONE"
                 | "TIMEZONE_HOUR" | "TIMEZONE_MINUTE" | "WEEK" | "YEAR";
-            castExpr.Rule = ToTerm("CAST") + "(" + expression + "AS" + typeName + ")";
+            castExpr.Rule = ToTerm("CAST") + "(" + expression + "AS" + typeNameAndParams + ")";
 
             notNull.Rule = NOT + NULL;
 

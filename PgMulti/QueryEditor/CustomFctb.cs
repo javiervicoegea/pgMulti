@@ -12,8 +12,9 @@ namespace PgMulti.QueryEditor
 
         public Style WavyStyle = new WavyLineStyle(255, Color.Red);
         public Style MaroonBoldStyle = new TextStyle(Brushes.Maroon, null, FontStyle.Bold);
-        public Style KeywordUpperCaseStyle = new UpperCaseTextStyle(Brushes.Blue, null, FontStyle.Regular);
-        public Style KeywordBoldUpperCaseStyle = new UpperCaseTextStyle(Brushes.Blue, null, FontStyle.Bold);
+        public Style KeywordUpperCaseStyle = new CaseTextStyle(Brushes.Blue, null, FontStyle.Regular, true);
+        public Style KeywordBoldUpperCaseStyle = new CaseTextStyle(Brushes.Blue, null, FontStyle.Bold, true);
+        public Style TypesStyle = new CaseTextStyle(Brushes.Brown, null, FontStyle.Italic, false);
 
         private Parser? parser;
         private ParseTree? _ParseTree = null;
@@ -48,8 +49,6 @@ namespace PgMulti.QueryEditor
             SyntaxHighlighter.NumberStyle = SyntaxHighlighter.MagentaStyle;
             SyntaxHighlighter.FunctionsStyle = MaroonBoldStyle;
             SyntaxHighlighter.VariableStyle = SyntaxHighlighter.BlackStyle;
-            SyntaxHighlighter.TypesStyle = SyntaxHighlighter.BrownStyle;
-
             InitBraces();
             OnTextChanged(Range);
         }
@@ -186,9 +185,9 @@ namespace PgMulti.QueryEditor
                         tr.SetStyle(SyntaxHighlighter.VariableStyle);
                         break;
                     default:
-                        if (nodoAst != null && (nodoAst.Name == "typeParamsOpt" || nodoAst.GetRecursiveParentNamedAs("typeName") != null))
+                        if (nodoAst != null && nodoAst.GetRecursiveParentNamedAs("typeNameAndParams") != null)
                         {
-                            tr.SetStyle(SyntaxHighlighter.TypesStyle);
+                            tr.SetStyle(TypesStyle);
                         }
                         else if (t.Terminal.GetType().Name == "KeyTerm")
                         {
