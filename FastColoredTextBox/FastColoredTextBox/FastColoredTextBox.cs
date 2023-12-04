@@ -5592,7 +5592,7 @@ namespace FastColoredTextBoxNS
                     int iLine = PointToPlaceSimple(e.Location).iLine;
                     lineSelectFrom = iLine;
                     Selection.Start = new Place(0, iLine);
-                    Selection.End = new Place(GetLineLength(iLine), iLine);
+                    Selection.End = LinesCount - 1 > iLine ? new Place(0, iLine + 1) : new Place(GetLineLength(iLine), iLine);
                     Selection.EndUpdate();
                     Invalidate();
                 }
