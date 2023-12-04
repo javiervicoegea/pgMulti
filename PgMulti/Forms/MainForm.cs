@@ -3709,7 +3709,7 @@ namespace PgMulti
         private void InitializeText()
         {
             this.tscmiNewGroup.Text = Properties.Text.new_group;
-            this.tscmiNewDB.Text = Properties.Text.new_db;
+            this.tscmiNewDB.Text = Properties.Text.add_db;
             this.tscmiExploreTable.Text = Properties.Text.explore_table;
             this.tscmiRecursiveRemove.Text = Properties.Text.recursive_remove;
             this.tscmiCreateTableDiagram.Text = Properties.Text.create_table_diagram;
@@ -3720,7 +3720,7 @@ namespace PgMulti
             this.tscmiDown.Text = Properties.Text.down;
             this.tscmiRefresh.Text = Properties.Text.refresh;
             this.tsbNewGroup.Text = Properties.Text.new_group;
-            this.tsbNewDB.Text = Properties.Text.new_db;
+            this.tsbNewDB.Text = Properties.Text.add_db;
             this.tsbExploreTable.Text = Properties.Text.explore_table;
             this.tsbRecursiveRemove.Text = Properties.Text.recursive_remove;
             this.tsbCreateTableDiagram.Text = Properties.Text.create_table_diagram;

@@ -412,8 +412,8 @@ ATTENTION: Databases within the group will also be deleted.</value>
 	<data name="name" xml:space="preserve">
     <value>Name</value>
   </data>
-	<data name="new_db" xml:space="preserve">
-    <value>New database</value>
+	<data name="add_db" xml:space="preserve">
+    <value>Add database</value>
   </data>
 	<data name="new_doc_title" xml:space="preserve">
     <value>Untitled</value>

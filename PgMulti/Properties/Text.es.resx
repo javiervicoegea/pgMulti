@@ -412,8 +412,8 @@ ATENCIÓN: Se eliminarán también las bases de datos dentro del grupo.</value>
   <data name="name" xml:space="preserve">
     <value>Nombre</value>
   </data>
-  <data name="new_db" xml:space="preserve">
-    <value>Nueva base de datos</value>
+  <data name="add_db" xml:space="preserve">
+    <value>Agregar base de datos</value>
   </data>
   <data name="new_doc_title" xml:space="preserve">
     <value>Sin título</value>

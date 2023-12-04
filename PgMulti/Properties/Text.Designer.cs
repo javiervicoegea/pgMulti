@@ -88,6 +88,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Add database.
+        /// </summary>
+        internal static string add_db {
+            get {
+                return ResourceManager.GetString("add_db", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Añadir relación.
         /// </summary>
         internal static string add_relation {
@@ -1404,15 +1413,6 @@ namespace PgMulti.Properties {
         internal static string new_column {
             get {
                 return ResourceManager.GetString("new_column", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a New database.
-        /// </summary>
-        internal static string new_db {
-            get {
-                return ResourceManager.GetString("new_db", resourceCulture);
             }
         }
         
