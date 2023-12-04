@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text.RegularExpressions;
 using FastColoredTextBoxNS;
 using Irony.Parsing;
 using PgMulti.SqlSyntax;
@@ -10,14 +11,20 @@ namespace PgMulti.QueryEditor
         public event EventHandler<StyleNeededEventArgs>? StyleNeeded;
         public event EventHandler<EventArgs>? ParseTreeUpdated;
 
-        public Style WavyStyle = new WavyLineStyle(255, Color.Red);
-        public Style MaroonBoldStyle = new TextStyle(Brushes.Maroon, null, FontStyle.Bold);
-        public Style KeywordUpperCaseStyle = new CaseTextStyle(Brushes.Blue, null, FontStyle.Regular, true);
-        public Style KeywordBoldUpperCaseStyle = new CaseTextStyle(Brushes.Blue, null, FontStyle.Bold, true);
-        public Style TypesStyle = new CaseTextStyle(Brushes.Brown, null, FontStyle.Italic, false);
+        public Style WavyLineStyle;
+        public Style FunctionsTextStyle;
+        public Style StringTextStyle;
+        public Style CommentTextStyle;
+        public Style NumberTextStyle;
+        public Style VariableTextStyle;
+        public Style KeywordCaseTextStyle;
+        public Style KeywordHeaderCaseTextStyle;
+        public Style TypesCaseStyle;
+        public Style SearchMatchTextStyle;
 
         private Parser? parser;
         private ParseTree? _ParseTree = null;
+        private List<FastColoredTextBoxNS.Range>? _SearchMatches = null;
 
         public ParseTree? ParseTree
         {
@@ -27,36 +34,63 @@ namespace PgMulti.QueryEditor
             }
         }
 
+        public List<FastColoredTextBoxNS.Range>? SearchMatches
+        {
+            get
+            {
+                return _SearchMatches;
+            }
+            set
+            {
+                _SearchMatches = value;
+            }
+        }
+
         public CustomFctb()
         {
+            ClearStylesBuffer();
+            AddStyle(WavyLineStyle);
+            AddStyle(FunctionsTextStyle);
+            AddStyle(StringTextStyle);
+            AddStyle(CommentTextStyle);
+            AddStyle(NumberTextStyle);
+            AddStyle(VariableTextStyle);
+            AddStyle(KeywordCaseTextStyle);
+            AddStyle(KeywordHeaderCaseTextStyle);
+            AddStyle(TypesCaseStyle);
+            AddStyle(SearchMatchTextStyle);
+
+            WavyLineStyle = new WavyLineStyle(255, Color.Red);
+            FunctionsTextStyle = new TextStyle(Brushes.Maroon, null, FontStyle.Bold);
+            StringTextStyle = SyntaxHighlighter.BrownStyle;
+            CommentTextStyle = SyntaxHighlighter.GreenStyle;
+            NumberTextStyle = SyntaxHighlighter.MagentaStyle;
+            VariableTextStyle = SyntaxHighlighter.BlackStyle;
+            KeywordCaseTextStyle = new CaseTextStyle(Brushes.Blue, null, FontStyle.Regular, true);
+            KeywordHeaderCaseTextStyle = new CaseTextStyle(Brushes.Blue, null, FontStyle.Bold, true);
+            TypesCaseStyle = new CaseTextStyle(Brushes.Brown, null, FontStyle.Italic, false);
+            SearchMatchTextStyle = new TextStyle(Brushes.Black, Brushes.Yellow, FontStyle.Bold);
+
+            //SyntaxHighlighter.InitStyleSchema(Language.Custom);
+            //SyntaxHighlighter.StringStyle = SyntaxHighlighter.BrownStyle;
+            //SyntaxHighlighter.CommentStyle = SyntaxHighlighter.GreenStyle;
+            //SyntaxHighlighter.NumberStyle = SyntaxHighlighter.MagentaStyle;
+            //SyntaxHighlighter.FunctionsStyle = FunctionsStyle;
+            //SyntaxHighlighter.VariableStyle = SyntaxHighlighter.BlackStyle;
         }
 
         public virtual void SetParser(LanguageData language)
         {
-            SetParser(new Parser(language));
-        }
+            this.parser = new Parser(language);
 
-        public virtual void SetParser(Parser? parser)
-        {
-            this.parser = parser;
-            ClearStylesBuffer();
-            AddStyle(WavyStyle);
-            AddStyle(MaroonBoldStyle);
-
-            SyntaxHighlighter.InitStyleSchema(Language.Custom);
-            SyntaxHighlighter.StringStyle = SyntaxHighlighter.BrownStyle;
-            SyntaxHighlighter.CommentStyle = SyntaxHighlighter.GreenStyle;
-            SyntaxHighlighter.NumberStyle = SyntaxHighlighter.MagentaStyle;
-            SyntaxHighlighter.FunctionsStyle = MaroonBoldStyle;
-            SyntaxHighlighter.VariableStyle = SyntaxHighlighter.BlackStyle;
             InitBraces();
             OnTextChanged(Range);
         }
 
         public override void OnTextChangedDelayed(FastColoredTextBoxNS.Range changedRange)
         {
-            DoHighlighting();
             base.OnTextChangedDelayed(changedRange);
+            DoHighlighting();
         }
 
         public virtual void DoHighlighting()
@@ -115,7 +149,7 @@ namespace PgMulti.QueryEditor
                     {
                         f = r.GetFragment(@"[\S]");
                     }
-                    f.SetStyle(WavyStyle);
+                    f.SetStyle(WavyLineStyle);
                 }
             }
             else if (_ParseTree.Status == ParseTreeStatus.Parsed)
@@ -147,21 +181,21 @@ namespace PgMulti.QueryEditor
                     case "NULL":
                         if (nodoAst != null && nodoAst.Parent != null && nodoAst.Parent.Name == "term")
                         {
-                            tr.SetStyle(SyntaxHighlighter.NumberStyle);
+                            tr.SetStyle(NumberTextStyle);
                         }
                         else
                         {
-                            tr.SetStyle(KeywordUpperCaseStyle);
+                            tr.SetStyle(KeywordCaseTextStyle);
                         }
 
                         break;
                     case "boolLit":
                     case "number":
-                        tr.SetStyle(SyntaxHighlighter.NumberStyle);
+                        tr.SetStyle(NumberTextStyle);
                         break;
                     case "string":
                     case "escaped_string":
-                        tr.SetStyle(SyntaxHighlighter.StringStyle);
+                        tr.SetStyle(StringTextStyle);
                         break;
                     case "comment":
                     case "line_comment":
@@ -169,25 +203,25 @@ namespace PgMulti.QueryEditor
                         {
                             tr = GetRange(new Place(tr.Start.iChar, tr.Start.iLine), new Place(tr.End.iChar - 1, tr.End.iLine));
                         }
-                        tr.SetStyle(SyntaxHighlighter.CommentStyle);
+                        tr.SetStyle(CommentTextStyle);
                         break;
                     case "id_simple":
                         if (nodoAst != null && nodoAst.Parent != null && nodoAst.Parent.Parent != null && nodoAst.Parent.Parent.Name == "funCall")
                         {
-                            tr.SetStyle(SyntaxHighlighter.FunctionsStyle);
+                            tr.SetStyle(FunctionsTextStyle);
                         }
                         else
                         {
-                            tr.SetStyle(SyntaxHighlighter.VariableStyle);
+                            tr.SetStyle(VariableTextStyle);
                         }
                         break;
                     case "":
-                        tr.SetStyle(SyntaxHighlighter.VariableStyle);
+                        tr.SetStyle(VariableTextStyle);
                         break;
                     default:
                         if (nodoAst != null && nodoAst.GetRecursiveParentNamedAs("typeNameAndParams") != null)
                         {
-                            tr.SetStyle(TypesStyle);
+                            tr.SetStyle(TypesCaseStyle);
                         }
                         else if (t.Terminal.GetType().Name == "KeyTerm")
                         {
@@ -195,11 +229,11 @@ namespace PgMulti.QueryEditor
                             {
                                 if (nodoAst != null && nodoAst.IsStatementHeader)
                                 {
-                                    tr.SetStyle(KeywordBoldUpperCaseStyle);
+                                    tr.SetStyle(KeywordHeaderCaseTextStyle);
                                 }
                                 else
                                 {
-                                    tr.SetStyle(KeywordUpperCaseStyle);
+                                    tr.SetStyle(KeywordCaseTextStyle);
                                 }
                             }
                         }
@@ -207,7 +241,35 @@ namespace PgMulti.QueryEditor
                 }
             }
 
+            if (_SearchMatches != null)
+            {
+                foreach (FastColoredTextBoxNS.Range r in _SearchMatches)
+                {
+                    r.ClearStyle(StyleIndex.All);
+                    r.SetStyle(SearchMatchTextStyle);
+                }
+            }
+
             if (ParseTreeUpdated != null) ParseTreeUpdated(this, new EventArgs());
+        }
+
+        public List<FastColoredTextBoxNS.Range> FindAll(string pattern, bool matchCase, bool matchWholeWords, bool regex, FastColoredTextBoxNS.Range wholeSearchRange)
+        {
+            RegexOptions opt = matchCase ? RegexOptions.None : RegexOptions.IgnoreCase;
+            if (!regex)
+                pattern = Regex.Escape(pattern);
+            if (matchWholeWords)
+                pattern = "\\b" + pattern + "\\b";
+
+            try
+            {
+                return wholeSearchRange.GetRangesByLines(pattern, opt).ToList();
+            }
+            catch (RegexParseException)
+            {
+
+                return new List<FastColoredTextBoxNS.Range>();
+            }
         }
 
         public virtual void OnStyleNeeded(StyleNeededEventArgs e)

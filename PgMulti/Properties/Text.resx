@@ -1009,4 +1009,47 @@ Unlike other tools, this application does not reuse the connection between diffe
   <data name="delete_tuples_script_name" xml:space="preserve">
     <value>Eliminar tuplas</value>
   </data>
+  <data name="db_list" xml:space="preserve">
+    <value>Lista de bases de datos</value>
+  </data>
+  <data name="search_for_and_replace" xml:space="preserve">
+    <value>Buscar y reemplazar</value>
+  </data>
+  <data name="search_text" xml:space="preserve">
+    <value>Texto a buscar</value>
+  </data>
+  <data name="replace_text" xml:space="preserve">
+    <value>Texto con el que reemplazar</value>
+  </data>
+  <data name="match_case" xml:space="preserve">
+    <value>Coincidir mayúsculas y minúsculas</value>
+  </data>
+  <data name="match_whole_words" xml:space="preserve">
+    <value>Solo palabras completas</value>
+  </data>
+  <data name="regex" xml:space="preserve">
+    <value>Usar expresiones regulares</value>
+  </data>
+  <data name="search" xml:space="preserve">
+    <value>Buscar</value>
+  </data>
+  <data name="go_next" xml:space="preserve">
+    <value>Ir al siguiente resultado</value>
+  </data>
+  <data name="replace_current" xml:space="preserve">
+    <value>Reemplazar actual</value>
+  </data>
+  <data name="replace_all" xml:space="preserve">
+    <value>Reemplazar todos</value>
+  </data>
+  <data name="number_of_search_results_found" xml:space="preserve">
+    <value>{0} resultados encontrados</value>
+  </data>
+  <data name="searching_the_entire_text" xml:space="preserve">
+    <value>Buscando en todo el texto</value>
+  </data>
+  <data name="searching_only_within_selected_text" xml:space="preserve">
+    <value>Buscando solo dentro del texto seleccionado</value>
+  </data>
+
 </root>

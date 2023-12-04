@@ -707,6 +707,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Lista de bases de datos.
+        /// </summary>
+        internal static string db_list {
+            get {
+                return ResourceManager.GetString("db_list", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Delay.
         /// </summary>
         internal static string delay {
@@ -1134,6 +1143,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Ir al siguiente resultado.
+        /// </summary>
+        internal static string go_next {
+            get {
+                return ResourceManager.GetString("go_next", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Go to line... (ctrl + g).
         /// </summary>
         internal static string goto_sc {
@@ -1324,6 +1342,24 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Coincidir mayúsculas y minúsculas.
+        /// </summary>
+        internal static string match_case {
+            get {
+                return ResourceManager.GetString("match_case", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Solo palabras completas.
+        /// </summary>
+        internal static string match_whole_words {
+            get {
+                return ResourceManager.GetString("match_whole_words", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Row limit per table.
         /// </summary>
         internal static string max_rows {
@@ -1503,6 +1539,15 @@ namespace PgMulti.Properties {
         internal static string null_value {
             get {
                 return ResourceManager.GetString("null_value", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a {0} resultados encontrados.
+        /// </summary>
+        internal static string number_of_search_results_found {
+            get {
+                return ResourceManager.GetString("number_of_search_results_found", resourceCulture);
             }
         }
         
@@ -1687,6 +1732,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Usar expresiones regulares.
+        /// </summary>
+        internal static string regex {
+            get {
+                return ResourceManager.GetString("regex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a {0} relation.
         /// </summary>
         internal static string relation_type {
@@ -1768,11 +1822,38 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Reemplazar todos.
+        /// </summary>
+        internal static string replace_all {
+            get {
+                return ResourceManager.GetString("replace_all", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Reemplazar actual.
+        /// </summary>
+        internal static string replace_current {
+            get {
+                return ResourceManager.GetString("replace_current", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Replace (ctrl + r).
         /// </summary>
         internal static string replace_sc {
             get {
                 return ResourceManager.GetString("replace_sc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Texto con el que reemplazar.
+        /// </summary>
+        internal static string replace_text {
+            get {
+                return ResourceManager.GetString("replace_text", resourceCulture);
             }
         }
         
@@ -1971,6 +2052,51 @@ namespace PgMulti.Properties {
         internal static string script_index_message {
             get {
                 return ResourceManager.GetString("script_index_message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Buscar.
+        /// </summary>
+        internal static string search {
+            get {
+                return ResourceManager.GetString("search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Buscar y reemplazar.
+        /// </summary>
+        internal static string search_for_and_replace {
+            get {
+                return ResourceManager.GetString("search_for_and_replace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Texto a buscar.
+        /// </summary>
+        internal static string search_text {
+            get {
+                return ResourceManager.GetString("search_text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Buscando solo dentro del texto seleccionado.
+        /// </summary>
+        internal static string searching_only_within_selected_text {
+            get {
+                return ResourceManager.GetString("searching_only_within_selected_text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Buscando en todo el texto.
+        /// </summary>
+        internal static string searching_the_entire_text {
+            get {
+                return ResourceManager.GetString("searching_the_entire_text", resourceCulture);
             }
         }
         

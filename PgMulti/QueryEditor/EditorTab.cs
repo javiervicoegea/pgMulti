@@ -4,6 +4,7 @@ using Microsoft.Data.Sqlite;
 using System.Data;
 using PgMulti.Tasks;
 using PgMulti.AppData;
+using System.Windows.Forms;
 
 namespace PgMulti.QueryEditor
 {
@@ -19,6 +20,7 @@ namespace PgMulti.QueryEditor
         private int _Id = -1;
 
         private Data _Data;
+        private MainForm _MainForm;
         private TabPage _TabPage;
         private CustomFctb _Fctb;
         private AutocompleteMenu _AutocompleteMenu;
@@ -26,8 +28,12 @@ namespace PgMulti.QueryEditor
         public EditorTab(Data d, TabPage tp, MainForm mainForm)
         {
             _Data = d;
+            _MainForm = mainForm;
             _TabPage = tp;
+
             _Fctb = (CustomFctb)tp.Controls[0];
+            _Fctb.KeyDown += _Fctb_KeyDown;
+
             _AutocompleteMenu = new AutocompleteMenu(_Fctb);
             _AutocompleteMenu.ForeColor = Color.FromArgb(30, 30, 30);
             _AutocompleteMenu.BackColor = Color.FromArgb(247, 249, 254);
@@ -47,6 +53,27 @@ namespace PgMulti.QueryEditor
             _AutocompleteMenu.AppearInterval = (_Data.Config.AutocompleteDelay == 0 ? int.MaxValue : _Data!.Config.AutocompleteDelay);
             _AutocompleteMenu.ProcessKeyDown += _AutocompleteMenu_ProcessKeyDown;
             _AutocompleteMenu.ProcessKeyPressing += _AutocompleteMenu_ProcessKeyPressing;
+        }
+
+        private void _Fctb_KeyDown(object? sender, KeyEventArgs e)
+        {
+            e.Handled = true;
+            if (e.KeyData == (Keys.Control | Keys.F) || e.KeyData==(Keys.Control | Keys.R))
+            {
+                _MainForm.ShowSearchAndReplace();
+            }
+            else if (e.KeyData == Keys.F3)
+            {
+                _MainForm.GoNextSearchResult();
+            }
+            else if (e.KeyData == (Keys.Alt | Keys.F) || e.KeyData == (Keys.Control | Keys.H))
+            {
+                
+            }
+            else
+            {
+                e.Handled = false;
+            }
         }
 
         private void _AutocompleteMenu_ProcessKeyDown(object? sender, ProcessKeyDownEventArgs e)

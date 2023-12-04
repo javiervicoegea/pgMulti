@@ -31,2012 +31,2075 @@ namespace PgMulti
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.toolStripContainer2 = new System.Windows.Forms.ToolStripContainer();
-            this.tvaConnections = new Aga.Controls.Tree.TreeViewAdv();
-            this.cmsServers = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.tscmiNewGroup = new System.Windows.Forms.ToolStripMenuItem();
-            this.tscmiNewDB = new System.Windows.Forms.ToolStripMenuItem();
-            this.tscmiExploreTable = new System.Windows.Forms.ToolStripMenuItem();
-            this.tscmiRecursiveRemove = new System.Windows.Forms.ToolStripMenuItem();
-            this.tscmiCreateTableDiagram = new System.Windows.Forms.ToolStripMenuItem();
-            this.tscmiEdit = new System.Windows.Forms.ToolStripMenuItem();
-            this.tscmiRemove = new System.Windows.Forms.ToolStripMenuItem();
-            this.tscmiUp = new System.Windows.Forms.ToolStripMenuItem();
-            this.tscmiDown = new System.Windows.Forms.ToolStripMenuItem();
-            this.tscmiRefresh = new System.Windows.Forms.ToolStripMenuItem();
-            this.tscmiCopyText = new System.Windows.Forms.ToolStripMenuItem();
-            this.ncb = new Aga.Controls.Tree.NodeControls.NodeCheckBox();
-            this.nsi = new Aga.Controls.Tree.NodeControls.NodeStateIcon();
-            this.ntb = new Aga.Controls.Tree.NodeControls.NodeTextBox();
-            this.toolStrip2 = new System.Windows.Forms.ToolStrip();
-            this.tsbNewGroup = new System.Windows.Forms.ToolStripButton();
-            this.tsbNewDB = new System.Windows.Forms.ToolStripButton();
-            this.tssNew = new System.Windows.Forms.ToolStripSeparator();
-            this.tsbExploreTable = new System.Windows.Forms.ToolStripButton();
-            this.tsbRecursiveRemove = new System.Windows.Forms.ToolStripButton();
-            this.tsbCreateTableDiagram = new System.Windows.Forms.ToolStripButton();
-            this.tsbEdit = new System.Windows.Forms.ToolStripButton();
-            this.tsbRemove = new System.Windows.Forms.ToolStripButton();
-            this.tssEdit = new System.Windows.Forms.ToolStripSeparator();
-            this.tsbUp = new System.Windows.Forms.ToolStripButton();
-            this.tsbDown = new System.Windows.Forms.ToolStripButton();
-            this.tssUpDown = new System.Windows.Forms.ToolStripSeparator();
-            this.tsbCollapseAll = new System.Windows.Forms.ToolStripButton();
-            this.tsbRefresh = new System.Windows.Forms.ToolStripButton();
-            this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
-            this.tcSql = new TradeWright.UI.Forms.TabControlExtra();
-            this.tpNewTab = new System.Windows.Forms.TabPage();
-            this.ilTabControl = new System.Windows.Forms.ImageList(this.components);
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.tsbOpen = new System.Windows.Forms.ToolStripButton();
-            this.tsbSave = new System.Windows.Forms.ToolStripButton();
-            this.tsbSaveAll = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.tsbRun = new System.Windows.Forms.ToolStripButton();
-            this.tsbExportCsv = new System.Windows.Forms.ToolStripButton();
-            this.tsddbTransactions = new System.Windows.Forms.ToolStripDropDownButton();
-            this.tsmiTransactionModeManual = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiTransactionModeAutoSingle = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiTransactionModeAutoCoordinated = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.tsmiTransactionLevelReadCommitted = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiTransactionLevelRepeatableRead = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiTransactionLevelSerializable = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.tsbFind = new System.Windows.Forms.ToolStripButton();
-            this.tsbReplace = new System.Windows.Forms.ToolStripButton();
-            this.tsbGoTo = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.tsbFormat = new System.Windows.Forms.ToolStripButton();
-            this.tsbHistory = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
-            this.tsbOpenDiagram = new System.Windows.Forms.ToolStripButton();
-            this.tsbNewDiagram = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.tsddbErrors = new System.Windows.Forms.ToolStripDropDownButton();
-            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
-            this.tslPosition = new System.Windows.Forms.ToolStripLabel();
-            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
-            this.toolStripContainer3 = new System.Windows.Forms.ToolStripContainer();
-            this.lbResult = new System.Windows.Forms.ListBox();
-            this.toolStrip3 = new System.Windows.Forms.ToolStrip();
-            this.tsbCurrentTabLastTask = new System.Windows.Forms.ToolStripButton();
-            this.tssResult = new System.Windows.Forms.ToolStripSeparator();
-            this.tsbRemoveSelected = new System.Windows.Forms.ToolStripButton();
-            this.tsbRemoveAll = new System.Windows.Forms.ToolStripButton();
-            this.tsbStopSelected = new System.Windows.Forms.ToolStripButton();
-            this.tsbStopAll = new System.Windows.Forms.ToolStripButton();
-            this.tcResult = new System.Windows.Forms.TabControl();
-            this.tpResult = new System.Windows.Forms.TabPage();
-            this.toolStripContainer6 = new System.Windows.Forms.ToolStripContainer();
-            this.txtResult = new System.Windows.Forms.TextBox();
-            this.toolStrip6 = new System.Windows.Forms.ToolStrip();
-            this.tsddbAutoScroll = new System.Windows.Forms.ToolStripDropDownButton();
-            this.tsmiAutoScroll = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiManualScroll = new System.Windows.Forms.ToolStripMenuItem();
-            this.tpTable = new System.Windows.Forms.TabPage();
-            this.toolStripContainer5 = new System.Windows.Forms.ToolStripContainer();
-            this.gvTable = new System.Windows.Forms.DataGridView();
-            this.cmsTable = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.tsbTextEditor = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsbSetNull = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStrip5 = new System.Windows.Forms.ToolStrip();
-            this.tsddbTables = new System.Windows.Forms.ToolStripDropDownButton();
-            this.tsddbInsertRow = new System.Windows.Forms.ToolStripDropDownButton();
-            this.tsbDeleteRows = new System.Windows.Forms.ToolStripButton();
-            this.tsbApplyTableChanges = new System.Windows.Forms.ToolStripButton();
-            this.tpExecutedSql = new System.Windows.Forms.TabPage();
-            this.toolStripContainer4 = new System.Windows.Forms.ToolStripContainer();
-            this.fctbExecutedSql = new PgMulti.QueryEditor.CustomFctb();
-            this.toolStrip4 = new System.Windows.Forms.ToolStrip();
-            this.tsbEditExecutedSql = new System.Windows.Forms.ToolStripButton();
-            this.tsmiAbout = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiNew = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiOpen = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiSave = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiSaveAs = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiSaveAll = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiClose = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiCloseAll = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiBack = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiForward = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiUndo = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiRedo = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiCut = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiCopy = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiPaste = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiFind = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiReplace = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiGoTo = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiFormat = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiIncreaseFont = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiReduceFont = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiChangePassword = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiImportConnections = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiExportConnections = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiMoreOptions = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmsTabs = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.tsmiCloseTab = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiCloseAllTabs = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiCloseAllTabsExceptThisOne = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiReopenLastClosedTab = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiClosedTabsLog = new System.Windows.Forms.ToolStripMenuItem();
-            this.tscmiBack = new System.Windows.Forms.ToolStripMenuItem();
-            this.tscmiForward = new System.Windows.Forms.ToolStripMenuItem();
-            this.tscmiUndo = new System.Windows.Forms.ToolStripMenuItem();
-            this.tscmiRedo = new System.Windows.Forms.ToolStripMenuItem();
-            this.tscmiCut = new System.Windows.Forms.ToolStripMenuItem();
-            this.tscmiCopy = new System.Windows.Forms.ToolStripMenuItem();
-            this.tscmiPaste = new System.Windows.Forms.ToolStripMenuItem();
-            this.tscmiFind = new System.Windows.Forms.ToolStripMenuItem();
-            this.tscmiReplace = new System.Windows.Forms.ToolStripMenuItem();
-            this.tscmiGoTo = new System.Windows.Forms.ToolStripMenuItem();
-            this.tscmiFormat = new System.Windows.Forms.ToolStripMenuItem();
-            this.ilServers = new System.Windows.Forms.ImageList(this.components);
-            this.ofdSql = new System.Windows.Forms.OpenFileDialog();
-            this.sfdSql = new System.Windows.Forms.SaveFileDialog();
-            this.tmrPosition = new System.Windows.Forms.Timer(this.components);
-            this.tmrSaveTabs = new System.Windows.Forms.Timer(this.components);
-            this.tmrResult = new System.Windows.Forms.Timer(this.components);
-            this.tmrFitGridColumns = new System.Windows.Forms.Timer(this.components);
-            this.ilAutocompleteMenu = new System.Windows.Forms.ImageList(this.components);
-            this.cmsFctb = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.sfdCsv = new System.Windows.Forms.SaveFileDialog();
-            this.mm = new System.Windows.Forms.MenuStrip();
-            this.tsmiFile = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiEdit = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiRunMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiRun = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiExportCsv = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiDiagrams = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiNewDiagram = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiOpenDiagram = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiOptions = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiHistory = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiUpdates = new System.Windows.Forms.ToolStripMenuItem();
-            this.ofdImportConfig = new System.Windows.Forms.OpenFileDialog();
-            this.ofdOpenDiagram = new System.Windows.Forms.OpenFileDialog();
-            this.sfdSaveDiagram = new System.Windows.Forms.SaveFileDialog();
-            this.tmrReenableRunButton = new System.Windows.Forms.Timer(this.components);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
-            this.splitContainer2.Panel1.SuspendLayout();
-            this.splitContainer2.Panel2.SuspendLayout();
-            this.splitContainer2.SuspendLayout();
-            this.toolStripContainer2.ContentPanel.SuspendLayout();
-            this.toolStripContainer2.TopToolStripPanel.SuspendLayout();
-            this.toolStripContainer2.SuspendLayout();
-            this.cmsServers.SuspendLayout();
-            this.toolStrip2.SuspendLayout();
-            this.toolStripContainer1.ContentPanel.SuspendLayout();
-            this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
-            this.toolStripContainer1.SuspendLayout();
-            this.tcSql.SuspendLayout();
-            this.toolStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
-            this.splitContainer3.Panel1.SuspendLayout();
-            this.splitContainer3.Panel2.SuspendLayout();
-            this.splitContainer3.SuspendLayout();
-            this.toolStripContainer3.ContentPanel.SuspendLayout();
-            this.toolStripContainer3.TopToolStripPanel.SuspendLayout();
-            this.toolStripContainer3.SuspendLayout();
-            this.toolStrip3.SuspendLayout();
-            this.tcResult.SuspendLayout();
-            this.tpResult.SuspendLayout();
-            this.toolStripContainer6.ContentPanel.SuspendLayout();
-            this.toolStripContainer6.TopToolStripPanel.SuspendLayout();
-            this.toolStripContainer6.SuspendLayout();
-            this.toolStrip6.SuspendLayout();
-            this.tpTable.SuspendLayout();
-            this.toolStripContainer5.ContentPanel.SuspendLayout();
-            this.toolStripContainer5.TopToolStripPanel.SuspendLayout();
-            this.toolStripContainer5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gvTable)).BeginInit();
-            this.cmsTable.SuspendLayout();
-            this.toolStrip5.SuspendLayout();
-            this.tpExecutedSql.SuspendLayout();
-            this.toolStripContainer4.ContentPanel.SuspendLayout();
-            this.toolStripContainer4.TopToolStripPanel.SuspendLayout();
-            this.toolStripContainer4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.fctbExecutedSql)).BeginInit();
-            this.toolStrip4.SuspendLayout();
-            this.cmsTabs.SuspendLayout();
-            this.cmsFctb.SuspendLayout();
-            this.mm.SuspendLayout();
-            this.SuspendLayout();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            splitContainer1 = new SplitContainer();
+            splitContainer2 = new SplitContainer();
+            tcLeftPanel = new TabControl();
+            tpConnections = new TabPage();
+            toolStripContainer2 = new ToolStripContainer();
+            tvaConnections = new Aga.Controls.Tree.TreeViewAdv();
+            cmsServers = new ContextMenuStrip(components);
+            tscmiNewGroup = new ToolStripMenuItem();
+            tscmiNewDB = new ToolStripMenuItem();
+            tscmiExploreTable = new ToolStripMenuItem();
+            tscmiRecursiveRemove = new ToolStripMenuItem();
+            tscmiCreateTableDiagram = new ToolStripMenuItem();
+            tscmiEdit = new ToolStripMenuItem();
+            tscmiRemove = new ToolStripMenuItem();
+            tscmiUp = new ToolStripMenuItem();
+            tscmiDown = new ToolStripMenuItem();
+            tscmiRefresh = new ToolStripMenuItem();
+            tscmiCopyText = new ToolStripMenuItem();
+            ncb = new Aga.Controls.Tree.NodeControls.NodeCheckBox();
+            nsi = new Aga.Controls.Tree.NodeControls.NodeStateIcon();
+            ntb = new Aga.Controls.Tree.NodeControls.NodeTextBox();
+            toolStrip2 = new ToolStrip();
+            tsbNewGroup = new ToolStripButton();
+            tsbNewDB = new ToolStripButton();
+            tssNew = new ToolStripSeparator();
+            tsbExploreTable = new ToolStripButton();
+            tsbRecursiveRemove = new ToolStripButton();
+            tsbCreateTableDiagram = new ToolStripButton();
+            tsbEdit = new ToolStripButton();
+            tsbRemove = new ToolStripButton();
+            tssEdit = new ToolStripSeparator();
+            tsbUp = new ToolStripButton();
+            tsbDown = new ToolStripButton();
+            tssUpDown = new ToolStripSeparator();
+            tsbCollapseAll = new ToolStripButton();
+            tsbRefresh = new ToolStripButton();
+            tpSearchAndReplace = new TabPage();
+            tlpSearchAndReplace = new TableLayoutPanel();
+            txtSearchText = new TextBox();
+            txtReplaceText = new TextBox();
+            flpSearchOptions = new FlowLayoutPanel();
+            chkSearchMatchCase = new CheckBox();
+            chkSearchMatchWholeWords = new CheckBox();
+            chkSearchRegex = new CheckBox();
+            flpSearchAndReplaceButtons = new FlowLayoutPanel();
+            btnSearch = new Button();
+            btnGoNextSearchResult = new Button();
+            btnReplaceCurrent = new Button();
+            btnReplaceAll = new Button();
+            lblSearchResultsSummary = new Label();
+            toolStripContainer1 = new ToolStripContainer();
+            tcSql = new TabControlExtra();
+            tpNewTab = new TabPage();
+            ilTabControl = new ImageList(components);
+            toolStrip1 = new ToolStrip();
+            tsbOpen = new ToolStripButton();
+            tsbSave = new ToolStripButton();
+            tsbSaveAll = new ToolStripButton();
+            toolStripSeparator2 = new ToolStripSeparator();
+            tsbRun = new ToolStripButton();
+            tsbExportCsv = new ToolStripButton();
+            tsddbTransactions = new ToolStripDropDownButton();
+            tsmiTransactionModeManual = new ToolStripMenuItem();
+            tsmiTransactionModeAutoSingle = new ToolStripMenuItem();
+            tsmiTransactionModeAutoCoordinated = new ToolStripMenuItem();
+            toolStripSeparator4 = new ToolStripSeparator();
+            tsmiTransactionLevelReadCommitted = new ToolStripMenuItem();
+            tsmiTransactionLevelRepeatableRead = new ToolStripMenuItem();
+            tsmiTransactionLevelSerializable = new ToolStripMenuItem();
+            toolStripSeparator3 = new ToolStripSeparator();
+            tsbSearchAndReplace = new ToolStripButton();
+            tsbGoTo = new ToolStripButton();
+            toolStripSeparator5 = new ToolStripSeparator();
+            tsbFormat = new ToolStripButton();
+            tsbHistory = new ToolStripButton();
+            toolStripSeparator7 = new ToolStripSeparator();
+            tsbOpenDiagram = new ToolStripButton();
+            tsbNewDiagram = new ToolStripButton();
+            toolStripSeparator1 = new ToolStripSeparator();
+            tsddbErrors = new ToolStripDropDownButton();
+            toolStripSeparator6 = new ToolStripSeparator();
+            tslPosition = new ToolStripLabel();
+            splitContainer3 = new SplitContainer();
+            toolStripContainer3 = new ToolStripContainer();
+            lbResult = new ListBox();
+            toolStrip3 = new ToolStrip();
+            tsbCurrentTabLastTask = new ToolStripButton();
+            tssResult = new ToolStripSeparator();
+            tsbRemoveSelected = new ToolStripButton();
+            tsbRemoveAll = new ToolStripButton();
+            tsbStopSelected = new ToolStripButton();
+            tsbStopAll = new ToolStripButton();
+            tcResult = new TabControl();
+            tpResult = new TabPage();
+            toolStripContainer6 = new ToolStripContainer();
+            txtResult = new TextBox();
+            toolStrip6 = new ToolStrip();
+            tsddbAutoScroll = new ToolStripDropDownButton();
+            tsmiAutoScroll = new ToolStripMenuItem();
+            tsmiManualScroll = new ToolStripMenuItem();
+            tpTable = new TabPage();
+            toolStripContainer5 = new ToolStripContainer();
+            gvTable = new DataGridView();
+            cmsTable = new ContextMenuStrip(components);
+            tsbTextEditor = new ToolStripMenuItem();
+            tsbSetNull = new ToolStripMenuItem();
+            toolStrip5 = new ToolStrip();
+            tsddbTables = new ToolStripDropDownButton();
+            tsddbInsertRow = new ToolStripDropDownButton();
+            tsbDeleteRows = new ToolStripButton();
+            tsbApplyTableChanges = new ToolStripButton();
+            tpExecutedSql = new TabPage();
+            toolStripContainer4 = new ToolStripContainer();
+            fctbExecutedSql = new CustomFctb();
+            toolStrip4 = new ToolStrip();
+            tsbEditExecutedSql = new ToolStripButton();
+            tsmiAbout = new ToolStripMenuItem();
+            tsmiNew = new ToolStripMenuItem();
+            tsmiOpen = new ToolStripMenuItem();
+            tsmiSave = new ToolStripMenuItem();
+            tsmiSaveAs = new ToolStripMenuItem();
+            tsmiSaveAll = new ToolStripMenuItem();
+            tsmiClose = new ToolStripMenuItem();
+            tsmiCloseAll = new ToolStripMenuItem();
+            tsmiBack = new ToolStripMenuItem();
+            tsmiForward = new ToolStripMenuItem();
+            tsmiUndo = new ToolStripMenuItem();
+            tsmiRedo = new ToolStripMenuItem();
+            tsmiCut = new ToolStripMenuItem();
+            tsmiCopy = new ToolStripMenuItem();
+            tsmiPaste = new ToolStripMenuItem();
+            tsmiSearchAndReplace = new ToolStripMenuItem();
+            tsmiGoTo = new ToolStripMenuItem();
+            tsmiFormat = new ToolStripMenuItem();
+            tsmiIncreaseFont = new ToolStripMenuItem();
+            tsmiReduceFont = new ToolStripMenuItem();
+            tsmiChangePassword = new ToolStripMenuItem();
+            tsmiImportConnections = new ToolStripMenuItem();
+            tsmiExportConnections = new ToolStripMenuItem();
+            tsmiMoreOptions = new ToolStripMenuItem();
+            cmsTabs = new ContextMenuStrip(components);
+            tsmiCloseTab = new ToolStripMenuItem();
+            tsmiCloseAllTabs = new ToolStripMenuItem();
+            tsmiCloseAllTabsExceptThisOne = new ToolStripMenuItem();
+            tsmiReopenLastClosedTab = new ToolStripMenuItem();
+            tsmiClosedTabsLog = new ToolStripMenuItem();
+            tscmiBack = new ToolStripMenuItem();
+            tscmiForward = new ToolStripMenuItem();
+            tscmiUndo = new ToolStripMenuItem();
+            tscmiRedo = new ToolStripMenuItem();
+            tscmiCut = new ToolStripMenuItem();
+            tscmiCopy = new ToolStripMenuItem();
+            tscmiPaste = new ToolStripMenuItem();
+            tscmiSearchAndReplace = new ToolStripMenuItem();
+            tscmiGoTo = new ToolStripMenuItem();
+            tscmiFormat = new ToolStripMenuItem();
+            ilServers = new ImageList(components);
+            ofdSql = new OpenFileDialog();
+            sfdSql = new SaveFileDialog();
+            tmrPosition = new System.Windows.Forms.Timer(components);
+            tmrSaveTabs = new System.Windows.Forms.Timer(components);
+            tmrResult = new System.Windows.Forms.Timer(components);
+            tmrFitGridColumns = new System.Windows.Forms.Timer(components);
+            ilAutocompleteMenu = new ImageList(components);
+            cmsFctb = new ContextMenuStrip(components);
+            sfdCsv = new SaveFileDialog();
+            mm = new MenuStrip();
+            tsmiFile = new ToolStripMenuItem();
+            tsmiEdit = new ToolStripMenuItem();
+            tsmiRunMenu = new ToolStripMenuItem();
+            tsmiRun = new ToolStripMenuItem();
+            tsmiExportCsv = new ToolStripMenuItem();
+            tsmiDiagrams = new ToolStripMenuItem();
+            tsmiNewDiagram = new ToolStripMenuItem();
+            tsmiOpenDiagram = new ToolStripMenuItem();
+            tsmiOptions = new ToolStripMenuItem();
+            tsmiHistory = new ToolStripMenuItem();
+            tsmiUpdates = new ToolStripMenuItem();
+            ofdImportConfig = new OpenFileDialog();
+            ofdOpenDiagram = new OpenFileDialog();
+            sfdSaveDiagram = new SaveFileDialog();
+            tmrReenableRunButton = new System.Windows.Forms.Timer(components);
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
+            splitContainer1.Panel1.SuspendLayout();
+            splitContainer1.Panel2.SuspendLayout();
+            splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainer2).BeginInit();
+            splitContainer2.Panel1.SuspendLayout();
+            splitContainer2.Panel2.SuspendLayout();
+            splitContainer2.SuspendLayout();
+            tcLeftPanel.SuspendLayout();
+            tpConnections.SuspendLayout();
+            toolStripContainer2.ContentPanel.SuspendLayout();
+            toolStripContainer2.TopToolStripPanel.SuspendLayout();
+            toolStripContainer2.SuspendLayout();
+            cmsServers.SuspendLayout();
+            toolStrip2.SuspendLayout();
+            tpSearchAndReplace.SuspendLayout();
+            tlpSearchAndReplace.SuspendLayout();
+            flpSearchOptions.SuspendLayout();
+            flpSearchAndReplaceButtons.SuspendLayout();
+            toolStripContainer1.ContentPanel.SuspendLayout();
+            toolStripContainer1.TopToolStripPanel.SuspendLayout();
+            toolStripContainer1.SuspendLayout();
+            tcSql.SuspendLayout();
+            toolStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainer3).BeginInit();
+            splitContainer3.Panel1.SuspendLayout();
+            splitContainer3.Panel2.SuspendLayout();
+            splitContainer3.SuspendLayout();
+            toolStripContainer3.ContentPanel.SuspendLayout();
+            toolStripContainer3.TopToolStripPanel.SuspendLayout();
+            toolStripContainer3.SuspendLayout();
+            toolStrip3.SuspendLayout();
+            tcResult.SuspendLayout();
+            tpResult.SuspendLayout();
+            toolStripContainer6.ContentPanel.SuspendLayout();
+            toolStripContainer6.TopToolStripPanel.SuspendLayout();
+            toolStripContainer6.SuspendLayout();
+            toolStrip6.SuspendLayout();
+            tpTable.SuspendLayout();
+            toolStripContainer5.ContentPanel.SuspendLayout();
+            toolStripContainer5.TopToolStripPanel.SuspendLayout();
+            toolStripContainer5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)gvTable).BeginInit();
+            cmsTable.SuspendLayout();
+            toolStrip5.SuspendLayout();
+            tpExecutedSql.SuspendLayout();
+            toolStripContainer4.ContentPanel.SuspendLayout();
+            toolStripContainer4.TopToolStripPanel.SuspendLayout();
+            toolStripContainer4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)fctbExecutedSql).BeginInit();
+            toolStrip4.SuspendLayout();
+            cmsTabs.SuspendLayout();
+            cmsFctb.SuspendLayout();
+            mm.SuspendLayout();
+            SuspendLayout();
             // 
             // splitContainer1
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 28);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            splitContainer1.Dock = DockStyle.Fill;
+            splitContainer1.Location = new Point(0, 28);
+            splitContainer1.Name = "splitContainer1";
+            splitContainer1.Orientation = Orientation.Horizontal;
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.splitContainer2);
+            splitContainer1.Panel1.Controls.Add(splitContainer2);
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.splitContainer3);
-            this.splitContainer1.Size = new System.Drawing.Size(1539, 502);
-            this.splitContainer1.SplitterDistance = 295;
-            this.splitContainer1.TabIndex = 0;
+            splitContainer1.Panel2.Controls.Add(splitContainer3);
+            splitContainer1.Size = new Size(1539, 502);
+            splitContainer1.SplitterDistance = 295;
+            splitContainer1.TabIndex = 0;
             // 
             // splitContainer2
             // 
-            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer2.Name = "splitContainer2";
+            splitContainer2.Dock = DockStyle.Fill;
+            splitContainer2.FixedPanel = FixedPanel.Panel1;
+            splitContainer2.Location = new Point(0, 0);
+            splitContainer2.Name = "splitContainer2";
             // 
             // splitContainer2.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.toolStripContainer2);
+            splitContainer2.Panel1.Controls.Add(tcLeftPanel);
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.toolStripContainer1);
-            this.splitContainer2.Size = new System.Drawing.Size(1539, 295);
-            this.splitContainer2.SplitterDistance = 410;
-            this.splitContainer2.TabIndex = 0;
+            splitContainer2.Panel2.Controls.Add(toolStripContainer1);
+            splitContainer2.Size = new Size(1539, 295);
+            splitContainer2.SplitterDistance = 410;
+            splitContainer2.TabIndex = 0;
+            // 
+            // tcLeftPanel
+            // 
+            tcLeftPanel.Alignment = TabAlignment.Bottom;
+            tcLeftPanel.Controls.Add(tpConnections);
+            tcLeftPanel.Controls.Add(tpSearchAndReplace);
+            tcLeftPanel.Dock = DockStyle.Fill;
+            tcLeftPanel.Location = new Point(0, 0);
+            tcLeftPanel.Name = "tcLeftPanel";
+            tcLeftPanel.SelectedIndex = 0;
+            tcLeftPanel.Size = new Size(410, 295);
+            tcLeftPanel.TabIndex = 2;
+            // 
+            // tpConnections
+            // 
+            tpConnections.Controls.Add(toolStripContainer2);
+            tpConnections.Location = new Point(4, 4);
+            tpConnections.Name = "tpConnections";
+            tpConnections.Padding = new Padding(3);
+            tpConnections.Size = new Size(402, 262);
+            tpConnections.TabIndex = 0;
+            tpConnections.UseVisualStyleBackColor = true;
             // 
             // toolStripContainer2
             // 
             // 
             // toolStripContainer2.ContentPanel
             // 
-            this.toolStripContainer2.ContentPanel.Controls.Add(this.tvaConnections);
-            this.toolStripContainer2.ContentPanel.Size = new System.Drawing.Size(410, 258);
-            this.toolStripContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.toolStripContainer2.Location = new System.Drawing.Point(0, 0);
-            this.toolStripContainer2.Name = "toolStripContainer2";
-            this.toolStripContainer2.Size = new System.Drawing.Size(410, 295);
-            this.toolStripContainer2.TabIndex = 1;
-            this.toolStripContainer2.Text = "toolStripContainer2";
+            toolStripContainer2.ContentPanel.Controls.Add(tvaConnections);
+            toolStripContainer2.ContentPanel.Size = new Size(396, 219);
+            toolStripContainer2.Dock = DockStyle.Fill;
+            toolStripContainer2.Location = new Point(3, 3);
+            toolStripContainer2.Name = "toolStripContainer2";
+            toolStripContainer2.Size = new Size(396, 256);
+            toolStripContainer2.TabIndex = 1;
+            toolStripContainer2.Text = "toolStripContainer2";
             // 
             // toolStripContainer2.TopToolStripPanel
             // 
-            this.toolStripContainer2.TopToolStripPanel.Controls.Add(this.toolStrip2);
+            toolStripContainer2.TopToolStripPanel.Controls.Add(toolStrip2);
             // 
             // tvaConnections
             // 
-            this.tvaConnections.AllowDrop = true;
-            this.tvaConnections.AsyncExpanding = true;
-            this.tvaConnections.AutoRowHeight = true;
-            this.tvaConnections.BackColor = System.Drawing.SystemColors.Window;
-            this.tvaConnections.ContextMenuStrip = this.cmsServers;
-            this.tvaConnections.DefaultToolTipProvider = null;
-            this.tvaConnections.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tvaConnections.DragDropMarkColor = System.Drawing.Color.Black;
-            this.tvaConnections.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.tvaConnections.Indent = 25;
-            this.tvaConnections.LineColor = System.Drawing.SystemColors.ControlDark;
-            this.tvaConnections.LoadOnDemand = true;
-            this.tvaConnections.Location = new System.Drawing.Point(0, 0);
-            this.tvaConnections.Margin = new System.Windows.Forms.Padding(10);
-            this.tvaConnections.Model = null;
-            this.tvaConnections.Name = "tvaConnections";
-            this.tvaConnections.NodeControls.Add(this.ncb);
-            this.tvaConnections.NodeControls.Add(this.nsi);
-            this.tvaConnections.NodeControls.Add(this.ntb);
-            this.tvaConnections.RowHeight = 25;
-            this.tvaConnections.SelectedNode = null;
-            this.tvaConnections.Size = new System.Drawing.Size(410, 258);
-            this.tvaConnections.TabIndex = 0;
-            this.tvaConnections.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.tvaConnections_ItemDrag);
-            this.tvaConnections.SelectionChanged += new System.EventHandler(this.tvaServers_SelectionChanged);
-            this.tvaConnections.DragDrop += new System.Windows.Forms.DragEventHandler(this.tvaConnections_DragDrop);
-            this.tvaConnections.DragOver += new System.Windows.Forms.DragEventHandler(this.tvaConnections_DragOver);
-            this.tvaConnections.DoubleClick += new System.EventHandler(this.tvaServers_DoubleClick);
-            this.tvaConnections.Enter += new System.EventHandler(this.tvaConnections_Enter);
-            this.tvaConnections.Leave += new System.EventHandler(this.tvaConnections_Leave);
+            tvaConnections.AllowDrop = true;
+            tvaConnections.AsyncExpanding = true;
+            tvaConnections.AutoRowHeight = true;
+            tvaConnections.BackColor = SystemColors.Window;
+            tvaConnections.ContextMenuStrip = cmsServers;
+            tvaConnections.DefaultToolTipProvider = null;
+            tvaConnections.Dock = DockStyle.Fill;
+            tvaConnections.DragDropMarkColor = Color.Black;
+            tvaConnections.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            tvaConnections.Indent = 25;
+            tvaConnections.LineColor = SystemColors.ControlDark;
+            tvaConnections.LoadOnDemand = true;
+            tvaConnections.Location = new Point(0, 0);
+            tvaConnections.Margin = new Padding(10);
+            tvaConnections.Model = null;
+            tvaConnections.Name = "tvaConnections";
+            tvaConnections.NodeControls.Add(ncb);
+            tvaConnections.NodeControls.Add(nsi);
+            tvaConnections.NodeControls.Add(ntb);
+            tvaConnections.RowHeight = 25;
+            tvaConnections.SelectedNode = null;
+            tvaConnections.Size = new Size(396, 219);
+            tvaConnections.TabIndex = 0;
+            tvaConnections.ItemDrag += tvaConnections_ItemDrag;
+            tvaConnections.SelectionChanged += tvaServers_SelectionChanged;
+            tvaConnections.DragDrop += tvaConnections_DragDrop;
+            tvaConnections.DragOver += tvaConnections_DragOver;
+            tvaConnections.DoubleClick += tvaServers_DoubleClick;
+            tvaConnections.Enter += tvaConnections_Enter;
+            tvaConnections.Leave += tvaConnections_Leave;
             // 
             // cmsServers
             // 
-            this.cmsServers.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.cmsServers.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tscmiNewGroup,
-            this.tscmiNewDB,
-            this.tscmiExploreTable,
-            this.tscmiRecursiveRemove,
-            this.tscmiCreateTableDiagram,
-            this.tscmiEdit,
-            this.tscmiRemove,
-            this.tscmiUp,
-            this.tscmiDown,
-            this.tscmiRefresh,
-            this.tscmiCopyText});
-            this.cmsServers.Name = "cmsServers";
-            this.cmsServers.Size = new System.Drawing.Size(74, 264);
+            cmsServers.ImageScalingSize = new Size(20, 20);
+            cmsServers.Items.AddRange(new ToolStripItem[] { tscmiNewGroup, tscmiNewDB, tscmiExploreTable, tscmiRecursiveRemove, tscmiCreateTableDiagram, tscmiEdit, tscmiRemove, tscmiUp, tscmiDown, tscmiRefresh, tscmiCopyText });
+            cmsServers.Name = "cmsServers";
+            cmsServers.Size = new Size(74, 290);
             // 
             // tscmiNewGroup
             // 
-            this.tscmiNewGroup.Image = global::PgMulti.Properties.Resources.nuevo_grupo;
-            this.tscmiNewGroup.Name = "tscmiNewGroup";
-            this.tscmiNewGroup.Size = new System.Drawing.Size(73, 26);
-            this.tscmiNewGroup.Click += new System.EventHandler(this.tscmiNewGroup_Click);
+            tscmiNewGroup.Image = Properties.Resources.nuevo_grupo;
+            tscmiNewGroup.Name = "tscmiNewGroup";
+            tscmiNewGroup.Size = new Size(73, 26);
+            tscmiNewGroup.Click += tscmiNewGroup_Click;
             // 
             // tscmiNewDB
             // 
-            this.tscmiNewDB.Image = global::PgMulti.Properties.Resources.nueva_db;
-            this.tscmiNewDB.Name = "tscmiNewDB";
-            this.tscmiNewDB.Size = new System.Drawing.Size(73, 26);
-            this.tscmiNewDB.Click += new System.EventHandler(this.tscmiNewDB_Click);
+            tscmiNewDB.Image = Properties.Resources.nueva_db;
+            tscmiNewDB.Name = "tscmiNewDB";
+            tscmiNewDB.Size = new Size(73, 26);
+            tscmiNewDB.Click += tscmiNewDB_Click;
             // 
             // tscmiExploreTable
             // 
-            this.tscmiExploreTable.Image = global::PgMulti.Properties.Resources.abrir_tabla;
-            this.tscmiExploreTable.Name = "tscmiExploreTable";
-            this.tscmiExploreTable.Size = new System.Drawing.Size(73, 26);
-            this.tscmiExploreTable.Click += new System.EventHandler(this.tscmiExploreTable_Click);
+            tscmiExploreTable.Image = Properties.Resources.abrir_tabla;
+            tscmiExploreTable.Name = "tscmiExploreTable";
+            tscmiExploreTable.Size = new Size(73, 26);
+            tscmiExploreTable.Click += tscmiExploreTable_Click;
             // 
             // tscmiRecursiveRemove
             // 
-            this.tscmiRecursiveRemove.Image = global::PgMulti.Properties.Resources.borrar_todos;
-            this.tscmiRecursiveRemove.Name = "tscmiRecursiveRemove";
-            this.tscmiRecursiveRemove.Size = new System.Drawing.Size(73, 26);
-            this.tscmiRecursiveRemove.Click += new System.EventHandler(this.tscmiRecursiveRemove_Click);
+            tscmiRecursiveRemove.Image = Properties.Resources.borrar_todos;
+            tscmiRecursiveRemove.Name = "tscmiRecursiveRemove";
+            tscmiRecursiveRemove.Size = new Size(73, 26);
+            tscmiRecursiveRemove.Click += tscmiRecursiveRemove_Click;
             // 
             // tscmiCreateTableDiagram
             // 
-            this.tscmiCreateTableDiagram.Image = global::PgMulti.Properties.Resources.diagram;
-            this.tscmiCreateTableDiagram.Name = "tscmiCreateTableDiagram";
-            this.tscmiCreateTableDiagram.Size = new System.Drawing.Size(73, 26);
-            this.tscmiCreateTableDiagram.Click += new System.EventHandler(this.tscmiCreateTableDiagram_Click);
+            tscmiCreateTableDiagram.Image = Properties.Resources.diagram;
+            tscmiCreateTableDiagram.Name = "tscmiCreateTableDiagram";
+            tscmiCreateTableDiagram.Size = new Size(73, 26);
+            tscmiCreateTableDiagram.Click += tscmiCreateTableDiagram_Click;
             // 
             // tscmiEdit
             // 
-            this.tscmiEdit.Image = global::PgMulti.Properties.Resources.editar;
-            this.tscmiEdit.Name = "tscmiEdit";
-            this.tscmiEdit.Size = new System.Drawing.Size(73, 26);
-            this.tscmiEdit.Click += new System.EventHandler(this.tscmiEdit_Click);
+            tscmiEdit.Image = Properties.Resources.editar;
+            tscmiEdit.Name = "tscmiEdit";
+            tscmiEdit.Size = new Size(73, 26);
+            tscmiEdit.Click += tscmiEdit_Click;
             // 
             // tscmiRemove
             // 
-            this.tscmiRemove.Image = global::PgMulti.Properties.Resources.borrar;
-            this.tscmiRemove.Name = "tscmiRemove";
-            this.tscmiRemove.Size = new System.Drawing.Size(73, 26);
-            this.tscmiRemove.Click += new System.EventHandler(this.tscmiRemove_Click);
+            tscmiRemove.Image = Properties.Resources.borrar;
+            tscmiRemove.Name = "tscmiRemove";
+            tscmiRemove.Size = new Size(73, 26);
+            tscmiRemove.Click += tscmiRemove_Click;
             // 
             // tscmiUp
             // 
-            this.tscmiUp.Image = global::PgMulti.Properties.Resources.arriba;
-            this.tscmiUp.Name = "tscmiUp";
-            this.tscmiUp.Size = new System.Drawing.Size(73, 26);
-            this.tscmiUp.Click += new System.EventHandler(this.tscmiUp_Click);
+            tscmiUp.Image = Properties.Resources.arriba;
+            tscmiUp.Name = "tscmiUp";
+            tscmiUp.Size = new Size(73, 26);
+            tscmiUp.Click += tscmiUp_Click;
             // 
             // tscmiDown
             // 
-            this.tscmiDown.Image = global::PgMulti.Properties.Resources.abajo;
-            this.tscmiDown.Name = "tscmiDown";
-            this.tscmiDown.Size = new System.Drawing.Size(73, 26);
-            this.tscmiDown.Click += new System.EventHandler(this.tscmiDown_Click);
+            tscmiDown.Image = Properties.Resources.abajo;
+            tscmiDown.Name = "tscmiDown";
+            tscmiDown.Size = new Size(73, 26);
+            tscmiDown.Click += tscmiDown_Click;
             // 
             // tscmiRefresh
             // 
-            this.tscmiRefresh.Image = global::PgMulti.Properties.Resources.actualizar;
-            this.tscmiRefresh.Name = "tscmiRefresh";
-            this.tscmiRefresh.Size = new System.Drawing.Size(73, 26);
-            this.tscmiRefresh.Click += new System.EventHandler(this.tscmiRefresh_Click);
+            tscmiRefresh.Image = Properties.Resources.actualizar;
+            tscmiRefresh.Name = "tscmiRefresh";
+            tscmiRefresh.Size = new Size(73, 26);
+            tscmiRefresh.Click += tscmiRefresh_Click;
             // 
             // tscmiCopyText
             // 
-            this.tscmiCopyText.Image = global::PgMulti.Properties.Resources.copiar;
-            this.tscmiCopyText.Name = "tscmiCopyText";
-            this.tscmiCopyText.Size = new System.Drawing.Size(73, 26);
-            this.tscmiCopyText.Click += new System.EventHandler(this.tscmiCopyText_Click);
+            tscmiCopyText.Image = Properties.Resources.copiar;
+            tscmiCopyText.Name = "tscmiCopyText";
+            tscmiCopyText.Size = new Size(73, 26);
+            tscmiCopyText.Click += tscmiCopyText_Click;
             // 
             // ncb
             // 
-            this.ncb.DataPropertyName = "CheckState";
-            this.ncb.EditEnabled = true;
-            this.ncb.ImageSize = 20;
-            this.ncb.LeftMargin = 5;
-            this.ncb.ParentColumn = null;
+            ncb.DataPropertyName = "CheckState";
+            ncb.EditEnabled = true;
+            ncb.ImageSize = 20;
+            ncb.LeftMargin = 5;
+            ncb.ParentColumn = null;
             // 
             // nsi
             // 
-            this.nsi.DataPropertyName = "Image";
-            this.nsi.LeftMargin = 5;
-            this.nsi.ParentColumn = null;
-            this.nsi.ScaleMode = Aga.Controls.Tree.ImageScaleMode.AlwaysScale;
+            nsi.DataPropertyName = "Image";
+            nsi.LeftMargin = 5;
+            nsi.ParentColumn = null;
+            nsi.ScaleMode = Aga.Controls.Tree.ImageScaleMode.AlwaysScale;
             // 
             // ntb
             // 
-            this.ntb.DataPropertyName = "Text";
-            this.ntb.IncrementalSearchEnabled = true;
-            this.ntb.LeftMargin = 5;
-            this.ntb.ParentColumn = null;
+            ntb.DataPropertyName = "Text";
+            ntb.IncrementalSearchEnabled = true;
+            ntb.LeftMargin = 5;
+            ntb.ParentColumn = null;
             // 
             // toolStrip2
             // 
-            this.toolStrip2.Dock = System.Windows.Forms.DockStyle.None;
-            this.toolStrip2.ImageScalingSize = new System.Drawing.Size(30, 30);
-            this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsbNewGroup,
-            this.tsbNewDB,
-            this.tssNew,
-            this.tsbExploreTable,
-            this.tsbRecursiveRemove,
-            this.tsbCreateTableDiagram,
-            this.tsbEdit,
-            this.tsbRemove,
-            this.tssEdit,
-            this.tsbUp,
-            this.tsbDown,
-            this.tssUpDown,
-            this.tsbCollapseAll,
-            this.tsbRefresh});
-            this.toolStrip2.Location = new System.Drawing.Point(4, 0);
-            this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(81, 37);
-            this.toolStrip2.TabIndex = 0;
+            toolStrip2.Dock = DockStyle.None;
+            toolStrip2.ImageScalingSize = new Size(30, 30);
+            toolStrip2.Items.AddRange(new ToolStripItem[] { tsbNewGroup, tsbNewDB, tssNew, tsbExploreTable, tsbRecursiveRemove, tsbCreateTableDiagram, tsbEdit, tsbRemove, tssEdit, tsbUp, tsbDown, tssUpDown, tsbCollapseAll, tsbRefresh });
+            toolStrip2.Location = new Point(4, 0);
+            toolStrip2.Name = "toolStrip2";
+            toolStrip2.Size = new Size(81, 37);
+            toolStrip2.TabIndex = 0;
             // 
             // tsbNewGroup
             // 
-            this.tsbNewGroup.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbNewGroup.Image = global::PgMulti.Properties.Resources.nuevo_grupo;
-            this.tsbNewGroup.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbNewGroup.Name = "tsbNewGroup";
-            this.tsbNewGroup.Size = new System.Drawing.Size(34, 34);
-            this.tsbNewGroup.Visible = false;
-            this.tsbNewGroup.Click += new System.EventHandler(this.tsbNewGroup_Click);
+            tsbNewGroup.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbNewGroup.Image = Properties.Resources.nuevo_grupo;
+            tsbNewGroup.ImageTransparentColor = Color.Magenta;
+            tsbNewGroup.Name = "tsbNewGroup";
+            tsbNewGroup.Size = new Size(34, 34);
+            tsbNewGroup.Visible = false;
+            tsbNewGroup.Click += tsbNewGroup_Click;
             // 
             // tsbNewDB
             // 
-            this.tsbNewDB.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbNewDB.Image = global::PgMulti.Properties.Resources.nueva_db;
-            this.tsbNewDB.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbNewDB.Name = "tsbNewDB";
-            this.tsbNewDB.Size = new System.Drawing.Size(34, 34);
-            this.tsbNewDB.Visible = false;
-            this.tsbNewDB.Click += new System.EventHandler(this.tsbNewDB_Click);
+            tsbNewDB.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbNewDB.Image = Properties.Resources.nueva_db;
+            tsbNewDB.ImageTransparentColor = Color.Magenta;
+            tsbNewDB.Name = "tsbNewDB";
+            tsbNewDB.Size = new Size(34, 34);
+            tsbNewDB.Visible = false;
+            tsbNewDB.Click += tsbNewDB_Click;
             // 
             // tssNew
             // 
-            this.tssNew.Name = "tssNew";
-            this.tssNew.Size = new System.Drawing.Size(6, 37);
-            this.tssNew.Visible = false;
+            tssNew.Name = "tssNew";
+            tssNew.Size = new Size(6, 37);
+            tssNew.Visible = false;
             // 
             // tsbExploreTable
             // 
-            this.tsbExploreTable.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbExploreTable.Image = global::PgMulti.Properties.Resources.abrir_tabla;
-            this.tsbExploreTable.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbExploreTable.Name = "tsbExploreTable";
-            this.tsbExploreTable.Size = new System.Drawing.Size(34, 34);
-            this.tsbExploreTable.Visible = false;
-            this.tsbExploreTable.Click += new System.EventHandler(this.tsbExploreTable_Click);
+            tsbExploreTable.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbExploreTable.Image = Properties.Resources.abrir_tabla;
+            tsbExploreTable.ImageTransparentColor = Color.Magenta;
+            tsbExploreTable.Name = "tsbExploreTable";
+            tsbExploreTable.Size = new Size(34, 34);
+            tsbExploreTable.Visible = false;
+            tsbExploreTable.Click += tsbExploreTable_Click;
             // 
             // tsbRecursiveRemove
             // 
-            this.tsbRecursiveRemove.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbRecursiveRemove.Image = global::PgMulti.Properties.Resources.borrar_todos;
-            this.tsbRecursiveRemove.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbRecursiveRemove.Name = "tsbRecursiveRemove";
-            this.tsbRecursiveRemove.Size = new System.Drawing.Size(34, 34);
-            this.tsbRecursiveRemove.Visible = false;
-            this.tsbRecursiveRemove.Click += new System.EventHandler(this.tsbRecursiveRemove_Click);
+            tsbRecursiveRemove.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbRecursiveRemove.Image = Properties.Resources.borrar_todos;
+            tsbRecursiveRemove.ImageTransparentColor = Color.Magenta;
+            tsbRecursiveRemove.Name = "tsbRecursiveRemove";
+            tsbRecursiveRemove.Size = new Size(34, 34);
+            tsbRecursiveRemove.Visible = false;
+            tsbRecursiveRemove.Click += tsbRecursiveRemove_Click;
             // 
             // tsbCreateTableDiagram
             // 
-            this.tsbCreateTableDiagram.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbCreateTableDiagram.Image = global::PgMulti.Properties.Resources.diagram;
-            this.tsbCreateTableDiagram.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbCreateTableDiagram.Name = "tsbCreateTableDiagram";
-            this.tsbCreateTableDiagram.Size = new System.Drawing.Size(34, 34);
-            this.tsbCreateTableDiagram.Visible = false;
-            this.tsbCreateTableDiagram.Click += new System.EventHandler(this.tsbCreateTableDiagram_Click);
+            tsbCreateTableDiagram.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbCreateTableDiagram.Image = Properties.Resources.diagram;
+            tsbCreateTableDiagram.ImageTransparentColor = Color.Magenta;
+            tsbCreateTableDiagram.Name = "tsbCreateTableDiagram";
+            tsbCreateTableDiagram.Size = new Size(34, 34);
+            tsbCreateTableDiagram.Visible = false;
+            tsbCreateTableDiagram.Click += tsbCreateTableDiagram_Click;
             // 
             // tsbEdit
             // 
-            this.tsbEdit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbEdit.Image = global::PgMulti.Properties.Resources.editar;
-            this.tsbEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbEdit.Name = "tsbEdit";
-            this.tsbEdit.Size = new System.Drawing.Size(34, 34);
-            this.tsbEdit.Visible = false;
-            this.tsbEdit.Click += new System.EventHandler(this.tsbEdit_Click);
+            tsbEdit.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbEdit.Image = Properties.Resources.editar;
+            tsbEdit.ImageTransparentColor = Color.Magenta;
+            tsbEdit.Name = "tsbEdit";
+            tsbEdit.Size = new Size(34, 34);
+            tsbEdit.Visible = false;
+            tsbEdit.Click += tsbEdit_Click;
             // 
             // tsbRemove
             // 
-            this.tsbRemove.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbRemove.Image = global::PgMulti.Properties.Resources.borrar;
-            this.tsbRemove.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbRemove.Name = "tsbRemove";
-            this.tsbRemove.Size = new System.Drawing.Size(34, 34);
-            this.tsbRemove.Visible = false;
-            this.tsbRemove.Click += new System.EventHandler(this.tsbRemove_Click);
+            tsbRemove.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbRemove.Image = Properties.Resources.borrar;
+            tsbRemove.ImageTransparentColor = Color.Magenta;
+            tsbRemove.Name = "tsbRemove";
+            tsbRemove.Size = new Size(34, 34);
+            tsbRemove.Visible = false;
+            tsbRemove.Click += tsbRemove_Click;
             // 
             // tssEdit
             // 
-            this.tssEdit.Name = "tssEdit";
-            this.tssEdit.Size = new System.Drawing.Size(6, 37);
-            this.tssEdit.Visible = false;
+            tssEdit.Name = "tssEdit";
+            tssEdit.Size = new Size(6, 37);
+            tssEdit.Visible = false;
             // 
             // tsbUp
             // 
-            this.tsbUp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbUp.Image = global::PgMulti.Properties.Resources.arriba;
-            this.tsbUp.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbUp.Name = "tsbUp";
-            this.tsbUp.Size = new System.Drawing.Size(34, 34);
-            this.tsbUp.Visible = false;
-            this.tsbUp.Click += new System.EventHandler(this.tsbUp_Click);
+            tsbUp.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbUp.Image = Properties.Resources.arriba;
+            tsbUp.ImageTransparentColor = Color.Magenta;
+            tsbUp.Name = "tsbUp";
+            tsbUp.Size = new Size(34, 34);
+            tsbUp.Visible = false;
+            tsbUp.Click += tsbUp_Click;
             // 
             // tsbDown
             // 
-            this.tsbDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbDown.Image = global::PgMulti.Properties.Resources.abajo;
-            this.tsbDown.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbDown.Name = "tsbDown";
-            this.tsbDown.Size = new System.Drawing.Size(34, 34);
-            this.tsbDown.Visible = false;
-            this.tsbDown.Click += new System.EventHandler(this.tsbDown_Click);
+            tsbDown.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbDown.Image = Properties.Resources.abajo;
+            tsbDown.ImageTransparentColor = Color.Magenta;
+            tsbDown.Name = "tsbDown";
+            tsbDown.Size = new Size(34, 34);
+            tsbDown.Visible = false;
+            tsbDown.Click += tsbDown_Click;
             // 
             // tssUpDown
             // 
-            this.tssUpDown.Name = "tssUpDown";
-            this.tssUpDown.Size = new System.Drawing.Size(6, 37);
-            this.tssUpDown.Visible = false;
+            tssUpDown.Name = "tssUpDown";
+            tssUpDown.Size = new Size(6, 37);
+            tssUpDown.Visible = false;
             // 
             // tsbCollapseAll
             // 
-            this.tsbCollapseAll.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbCollapseAll.Image = global::PgMulti.Properties.Resources.contraer;
-            this.tsbCollapseAll.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbCollapseAll.Name = "tsbCollapseAll";
-            this.tsbCollapseAll.Size = new System.Drawing.Size(34, 34);
-            this.tsbCollapseAll.Click += new System.EventHandler(this.tsbCollapseAll_Click);
+            tsbCollapseAll.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbCollapseAll.Image = Properties.Resources.contraer;
+            tsbCollapseAll.ImageTransparentColor = Color.Magenta;
+            tsbCollapseAll.Name = "tsbCollapseAll";
+            tsbCollapseAll.Size = new Size(34, 34);
+            tsbCollapseAll.Click += tsbCollapseAll_Click;
             // 
             // tsbRefresh
             // 
-            this.tsbRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbRefresh.Image = global::PgMulti.Properties.Resources.actualizar;
-            this.tsbRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbRefresh.Name = "tsbRefresh";
-            this.tsbRefresh.Size = new System.Drawing.Size(34, 34);
-            this.tsbRefresh.Click += new System.EventHandler(this.tsbRefresh_Click);
+            tsbRefresh.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbRefresh.Image = Properties.Resources.actualizar;
+            tsbRefresh.ImageTransparentColor = Color.Magenta;
+            tsbRefresh.Name = "tsbRefresh";
+            tsbRefresh.Size = new Size(34, 34);
+            tsbRefresh.Click += tsbRefresh_Click;
+            // 
+            // tpSearchAndReplace
+            // 
+            tpSearchAndReplace.Controls.Add(tlpSearchAndReplace);
+            tpSearchAndReplace.Location = new Point(4, 4);
+            tpSearchAndReplace.Name = "tpSearchAndReplace";
+            tpSearchAndReplace.Padding = new Padding(3);
+            tpSearchAndReplace.Size = new Size(402, 262);
+            tpSearchAndReplace.TabIndex = 1;
+            tpSearchAndReplace.UseVisualStyleBackColor = true;
+            // 
+            // tlpSearchAndReplace
+            // 
+            tlpSearchAndReplace.ColumnCount = 1;
+            tlpSearchAndReplace.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tlpSearchAndReplace.Controls.Add(txtSearchText, 0, 0);
+            tlpSearchAndReplace.Controls.Add(txtReplaceText, 0, 3);
+            tlpSearchAndReplace.Controls.Add(flpSearchOptions, 0, 1);
+            tlpSearchAndReplace.Controls.Add(flpSearchAndReplaceButtons, 0, 4);
+            tlpSearchAndReplace.Controls.Add(lblSearchResultsSummary, 0, 2);
+            tlpSearchAndReplace.Dock = DockStyle.Fill;
+            tlpSearchAndReplace.Location = new Point(3, 3);
+            tlpSearchAndReplace.Name = "tlpSearchAndReplace";
+            tlpSearchAndReplace.RowCount = 6;
+            tlpSearchAndReplace.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+            tlpSearchAndReplace.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F));
+            tlpSearchAndReplace.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+            tlpSearchAndReplace.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+            tlpSearchAndReplace.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F));
+            tlpSearchAndReplace.RowStyles.Add(new RowStyle());
+            tlpSearchAndReplace.Size = new Size(396, 256);
+            tlpSearchAndReplace.TabIndex = 0;
+            // 
+            // txtSearchText
+            // 
+            txtSearchText.Dock = DockStyle.Fill;
+            txtSearchText.Location = new Point(3, 3);
+            txtSearchText.Name = "txtSearchText";
+            txtSearchText.Size = new Size(390, 27);
+            txtSearchText.TabIndex = 0;
+            txtSearchText.TextChanged += txtSearchText_TextChanged;
+            txtSearchText.KeyUp += txtSearchText_KeyUp;
+            // 
+            // txtReplaceText
+            // 
+            txtReplaceText.Dock = DockStyle.Fill;
+            txtReplaceText.Location = new Point(3, 173);
+            txtReplaceText.Name = "txtReplaceText";
+            txtReplaceText.Size = new Size(390, 27);
+            txtReplaceText.TabIndex = 1;
+            txtReplaceText.KeyUp += txtReplaceText_KeyUp;
+            // 
+            // flpSearchOptions
+            // 
+            flpSearchOptions.Controls.Add(chkSearchMatchCase);
+            flpSearchOptions.Controls.Add(chkSearchMatchWholeWords);
+            flpSearchOptions.Controls.Add(chkSearchRegex);
+            flpSearchOptions.Dock = DockStyle.Fill;
+            flpSearchOptions.FlowDirection = FlowDirection.TopDown;
+            flpSearchOptions.Location = new Point(3, 33);
+            flpSearchOptions.Name = "flpSearchOptions";
+            flpSearchOptions.Size = new Size(390, 94);
+            flpSearchOptions.TabIndex = 2;
+            // 
+            // chkSearchMatchCase
+            // 
+            chkSearchMatchCase.AutoSize = true;
+            chkSearchMatchCase.Location = new Point(3, 3);
+            chkSearchMatchCase.Name = "chkSearchMatchCase";
+            chkSearchMatchCase.Size = new Size(18, 17);
+            chkSearchMatchCase.TabIndex = 0;
+            chkSearchMatchCase.UseVisualStyleBackColor = true;
+            chkSearchMatchCase.CheckedChanged += chkSearchMatchCase_CheckedChanged;
+            // 
+            // chkSearchMatchWholeWords
+            // 
+            chkSearchMatchWholeWords.AutoSize = true;
+            chkSearchMatchWholeWords.Location = new Point(3, 26);
+            chkSearchMatchWholeWords.Name = "chkSearchMatchWholeWords";
+            chkSearchMatchWholeWords.Size = new Size(18, 17);
+            chkSearchMatchWholeWords.TabIndex = 1;
+            chkSearchMatchWholeWords.UseVisualStyleBackColor = true;
+            chkSearchMatchWholeWords.CheckedChanged += chkSearchMatchWholeWords_CheckedChanged;
+            // 
+            // chkSearchRegex
+            // 
+            chkSearchRegex.AutoSize = true;
+            chkSearchRegex.Location = new Point(3, 49);
+            chkSearchRegex.Name = "chkSearchRegex";
+            chkSearchRegex.Size = new Size(18, 17);
+            chkSearchRegex.TabIndex = 2;
+            chkSearchRegex.UseVisualStyleBackColor = true;
+            chkSearchRegex.CheckedChanged += chkSearchRegex_CheckedChanged;
+            // 
+            // flpSearchAndReplaceButtons
+            // 
+            flpSearchAndReplaceButtons.Controls.Add(btnSearch);
+            flpSearchAndReplaceButtons.Controls.Add(btnGoNextSearchResult);
+            flpSearchAndReplaceButtons.Controls.Add(btnReplaceCurrent);
+            flpSearchAndReplaceButtons.Controls.Add(btnReplaceAll);
+            flpSearchAndReplaceButtons.Dock = DockStyle.Fill;
+            flpSearchAndReplaceButtons.Location = new Point(3, 203);
+            flpSearchAndReplaceButtons.Name = "flpSearchAndReplaceButtons";
+            flpSearchAndReplaceButtons.Size = new Size(390, 94);
+            flpSearchAndReplaceButtons.TabIndex = 3;
+            // 
+            // btnSearch
+            // 
+            btnSearch.AutoSize = true;
+            btnSearch.Location = new Point(3, 3);
+            btnSearch.Name = "btnSearch";
+            btnSearch.Size = new Size(94, 30);
+            btnSearch.TabIndex = 0;
+            btnSearch.UseVisualStyleBackColor = true;
+            btnSearch.Click += btnSearch_Click;
+            // 
+            // btnGoNextSearchResult
+            // 
+            btnGoNextSearchResult.AutoSize = true;
+            btnGoNextSearchResult.Enabled = false;
+            btnGoNextSearchResult.Location = new Point(103, 3);
+            btnGoNextSearchResult.Name = "btnGoNextSearchResult";
+            btnGoNextSearchResult.Size = new Size(94, 30);
+            btnGoNextSearchResult.TabIndex = 0;
+            btnGoNextSearchResult.UseVisualStyleBackColor = true;
+            btnGoNextSearchResult.Click += btnGoNextSearchResult_Click;
+            // 
+            // btnReplaceCurrent
+            // 
+            btnReplaceCurrent.AutoSize = true;
+            btnReplaceCurrent.Enabled = false;
+            btnReplaceCurrent.Location = new Point(203, 3);
+            btnReplaceCurrent.Name = "btnReplaceCurrent";
+            btnReplaceCurrent.Size = new Size(94, 30);
+            btnReplaceCurrent.TabIndex = 1;
+            btnReplaceCurrent.UseVisualStyleBackColor = true;
+            btnReplaceCurrent.Click += btnReplaceCurrent_Click;
+            // 
+            // btnReplaceAll
+            // 
+            btnReplaceAll.AutoSize = true;
+            btnReplaceAll.Enabled = false;
+            btnReplaceAll.Location = new Point(3, 39);
+            btnReplaceAll.Name = "btnReplaceAll";
+            btnReplaceAll.Size = new Size(94, 30);
+            btnReplaceAll.TabIndex = 2;
+            btnReplaceAll.UseVisualStyleBackColor = true;
+            btnReplaceAll.Click += btnReplaceAll_Click;
+            // 
+            // lblSearchResultsSummary
+            // 
+            lblSearchResultsSummary.AutoSize = true;
+            lblSearchResultsSummary.Dock = DockStyle.Fill;
+            lblSearchResultsSummary.Location = new Point(3, 130);
+            lblSearchResultsSummary.Name = "lblSearchResultsSummary";
+            lblSearchResultsSummary.Size = new Size(390, 40);
+            lblSearchResultsSummary.TabIndex = 4;
             // 
             // toolStripContainer1
             // 
             // 
             // toolStripContainer1.ContentPanel
             // 
-            this.toolStripContainer1.ContentPanel.Controls.Add(this.tcSql);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(1125, 258);
-            this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
-            this.toolStripContainer1.Name = "toolStripContainer1";
-            this.toolStripContainer1.Size = new System.Drawing.Size(1125, 295);
-            this.toolStripContainer1.TabIndex = 1;
-            this.toolStripContainer1.Text = "toolStripContainer1";
+            toolStripContainer1.ContentPanel.Controls.Add(tcSql);
+            toolStripContainer1.ContentPanel.Size = new Size(1125, 258);
+            toolStripContainer1.Dock = DockStyle.Fill;
+            toolStripContainer1.Location = new Point(0, 0);
+            toolStripContainer1.Name = "toolStripContainer1";
+            toolStripContainer1.Size = new Size(1125, 295);
+            toolStripContainer1.TabIndex = 1;
+            toolStripContainer1.Text = "toolStripContainer1";
             // 
             // toolStripContainer1.TopToolStripPanel
             // 
-            this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.toolStrip1);
+            toolStripContainer1.TopToolStripPanel.Controls.Add(toolStrip1);
             // 
             // tcSql
             // 
-            this.tcSql.Controls.Add(this.tpNewTab);
-            this.tcSql.DisplayStyle = TradeWright.UI.Forms.TabStyle.Rounded;
+            tcSql.AllowReorder = true;
+            tcSql.Controls.Add(tpNewTab);
+            tcSql.DisplayStyle = TabStyle.Rounded;
             // 
             // 
             // 
-            this.tcSql.DisplayStyleProvider.BlendStyle = TradeWright.UI.Forms.BlendStyle.Normal;
-            this.tcSql.DisplayStyleProvider.BorderColorDisabled = System.Drawing.SystemColors.ControlLight;
-            this.tcSql.DisplayStyleProvider.BorderColorFocused = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(157)))), ((int)(((byte)(185)))));
-            this.tcSql.DisplayStyleProvider.BorderColorHighlighted = System.Drawing.SystemColors.ControlDark;
-            this.tcSql.DisplayStyleProvider.BorderColorSelected = System.Drawing.SystemColors.ControlDark;
-            this.tcSql.DisplayStyleProvider.BorderColorUnselected = System.Drawing.SystemColors.ControlDark;
-            this.tcSql.DisplayStyleProvider.CloserButtonFillColorFocused = System.Drawing.Color.Empty;
-            this.tcSql.DisplayStyleProvider.CloserButtonFillColorFocusedActive = System.Drawing.Color.Black;
-            this.tcSql.DisplayStyleProvider.CloserButtonFillColorHighlighted = System.Drawing.Color.Empty;
-            this.tcSql.DisplayStyleProvider.CloserButtonFillColorHighlightedActive = System.Drawing.Color.Black;
-            this.tcSql.DisplayStyleProvider.CloserButtonFillColorSelected = System.Drawing.Color.Empty;
-            this.tcSql.DisplayStyleProvider.CloserButtonFillColorSelectedActive = System.Drawing.Color.Black;
-            this.tcSql.DisplayStyleProvider.CloserButtonFillColorUnselected = System.Drawing.Color.Empty;
-            this.tcSql.DisplayStyleProvider.CloserButtonOutlineColorFocused = System.Drawing.Color.Empty;
-            this.tcSql.DisplayStyleProvider.CloserButtonOutlineColorFocusedActive = System.Drawing.Color.Empty;
-            this.tcSql.DisplayStyleProvider.CloserButtonOutlineColorHighlighted = System.Drawing.Color.Empty;
-            this.tcSql.DisplayStyleProvider.CloserButtonOutlineColorHighlightedActive = System.Drawing.Color.Empty;
-            this.tcSql.DisplayStyleProvider.CloserButtonOutlineColorSelected = System.Drawing.Color.Empty;
-            this.tcSql.DisplayStyleProvider.CloserButtonOutlineColorSelectedActive = System.Drawing.Color.Empty;
-            this.tcSql.DisplayStyleProvider.CloserButtonOutlineColorUnselected = System.Drawing.Color.Empty;
-            this.tcSql.DisplayStyleProvider.CloserColorFocused = System.Drawing.Color.Black;
-            this.tcSql.DisplayStyleProvider.CloserColorFocusedActive = System.Drawing.Color.White;
-            this.tcSql.DisplayStyleProvider.CloserColorHighlighted = System.Drawing.Color.Black;
-            this.tcSql.DisplayStyleProvider.CloserColorHighlightedActive = System.Drawing.Color.White;
-            this.tcSql.DisplayStyleProvider.CloserColorSelected = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(102)))), ((int)(((byte)(115)))));
-            this.tcSql.DisplayStyleProvider.CloserColorSelectedActive = System.Drawing.Color.White;
-            this.tcSql.DisplayStyleProvider.CloserColorUnselected = System.Drawing.Color.Black;
-            this.tcSql.DisplayStyleProvider.FocusTrack = false;
-            this.tcSql.DisplayStyleProvider.HotTrack = true;
-            this.tcSql.DisplayStyleProvider.ImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.tcSql.DisplayStyleProvider.Opacity = 1F;
-            this.tcSql.DisplayStyleProvider.Overlap = 3;
-            this.tcSql.DisplayStyleProvider.Padding = new System.Drawing.Point(6, 3);
-            this.tcSql.DisplayStyleProvider.PageBackgroundColorDisabled = System.Drawing.SystemColors.Control;
-            this.tcSql.DisplayStyleProvider.PageBackgroundColorFocused = System.Drawing.SystemColors.ControlLight;
-            this.tcSql.DisplayStyleProvider.PageBackgroundColorHighlighted = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(244)))), ((int)(((byte)(252)))));
-            this.tcSql.DisplayStyleProvider.PageBackgroundColorSelected = System.Drawing.SystemColors.ControlLightLight;
-            this.tcSql.DisplayStyleProvider.PageBackgroundColorUnselected = System.Drawing.SystemColors.Control;
-            this.tcSql.DisplayStyleProvider.Radius = 10;
-            this.tcSql.DisplayStyleProvider.SelectedTabIsLarger = false;
-            this.tcSql.DisplayStyleProvider.ShowTabCloser = true;
-            this.tcSql.DisplayStyleProvider.TabColorDisabled1 = System.Drawing.SystemColors.Control;
-            this.tcSql.DisplayStyleProvider.TabColorDisabled2 = System.Drawing.SystemColors.Control;
-            this.tcSql.DisplayStyleProvider.TabColorFocused1 = System.Drawing.SystemColors.ControlLightLight;
-            this.tcSql.DisplayStyleProvider.TabColorFocused2 = System.Drawing.SystemColors.ControlLightLight;
-            this.tcSql.DisplayStyleProvider.TabColorHighLighted1 = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(244)))), ((int)(((byte)(252)))));
-            this.tcSql.DisplayStyleProvider.TabColorHighLighted2 = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(237)))), ((int)(((byte)(252)))));
-            this.tcSql.DisplayStyleProvider.TabColorSelected1 = System.Drawing.SystemColors.ControlLightLight;
-            this.tcSql.DisplayStyleProvider.TabColorSelected2 = System.Drawing.SystemColors.ControlLightLight;
-            this.tcSql.DisplayStyleProvider.TabColorUnSelected1 = System.Drawing.SystemColors.Control;
-            this.tcSql.DisplayStyleProvider.TabColorUnSelected2 = System.Drawing.SystemColors.Control;
-            this.tcSql.DisplayStyleProvider.TabPageMargin = new System.Windows.Forms.Padding(1);
-            this.tcSql.DisplayStyleProvider.TextColorDisabled = System.Drawing.SystemColors.ControlDark;
-            this.tcSql.DisplayStyleProvider.TextColorFocused = System.Drawing.SystemColors.ControlText;
-            this.tcSql.DisplayStyleProvider.TextColorHighlighted = System.Drawing.SystemColors.ControlText;
-            this.tcSql.DisplayStyleProvider.TextColorSelected = System.Drawing.SystemColors.ControlText;
-            this.tcSql.DisplayStyleProvider.TextColorUnselected = System.Drawing.SystemColors.ControlText;
-            this.tcSql.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tcSql.HotTrack = true;
-            this.tcSql.AllowReorder = true;
-            this.tcSql.NewTabButton = true;
-            this.tcSql.ImageList = this.ilTabControl;
-            this.tcSql.Location = new System.Drawing.Point(0, 0);
-            this.tcSql.Name = "tcSql";
-            this.tcSql.SelectedIndex = 0;
-            this.tcSql.Size = new System.Drawing.Size(1125, 258);
-            this.tcSql.TabIndex = 0;
-            this.tcSql.TabClosing += new System.EventHandler<System.Windows.Forms.TabControlCancelEventArgs>(this.tcSql_TabClosing);
-            this.tcSql.SelectedIndexChanged += new System.EventHandler(this.tcSql_SelectedIndexChanged);
-            this.tcSql.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tcSql_MouseDown);
-            this.tcSql.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tcSql_MouseUp);
-            this.tcSql.ReorderedTabs += new EventHandler<EventArgs>(tcSql_ReorderedTabs);
+            tcSql.DisplayStyleProvider.BlendStyle = BlendStyle.Normal;
+            tcSql.DisplayStyleProvider.BorderColorDisabled = SystemColors.ControlLight;
+            tcSql.DisplayStyleProvider.BorderColorFocused = Color.FromArgb(127, 157, 185);
+            tcSql.DisplayStyleProvider.BorderColorHighlighted = SystemColors.ControlDark;
+            tcSql.DisplayStyleProvider.BorderColorSelected = SystemColors.ControlDark;
+            tcSql.DisplayStyleProvider.BorderColorUnselected = SystemColors.ControlDark;
+            tcSql.DisplayStyleProvider.CloserButtonFillColorFocused = Color.Empty;
+            tcSql.DisplayStyleProvider.CloserButtonFillColorFocusedActive = Color.Black;
+            tcSql.DisplayStyleProvider.CloserButtonFillColorHighlighted = Color.Empty;
+            tcSql.DisplayStyleProvider.CloserButtonFillColorHighlightedActive = Color.Black;
+            tcSql.DisplayStyleProvider.CloserButtonFillColorSelected = Color.Empty;
+            tcSql.DisplayStyleProvider.CloserButtonFillColorSelectedActive = Color.Black;
+            tcSql.DisplayStyleProvider.CloserButtonFillColorUnselected = Color.Empty;
+            tcSql.DisplayStyleProvider.CloserButtonOutlineColorFocused = Color.Empty;
+            tcSql.DisplayStyleProvider.CloserButtonOutlineColorFocusedActive = Color.Empty;
+            tcSql.DisplayStyleProvider.CloserButtonOutlineColorHighlighted = Color.Empty;
+            tcSql.DisplayStyleProvider.CloserButtonOutlineColorHighlightedActive = Color.Empty;
+            tcSql.DisplayStyleProvider.CloserButtonOutlineColorSelected = Color.Empty;
+            tcSql.DisplayStyleProvider.CloserButtonOutlineColorSelectedActive = Color.Empty;
+            tcSql.DisplayStyleProvider.CloserButtonOutlineColorUnselected = Color.Empty;
+            tcSql.DisplayStyleProvider.CloserColorFocused = Color.Black;
+            tcSql.DisplayStyleProvider.CloserColorFocusedActive = Color.White;
+            tcSql.DisplayStyleProvider.CloserColorHighlighted = Color.Black;
+            tcSql.DisplayStyleProvider.CloserColorHighlightedActive = Color.White;
+            tcSql.DisplayStyleProvider.CloserColorSelected = Color.FromArgb(95, 102, 115);
+            tcSql.DisplayStyleProvider.CloserColorSelectedActive = Color.White;
+            tcSql.DisplayStyleProvider.CloserColorUnselected = Color.Black;
+            tcSql.DisplayStyleProvider.FocusTrack = false;
+            tcSql.DisplayStyleProvider.HotTrack = true;
+            tcSql.DisplayStyleProvider.ImageAlign = ContentAlignment.MiddleCenter;
+            tcSql.DisplayStyleProvider.Opacity = 1F;
+            tcSql.DisplayStyleProvider.Overlap = 3;
+            tcSql.DisplayStyleProvider.Padding = new Point(6, 3);
+            tcSql.DisplayStyleProvider.PageBackgroundColorDisabled = SystemColors.Control;
+            tcSql.DisplayStyleProvider.PageBackgroundColorFocused = SystemColors.ControlLight;
+            tcSql.DisplayStyleProvider.PageBackgroundColorHighlighted = Color.FromArgb(236, 244, 252);
+            tcSql.DisplayStyleProvider.PageBackgroundColorSelected = SystemColors.ControlLightLight;
+            tcSql.DisplayStyleProvider.PageBackgroundColorUnselected = SystemColors.Control;
+            tcSql.DisplayStyleProvider.Radius = 10;
+            tcSql.DisplayStyleProvider.SelectedTabIsLarger = false;
+            tcSql.DisplayStyleProvider.ShowTabCloser = true;
+            tcSql.DisplayStyleProvider.TabColorDisabled1 = SystemColors.Control;
+            tcSql.DisplayStyleProvider.TabColorDisabled2 = SystemColors.Control;
+            tcSql.DisplayStyleProvider.TabColorFocused1 = SystemColors.ControlLightLight;
+            tcSql.DisplayStyleProvider.TabColorFocused2 = SystemColors.ControlLightLight;
+            tcSql.DisplayStyleProvider.TabColorHighLighted1 = Color.FromArgb(236, 244, 252);
+            tcSql.DisplayStyleProvider.TabColorHighLighted2 = Color.FromArgb(221, 237, 252);
+            tcSql.DisplayStyleProvider.TabColorSelected1 = SystemColors.ControlLightLight;
+            tcSql.DisplayStyleProvider.TabColorSelected2 = SystemColors.ControlLightLight;
+            tcSql.DisplayStyleProvider.TabColorUnSelected1 = SystemColors.Control;
+            tcSql.DisplayStyleProvider.TabColorUnSelected2 = SystemColors.Control;
+            tcSql.DisplayStyleProvider.TabPageMargin = new Padding(1);
+            tcSql.DisplayStyleProvider.TextColorDisabled = SystemColors.ControlDark;
+            tcSql.DisplayStyleProvider.TextColorFocused = SystemColors.ControlText;
+            tcSql.DisplayStyleProvider.TextColorHighlighted = SystemColors.ControlText;
+            tcSql.DisplayStyleProvider.TextColorSelected = SystemColors.ControlText;
+            tcSql.DisplayStyleProvider.TextColorUnselected = SystemColors.ControlText;
+            tcSql.Dock = DockStyle.Fill;
+            tcSql.HotTrack = true;
+            tcSql.ImageList = ilTabControl;
+            tcSql.Location = new Point(0, 0);
+            tcSql.Name = "tcSql";
+            tcSql.NewTabButton = true;
+            tcSql.SelectedIndex = 0;
+            tcSql.Size = new Size(1125, 258);
+            tcSql.TabIndex = 0;
+            tcSql.TabClosing += tcSql_TabClosing;
+            tcSql.ReorderedTabs += tcSql_ReorderedTabs;
+            tcSql.SelectedIndexChanged += tcSql_SelectedIndexChanged;
+            tcSql.MouseDown += tcSql_MouseDown;
+            tcSql.MouseUp += tcSql_MouseUp;
             // 
             // tpNewTab
             // 
-            this.tpNewTab.ImageIndex = 0;
-            this.tpNewTab.Location = new System.Drawing.Point(4, 32);
-            this.tpNewTab.Name = "tpNewTab";
-            this.tpNewTab.Size = new System.Drawing.Size(1117, 222);
-            this.tpNewTab.TabIndex = 0;
+            tpNewTab.ImageIndex = 0;
+            tpNewTab.Location = new Point(4, 32);
+            tpNewTab.Name = "tpNewTab";
+            tpNewTab.Size = new Size(1117, 222);
+            tpNewTab.TabIndex = 0;
             // 
             // ilTabControl
             // 
-            this.ilTabControl.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
-            this.ilTabControl.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilTabControl.ImageStream")));
-            this.ilTabControl.TransparentColor = System.Drawing.Color.Transparent;
-            this.ilTabControl.Images.SetKeyName(0, "nuevo.png");
+            ilTabControl.ColorDepth = ColorDepth.Depth8Bit;
+            ilTabControl.ImageStream = (ImageListStreamer)resources.GetObject("ilTabControl.ImageStream");
+            ilTabControl.TransparentColor = Color.Transparent;
+            ilTabControl.Images.SetKeyName(0, "nuevo.png");
             // 
             // toolStrip1
             // 
-            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.None;
-            this.toolStrip1.ImageScalingSize = new System.Drawing.Size(30, 30);
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsbOpen,
-            this.tsbSave,
-            this.tsbSaveAll,
-            this.toolStripSeparator2,
-            this.tsbRun,
-            this.tsbExportCsv,
-            this.tsddbTransactions,
-            this.toolStripSeparator3,
-            this.tsbFind,
-            this.tsbReplace,
-            this.tsbGoTo,
-            this.toolStripSeparator5,
-            this.tsbFormat,
-            this.tsbHistory,
-            this.toolStripSeparator7,
-            this.tsbOpenDiagram,
-            this.tsbNewDiagram,
-            this.toolStripSeparator1,
-            this.tsddbErrors,
-            this.toolStripSeparator6,
-            this.tslPosition});
-            this.toolStrip1.Location = new System.Drawing.Point(4, 0);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(545, 37);
-            this.toolStrip1.TabIndex = 1;
-            this.toolStrip1.Text = "toolStrip1";
+            toolStrip1.Dock = DockStyle.None;
+            toolStrip1.ImageScalingSize = new Size(30, 30);
+            toolStrip1.Items.AddRange(new ToolStripItem[] { tsbOpen, tsbSave, tsbSaveAll, toolStripSeparator2, tsbRun, tsbExportCsv, tsddbTransactions, toolStripSeparator3, tsbSearchAndReplace, tsbGoTo, toolStripSeparator5, tsbFormat, tsbHistory, toolStripSeparator7, tsbOpenDiagram, tsbNewDiagram, toolStripSeparator1, tsddbErrors, toolStripSeparator6, tslPosition });
+            toolStrip1.Location = new Point(4, 0);
+            toolStrip1.Name = "toolStrip1";
+            toolStrip1.Size = new Size(540, 37);
+            toolStrip1.TabIndex = 1;
+            toolStrip1.Text = "toolStrip1";
             // 
             // tsbOpen
             // 
-            this.tsbOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbOpen.Image = global::PgMulti.Properties.Resources.abrir;
-            this.tsbOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbOpen.Name = "tsbOpen";
-            this.tsbOpen.Size = new System.Drawing.Size(34, 34);
-            this.tsbOpen.Text = "toolStripButton1";
-            this.tsbOpen.Click += new System.EventHandler(this.tsbOpen_Click);
+            tsbOpen.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbOpen.Image = Properties.Resources.abrir;
+            tsbOpen.ImageTransparentColor = Color.Magenta;
+            tsbOpen.Name = "tsbOpen";
+            tsbOpen.Size = new Size(34, 34);
+            tsbOpen.Text = "toolStripButton1";
+            tsbOpen.Click += tsbOpen_Click;
             // 
             // tsbSave
             // 
-            this.tsbSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbSave.Image = global::PgMulti.Properties.Resources.guardar;
-            this.tsbSave.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbSave.Name = "tsbSave";
-            this.tsbSave.Size = new System.Drawing.Size(34, 34);
-            this.tsbSave.Text = "toolStripButton1";
-            this.tsbSave.Click += new System.EventHandler(this.tsbSave_Click);
+            tsbSave.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbSave.Image = Properties.Resources.guardar;
+            tsbSave.ImageTransparentColor = Color.Magenta;
+            tsbSave.Name = "tsbSave";
+            tsbSave.Size = new Size(34, 34);
+            tsbSave.Text = "toolStripButton1";
+            tsbSave.Click += tsbSave_Click;
             // 
             // tsbSaveAll
             // 
-            this.tsbSaveAll.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbSaveAll.Image = global::PgMulti.Properties.Resources.guardar_todo;
-            this.tsbSaveAll.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbSaveAll.Name = "tsbSaveAll";
-            this.tsbSaveAll.Size = new System.Drawing.Size(34, 34);
-            this.tsbSaveAll.Text = "toolStripButton1";
-            this.tsbSaveAll.Click += new System.EventHandler(this.tsbSaveAll_Click);
+            tsbSaveAll.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbSaveAll.Image = Properties.Resources.guardar_todo;
+            tsbSaveAll.ImageTransparentColor = Color.Magenta;
+            tsbSaveAll.Name = "tsbSaveAll";
+            tsbSaveAll.Size = new Size(34, 34);
+            tsbSaveAll.Text = "toolStripButton1";
+            tsbSaveAll.Click += tsbSaveAll_Click;
             // 
             // toolStripSeparator2
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 37);
+            toolStripSeparator2.Name = "toolStripSeparator2";
+            toolStripSeparator2.Size = new Size(6, 37);
             // 
             // tsbRun
             // 
-            this.tsbRun.Enabled = false;
-            this.tsbRun.Image = global::PgMulti.Properties.Resources.ejecutar;
-            this.tsbRun.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbRun.Name = "tsbRun";
-            this.tsbRun.Size = new System.Drawing.Size(34, 34);
-            this.tsbRun.ToolTipText = "Ejecutar";
-            this.tsbRun.Click += new System.EventHandler(this.tsbRun_Click);
+            tsbRun.Enabled = false;
+            tsbRun.Image = Properties.Resources.ejecutar;
+            tsbRun.ImageTransparentColor = Color.Magenta;
+            tsbRun.Name = "tsbRun";
+            tsbRun.Size = new Size(34, 34);
+            tsbRun.ToolTipText = "Ejecutar";
+            tsbRun.Click += tsbRun_Click;
             // 
             // tsbExportCsv
             // 
-            this.tsbExportCsv.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbExportCsv.Image = global::PgMulti.Properties.Resources.download;
-            this.tsbExportCsv.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbExportCsv.Name = "tsbExportCsv";
-            this.tsbExportCsv.Size = new System.Drawing.Size(34, 34);
-            this.tsbExportCsv.Click += new System.EventHandler(this.tsbExportCsv_Click);
+            tsbExportCsv.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbExportCsv.Image = Properties.Resources.download;
+            tsbExportCsv.ImageTransparentColor = Color.Magenta;
+            tsbExportCsv.Name = "tsbExportCsv";
+            tsbExportCsv.Size = new Size(34, 34);
+            tsbExportCsv.Click += tsbExportCsv_Click;
             // 
             // tsddbTransactions
             // 
-            this.tsddbTransactions.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsddbTransactions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiTransactionModeManual,
-            this.tsmiTransactionModeAutoSingle,
-            this.tsmiTransactionModeAutoCoordinated,
-            this.toolStripSeparator4,
-            this.tsmiTransactionLevelReadCommitted,
-            this.tsmiTransactionLevelRepeatableRead,
-            this.tsmiTransactionLevelSerializable});
-            this.tsddbTransactions.Image = global::PgMulti.Properties.Resources.transaccion;
-            this.tsddbTransactions.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsddbTransactions.Name = "tsddbTransactions";
-            this.tsddbTransactions.Size = new System.Drawing.Size(44, 34);
-            this.tsddbTransactions.Text = "toolStripDropDownButton2";
+            tsddbTransactions.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsddbTransactions.DropDownItems.AddRange(new ToolStripItem[] { tsmiTransactionModeManual, tsmiTransactionModeAutoSingle, tsmiTransactionModeAutoCoordinated, toolStripSeparator4, tsmiTransactionLevelReadCommitted, tsmiTransactionLevelRepeatableRead, tsmiTransactionLevelSerializable });
+            tsddbTransactions.Image = Properties.Resources.transaccion;
+            tsddbTransactions.ImageTransparentColor = Color.Magenta;
+            tsddbTransactions.Name = "tsddbTransactions";
+            tsddbTransactions.Size = new Size(44, 34);
+            tsddbTransactions.Text = "toolStripDropDownButton2";
             // 
             // tsmiTransactionModeManual
             // 
-            this.tsmiTransactionModeManual.Name = "tsmiTransactionModeManual";
-            this.tsmiTransactionModeManual.Size = new System.Drawing.Size(203, 26);
-            this.tsmiTransactionModeManual.Text = "Manual";
-            this.tsmiTransactionModeManual.Click += new System.EventHandler(this.tsmiTransactionModeManual_Click);
+            tsmiTransactionModeManual.Name = "tsmiTransactionModeManual";
+            tsmiTransactionModeManual.Size = new Size(203, 26);
+            tsmiTransactionModeManual.Text = "Manual";
+            tsmiTransactionModeManual.Click += tsmiTransactionModeManual_Click;
             // 
             // tsmiTransactionModeAutoSingle
             // 
-            this.tsmiTransactionModeAutoSingle.Name = "tsmiTransactionModeAutoSingle";
-            this.tsmiTransactionModeAutoSingle.Size = new System.Drawing.Size(203, 26);
-            this.tsmiTransactionModeAutoSingle.Text = "Auto-Single";
-            this.tsmiTransactionModeAutoSingle.Click += new System.EventHandler(this.tsmiTransactionModeAutoSingle_Click);
+            tsmiTransactionModeAutoSingle.Name = "tsmiTransactionModeAutoSingle";
+            tsmiTransactionModeAutoSingle.Size = new Size(203, 26);
+            tsmiTransactionModeAutoSingle.Text = "Auto-Single";
+            tsmiTransactionModeAutoSingle.Click += tsmiTransactionModeAutoSingle_Click;
             // 
             // tsmiTransactionModeAutoCoordinated
             // 
-            this.tsmiTransactionModeAutoCoordinated.Name = "tsmiTransactionModeAutoCoordinated";
-            this.tsmiTransactionModeAutoCoordinated.Size = new System.Drawing.Size(203, 26);
-            this.tsmiTransactionModeAutoCoordinated.Text = "Auto-Coord";
-            this.tsmiTransactionModeAutoCoordinated.Click += new System.EventHandler(this.tsmiTransactionModeAutoCoordinated_Click);
+            tsmiTransactionModeAutoCoordinated.Name = "tsmiTransactionModeAutoCoordinated";
+            tsmiTransactionModeAutoCoordinated.Size = new Size(203, 26);
+            tsmiTransactionModeAutoCoordinated.Text = "Auto-Coord";
+            tsmiTransactionModeAutoCoordinated.Click += tsmiTransactionModeAutoCoordinated_Click;
             // 
             // toolStripSeparator4
             // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(200, 6);
+            toolStripSeparator4.Name = "toolStripSeparator4";
+            toolStripSeparator4.Size = new Size(200, 6);
             // 
             // tsmiTransactionLevelReadCommitted
             // 
-            this.tsmiTransactionLevelReadCommitted.Name = "tsmiTransactionLevelReadCommitted";
-            this.tsmiTransactionLevelReadCommitted.Size = new System.Drawing.Size(203, 26);
-            this.tsmiTransactionLevelReadCommitted.Text = "Read committed";
-            this.tsmiTransactionLevelReadCommitted.Click += new System.EventHandler(this.tsmiTransactionLevelReadCommitted_Click);
+            tsmiTransactionLevelReadCommitted.Name = "tsmiTransactionLevelReadCommitted";
+            tsmiTransactionLevelReadCommitted.Size = new Size(203, 26);
+            tsmiTransactionLevelReadCommitted.Text = "Read committed";
+            tsmiTransactionLevelReadCommitted.Click += tsmiTransactionLevelReadCommitted_Click;
             // 
             // tsmiTransactionLevelRepeatableRead
             // 
-            this.tsmiTransactionLevelRepeatableRead.Name = "tsmiTransactionLevelRepeatableRead";
-            this.tsmiTransactionLevelRepeatableRead.Size = new System.Drawing.Size(203, 26);
-            this.tsmiTransactionLevelRepeatableRead.Text = "Repeatable read";
-            this.tsmiTransactionLevelRepeatableRead.Click += new System.EventHandler(this.tsmiTransactionLevelRepeatableRead_Click);
+            tsmiTransactionLevelRepeatableRead.Name = "tsmiTransactionLevelRepeatableRead";
+            tsmiTransactionLevelRepeatableRead.Size = new Size(203, 26);
+            tsmiTransactionLevelRepeatableRead.Text = "Repeatable read";
+            tsmiTransactionLevelRepeatableRead.Click += tsmiTransactionLevelRepeatableRead_Click;
             // 
             // tsmiTransactionLevelSerializable
             // 
-            this.tsmiTransactionLevelSerializable.Name = "tsmiTransactionLevelSerializable";
-            this.tsmiTransactionLevelSerializable.Size = new System.Drawing.Size(203, 26);
-            this.tsmiTransactionLevelSerializable.Text = "Serializable";
-            this.tsmiTransactionLevelSerializable.Click += new System.EventHandler(this.tsmiTransactionLevelSerializable_Click);
+            tsmiTransactionLevelSerializable.Name = "tsmiTransactionLevelSerializable";
+            tsmiTransactionLevelSerializable.Size = new Size(203, 26);
+            tsmiTransactionLevelSerializable.Text = "Serializable";
+            tsmiTransactionLevelSerializable.Click += tsmiTransactionLevelSerializable_Click;
             // 
             // toolStripSeparator3
             // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 37);
+            toolStripSeparator3.Name = "toolStripSeparator3";
+            toolStripSeparator3.Size = new Size(6, 37);
             // 
-            // tsbFind
+            // tsbSearchAndReplace
             // 
-            this.tsbFind.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbFind.Image = global::PgMulti.Properties.Resources.buscar;
-            this.tsbFind.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbFind.Name = "tsbFind";
-            this.tsbFind.Size = new System.Drawing.Size(34, 34);
-            this.tsbFind.Text = "toolStripButton1";
-            this.tsbFind.Click += new System.EventHandler(this.tsbFind_Click);
-            // 
-            // tsbReplace
-            // 
-            this.tsbReplace.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbReplace.Image = global::PgMulti.Properties.Resources.reemplazar;
-            this.tsbReplace.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbReplace.Name = "tsbReplace";
-            this.tsbReplace.Size = new System.Drawing.Size(34, 34);
-            this.tsbReplace.Text = "toolStripButton2";
-            this.tsbReplace.Click += new System.EventHandler(this.tsbReplace_Click);
+            tsbSearchAndReplace.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbSearchAndReplace.Image = Properties.Resources.buscar;
+            tsbSearchAndReplace.ImageTransparentColor = Color.Magenta;
+            tsbSearchAndReplace.Name = "tsbSearchAndReplace";
+            tsbSearchAndReplace.Size = new Size(34, 34);
+            tsbSearchAndReplace.Text = "toolStripButton1";
+            tsbSearchAndReplace.Click += tsbSearchAndReplace_Click;
             // 
             // tsbGoTo
             // 
-            this.tsbGoTo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbGoTo.Image = global::PgMulti.Properties.Resources.goto_line;
-            this.tsbGoTo.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbGoTo.Name = "tsbGoTo";
-            this.tsbGoTo.Size = new System.Drawing.Size(34, 34);
-            this.tsbGoTo.Text = "toolStripButton3";
-            this.tsbGoTo.Click += new System.EventHandler(this.tsbGoTo_Click);
+            tsbGoTo.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbGoTo.Image = Properties.Resources.goto_line;
+            tsbGoTo.ImageTransparentColor = Color.Magenta;
+            tsbGoTo.Name = "tsbGoTo";
+            tsbGoTo.Size = new Size(34, 34);
+            tsbGoTo.Text = "toolStripButton3";
+            tsbGoTo.Click += tsbGoTo_Click;
             // 
             // toolStripSeparator5
             // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 37);
+            toolStripSeparator5.Name = "toolStripSeparator5";
+            toolStripSeparator5.Size = new Size(6, 37);
             // 
             // tsbFormat
             // 
-            this.tsbFormat.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbFormat.Image = global::PgMulti.Properties.Resources.autoformato;
-            this.tsbFormat.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbFormat.Name = "tsbFormat";
-            this.tsbFormat.Size = new System.Drawing.Size(34, 34);
-            this.tsbFormat.Text = "toolStripButton4";
-            this.tsbFormat.Click += new System.EventHandler(this.tsbFormat_Click);
+            tsbFormat.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbFormat.Image = Properties.Resources.autoformato;
+            tsbFormat.ImageTransparentColor = Color.Magenta;
+            tsbFormat.Name = "tsbFormat";
+            tsbFormat.Size = new Size(34, 34);
+            tsbFormat.Text = "toolStripButton4";
+            tsbFormat.Click += tsbFormat_Click;
             // 
             // tsbHistory
             // 
-            this.tsbHistory.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbHistory.Image = global::PgMulti.Properties.Resources.historial;
-            this.tsbHistory.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbHistory.Name = "tsbHistory";
-            this.tsbHistory.Size = new System.Drawing.Size(34, 34);
-            this.tsbHistory.Click += new System.EventHandler(this.tsbHistory_Click);
+            tsbHistory.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbHistory.Image = Properties.Resources.historial;
+            tsbHistory.ImageTransparentColor = Color.Magenta;
+            tsbHistory.Name = "tsbHistory";
+            tsbHistory.Size = new Size(34, 34);
+            tsbHistory.Click += tsbHistory_Click;
             // 
             // toolStripSeparator7
             // 
-            this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(6, 37);
+            toolStripSeparator7.Name = "toolStripSeparator7";
+            toolStripSeparator7.Size = new Size(6, 37);
             // 
             // tsbOpenDiagram
             // 
-            this.tsbOpenDiagram.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbOpenDiagram.Image = global::PgMulti.Properties.Resources.open_diagram;
-            this.tsbOpenDiagram.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbOpenDiagram.Name = "tsbOpenDiagram";
-            this.tsbOpenDiagram.Size = new System.Drawing.Size(34, 34);
-            this.tsbOpenDiagram.Text = "toolStripButton1";
-            this.tsbOpenDiagram.Click += new System.EventHandler(this.tsbOpenDiagram_Click);
+            tsbOpenDiagram.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbOpenDiagram.Image = Properties.Resources.open_diagram;
+            tsbOpenDiagram.ImageTransparentColor = Color.Magenta;
+            tsbOpenDiagram.Name = "tsbOpenDiagram";
+            tsbOpenDiagram.Size = new Size(34, 34);
+            tsbOpenDiagram.Text = "toolStripButton1";
+            tsbOpenDiagram.Click += tsbOpenDiagram_Click;
             // 
             // tsbNewDiagram
             // 
-            this.tsbNewDiagram.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbNewDiagram.Image = global::PgMulti.Properties.Resources.new_diagram;
-            this.tsbNewDiagram.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbNewDiagram.Name = "tsbNewDiagram";
-            this.tsbNewDiagram.Size = new System.Drawing.Size(34, 34);
-            this.tsbNewDiagram.Text = "toolStripButton1";
-            this.tsbNewDiagram.Click += new System.EventHandler(this.tsbNewDiagram_Click);
+            tsbNewDiagram.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbNewDiagram.Image = Properties.Resources.new_diagram;
+            tsbNewDiagram.ImageTransparentColor = Color.Magenta;
+            tsbNewDiagram.Name = "tsbNewDiagram";
+            tsbNewDiagram.Size = new Size(34, 34);
+            tsbNewDiagram.Text = "toolStripButton1";
+            tsbNewDiagram.Click += tsbNewDiagram_Click;
             // 
             // toolStripSeparator1
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 37);
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new Size(6, 37);
             // 
             // tsddbErrors
             // 
-            this.tsddbErrors.Image = global::PgMulti.Properties.Resources.ok;
-            this.tsddbErrors.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsddbErrors.Name = "tsddbErrors";
-            this.tsddbErrors.Size = new System.Drawing.Size(44, 34);
+            tsddbErrors.Image = Properties.Resources.ok;
+            tsddbErrors.ImageTransparentColor = Color.Magenta;
+            tsddbErrors.Name = "tsddbErrors";
+            tsddbErrors.Size = new Size(44, 34);
             // 
             // toolStripSeparator6
             // 
-            this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(6, 37);
+            toolStripSeparator6.Name = "toolStripSeparator6";
+            toolStripSeparator6.Size = new Size(6, 37);
             // 
             // tslPosition
             // 
-            this.tslPosition.Name = "tslPosition";
-            this.tslPosition.Size = new System.Drawing.Size(0, 34);
+            tslPosition.Name = "tslPosition";
+            tslPosition.Size = new Size(0, 34);
             // 
             // splitContainer3
             // 
-            this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer3.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer3.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer3.Name = "splitContainer3";
+            splitContainer3.Dock = DockStyle.Fill;
+            splitContainer3.FixedPanel = FixedPanel.Panel1;
+            splitContainer3.Location = new Point(0, 0);
+            splitContainer3.Name = "splitContainer3";
             // 
             // splitContainer3.Panel1
             // 
-            this.splitContainer3.Panel1.Controls.Add(this.toolStripContainer3);
+            splitContainer3.Panel1.Controls.Add(toolStripContainer3);
             // 
             // splitContainer3.Panel2
             // 
-            this.splitContainer3.Panel2.Controls.Add(this.tcResult);
-            this.splitContainer3.Size = new System.Drawing.Size(1539, 203);
-            this.splitContainer3.SplitterDistance = 505;
-            this.splitContainer3.TabIndex = 0;
+            splitContainer3.Panel2.Controls.Add(tcResult);
+            splitContainer3.Size = new Size(1539, 203);
+            splitContainer3.SplitterDistance = 505;
+            splitContainer3.TabIndex = 0;
             // 
             // toolStripContainer3
             // 
             // 
             // toolStripContainer3.ContentPanel
             // 
-            this.toolStripContainer3.ContentPanel.Controls.Add(this.lbResult);
-            this.toolStripContainer3.ContentPanel.Size = new System.Drawing.Size(505, 166);
-            this.toolStripContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.toolStripContainer3.Location = new System.Drawing.Point(0, 0);
-            this.toolStripContainer3.Name = "toolStripContainer3";
-            this.toolStripContainer3.Size = new System.Drawing.Size(505, 203);
-            this.toolStripContainer3.TabIndex = 1;
-            this.toolStripContainer3.Text = "toolStripContainer3";
+            toolStripContainer3.ContentPanel.Controls.Add(lbResult);
+            toolStripContainer3.ContentPanel.Size = new Size(505, 166);
+            toolStripContainer3.Dock = DockStyle.Fill;
+            toolStripContainer3.Location = new Point(0, 0);
+            toolStripContainer3.Name = "toolStripContainer3";
+            toolStripContainer3.Size = new Size(505, 203);
+            toolStripContainer3.TabIndex = 1;
+            toolStripContainer3.Text = "toolStripContainer3";
             // 
             // toolStripContainer3.TopToolStripPanel
             // 
-            this.toolStripContainer3.TopToolStripPanel.Controls.Add(this.toolStrip3);
+            toolStripContainer3.TopToolStripPanel.Controls.Add(toolStrip3);
             // 
             // lbResult
             // 
-            this.lbResult.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lbResult.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.lbResult.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lbResult.FormattingEnabled = true;
-            this.lbResult.ItemHeight = 20;
-            this.lbResult.Location = new System.Drawing.Point(0, 0);
-            this.lbResult.Name = "lbResult";
-            this.lbResult.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.lbResult.Size = new System.Drawing.Size(505, 166);
-            this.lbResult.TabIndex = 0;
-            this.lbResult.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.lbResult_DrawItem);
-            this.lbResult.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.lbResult_MeasureItem);
-            this.lbResult.SelectedIndexChanged += new System.EventHandler(this.lbResult_SelectedIndexChanged);
-            this.lbResult.Resize += new System.EventHandler(this.lbResult_Resize);
+            lbResult.Dock = DockStyle.Fill;
+            lbResult.DrawMode = DrawMode.OwnerDrawVariable;
+            lbResult.Font = new Font("Segoe UI", 8F, FontStyle.Bold, GraphicsUnit.Point);
+            lbResult.FormattingEnabled = true;
+            lbResult.ItemHeight = 20;
+            lbResult.Location = new Point(0, 0);
+            lbResult.Name = "lbResult";
+            lbResult.SelectionMode = SelectionMode.MultiExtended;
+            lbResult.Size = new Size(505, 166);
+            lbResult.TabIndex = 0;
+            lbResult.DrawItem += lbResult_DrawItem;
+            lbResult.MeasureItem += lbResult_MeasureItem;
+            lbResult.SelectedIndexChanged += lbResult_SelectedIndexChanged;
+            lbResult.Resize += lbResult_Resize;
             // 
             // toolStrip3
             // 
-            this.toolStrip3.Dock = System.Windows.Forms.DockStyle.None;
-            this.toolStrip3.ImageScalingSize = new System.Drawing.Size(30, 30);
-            this.toolStrip3.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsbCurrentTabLastTask,
-            this.tssResult,
-            this.tsbRemoveSelected,
-            this.tsbRemoveAll,
-            this.tsbStopSelected,
-            this.tsbStopAll});
-            this.toolStrip3.Location = new System.Drawing.Point(4, 0);
-            this.toolStrip3.Name = "toolStrip3";
-            this.toolStrip3.Size = new System.Drawing.Size(53, 37);
-            this.toolStrip3.TabIndex = 0;
+            toolStrip3.Dock = DockStyle.None;
+            toolStrip3.ImageScalingSize = new Size(30, 30);
+            toolStrip3.Items.AddRange(new ToolStripItem[] { tsbCurrentTabLastTask, tssResult, tsbRemoveSelected, tsbRemoveAll, tsbStopSelected, tsbStopAll });
+            toolStrip3.Location = new Point(4, 0);
+            toolStrip3.Name = "toolStrip3";
+            toolStrip3.Size = new Size(53, 37);
+            toolStrip3.TabIndex = 0;
             // 
             // tsbCurrentTabLastTask
             // 
-            this.tsbCurrentTabLastTask.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbCurrentTabLastTask.Image = global::PgMulti.Properties.Resources.last;
-            this.tsbCurrentTabLastTask.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbCurrentTabLastTask.Name = "tsbCurrentTabLastTask";
-            this.tsbCurrentTabLastTask.Size = new System.Drawing.Size(34, 34);
-            this.tsbCurrentTabLastTask.Click += new System.EventHandler(this.tsbCurrentTabLastTask_Click);
+            tsbCurrentTabLastTask.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbCurrentTabLastTask.Image = Properties.Resources.last;
+            tsbCurrentTabLastTask.ImageTransparentColor = Color.Magenta;
+            tsbCurrentTabLastTask.Name = "tsbCurrentTabLastTask";
+            tsbCurrentTabLastTask.Size = new Size(34, 34);
+            tsbCurrentTabLastTask.Click += tsbCurrentTabLastTask_Click;
             // 
             // tssResult
             // 
-            this.tssResult.Name = "tssResult";
-            this.tssResult.Size = new System.Drawing.Size(6, 37);
+            tssResult.Name = "tssResult";
+            tssResult.Size = new Size(6, 37);
             // 
             // tsbRemoveSelected
             // 
-            this.tsbRemoveSelected.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbRemoveSelected.Image = global::PgMulti.Properties.Resources.borrar;
-            this.tsbRemoveSelected.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbRemoveSelected.Name = "tsbRemoveSelected";
-            this.tsbRemoveSelected.Size = new System.Drawing.Size(34, 34);
-            this.tsbRemoveSelected.Visible = false;
-            this.tsbRemoveSelected.Click += new System.EventHandler(this.tsbRemoveSelected_Click);
+            tsbRemoveSelected.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbRemoveSelected.Image = Properties.Resources.borrar;
+            tsbRemoveSelected.ImageTransparentColor = Color.Magenta;
+            tsbRemoveSelected.Name = "tsbRemoveSelected";
+            tsbRemoveSelected.Size = new Size(34, 34);
+            tsbRemoveSelected.Visible = false;
+            tsbRemoveSelected.Click += tsbRemoveSelected_Click;
             // 
             // tsbRemoveAll
             // 
-            this.tsbRemoveAll.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbRemoveAll.Image = global::PgMulti.Properties.Resources.borrar_todos;
-            this.tsbRemoveAll.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbRemoveAll.Name = "tsbRemoveAll";
-            this.tsbRemoveAll.Size = new System.Drawing.Size(34, 34);
-            this.tsbRemoveAll.Visible = false;
-            this.tsbRemoveAll.Click += new System.EventHandler(this.tsbRemoveAll_Click);
+            tsbRemoveAll.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbRemoveAll.Image = Properties.Resources.borrar_todos;
+            tsbRemoveAll.ImageTransparentColor = Color.Magenta;
+            tsbRemoveAll.Name = "tsbRemoveAll";
+            tsbRemoveAll.Size = new Size(34, 34);
+            tsbRemoveAll.Visible = false;
+            tsbRemoveAll.Click += tsbRemoveAll_Click;
             // 
             // tsbStopSelected
             // 
-            this.tsbStopSelected.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbStopSelected.Image = global::PgMulti.Properties.Resources.detener;
-            this.tsbStopSelected.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbStopSelected.Name = "tsbStopSelected";
-            this.tsbStopSelected.Size = new System.Drawing.Size(34, 34);
-            this.tsbStopSelected.Visible = false;
-            this.tsbStopSelected.Click += new System.EventHandler(this.tsbStopSelected_Click);
+            tsbStopSelected.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbStopSelected.Image = Properties.Resources.detener;
+            tsbStopSelected.ImageTransparentColor = Color.Magenta;
+            tsbStopSelected.Name = "tsbStopSelected";
+            tsbStopSelected.Size = new Size(34, 34);
+            tsbStopSelected.Visible = false;
+            tsbStopSelected.Click += tsbStopSelected_Click;
             // 
             // tsbStopAll
             // 
-            this.tsbStopAll.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbStopAll.Image = global::PgMulti.Properties.Resources.detener_todos;
-            this.tsbStopAll.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbStopAll.Name = "tsbStopAll";
-            this.tsbStopAll.Size = new System.Drawing.Size(34, 34);
-            this.tsbStopAll.Visible = false;
-            this.tsbStopAll.Click += new System.EventHandler(this.tsbDetenerTodos_Click);
+            tsbStopAll.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbStopAll.Image = Properties.Resources.detener_todos;
+            tsbStopAll.ImageTransparentColor = Color.Magenta;
+            tsbStopAll.Name = "tsbStopAll";
+            tsbStopAll.Size = new Size(34, 34);
+            tsbStopAll.Visible = false;
+            tsbStopAll.Click += tsbDetenerTodos_Click;
             // 
             // tcResult
             // 
-            this.tcResult.Controls.Add(this.tpResult);
-            this.tcResult.Controls.Add(this.tpTable);
-            this.tcResult.Controls.Add(this.tpExecutedSql);
-            this.tcResult.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tcResult.Location = new System.Drawing.Point(0, 0);
-            this.tcResult.Name = "tcResult";
-            this.tcResult.SelectedIndex = 0;
-            this.tcResult.Size = new System.Drawing.Size(1030, 203);
-            this.tcResult.TabIndex = 0;
+            tcResult.Controls.Add(tpResult);
+            tcResult.Controls.Add(tpTable);
+            tcResult.Controls.Add(tpExecutedSql);
+            tcResult.Dock = DockStyle.Fill;
+            tcResult.Location = new Point(0, 0);
+            tcResult.Name = "tcResult";
+            tcResult.SelectedIndex = 0;
+            tcResult.Size = new Size(1030, 203);
+            tcResult.TabIndex = 0;
             // 
             // tpResult
             // 
-            this.tpResult.Controls.Add(this.toolStripContainer6);
-            this.tpResult.Location = new System.Drawing.Point(4, 29);
-            this.tpResult.Name = "tpResult";
-            this.tpResult.Padding = new System.Windows.Forms.Padding(3);
-            this.tpResult.Size = new System.Drawing.Size(1022, 170);
-            this.tpResult.TabIndex = 0;
-            this.tpResult.UseVisualStyleBackColor = true;
+            tpResult.Controls.Add(toolStripContainer6);
+            tpResult.Location = new Point(4, 29);
+            tpResult.Name = "tpResult";
+            tpResult.Padding = new Padding(3);
+            tpResult.Size = new Size(1022, 170);
+            tpResult.TabIndex = 0;
+            tpResult.UseVisualStyleBackColor = true;
             // 
             // toolStripContainer6
             // 
             // 
             // toolStripContainer6.ContentPanel
             // 
-            this.toolStripContainer6.ContentPanel.Controls.Add(this.txtResult);
-            this.toolStripContainer6.ContentPanel.Size = new System.Drawing.Size(1016, 137);
-            this.toolStripContainer6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.toolStripContainer6.Location = new System.Drawing.Point(3, 3);
-            this.toolStripContainer6.Name = "toolStripContainer6";
-            this.toolStripContainer6.Size = new System.Drawing.Size(1016, 164);
-            this.toolStripContainer6.TabIndex = 1;
-            this.toolStripContainer6.Text = "toolStripContainer6";
+            toolStripContainer6.ContentPanel.Controls.Add(txtResult);
+            toolStripContainer6.ContentPanel.Size = new Size(1016, 137);
+            toolStripContainer6.Dock = DockStyle.Fill;
+            toolStripContainer6.Location = new Point(3, 3);
+            toolStripContainer6.Name = "toolStripContainer6";
+            toolStripContainer6.Size = new Size(1016, 164);
+            toolStripContainer6.TabIndex = 1;
+            toolStripContainer6.Text = "toolStripContainer6";
             // 
             // toolStripContainer6.TopToolStripPanel
             // 
-            this.toolStripContainer6.TopToolStripPanel.Controls.Add(this.toolStrip6);
+            toolStripContainer6.TopToolStripPanel.Controls.Add(toolStrip6);
             // 
             // txtResult
             // 
-            this.txtResult.BackColor = System.Drawing.Color.White;
-            this.txtResult.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtResult.Font = new System.Drawing.Font("Cascadia Code", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.txtResult.Location = new System.Drawing.Point(0, 0);
-            this.txtResult.Multiline = true;
-            this.txtResult.Name = "txtResult";
-            this.txtResult.ReadOnly = true;
-            this.txtResult.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtResult.Size = new System.Drawing.Size(1016, 137);
-            this.txtResult.TabIndex = 0;
+            txtResult.BackColor = Color.White;
+            txtResult.Dock = DockStyle.Fill;
+            txtResult.Font = new Font("Cascadia Code", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            txtResult.Location = new Point(0, 0);
+            txtResult.Multiline = true;
+            txtResult.Name = "txtResult";
+            txtResult.ReadOnly = true;
+            txtResult.ScrollBars = ScrollBars.Vertical;
+            txtResult.Size = new Size(1016, 137);
+            txtResult.TabIndex = 0;
             // 
             // toolStrip6
             // 
-            this.toolStrip6.Dock = System.Windows.Forms.DockStyle.None;
-            this.toolStrip6.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.toolStrip6.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsddbAutoScroll});
-            this.toolStrip6.Location = new System.Drawing.Point(4, 0);
-            this.toolStrip6.Name = "toolStrip6";
-            this.toolStrip6.Size = new System.Drawing.Size(47, 27);
-            this.toolStrip6.TabIndex = 0;
+            toolStrip6.Dock = DockStyle.None;
+            toolStrip6.ImageScalingSize = new Size(20, 20);
+            toolStrip6.Items.AddRange(new ToolStripItem[] { tsddbAutoScroll });
+            toolStrip6.Location = new Point(4, 0);
+            toolStrip6.Name = "toolStrip6";
+            toolStrip6.Size = new Size(47, 27);
+            toolStrip6.TabIndex = 0;
             // 
             // tsddbAutoScroll
             // 
-            this.tsddbAutoScroll.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiAutoScroll,
-            this.tsmiManualScroll});
-            this.tsddbAutoScroll.Image = global::PgMulti.Properties.Resources.scroll_auto;
-            this.tsddbAutoScroll.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsddbAutoScroll.Name = "tsddbAutoScroll";
-            this.tsddbAutoScroll.Size = new System.Drawing.Size(34, 24);
-            this.tsddbAutoScroll.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.tsddbAutoScroll_DropDownItemClicked);
+            tsddbAutoScroll.DropDownItems.AddRange(new ToolStripItem[] { tsmiAutoScroll, tsmiManualScroll });
+            tsddbAutoScroll.Image = Properties.Resources.scroll_auto;
+            tsddbAutoScroll.ImageTransparentColor = Color.Magenta;
+            tsddbAutoScroll.Name = "tsddbAutoScroll";
+            tsddbAutoScroll.Size = new Size(34, 24);
+            tsddbAutoScroll.DropDownItemClicked += tsddbAutoScroll_DropDownItemClicked;
             // 
             // tsmiAutoScroll
             // 
-            this.tsmiAutoScroll.Image = global::PgMulti.Properties.Resources.scroll_auto;
-            this.tsmiAutoScroll.Name = "tsmiAutoScroll";
-            this.tsmiAutoScroll.Size = new System.Drawing.Size(83, 26);
-            this.tsmiAutoScroll.Tag = "auto";
+            tsmiAutoScroll.Image = Properties.Resources.scroll_auto;
+            tsmiAutoScroll.Name = "tsmiAutoScroll";
+            tsmiAutoScroll.Size = new Size(83, 26);
+            tsmiAutoScroll.Tag = "auto";
             // 
             // tsmiManualScroll
             // 
-            this.tsmiManualScroll.Image = global::PgMulti.Properties.Resources.scroll;
-            this.tsmiManualScroll.Name = "tsmiManualScroll";
-            this.tsmiManualScroll.Size = new System.Drawing.Size(83, 26);
-            this.tsmiManualScroll.Tag = "manual";
+            tsmiManualScroll.Image = Properties.Resources.scroll;
+            tsmiManualScroll.Name = "tsmiManualScroll";
+            tsmiManualScroll.Size = new Size(83, 26);
+            tsmiManualScroll.Tag = "manual";
             // 
             // tpTable
             // 
-            this.tpTable.Controls.Add(this.toolStripContainer5);
-            this.tpTable.Location = new System.Drawing.Point(4, 29);
-            this.tpTable.Name = "tpTable";
-            this.tpTable.Padding = new System.Windows.Forms.Padding(3);
-            this.tpTable.Size = new System.Drawing.Size(1022, 170);
-            this.tpTable.TabIndex = 1;
-            this.tpTable.UseVisualStyleBackColor = true;
+            tpTable.Controls.Add(toolStripContainer5);
+            tpTable.Location = new Point(4, 29);
+            tpTable.Name = "tpTable";
+            tpTable.Padding = new Padding(3);
+            tpTable.Size = new Size(1022, 170);
+            tpTable.TabIndex = 1;
+            tpTable.UseVisualStyleBackColor = true;
             // 
             // toolStripContainer5
             // 
             // 
             // toolStripContainer5.ContentPanel
             // 
-            this.toolStripContainer5.ContentPanel.Controls.Add(this.gvTable);
-            this.toolStripContainer5.ContentPanel.Size = new System.Drawing.Size(1016, 137);
-            this.toolStripContainer5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.toolStripContainer5.Location = new System.Drawing.Point(3, 3);
-            this.toolStripContainer5.Name = "toolStripContainer5";
-            this.toolStripContainer5.Size = new System.Drawing.Size(1016, 164);
-            this.toolStripContainer5.TabIndex = 1;
-            this.toolStripContainer5.Text = "toolStripContainer5";
+            toolStripContainer5.ContentPanel.Controls.Add(gvTable);
+            toolStripContainer5.ContentPanel.Size = new Size(1016, 137);
+            toolStripContainer5.Dock = DockStyle.Fill;
+            toolStripContainer5.Location = new Point(3, 3);
+            toolStripContainer5.Name = "toolStripContainer5";
+            toolStripContainer5.Size = new Size(1016, 164);
+            toolStripContainer5.TabIndex = 1;
+            toolStripContainer5.Text = "toolStripContainer5";
             // 
             // toolStripContainer5.TopToolStripPanel
             // 
-            this.toolStripContainer5.TopToolStripPanel.Controls.Add(this.toolStrip5);
+            toolStripContainer5.TopToolStripPanel.Controls.Add(toolStrip5);
             // 
             // gvTable
             // 
-            this.gvTable.AllowUserToAddRows = false;
-            this.gvTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gvTable.ContextMenuStrip = this.cmsTable;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            gvTable.AllowUserToAddRows = false;
+            gvTable.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            gvTable.ContextMenuStrip = cmsTable;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = SystemColors.Window;
+            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
             dataGridViewCellStyle1.NullValue = "[NULL]";
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.gvTable.DefaultCellStyle = dataGridViewCellStyle1;
-            this.gvTable.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gvTable.Location = new System.Drawing.Point(0, 0);
-            this.gvTable.Name = "gvTable";
-            this.gvTable.RowHeadersWidth = 51;
-            this.gvTable.RowTemplate.Height = 29;
-            this.gvTable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.gvTable.ShowCellErrors = false;
-            this.gvTable.ShowEditingIcon = false;
-            this.gvTable.ShowRowErrors = false;
-            this.gvTable.Size = new System.Drawing.Size(1016, 137);
-            this.gvTable.TabIndex = 0;
-            this.gvTable.CellToolTipTextNeeded += new System.Windows.Forms.DataGridViewCellToolTipTextNeededEventHandler(this.gvTable_CellToolTipTextNeeded);
-            this.gvTable.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gvTable_CellMouseDown);
-            this.gvTable.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gvTable_CellMouseUp);
-            this.gvTable.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.gvTable_CellPainting);
-            this.gvTable.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.gvTable_CellValueChanged);
-            this.gvTable.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.gvTable_DataError);
-            this.gvTable.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.gvTable_RowsRemoved);
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
+            gvTable.DefaultCellStyle = dataGridViewCellStyle1;
+            gvTable.Dock = DockStyle.Fill;
+            gvTable.Location = new Point(0, 0);
+            gvTable.Name = "gvTable";
+            gvTable.RowHeadersWidth = 51;
+            gvTable.RowTemplate.Height = 29;
+            gvTable.SelectionMode = DataGridViewSelectionMode.CellSelect;
+            gvTable.ShowCellErrors = false;
+            gvTable.ShowEditingIcon = false;
+            gvTable.ShowRowErrors = false;
+            gvTable.Size = new Size(1016, 137);
+            gvTable.TabIndex = 0;
+            gvTable.CellMouseDown += gvTable_CellMouseDown;
+            gvTable.CellMouseUp += gvTable_CellMouseUp;
+            gvTable.CellPainting += gvTable_CellPainting;
+            gvTable.CellToolTipTextNeeded += gvTable_CellToolTipTextNeeded;
+            gvTable.CellValueChanged += gvTable_CellValueChanged;
+            gvTable.DataError += gvTable_DataError;
+            gvTable.RowsRemoved += gvTable_RowsRemoved;
             // 
             // cmsTable
             // 
-            this.cmsTable.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.cmsTable.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsbTextEditor,
-            this.tsbSetNull});
-            this.cmsTable.Name = "cmsTable";
-            this.cmsTable.Size = new System.Drawing.Size(74, 56);
+            cmsTable.ImageScalingSize = new Size(20, 20);
+            cmsTable.Items.AddRange(new ToolStripItem[] { tsbTextEditor, tsbSetNull });
+            cmsTable.Name = "cmsTable";
+            cmsTable.Size = new Size(74, 56);
             // 
             // tsbTextEditor
             // 
-            this.tsbTextEditor.Image = global::PgMulti.Properties.Resources.editar;
-            this.tsbTextEditor.Name = "tsbTextEditor";
-            this.tsbTextEditor.Size = new System.Drawing.Size(73, 26);
-            this.tsbTextEditor.Click += new System.EventHandler(this.tsbTextEditor_Click);
+            tsbTextEditor.Image = Properties.Resources.editar;
+            tsbTextEditor.Name = "tsbTextEditor";
+            tsbTextEditor.Size = new Size(73, 26);
+            tsbTextEditor.Click += tsbTextEditor_Click;
             // 
             // tsbSetNull
             // 
-            this.tsbSetNull.Image = global::PgMulti.Properties.Resources._null;
-            this.tsbSetNull.Name = "tsbSetNull";
-            this.tsbSetNull.Size = new System.Drawing.Size(73, 26);
-            this.tsbSetNull.Click += new System.EventHandler(this.tsbSetNull_Click);
+            tsbSetNull.Image = Properties.Resources._null;
+            tsbSetNull.Name = "tsbSetNull";
+            tsbSetNull.Size = new Size(73, 26);
+            tsbSetNull.Click += tsbSetNull_Click;
             // 
             // toolStrip5
             // 
-            this.toolStrip5.Dock = System.Windows.Forms.DockStyle.None;
-            this.toolStrip5.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.toolStrip5.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsddbTables,
-            this.tsddbInsertRow,
-            this.tsbDeleteRows,
-            this.tsbApplyTableChanges});
-            this.toolStrip5.Location = new System.Drawing.Point(4, 0);
-            this.toolStrip5.Name = "toolStrip5";
-            this.toolStrip5.Size = new System.Drawing.Size(139, 27);
-            this.toolStrip5.TabIndex = 0;
+            toolStrip5.Dock = DockStyle.None;
+            toolStrip5.ImageScalingSize = new Size(20, 20);
+            toolStrip5.Items.AddRange(new ToolStripItem[] { tsddbTables, tsddbInsertRow, tsbDeleteRows, tsbApplyTableChanges });
+            toolStrip5.Location = new Point(4, 0);
+            toolStrip5.Name = "toolStrip5";
+            toolStrip5.Size = new Size(139, 27);
+            toolStrip5.TabIndex = 0;
             // 
             // tsddbTables
             // 
-            this.tsddbTables.Image = global::PgMulti.Properties.Resources.tabla;
-            this.tsddbTables.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsddbTables.Name = "tsddbTables";
-            this.tsddbTables.Size = new System.Drawing.Size(34, 24);
-            this.tsddbTables.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.tsddbTables_DropDownItemClicked);
+            tsddbTables.Image = Properties.Resources.tabla;
+            tsddbTables.ImageTransparentColor = Color.Magenta;
+            tsddbTables.Name = "tsddbTables";
+            tsddbTables.Size = new Size(34, 24);
+            tsddbTables.DropDownItemClicked += tsddbTables_DropDownItemClicked;
             // 
             // tsddbInsertRow
             // 
-            this.tsddbInsertRow.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsddbInsertRow.Image = global::PgMulti.Properties.Resources.nuevo;
-            this.tsddbInsertRow.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsddbInsertRow.Name = "tsddbInsertRow";
-            this.tsddbInsertRow.Size = new System.Drawing.Size(34, 24);
-            this.tsddbInsertRow.Click += new System.EventHandler(this.tsddbInsertRow_Click);
+            tsddbInsertRow.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsddbInsertRow.Image = Properties.Resources.nuevo;
+            tsddbInsertRow.ImageTransparentColor = Color.Magenta;
+            tsddbInsertRow.Name = "tsddbInsertRow";
+            tsddbInsertRow.Size = new Size(34, 24);
+            tsddbInsertRow.Click += tsddbInsertRow_Click;
             // 
             // tsbDeleteRows
             // 
-            this.tsbDeleteRows.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbDeleteRows.Image = global::PgMulti.Properties.Resources.borrar;
-            this.tsbDeleteRows.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbDeleteRows.Name = "tsbDeleteRows";
-            this.tsbDeleteRows.Size = new System.Drawing.Size(29, 24);
-            this.tsbDeleteRows.Click += new System.EventHandler(this.tsbDeleteRows_Click);
+            tsbDeleteRows.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbDeleteRows.Image = Properties.Resources.borrar;
+            tsbDeleteRows.ImageTransparentColor = Color.Magenta;
+            tsbDeleteRows.Name = "tsbDeleteRows";
+            tsbDeleteRows.Size = new Size(29, 24);
+            tsbDeleteRows.Click += tsbDeleteRows_Click;
             // 
             // tsbApplyTableChanges
             // 
-            this.tsbApplyTableChanges.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbApplyTableChanges.Image = global::PgMulti.Properties.Resources.ok;
-            this.tsbApplyTableChanges.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbApplyTableChanges.Name = "tsbApplyTableChanges";
-            this.tsbApplyTableChanges.Size = new System.Drawing.Size(29, 24);
-            this.tsbApplyTableChanges.Click += new System.EventHandler(this.tsbApplyTableChanges_Click);
+            tsbApplyTableChanges.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbApplyTableChanges.Image = Properties.Resources.ok;
+            tsbApplyTableChanges.ImageTransparentColor = Color.Magenta;
+            tsbApplyTableChanges.Name = "tsbApplyTableChanges";
+            tsbApplyTableChanges.Size = new Size(29, 24);
+            tsbApplyTableChanges.Click += tsbApplyTableChanges_Click;
             // 
             // tpExecutedSql
             // 
-            this.tpExecutedSql.Controls.Add(this.toolStripContainer4);
-            this.tpExecutedSql.Location = new System.Drawing.Point(4, 29);
-            this.tpExecutedSql.Name = "tpExecutedSql";
-            this.tpExecutedSql.Size = new System.Drawing.Size(1022, 170);
-            this.tpExecutedSql.TabIndex = 2;
-            this.tpExecutedSql.UseVisualStyleBackColor = true;
+            tpExecutedSql.Controls.Add(toolStripContainer4);
+            tpExecutedSql.Location = new Point(4, 29);
+            tpExecutedSql.Name = "tpExecutedSql";
+            tpExecutedSql.Size = new Size(1022, 170);
+            tpExecutedSql.TabIndex = 2;
+            tpExecutedSql.UseVisualStyleBackColor = true;
             // 
             // toolStripContainer4
             // 
             // 
             // toolStripContainer4.ContentPanel
             // 
-            this.toolStripContainer4.ContentPanel.Controls.Add(this.fctbExecutedSql);
-            this.toolStripContainer4.ContentPanel.Size = new System.Drawing.Size(1022, 133);
-            this.toolStripContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.toolStripContainer4.Location = new System.Drawing.Point(0, 0);
-            this.toolStripContainer4.Name = "toolStripContainer4";
-            this.toolStripContainer4.Size = new System.Drawing.Size(1022, 170);
-            this.toolStripContainer4.TabIndex = 1;
-            this.toolStripContainer4.Text = "toolStripContainer4";
+            toolStripContainer4.ContentPanel.Controls.Add(fctbExecutedSql);
+            toolStripContainer4.ContentPanel.Size = new Size(1022, 133);
+            toolStripContainer4.Dock = DockStyle.Fill;
+            toolStripContainer4.Location = new Point(0, 0);
+            toolStripContainer4.Name = "toolStripContainer4";
+            toolStripContainer4.Size = new Size(1022, 170);
+            toolStripContainer4.TabIndex = 1;
+            toolStripContainer4.Text = "toolStripContainer4";
             // 
             // toolStripContainer4.TopToolStripPanel
             // 
-            this.toolStripContainer4.TopToolStripPanel.Controls.Add(this.toolStrip4);
+            toolStripContainer4.TopToolStripPanel.Controls.Add(toolStrip4);
             // 
             // fctbExecutedSql
             // 
-            this.fctbExecutedSql.AutoCompleteBracketsList = new char[] {
-        '(',
-        ')',
-        '{',
-        '}',
-        '[',
-        ']',
-        '\"',
-        '\"',
-        '\'',
-        '\''};
-            this.fctbExecutedSql.AutoIndentCharsPatterns = "^\\s*[\\w\\.]+(\\s\\w+)?\\s*(?<range>=)\\s*(?<range>[^;=]+);\n^\\s*(case|default)\\s*[^:]*(" +
-    "?<range>:)\\s*(?<range>[^;]+);";
-            this.fctbExecutedSql.AutoScrollMinSize = new System.Drawing.Size(42, 58);
-            this.fctbExecutedSql.BackBrush = null;
-            this.fctbExecutedSql.CharHeight = 18;
-            this.fctbExecutedSql.CharWidth = 10;
-            this.fctbExecutedSql.DefaultMarkerSize = 8;
-            this.fctbExecutedSql.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
-            this.fctbExecutedSql.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.fctbExecutedSql.Font = new System.Drawing.Font("Courier New", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.fctbExecutedSql.Hotkeys = resources.GetString("fctbExecutedSql.Hotkeys");
-            this.fctbExecutedSql.IsReplaceMode = false;
-            this.fctbExecutedSql.Location = new System.Drawing.Point(0, 0);
-            this.fctbExecutedSql.Name = "fctbExecutedSql";
-            this.fctbExecutedSql.Paddings = new System.Windows.Forms.Padding(20);
-            this.fctbExecutedSql.ReadOnly = true;
-            this.fctbExecutedSql.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
-            this.fctbExecutedSql.ServiceColors = ((FastColoredTextBoxNS.ServiceColors)(resources.GetObject("fctbExecutedSql.ServiceColors")));
-            this.fctbExecutedSql.Size = new System.Drawing.Size(1022, 133);
-            this.fctbExecutedSql.TabIndex = 0;
-            this.fctbExecutedSql.Zoom = 100;
-            this.fctbExecutedSql.SecondaryFormShowed += new System.EventHandler<FastColoredTextBoxNS.SecondaryFormEventArgs>(this.fctbExecutedSql_SecondaryFormShowed);
-            this.fctbExecutedSql.SecondaryFormClosed += new System.EventHandler<FastColoredTextBoxNS.SecondaryFormEventArgs>(this.fctbExecutedSql_SecondaryFormClosed);
+            fctbExecutedSql.AutoCompleteBracketsList = new char[]
+    {
+    '(',
+    ')',
+    '{',
+    '}',
+    '[',
+    ']',
+    '"',
+    '"',
+    '\'',
+    '\''
+    };
+            fctbExecutedSql.AutoIndentCharsPatterns = "^\\s*[\\w\\.]+(\\s\\w+)?\\s*(?<range>=)\\s*(?<range>[^;=]+);\n^\\s*(case|default)\\s*[^:]*(?<range>:)\\s*(?<range>[^;]+);";
+            fctbExecutedSql.AutoScrollMinSize = new Size(42, 58);
+            fctbExecutedSql.BackBrush = null;
+            fctbExecutedSql.CharHeight = 18;
+            fctbExecutedSql.CharWidth = 10;
+            fctbExecutedSql.DefaultMarkerSize = 8;
+            fctbExecutedSql.DisabledColor = Color.FromArgb(100, 180, 180, 180);
+            fctbExecutedSql.Dock = DockStyle.Fill;
+            fctbExecutedSql.Font = new Font("Courier New", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            fctbExecutedSql.Hotkeys = resources.GetString("fctbExecutedSql.Hotkeys");
+            fctbExecutedSql.IsReplaceMode = false;
+            fctbExecutedSql.Location = new Point(0, 0);
+            fctbExecutedSql.Name = "fctbExecutedSql";
+            fctbExecutedSql.Paddings = new Padding(20);
+            fctbExecutedSql.ReadOnly = true;
+            fctbExecutedSql.SearchMatches = null;
+            fctbExecutedSql.SelectionColor = Color.FromArgb(60, 0, 0, 255);
+            fctbExecutedSql.ServiceColors = (FastColoredTextBoxNS.ServiceColors)resources.GetObject("fctbExecutedSql.ServiceColors");
+            fctbExecutedSql.Size = new Size(1022, 133);
+            fctbExecutedSql.TabIndex = 0;
+            fctbExecutedSql.Zoom = 100;
+            fctbExecutedSql.SecondaryFormShowed += fctbExecutedSql_SecondaryFormShowed;
+            fctbExecutedSql.SecondaryFormClosed += fctbExecutedSql_SecondaryFormClosed;
             // 
             // toolStrip4
             // 
-            this.toolStrip4.Dock = System.Windows.Forms.DockStyle.None;
-            this.toolStrip4.ImageScalingSize = new System.Drawing.Size(30, 30);
-            this.toolStrip4.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsbEditExecutedSql});
-            this.toolStrip4.Location = new System.Drawing.Point(4, 0);
-            this.toolStrip4.Name = "toolStrip4";
-            this.toolStrip4.Size = new System.Drawing.Size(47, 37);
-            this.toolStrip4.TabIndex = 0;
+            toolStrip4.Dock = DockStyle.None;
+            toolStrip4.ImageScalingSize = new Size(30, 30);
+            toolStrip4.Items.AddRange(new ToolStripItem[] { tsbEditExecutedSql });
+            toolStrip4.Location = new Point(4, 0);
+            toolStrip4.Name = "toolStrip4";
+            toolStrip4.Size = new Size(47, 37);
+            toolStrip4.TabIndex = 0;
             // 
             // tsbEditExecutedSql
             // 
-            this.tsbEditExecutedSql.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbEditExecutedSql.Image = global::PgMulti.Properties.Resources.editar;
-            this.tsbEditExecutedSql.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbEditExecutedSql.Name = "tsbEditExecutedSql";
-            this.tsbEditExecutedSql.Size = new System.Drawing.Size(34, 34);
-            this.tsbEditExecutedSql.Click += new System.EventHandler(this.tsbEditExecutedSql_Click);
+            tsbEditExecutedSql.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbEditExecutedSql.Image = Properties.Resources.editar;
+            tsbEditExecutedSql.ImageTransparentColor = Color.Magenta;
+            tsbEditExecutedSql.Name = "tsbEditExecutedSql";
+            tsbEditExecutedSql.Size = new Size(34, 34);
+            tsbEditExecutedSql.Click += tsbEditExecutedSql_Click;
             // 
             // tsmiAbout
             // 
-            this.tsmiAbout.Image = global::PgMulti.Properties.Resources.about;
-            this.tsmiAbout.Name = "tsmiAbout";
-            this.tsmiAbout.Size = new System.Drawing.Size(224, 26);
-            this.tsmiAbout.Click += new System.EventHandler(this.tsmiAbout_Click);
+            tsmiAbout.Image = Properties.Resources.about;
+            tsmiAbout.Name = "tsmiAbout";
+            tsmiAbout.Size = new Size(83, 26);
+            tsmiAbout.Click += tsmiAbout_Click;
             // 
             // tsmiNew
             // 
-            this.tsmiNew.Image = global::PgMulti.Properties.Resources.nuevo_documento;
-            this.tsmiNew.Name = "tsmiNew";
-            this.tsmiNew.Size = new System.Drawing.Size(224, 26);
-            this.tsmiNew.Click += new System.EventHandler(this.tsmiNew_Click);
+            tsmiNew.Image = Properties.Resources.nuevo_documento;
+            tsmiNew.Name = "tsmiNew";
+            tsmiNew.Size = new Size(83, 26);
+            tsmiNew.Click += tsmiNew_Click;
             // 
             // tsmiOpen
             // 
-            this.tsmiOpen.Image = global::PgMulti.Properties.Resources.abrir;
-            this.tsmiOpen.Name = "tsmiOpen";
-            this.tsmiOpen.Size = new System.Drawing.Size(224, 26);
-            this.tsmiOpen.Click += new System.EventHandler(this.tsmiOpen_Click);
+            tsmiOpen.Image = Properties.Resources.abrir;
+            tsmiOpen.Name = "tsmiOpen";
+            tsmiOpen.Size = new Size(83, 26);
+            tsmiOpen.Click += tsmiOpen_Click;
             // 
             // tsmiSave
             // 
-            this.tsmiSave.Image = global::PgMulti.Properties.Resources.guardar;
-            this.tsmiSave.Name = "tsmiSave";
-            this.tsmiSave.Size = new System.Drawing.Size(224, 26);
-            this.tsmiSave.Click += new System.EventHandler(this.tsmiSave_Click);
+            tsmiSave.Image = Properties.Resources.guardar;
+            tsmiSave.Name = "tsmiSave";
+            tsmiSave.Size = new Size(83, 26);
+            tsmiSave.Click += tsmiSave_Click;
             // 
             // tsmiSaveAs
             // 
-            this.tsmiSaveAs.Image = global::PgMulti.Properties.Resources.guardar_como;
-            this.tsmiSaveAs.Name = "tsmiSaveAs";
-            this.tsmiSaveAs.Size = new System.Drawing.Size(224, 26);
-            this.tsmiSaveAs.Click += new System.EventHandler(this.tsmiSaveAs_Click);
+            tsmiSaveAs.Image = Properties.Resources.guardar_como;
+            tsmiSaveAs.Name = "tsmiSaveAs";
+            tsmiSaveAs.Size = new Size(83, 26);
+            tsmiSaveAs.Click += tsmiSaveAs_Click;
             // 
             // tsmiSaveAll
             // 
-            this.tsmiSaveAll.Image = global::PgMulti.Properties.Resources.guardar_todo;
-            this.tsmiSaveAll.Name = "tsmiSaveAll";
-            this.tsmiSaveAll.Size = new System.Drawing.Size(224, 26);
-            this.tsmiSaveAll.Click += new System.EventHandler(this.tsmiSaveAll_Click);
+            tsmiSaveAll.Image = Properties.Resources.guardar_todo;
+            tsmiSaveAll.Name = "tsmiSaveAll";
+            tsmiSaveAll.Size = new Size(83, 26);
+            tsmiSaveAll.Click += tsmiSaveAll_Click;
             // 
             // tsmiClose
             // 
-            this.tsmiClose.Image = global::PgMulti.Properties.Resources.cerrar;
-            this.tsmiClose.Name = "tsmiClose";
-            this.tsmiClose.Size = new System.Drawing.Size(224, 26);
-            this.tsmiClose.Click += new System.EventHandler(this.tsmiClose_Click);
+            tsmiClose.Image = Properties.Resources.cerrar;
+            tsmiClose.Name = "tsmiClose";
+            tsmiClose.Size = new Size(83, 26);
+            tsmiClose.Click += tsmiClose_Click;
             // 
             // tsmiCloseAll
             // 
-            this.tsmiCloseAll.Image = global::PgMulti.Properties.Resources.cerrar_todo;
-            this.tsmiCloseAll.Name = "tsmiCloseAll";
-            this.tsmiCloseAll.Size = new System.Drawing.Size(224, 26);
-            this.tsmiCloseAll.Click += new System.EventHandler(this.tsmiCloseAll_Click);
+            tsmiCloseAll.Image = Properties.Resources.cerrar_todo;
+            tsmiCloseAll.Name = "tsmiCloseAll";
+            tsmiCloseAll.Size = new Size(83, 26);
+            tsmiCloseAll.Click += tsmiCloseAll_Click;
             // 
             // tsmiBack
             // 
-            this.tsmiBack.Image = global::PgMulti.Properties.Resources.atras;
-            this.tsmiBack.Name = "tsmiBack";
-            this.tsmiBack.Size = new System.Drawing.Size(224, 26);
-            this.tsmiBack.Click += new System.EventHandler(this.tsmiBack_Click);
+            tsmiBack.Image = Properties.Resources.atras;
+            tsmiBack.Name = "tsmiBack";
+            tsmiBack.Size = new Size(83, 26);
+            tsmiBack.Click += tsmiBack_Click;
             // 
             // tsmiForward
             // 
-            this.tsmiForward.Image = global::PgMulti.Properties.Resources.adelante;
-            this.tsmiForward.Name = "tsmiForward";
-            this.tsmiForward.Size = new System.Drawing.Size(224, 26);
-            this.tsmiForward.Click += new System.EventHandler(this.tsmiForward_Click);
+            tsmiForward.Image = Properties.Resources.adelante;
+            tsmiForward.Name = "tsmiForward";
+            tsmiForward.Size = new Size(83, 26);
+            tsmiForward.Click += tsmiForward_Click;
             // 
             // tsmiUndo
             // 
-            this.tsmiUndo.Image = global::PgMulti.Properties.Resources.undo;
-            this.tsmiUndo.Name = "tsmiUndo";
-            this.tsmiUndo.Size = new System.Drawing.Size(224, 26);
-            this.tsmiUndo.Click += new System.EventHandler(this.tsmiUndo_Click);
+            tsmiUndo.Image = Properties.Resources.undo;
+            tsmiUndo.Name = "tsmiUndo";
+            tsmiUndo.Size = new Size(83, 26);
+            tsmiUndo.Click += tsmiUndo_Click;
             // 
             // tsmiRedo
             // 
-            this.tsmiRedo.Image = global::PgMulti.Properties.Resources.redo;
-            this.tsmiRedo.Name = "tsmiRedo";
-            this.tsmiRedo.Size = new System.Drawing.Size(224, 26);
-            this.tsmiRedo.Click += new System.EventHandler(this.tsmiRedo_Click);
+            tsmiRedo.Image = Properties.Resources.redo;
+            tsmiRedo.Name = "tsmiRedo";
+            tsmiRedo.Size = new Size(83, 26);
+            tsmiRedo.Click += tsmiRedo_Click;
             // 
             // tsmiCut
             // 
-            this.tsmiCut.Image = global::PgMulti.Properties.Resources.cortar;
-            this.tsmiCut.Name = "tsmiCut";
-            this.tsmiCut.Size = new System.Drawing.Size(224, 26);
-            this.tsmiCut.Click += new System.EventHandler(this.tsmiCut_Click);
+            tsmiCut.Image = Properties.Resources.cortar;
+            tsmiCut.Name = "tsmiCut";
+            tsmiCut.Size = new Size(83, 26);
+            tsmiCut.Click += tsmiCut_Click;
             // 
             // tsmiCopy
             // 
-            this.tsmiCopy.Image = global::PgMulti.Properties.Resources.copiar;
-            this.tsmiCopy.Name = "tsmiCopy";
-            this.tsmiCopy.Size = new System.Drawing.Size(224, 26);
-            this.tsmiCopy.Click += new System.EventHandler(this.tsmiCopy_Click);
+            tsmiCopy.Image = Properties.Resources.copiar;
+            tsmiCopy.Name = "tsmiCopy";
+            tsmiCopy.Size = new Size(83, 26);
+            tsmiCopy.Click += tsmiCopy_Click;
             // 
             // tsmiPaste
             // 
-            this.tsmiPaste.Image = global::PgMulti.Properties.Resources.pegar;
-            this.tsmiPaste.Name = "tsmiPaste";
-            this.tsmiPaste.Size = new System.Drawing.Size(224, 26);
-            this.tsmiPaste.Click += new System.EventHandler(this.tsmiPaste_Click);
+            tsmiPaste.Image = Properties.Resources.pegar;
+            tsmiPaste.Name = "tsmiPaste";
+            tsmiPaste.Size = new Size(83, 26);
+            tsmiPaste.Click += tsmiPaste_Click;
             // 
-            // tsmiFind
+            // tsmiSearchAndReplace
             // 
-            this.tsmiFind.Image = global::PgMulti.Properties.Resources.buscar;
-            this.tsmiFind.Name = "tsmiFind";
-            this.tsmiFind.Size = new System.Drawing.Size(224, 26);
-            this.tsmiFind.Click += new System.EventHandler(this.tsmiFind_Click);
-            // 
-            // tsmiReplace
-            // 
-            this.tsmiReplace.Image = global::PgMulti.Properties.Resources.reemplazar;
-            this.tsmiReplace.Name = "tsmiReplace";
-            this.tsmiReplace.Size = new System.Drawing.Size(224, 26);
-            this.tsmiReplace.Click += new System.EventHandler(this.tsmiReplace_Click);
+            tsmiSearchAndReplace.Image = Properties.Resources.buscar;
+            tsmiSearchAndReplace.Name = "tsmiSearchAndReplace";
+            tsmiSearchAndReplace.Size = new Size(83, 26);
+            tsmiSearchAndReplace.Click += tsmiSearchAndReplace_Click;
             // 
             // tsmiGoTo
             // 
-            this.tsmiGoTo.Image = global::PgMulti.Properties.Resources.linea;
-            this.tsmiGoTo.Name = "tsmiGoTo";
-            this.tsmiGoTo.Size = new System.Drawing.Size(224, 26);
-            this.tsmiGoTo.Click += new System.EventHandler(this.tsmiGoTo_Click);
+            tsmiGoTo.Image = Properties.Resources.linea;
+            tsmiGoTo.Name = "tsmiGoTo";
+            tsmiGoTo.Size = new Size(83, 26);
+            tsmiGoTo.Click += tsmiGoTo_Click;
             // 
             // tsmiFormat
             // 
-            this.tsmiFormat.Image = global::PgMulti.Properties.Resources.autoformato;
-            this.tsmiFormat.Name = "tsmiFormat";
-            this.tsmiFormat.Size = new System.Drawing.Size(224, 26);
-            this.tsmiFormat.Click += new System.EventHandler(this.tsmiFormat_Click);
+            tsmiFormat.Image = Properties.Resources.autoformato;
+            tsmiFormat.Name = "tsmiFormat";
+            tsmiFormat.Size = new Size(83, 26);
+            tsmiFormat.Click += tsmiFormat_Click;
             // 
             // tsmiIncreaseFont
             // 
-            this.tsmiIncreaseFont.Image = global::PgMulti.Properties.Resources.zoomin;
-            this.tsmiIncreaseFont.Name = "tsmiIncreaseFont";
-            this.tsmiIncreaseFont.Size = new System.Drawing.Size(224, 26);
-            this.tsmiIncreaseFont.Click += new System.EventHandler(this.tsmiIncreaseFont_Click);
+            tsmiIncreaseFont.Image = Properties.Resources.zoomin;
+            tsmiIncreaseFont.Name = "tsmiIncreaseFont";
+            tsmiIncreaseFont.Size = new Size(83, 26);
+            tsmiIncreaseFont.Click += tsmiIncreaseFont_Click;
             // 
             // tsmiReduceFont
             // 
-            this.tsmiReduceFont.Image = global::PgMulti.Properties.Resources.zoomout;
-            this.tsmiReduceFont.Name = "tsmiReduceFont";
-            this.tsmiReduceFont.Size = new System.Drawing.Size(224, 26);
-            this.tsmiReduceFont.Click += new System.EventHandler(this.tsmiReduceFont_Click);
+            tsmiReduceFont.Image = Properties.Resources.zoomout;
+            tsmiReduceFont.Name = "tsmiReduceFont";
+            tsmiReduceFont.Size = new Size(83, 26);
+            tsmiReduceFont.Click += tsmiReduceFont_Click;
             // 
             // tsmiChangePassword
             // 
-            this.tsmiChangePassword.Image = global::PgMulti.Properties.Resources.password;
-            this.tsmiChangePassword.Name = "tsmiChangePassword";
-            this.tsmiChangePassword.Size = new System.Drawing.Size(224, 26);
-            this.tsmiChangePassword.Click += new System.EventHandler(this.tsmiChangePassword_Click);
+            tsmiChangePassword.Image = Properties.Resources.password;
+            tsmiChangePassword.Name = "tsmiChangePassword";
+            tsmiChangePassword.Size = new Size(83, 26);
+            tsmiChangePassword.Click += tsmiChangePassword_Click;
             // 
             // tsmiImportConnections
             // 
-            this.tsmiImportConnections.Image = global::PgMulti.Properties.Resources.import;
-            this.tsmiImportConnections.Name = "tsmiImportConnections";
-            this.tsmiImportConnections.Size = new System.Drawing.Size(224, 26);
-            this.tsmiImportConnections.Click += new System.EventHandler(this.tsmiImportConnections_Click);
+            tsmiImportConnections.Image = Properties.Resources.import;
+            tsmiImportConnections.Name = "tsmiImportConnections";
+            tsmiImportConnections.Size = new Size(83, 26);
+            tsmiImportConnections.Click += tsmiImportConnections_Click;
             // 
             // tsmiExportConnections
             // 
-            this.tsmiExportConnections.Image = global::PgMulti.Properties.Resources.export;
-            this.tsmiExportConnections.Name = "tsmiExportConnections";
-            this.tsmiExportConnections.Size = new System.Drawing.Size(224, 26);
-            this.tsmiExportConnections.Click += new System.EventHandler(this.tsmiExportConnections_Click);
+            tsmiExportConnections.Image = Properties.Resources.export;
+            tsmiExportConnections.Name = "tsmiExportConnections";
+            tsmiExportConnections.Size = new Size(83, 26);
+            tsmiExportConnections.Click += tsmiExportConnections_Click;
             // 
             // tsmiMoreOptions
             // 
-            this.tsmiMoreOptions.Image = global::PgMulti.Properties.Resources.opciones;
-            this.tsmiMoreOptions.Name = "tsmiMoreOptions";
-            this.tsmiMoreOptions.Size = new System.Drawing.Size(224, 26);
-            this.tsmiMoreOptions.Click += new System.EventHandler(this.tsmMoreOptions_Click);
+            tsmiMoreOptions.Image = Properties.Resources.opciones;
+            tsmiMoreOptions.Name = "tsmiMoreOptions";
+            tsmiMoreOptions.Size = new Size(83, 26);
+            tsmiMoreOptions.Click += tsmMoreOptions_Click;
             // 
             // cmsTabs
             // 
-            this.cmsTabs.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.cmsTabs.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiCloseTab,
-            this.tsmiCloseAllTabs,
-            this.tsmiCloseAllTabsExceptThisOne,
-            this.tsmiReopenLastClosedTab,
-            this.tsmiClosedTabsLog});
-            this.cmsTabs.Name = "cmsTabs";
-            this.cmsTabs.Size = new System.Drawing.Size(74, 134);
+            cmsTabs.ImageScalingSize = new Size(20, 20);
+            cmsTabs.Items.AddRange(new ToolStripItem[] { tsmiCloseTab, tsmiCloseAllTabs, tsmiCloseAllTabsExceptThisOne, tsmiReopenLastClosedTab, tsmiClosedTabsLog });
+            cmsTabs.Name = "cmsTabs";
+            cmsTabs.Size = new Size(74, 134);
             // 
             // tsmiCloseTab
             // 
-            this.tsmiCloseTab.Image = global::PgMulti.Properties.Resources.cerrar;
-            this.tsmiCloseTab.Name = "tsmiCloseTab";
-            this.tsmiCloseTab.Size = new System.Drawing.Size(73, 26);
-            this.tsmiCloseTab.Click += new System.EventHandler(this.tsmiCloseTab_Click);
+            tsmiCloseTab.Image = Properties.Resources.cerrar;
+            tsmiCloseTab.Name = "tsmiCloseTab";
+            tsmiCloseTab.Size = new Size(73, 26);
+            tsmiCloseTab.Click += tsmiCloseTab_Click;
             // 
             // tsmiCloseAllTabs
             // 
-            this.tsmiCloseAllTabs.Image = global::PgMulti.Properties.Resources.cerrar_todo;
-            this.tsmiCloseAllTabs.Name = "tsmiCloseAllTabs";
-            this.tsmiCloseAllTabs.Size = new System.Drawing.Size(73, 26);
-            this.tsmiCloseAllTabs.Click += new System.EventHandler(this.tsmiCloseAllTabs_Click);
+            tsmiCloseAllTabs.Image = Properties.Resources.cerrar_todo;
+            tsmiCloseAllTabs.Name = "tsmiCloseAllTabs";
+            tsmiCloseAllTabs.Size = new Size(73, 26);
+            tsmiCloseAllTabs.Click += tsmiCloseAllTabs_Click;
             // 
             // tsmiCloseAllTabsExceptThisOne
             // 
-            this.tsmiCloseAllTabsExceptThisOne.Image = global::PgMulti.Properties.Resources.cerrar_todo;
-            this.tsmiCloseAllTabsExceptThisOne.Name = "tsmiCloseAllTabsExceptThisOne";
-            this.tsmiCloseAllTabsExceptThisOne.Size = new System.Drawing.Size(73, 26);
-            this.tsmiCloseAllTabsExceptThisOne.Click += new System.EventHandler(this.tsmiCloseAllTabsExceptThisOne_Click);
+            tsmiCloseAllTabsExceptThisOne.Image = Properties.Resources.cerrar_todo;
+            tsmiCloseAllTabsExceptThisOne.Name = "tsmiCloseAllTabsExceptThisOne";
+            tsmiCloseAllTabsExceptThisOne.Size = new Size(73, 26);
+            tsmiCloseAllTabsExceptThisOne.Click += tsmiCloseAllTabsExceptThisOne_Click;
             // 
             // tsmiReopenLastClosedTab
             // 
-            this.tsmiReopenLastClosedTab.Image = global::PgMulti.Properties.Resources.undo;
-            this.tsmiReopenLastClosedTab.Name = "tsmiReopenLastClosedTab";
-            this.tsmiReopenLastClosedTab.Size = new System.Drawing.Size(73, 26);
-            this.tsmiReopenLastClosedTab.Click += new System.EventHandler(this.tsmiReopenLastClosedTab_Click);
+            tsmiReopenLastClosedTab.Image = Properties.Resources.undo;
+            tsmiReopenLastClosedTab.Name = "tsmiReopenLastClosedTab";
+            tsmiReopenLastClosedTab.Size = new Size(73, 26);
+            tsmiReopenLastClosedTab.Click += tsmiReopenLastClosedTab_Click;
             // 
             // tsmiClosedTabsLog
             // 
-            this.tsmiClosedTabsLog.Image = global::PgMulti.Properties.Resources.historial;
-            this.tsmiClosedTabsLog.Name = "tsmiClosedTabsLog";
-            this.tsmiClosedTabsLog.Size = new System.Drawing.Size(73, 26);
-            this.tsmiClosedTabsLog.Click += new System.EventHandler(this.tsmiClosedTabsLog_Click);
+            tsmiClosedTabsLog.Image = Properties.Resources.historial;
+            tsmiClosedTabsLog.Name = "tsmiClosedTabsLog";
+            tsmiClosedTabsLog.Size = new Size(73, 26);
+            tsmiClosedTabsLog.Click += tsmiClosedTabsLog_Click;
             // 
             // tscmiBack
             // 
-            this.tscmiBack.Image = global::PgMulti.Properties.Resources.atras;
-            this.tscmiBack.Name = "tscmiBack";
-            this.tscmiBack.Size = new System.Drawing.Size(73, 26);
-            this.tscmiBack.Click += new System.EventHandler(this.tsmiBack_Click);
+            tscmiBack.Image = Properties.Resources.atras;
+            tscmiBack.Name = "tscmiBack";
+            tscmiBack.Size = new Size(73, 26);
+            tscmiBack.Click += tsmiBack_Click;
             // 
             // tscmiForward
             // 
-            this.tscmiForward.Image = global::PgMulti.Properties.Resources.adelante;
-            this.tscmiForward.Name = "tscmiForward";
-            this.tscmiForward.Size = new System.Drawing.Size(73, 26);
-            this.tscmiForward.Click += new System.EventHandler(this.tsmiForward_Click);
+            tscmiForward.Image = Properties.Resources.adelante;
+            tscmiForward.Name = "tscmiForward";
+            tscmiForward.Size = new Size(73, 26);
+            tscmiForward.Click += tsmiForward_Click;
             // 
             // tscmiUndo
             // 
-            this.tscmiUndo.Image = global::PgMulti.Properties.Resources.undo;
-            this.tscmiUndo.Name = "tscmiUndo";
-            this.tscmiUndo.Size = new System.Drawing.Size(73, 26);
-            this.tscmiUndo.Click += new System.EventHandler(this.tsmiUndo_Click);
+            tscmiUndo.Image = Properties.Resources.undo;
+            tscmiUndo.Name = "tscmiUndo";
+            tscmiUndo.Size = new Size(73, 26);
+            tscmiUndo.Click += tsmiUndo_Click;
             // 
             // tscmiRedo
             // 
-            this.tscmiRedo.Image = global::PgMulti.Properties.Resources.redo;
-            this.tscmiRedo.Name = "tscmiRedo";
-            this.tscmiRedo.Size = new System.Drawing.Size(73, 26);
-            this.tscmiRedo.Click += new System.EventHandler(this.tsmiRedo_Click);
+            tscmiRedo.Image = Properties.Resources.redo;
+            tscmiRedo.Name = "tscmiRedo";
+            tscmiRedo.Size = new Size(73, 26);
+            tscmiRedo.Click += tsmiRedo_Click;
             // 
             // tscmiCut
             // 
-            this.tscmiCut.Image = global::PgMulti.Properties.Resources.cortar;
-            this.tscmiCut.Name = "tscmiCut";
-            this.tscmiCut.Size = new System.Drawing.Size(73, 26);
-            this.tscmiCut.Click += new System.EventHandler(this.tsmiCut_Click);
+            tscmiCut.Image = Properties.Resources.cortar;
+            tscmiCut.Name = "tscmiCut";
+            tscmiCut.Size = new Size(73, 26);
+            tscmiCut.Click += tsmiCut_Click;
             // 
             // tscmiCopy
             // 
-            this.tscmiCopy.Image = global::PgMulti.Properties.Resources.copiar;
-            this.tscmiCopy.Name = "tscmiCopy";
-            this.tscmiCopy.Size = new System.Drawing.Size(73, 26);
-            this.tscmiCopy.Click += new System.EventHandler(this.tsmiCopy_Click);
+            tscmiCopy.Image = Properties.Resources.copiar;
+            tscmiCopy.Name = "tscmiCopy";
+            tscmiCopy.Size = new Size(73, 26);
+            tscmiCopy.Click += tsmiCopy_Click;
             // 
             // tscmiPaste
             // 
-            this.tscmiPaste.Image = global::PgMulti.Properties.Resources.pegar;
-            this.tscmiPaste.Name = "tscmiPaste";
-            this.tscmiPaste.Size = new System.Drawing.Size(73, 26);
-            this.tscmiPaste.Click += new System.EventHandler(this.tsmiPaste_Click);
+            tscmiPaste.Image = Properties.Resources.pegar;
+            tscmiPaste.Name = "tscmiPaste";
+            tscmiPaste.Size = new Size(73, 26);
+            tscmiPaste.Click += tsmiPaste_Click;
             // 
-            // tscmiFind
+            // tscmiSearchAndReplace
             // 
-            this.tscmiFind.Image = global::PgMulti.Properties.Resources.buscar;
-            this.tscmiFind.Name = "tscmiFind";
-            this.tscmiFind.Size = new System.Drawing.Size(73, 26);
-            this.tscmiFind.Click += new System.EventHandler(this.tsmiFind_Click);
-            // 
-            // tscmiReplace
-            // 
-            this.tscmiReplace.Image = global::PgMulti.Properties.Resources.reemplazar;
-            this.tscmiReplace.Name = "tscmiReplace";
-            this.tscmiReplace.Size = new System.Drawing.Size(73, 26);
-            this.tscmiReplace.Click += new System.EventHandler(this.tsmiReplace_Click);
+            tscmiSearchAndReplace.Image = Properties.Resources.buscar;
+            tscmiSearchAndReplace.Name = "tscmiSearchAndReplace";
+            tscmiSearchAndReplace.Size = new Size(73, 26);
+            tscmiSearchAndReplace.Click += tsmiSearchAndReplace_Click;
             // 
             // tscmiGoTo
             // 
-            this.tscmiGoTo.Image = global::PgMulti.Properties.Resources.linea;
-            this.tscmiGoTo.Name = "tscmiGoTo";
-            this.tscmiGoTo.Size = new System.Drawing.Size(73, 26);
-            this.tscmiGoTo.Click += new System.EventHandler(this.tsmiGoTo_Click);
+            tscmiGoTo.Image = Properties.Resources.linea;
+            tscmiGoTo.Name = "tscmiGoTo";
+            tscmiGoTo.Size = new Size(73, 26);
+            tscmiGoTo.Click += tsmiGoTo_Click;
             // 
             // tscmiFormat
             // 
-            this.tscmiFormat.Image = global::PgMulti.Properties.Resources.autoformato;
-            this.tscmiFormat.Name = "tscmiFormat";
-            this.tscmiFormat.Size = new System.Drawing.Size(73, 26);
-            this.tscmiFormat.Click += new System.EventHandler(this.tsmiFormat_Click);
+            tscmiFormat.Image = Properties.Resources.autoformato;
+            tscmiFormat.Name = "tscmiFormat";
+            tscmiFormat.Size = new Size(73, 26);
+            tscmiFormat.Click += tsmiFormat_Click;
             // 
             // ilServers
             // 
-            this.ilServers.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
-            this.ilServers.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilServers.ImageStream")));
-            this.ilServers.TransparentColor = System.Drawing.Color.Transparent;
-            this.ilServers.Images.SetKeyName(0, "carpeta.png");
-            this.ilServers.Images.SetKeyName(1, "db.png");
-            this.ilServers.Images.SetKeyName(2, "nuevo.png");
+            ilServers.ColorDepth = ColorDepth.Depth8Bit;
+            ilServers.ImageStream = (ImageListStreamer)resources.GetObject("ilServers.ImageStream");
+            ilServers.TransparentColor = Color.Transparent;
+            ilServers.Images.SetKeyName(0, "carpeta.png");
+            ilServers.Images.SetKeyName(1, "db.png");
+            ilServers.Images.SetKeyName(2, "nuevo.png");
             // 
             // ofdSql
             // 
-            this.ofdSql.FileName = "openFileDialog1";
-            this.ofdSql.FilterIndex = 0;
+            ofdSql.FileName = "openFileDialog1";
+            ofdSql.FilterIndex = 0;
             // 
             // sfdSql
             // 
-            this.sfdSql.DefaultExt = "sql";
-            this.sfdSql.FilterIndex = 0;
+            sfdSql.DefaultExt = "sql";
+            sfdSql.FilterIndex = 0;
             // 
             // tmrPosition
             // 
-            this.tmrPosition.Interval = 500;
-            this.tmrPosition.Tick += new System.EventHandler(this.tmrPosition_Tick);
+            tmrPosition.Interval = 500;
+            tmrPosition.Tick += tmrPosition_Tick;
             // 
             // tmrSaveTabs
             // 
-            this.tmrSaveTabs.Interval = 2000;
-            this.tmrSaveTabs.Tick += new System.EventHandler(this.tmrSaveTabs_Tick);
+            tmrSaveTabs.Interval = 2000;
+            tmrSaveTabs.Tick += tmrSaveTabs_Tick;
             // 
             // tmrResult
             // 
-            this.tmrResult.Interval = 500;
-            this.tmrResult.Tick += new System.EventHandler(this.tmrResult_Tick);
+            tmrResult.Interval = 500;
+            tmrResult.Tick += tmrResult_Tick;
             // 
             // tmrFitGridColumns
             // 
-            this.tmrFitGridColumns.Tick += new System.EventHandler(this.tmrFitGridColumns_Tick);
+            tmrFitGridColumns.Tick += tmrFitGridColumns_Tick;
             // 
             // ilAutocompleteMenu
             // 
-            this.ilAutocompleteMenu.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-            this.ilAutocompleteMenu.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilAutocompleteMenu.ImageStream")));
-            this.ilAutocompleteMenu.TransparentColor = System.Drawing.Color.Transparent;
-            this.ilAutocompleteMenu.Images.SetKeyName(0, "schema.png");
-            this.ilAutocompleteMenu.Images.SetKeyName(1, "tva_table.png");
-            this.ilAutocompleteMenu.Images.SetKeyName(2, "tva_1n.png");
-            this.ilAutocompleteMenu.Images.SetKeyName(3, "tva_n1.png");
-            this.ilAutocompleteMenu.Images.SetKeyName(4, "tva_binary.png");
-            this.ilAutocompleteMenu.Images.SetKeyName(5, "tva_bool.png");
-            this.ilAutocompleteMenu.Images.SetKeyName(6, "tva_date.png");
-            this.ilAutocompleteMenu.Images.SetKeyName(7, "tva_dato.png");
-            this.ilAutocompleteMenu.Images.SetKeyName(8, "tva_int.png");
-            this.ilAutocompleteMenu.Images.SetKeyName(9, "tva_money.png");
-            this.ilAutocompleteMenu.Images.SetKeyName(10, "tva_number.png");
-            this.ilAutocompleteMenu.Images.SetKeyName(11, "tva_text.png");
-            this.ilAutocompleteMenu.Images.SetKeyName(12, "tva_time.png");
-            this.ilAutocompleteMenu.Images.SetKeyName(13, "postgresql.png");
-            this.ilAutocompleteMenu.Images.SetKeyName(14, "key.png");
-            this.ilAutocompleteMenu.Images.SetKeyName(15, "tva_element.png");
-            this.ilAutocompleteMenu.Images.SetKeyName(16, "current_fragment.png");
+            ilAutocompleteMenu.ColorDepth = ColorDepth.Depth32Bit;
+            ilAutocompleteMenu.ImageStream = (ImageListStreamer)resources.GetObject("ilAutocompleteMenu.ImageStream");
+            ilAutocompleteMenu.TransparentColor = Color.Transparent;
+            ilAutocompleteMenu.Images.SetKeyName(0, "schema.png");
+            ilAutocompleteMenu.Images.SetKeyName(1, "tva_table.png");
+            ilAutocompleteMenu.Images.SetKeyName(2, "tva_1n.png");
+            ilAutocompleteMenu.Images.SetKeyName(3, "tva_n1.png");
+            ilAutocompleteMenu.Images.SetKeyName(4, "tva_binary.png");
+            ilAutocompleteMenu.Images.SetKeyName(5, "tva_bool.png");
+            ilAutocompleteMenu.Images.SetKeyName(6, "tva_date.png");
+            ilAutocompleteMenu.Images.SetKeyName(7, "tva_dato.png");
+            ilAutocompleteMenu.Images.SetKeyName(8, "tva_int.png");
+            ilAutocompleteMenu.Images.SetKeyName(9, "tva_money.png");
+            ilAutocompleteMenu.Images.SetKeyName(10, "tva_number.png");
+            ilAutocompleteMenu.Images.SetKeyName(11, "tva_text.png");
+            ilAutocompleteMenu.Images.SetKeyName(12, "tva_time.png");
+            ilAutocompleteMenu.Images.SetKeyName(13, "postgresql.png");
+            ilAutocompleteMenu.Images.SetKeyName(14, "key.png");
+            ilAutocompleteMenu.Images.SetKeyName(15, "tva_element.png");
+            ilAutocompleteMenu.Images.SetKeyName(16, "current_fragment.png");
             // 
             // cmsFctb
             // 
-            this.cmsFctb.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.cmsFctb.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tscmiBack,
-            this.tscmiForward,
-            this.tscmiUndo,
-            this.tscmiRedo,
-            this.tscmiCut,
-            this.tscmiCopy,
-            this.tscmiPaste,
-            this.tscmiFind,
-            this.tscmiReplace,
-            this.tscmiGoTo,
-            this.tscmiFormat});
-            this.cmsFctb.Name = "cmsFctb";
-            this.cmsFctb.Size = new System.Drawing.Size(74, 290);
+            cmsFctb.ImageScalingSize = new Size(20, 20);
+            cmsFctb.Items.AddRange(new ToolStripItem[] { tscmiBack, tscmiForward, tscmiUndo, tscmiRedo, tscmiCut, tscmiCopy, tscmiPaste, tscmiSearchAndReplace, tscmiGoTo, tscmiFormat });
+            cmsFctb.Name = "cmsFctb";
+            cmsFctb.Size = new Size(74, 290);
             // 
             // sfdCsv
             // 
-            this.sfdCsv.DefaultExt = "csv";
-            this.sfdCsv.FilterIndex = 0;
+            sfdCsv.DefaultExt = "csv";
+            sfdCsv.FilterIndex = 0;
             // 
             // mm
             // 
-            this.mm.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.mm.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiFile,
-            this.tsmiEdit,
-            this.tsmiRunMenu,
-            this.tsmiDiagrams,
-            this.tsmiOptions,
-            this.tsmiUpdates});
-            this.mm.Location = new System.Drawing.Point(0, 0);
-            this.mm.Name = "mm";
-            this.mm.Size = new System.Drawing.Size(1539, 28);
-            this.mm.TabIndex = 4;
-            this.mm.Text = "menuStrip1";
+            mm.ImageScalingSize = new Size(20, 20);
+            mm.Items.AddRange(new ToolStripItem[] { tsmiFile, tsmiEdit, tsmiRunMenu, tsmiDiagrams, tsmiOptions, tsmiUpdates });
+            mm.Location = new Point(0, 0);
+            mm.Name = "mm";
+            mm.Size = new Size(1539, 28);
+            mm.TabIndex = 4;
+            mm.Text = "menuStrip1";
             // 
             // tsmiFile
             // 
-            this.tsmiFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiNew,
-            this.tsmiOpen,
-            this.tsmiSave,
-            this.tsmiSaveAs,
-            this.tsmiSaveAll,
-            this.tsmiClose,
-            this.tsmiCloseAll,
-            this.tsmiAbout});
-            this.tsmiFile.Image = global::PgMulti.Properties.Resources.archivo;
-            this.tsmiFile.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsmiFile.Name = "tsmiFile";
-            this.tsmiFile.Overflow = System.Windows.Forms.ToolStripItemOverflow.AsNeeded;
-            this.tsmiFile.Size = new System.Drawing.Size(93, 24);
-            this.tsmiFile.Text = "Archivo";
+            tsmiFile.DropDownItems.AddRange(new ToolStripItem[] { tsmiNew, tsmiOpen, tsmiSave, tsmiSaveAs, tsmiSaveAll, tsmiClose, tsmiCloseAll, tsmiAbout });
+            tsmiFile.Image = Properties.Resources.archivo;
+            tsmiFile.ImageTransparentColor = Color.Magenta;
+            tsmiFile.Name = "tsmiFile";
+            tsmiFile.Overflow = ToolStripItemOverflow.AsNeeded;
+            tsmiFile.Size = new Size(93, 24);
+            tsmiFile.Text = "Archivo";
             // 
             // tsmiEdit
             // 
-            this.tsmiEdit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiBack,
-            this.tsmiForward,
-            this.tsmiUndo,
-            this.tsmiRedo,
-            this.tsmiCut,
-            this.tsmiCopy,
-            this.tsmiPaste,
-            this.tsmiFind,
-            this.tsmiReplace,
-            this.tsmiGoTo,
-            this.tsmiFormat});
-            this.tsmiEdit.Image = global::PgMulti.Properties.Resources.editar;
-            this.tsmiEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsmiEdit.Name = "tsmiEdit";
-            this.tsmiEdit.Overflow = System.Windows.Forms.ToolStripItemOverflow.AsNeeded;
-            this.tsmiEdit.Size = new System.Drawing.Size(82, 24);
-            this.tsmiEdit.Text = "Editar";
+            tsmiEdit.DropDownItems.AddRange(new ToolStripItem[] { tsmiBack, tsmiForward, tsmiUndo, tsmiRedo, tsmiCut, tsmiCopy, tsmiPaste, tsmiSearchAndReplace, tsmiGoTo, tsmiFormat });
+            tsmiEdit.Image = Properties.Resources.editar;
+            tsmiEdit.ImageTransparentColor = Color.Magenta;
+            tsmiEdit.Name = "tsmiEdit";
+            tsmiEdit.Overflow = ToolStripItemOverflow.AsNeeded;
+            tsmiEdit.Size = new Size(82, 24);
+            tsmiEdit.Text = "Editar";
             // 
             // tsmiRunMenu
             // 
-            this.tsmiRunMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiRun,
-            this.tsmiExportCsv});
-            this.tsmiRunMenu.Image = global::PgMulti.Properties.Resources.ejecutar;
-            this.tsmiRunMenu.Name = "tsmiRunMenu";
-            this.tsmiRunMenu.Overflow = System.Windows.Forms.ToolStripItemOverflow.AsNeeded;
-            this.tsmiRunMenu.Size = new System.Drawing.Size(68, 24);
-            this.tsmiRunMenu.Text = "Run";
+            tsmiRunMenu.DropDownItems.AddRange(new ToolStripItem[] { tsmiRun, tsmiExportCsv });
+            tsmiRunMenu.Image = Properties.Resources.ejecutar;
+            tsmiRunMenu.Name = "tsmiRunMenu";
+            tsmiRunMenu.Overflow = ToolStripItemOverflow.AsNeeded;
+            tsmiRunMenu.Size = new Size(68, 24);
+            tsmiRunMenu.Text = "Run";
             // 
             // tsmiRun
             // 
-            this.tsmiRun.Image = global::PgMulti.Properties.Resources.ejecutar;
-            this.tsmiRun.Name = "tsmiRun";
-            this.tsmiRun.Size = new System.Drawing.Size(263, 26);
-            this.tsmiRun.Text = "Run";
-            this.tsmiRun.Click += new System.EventHandler(this.tsmiRun_Click);
+            tsmiRun.Image = Properties.Resources.ejecutar;
+            tsmiRun.Name = "tsmiRun";
+            tsmiRun.Size = new Size(263, 26);
+            tsmiRun.Text = "Run";
+            tsmiRun.Click += tsmiRun_Click;
             // 
             // tsmiExportCsv
             // 
-            this.tsmiExportCsv.Image = global::PgMulti.Properties.Resources.download;
-            this.tsmiExportCsv.Name = "tsmiExportCsv";
-            this.tsmiExportCsv.Size = new System.Drawing.Size(263, 26);
-            this.tsmiExportCsv.Text = "Run and download results";
-            this.tsmiExportCsv.Click += new System.EventHandler(this.tsmiExportCsv_Click);
+            tsmiExportCsv.Image = Properties.Resources.download;
+            tsmiExportCsv.Name = "tsmiExportCsv";
+            tsmiExportCsv.Size = new Size(263, 26);
+            tsmiExportCsv.Text = "Run and download results";
+            tsmiExportCsv.Click += tsmiExportCsv_Click;
             // 
             // tsmiDiagrams
             // 
-            this.tsmiDiagrams.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiNewDiagram,
-            this.tsmiOpenDiagram});
-            this.tsmiDiagrams.Image = global::PgMulti.Properties.Resources.diagram;
-            this.tsmiDiagrams.Name = "tsmiDiagrams";
-            this.tsmiDiagrams.Overflow = System.Windows.Forms.ToolStripItemOverflow.AsNeeded;
-            this.tsmiDiagrams.Size = new System.Drawing.Size(115, 24);
-            this.tsmiDiagrams.Text = "Diagramas";
+            tsmiDiagrams.DropDownItems.AddRange(new ToolStripItem[] { tsmiNewDiagram, tsmiOpenDiagram });
+            tsmiDiagrams.Image = Properties.Resources.diagram;
+            tsmiDiagrams.Name = "tsmiDiagrams";
+            tsmiDiagrams.Overflow = ToolStripItemOverflow.AsNeeded;
+            tsmiDiagrams.Size = new Size(115, 24);
+            tsmiDiagrams.Text = "Diagramas";
             // 
             // tsmiNewDiagram
             // 
-            this.tsmiNewDiagram.Image = global::PgMulti.Properties.Resources.new_diagram;
-            this.tsmiNewDiagram.Name = "tsmiNewDiagram";
-            this.tsmiNewDiagram.Size = new System.Drawing.Size(224, 26);
-            this.tsmiNewDiagram.Text = "Nuevo diagrama";
-            this.tsmiNewDiagram.Click += new System.EventHandler(this.tsmiNewDiagram_Click);
+            tsmiNewDiagram.Image = Properties.Resources.new_diagram;
+            tsmiNewDiagram.Name = "tsmiNewDiagram";
+            tsmiNewDiagram.Size = new Size(203, 26);
+            tsmiNewDiagram.Text = "Nuevo diagrama";
+            tsmiNewDiagram.Click += tsmiNewDiagram_Click;
             // 
             // tsmiOpenDiagram
             // 
-            this.tsmiOpenDiagram.Image = global::PgMulti.Properties.Resources.open_diagram;
-            this.tsmiOpenDiagram.Name = "tsmiOpenDiagram";
-            this.tsmiOpenDiagram.Size = new System.Drawing.Size(224, 26);
-            this.tsmiOpenDiagram.Text = "Abrir diagrama";
-            this.tsmiOpenDiagram.Click += new System.EventHandler(this.tsmiOpenDiagram_Click);
+            tsmiOpenDiagram.Image = Properties.Resources.open_diagram;
+            tsmiOpenDiagram.Name = "tsmiOpenDiagram";
+            tsmiOpenDiagram.Size = new Size(203, 26);
+            tsmiOpenDiagram.Text = "Abrir diagrama";
+            tsmiOpenDiagram.Click += tsmiOpenDiagram_Click;
             // 
             // tsmiOptions
             // 
-            this.tsmiOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiIncreaseFont,
-            this.tsmiReduceFont,
-            this.tsmiHistory,
-            this.tsmiChangePassword,
-            this.tsmiExportConnections,
-            this.tsmiImportConnections,
-            this.tsmiMoreOptions});
-            this.tsmiOptions.Image = global::PgMulti.Properties.Resources.opciones;
-            this.tsmiOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsmiOptions.Name = "tsmiOptions";
-            this.tsmiOptions.Overflow = System.Windows.Forms.ToolStripItemOverflow.AsNeeded;
-            this.tsmiOptions.Size = new System.Drawing.Size(105, 24);
-            this.tsmiOptions.Text = "Opciones";
+            tsmiOptions.DropDownItems.AddRange(new ToolStripItem[] { tsmiIncreaseFont, tsmiReduceFont, tsmiHistory, tsmiChangePassword, tsmiExportConnections, tsmiImportConnections, tsmiMoreOptions });
+            tsmiOptions.Image = Properties.Resources.opciones;
+            tsmiOptions.ImageTransparentColor = Color.Magenta;
+            tsmiOptions.Name = "tsmiOptions";
+            tsmiOptions.Overflow = ToolStripItemOverflow.AsNeeded;
+            tsmiOptions.Size = new Size(105, 24);
+            tsmiOptions.Text = "Opciones";
             // 
             // tsmiHistory
             // 
-            this.tsmiHistory.Image = global::PgMulti.Properties.Resources.historial;
-            this.tsmiHistory.Name = "tsmiHistory";
-            this.tsmiHistory.Size = new System.Drawing.Size(224, 26);
-            this.tsmiHistory.Click += new System.EventHandler(this.tsmiHistory_Click);
+            tsmiHistory.Image = Properties.Resources.historial;
+            tsmiHistory.Name = "tsmiHistory";
+            tsmiHistory.Size = new Size(83, 26);
+            tsmiHistory.Click += tsmiHistory_Click;
             // 
             // tsmiUpdates
             // 
-            this.tsmiUpdates.Image = global::PgMulti.Properties.Resources.updates;
-            this.tsmiUpdates.Name = "tsmiUpdates";
-            this.tsmiUpdates.Overflow = System.Windows.Forms.ToolStripItemOverflow.AsNeeded;
-            this.tsmiUpdates.Size = new System.Drawing.Size(191, 24);
-            this.tsmiUpdates.Text = "Buscar actualizaciones";
-            this.tsmiUpdates.Visible = false;
-            this.tsmiUpdates.Click += new System.EventHandler(this.tsmiUpdates_Click);
+            tsmiUpdates.Image = Properties.Resources.updates;
+            tsmiUpdates.Name = "tsmiUpdates";
+            tsmiUpdates.Overflow = ToolStripItemOverflow.AsNeeded;
+            tsmiUpdates.Size = new Size(191, 24);
+            tsmiUpdates.Text = "Buscar actualizaciones";
+            tsmiUpdates.Visible = false;
+            tsmiUpdates.Click += tsmiUpdates_Click;
             // 
             // ofdImportConfig
             // 
-            this.ofdImportConfig.FileName = "openFileDialog1";
-            this.ofdImportConfig.FilterIndex = 0;
+            ofdImportConfig.FileName = "openFileDialog1";
+            ofdImportConfig.FilterIndex = 0;
             // 
             // ofdOpenDiagram
             // 
-            this.ofdOpenDiagram.FileName = "openFileDialog1";
-            this.ofdOpenDiagram.FilterIndex = 0;
+            ofdOpenDiagram.FileName = "openFileDialog1";
+            ofdOpenDiagram.FilterIndex = 0;
             // 
             // sfdSaveDiagram
             // 
-            this.sfdSaveDiagram.DefaultExt = "csv";
-            this.sfdSaveDiagram.FilterIndex = 0;
+            sfdSaveDiagram.DefaultExt = "csv";
+            sfdSaveDiagram.FilterIndex = 0;
             // 
             // tmrReenableRunButton
             // 
-            this.tmrReenableRunButton.Interval = 2000;
-            this.tmrReenableRunButton.Tick += new System.EventHandler(this.tmrReenableRunButton_Tick);
+            tmrReenableRunButton.Interval = 2000;
+            tmrReenableRunButton.Tick += tmrReenableRunButton_Tick;
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1539, 530);
-            this.Controls.Add(this.splitContainer1);
-            this.Controls.Add(this.mm);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MainMenuStrip = this.mm;
-            this.Name = "MainForm";
-            this.Text = "pgMulti";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
-            this.Load += new System.EventHandler(this.MainForm_Load);
-            this.Resize += new System.EventHandler(this.MainForm_Resize);
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
-            this.splitContainer2.Panel1.ResumeLayout(false);
-            this.splitContainer2.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
-            this.splitContainer2.ResumeLayout(false);
-            this.toolStripContainer2.ContentPanel.ResumeLayout(false);
-            this.toolStripContainer2.TopToolStripPanel.ResumeLayout(false);
-            this.toolStripContainer2.TopToolStripPanel.PerformLayout();
-            this.toolStripContainer2.ResumeLayout(false);
-            this.toolStripContainer2.PerformLayout();
-            this.cmsServers.ResumeLayout(false);
-            this.toolStrip2.ResumeLayout(false);
-            this.toolStrip2.PerformLayout();
-            this.toolStripContainer1.ContentPanel.ResumeLayout(false);
-            this.toolStripContainer1.TopToolStripPanel.ResumeLayout(false);
-            this.toolStripContainer1.TopToolStripPanel.PerformLayout();
-            this.toolStripContainer1.ResumeLayout(false);
-            this.toolStripContainer1.PerformLayout();
-            this.tcSql.ResumeLayout(false);
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
-            this.splitContainer3.Panel1.ResumeLayout(false);
-            this.splitContainer3.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
-            this.splitContainer3.ResumeLayout(false);
-            this.toolStripContainer3.ContentPanel.ResumeLayout(false);
-            this.toolStripContainer3.TopToolStripPanel.ResumeLayout(false);
-            this.toolStripContainer3.TopToolStripPanel.PerformLayout();
-            this.toolStripContainer3.ResumeLayout(false);
-            this.toolStripContainer3.PerformLayout();
-            this.toolStrip3.ResumeLayout(false);
-            this.toolStrip3.PerformLayout();
-            this.tcResult.ResumeLayout(false);
-            this.tpResult.ResumeLayout(false);
-            this.toolStripContainer6.ContentPanel.ResumeLayout(false);
-            this.toolStripContainer6.ContentPanel.PerformLayout();
-            this.toolStripContainer6.TopToolStripPanel.ResumeLayout(false);
-            this.toolStripContainer6.TopToolStripPanel.PerformLayout();
-            this.toolStripContainer6.ResumeLayout(false);
-            this.toolStripContainer6.PerformLayout();
-            this.toolStrip6.ResumeLayout(false);
-            this.toolStrip6.PerformLayout();
-            this.tpTable.ResumeLayout(false);
-            this.toolStripContainer5.ContentPanel.ResumeLayout(false);
-            this.toolStripContainer5.TopToolStripPanel.ResumeLayout(false);
-            this.toolStripContainer5.TopToolStripPanel.PerformLayout();
-            this.toolStripContainer5.ResumeLayout(false);
-            this.toolStripContainer5.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gvTable)).EndInit();
-            this.cmsTable.ResumeLayout(false);
-            this.toolStrip5.ResumeLayout(false);
-            this.toolStrip5.PerformLayout();
-            this.tpExecutedSql.ResumeLayout(false);
-            this.toolStripContainer4.ContentPanel.ResumeLayout(false);
-            this.toolStripContainer4.TopToolStripPanel.ResumeLayout(false);
-            this.toolStripContainer4.TopToolStripPanel.PerformLayout();
-            this.toolStripContainer4.ResumeLayout(false);
-            this.toolStripContainer4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.fctbExecutedSql)).EndInit();
-            this.toolStrip4.ResumeLayout(false);
-            this.toolStrip4.PerformLayout();
-            this.cmsTabs.ResumeLayout(false);
-            this.cmsFctb.ResumeLayout(false);
-            this.mm.ResumeLayout(false);
-            this.mm.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(1539, 530);
+            Controls.Add(splitContainer1);
+            Controls.Add(mm);
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MainMenuStrip = mm;
+            Name = "MainForm";
+            Text = "pgMulti";
+            WindowState = FormWindowState.Maximized;
+            FormClosing += MainForm_FormClosing;
+            Load += MainForm_Load;
+            Resize += MainForm_Resize;
+            splitContainer1.Panel1.ResumeLayout(false);
+            splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
+            splitContainer1.ResumeLayout(false);
+            splitContainer2.Panel1.ResumeLayout(false);
+            splitContainer2.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitContainer2).EndInit();
+            splitContainer2.ResumeLayout(false);
+            tcLeftPanel.ResumeLayout(false);
+            tpConnections.ResumeLayout(false);
+            toolStripContainer2.ContentPanel.ResumeLayout(false);
+            toolStripContainer2.TopToolStripPanel.ResumeLayout(false);
+            toolStripContainer2.TopToolStripPanel.PerformLayout();
+            toolStripContainer2.ResumeLayout(false);
+            toolStripContainer2.PerformLayout();
+            cmsServers.ResumeLayout(false);
+            toolStrip2.ResumeLayout(false);
+            toolStrip2.PerformLayout();
+            tpSearchAndReplace.ResumeLayout(false);
+            tlpSearchAndReplace.ResumeLayout(false);
+            tlpSearchAndReplace.PerformLayout();
+            flpSearchOptions.ResumeLayout(false);
+            flpSearchOptions.PerformLayout();
+            flpSearchAndReplaceButtons.ResumeLayout(false);
+            flpSearchAndReplaceButtons.PerformLayout();
+            toolStripContainer1.ContentPanel.ResumeLayout(false);
+            toolStripContainer1.TopToolStripPanel.ResumeLayout(false);
+            toolStripContainer1.TopToolStripPanel.PerformLayout();
+            toolStripContainer1.ResumeLayout(false);
+            toolStripContainer1.PerformLayout();
+            tcSql.ResumeLayout(false);
+            toolStrip1.ResumeLayout(false);
+            toolStrip1.PerformLayout();
+            splitContainer3.Panel1.ResumeLayout(false);
+            splitContainer3.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitContainer3).EndInit();
+            splitContainer3.ResumeLayout(false);
+            toolStripContainer3.ContentPanel.ResumeLayout(false);
+            toolStripContainer3.TopToolStripPanel.ResumeLayout(false);
+            toolStripContainer3.TopToolStripPanel.PerformLayout();
+            toolStripContainer3.ResumeLayout(false);
+            toolStripContainer3.PerformLayout();
+            toolStrip3.ResumeLayout(false);
+            toolStrip3.PerformLayout();
+            tcResult.ResumeLayout(false);
+            tpResult.ResumeLayout(false);
+            toolStripContainer6.ContentPanel.ResumeLayout(false);
+            toolStripContainer6.ContentPanel.PerformLayout();
+            toolStripContainer6.TopToolStripPanel.ResumeLayout(false);
+            toolStripContainer6.TopToolStripPanel.PerformLayout();
+            toolStripContainer6.ResumeLayout(false);
+            toolStripContainer6.PerformLayout();
+            toolStrip6.ResumeLayout(false);
+            toolStrip6.PerformLayout();
+            tpTable.ResumeLayout(false);
+            toolStripContainer5.ContentPanel.ResumeLayout(false);
+            toolStripContainer5.TopToolStripPanel.ResumeLayout(false);
+            toolStripContainer5.TopToolStripPanel.PerformLayout();
+            toolStripContainer5.ResumeLayout(false);
+            toolStripContainer5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)gvTable).EndInit();
+            cmsTable.ResumeLayout(false);
+            toolStrip5.ResumeLayout(false);
+            toolStrip5.PerformLayout();
+            tpExecutedSql.ResumeLayout(false);
+            toolStripContainer4.ContentPanel.ResumeLayout(false);
+            toolStripContainer4.TopToolStripPanel.ResumeLayout(false);
+            toolStripContainer4.TopToolStripPanel.PerformLayout();
+            toolStripContainer4.ResumeLayout(false);
+            toolStripContainer4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)fctbExecutedSql).EndInit();
+            toolStrip4.ResumeLayout(false);
+            toolStrip4.PerformLayout();
+            cmsTabs.ResumeLayout(false);
+            cmsFctb.ResumeLayout(false);
+            mm.ResumeLayout(false);
+            mm.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -2100,8 +2163,7 @@ namespace PgMulti
         private ToolStripDropDownButton tsddbErrors;
         internal ImageList ilAutocompleteMenu;
         private ToolStripButton tsbRefresh;
-        private ToolStripMenuItem tsmiFind;
-        private ToolStripMenuItem tsmiReplace;
+        private ToolStripMenuItem tsmiSearchAndReplace;
         private ToolStripMenuItem tsmiGoTo;
         private ToolStripMenuItem tsmiCut;
         private ToolStripMenuItem tsmiCopy;
@@ -2126,8 +2188,7 @@ namespace PgMulti
         private ToolStripMenuItem tscmiCut;
         private ToolStripMenuItem tscmiCopy;
         private ToolStripMenuItem tscmiPaste;
-        private ToolStripMenuItem tscmiFind;
-        private ToolStripMenuItem tscmiReplace;
+        private ToolStripMenuItem tscmiSearchAndReplace;
         private ToolStripMenuItem tscmiGoTo;
         private ToolStripMenuItem tscmiFormat;
         private ToolStripMenuItem tsmiIncreaseFont;
@@ -2175,8 +2236,7 @@ namespace PgMulti
         private ToolStripButton tsbOpen;
         private ToolStripButton tsbSave;
         private ToolStripButton tsbSaveAll;
-        private ToolStripButton tsbFind;
-        private ToolStripButton tsbReplace;
+        private ToolStripButton tsbSearchAndReplace;
         private ToolStripButton tsbGoTo;
         private ToolStripSeparator toolStripSeparator3;
         private ToolStripButton tsbFormat;
@@ -2210,5 +2270,21 @@ namespace PgMulti
         private ToolStripMenuItem tsmiReopenLastClosedTab;
         private ToolStripButton tsbCreateTableDiagram;
         private ToolStripMenuItem tsmiUpdates;
+        private TabControl tcLeftPanel;
+        private TabPage tpConnections;
+        private TabPage tpSearchAndReplace;
+        private TableLayoutPanel tlpSearchAndReplace;
+        private TextBox txtSearchText;
+        private TextBox txtReplaceText;
+        private FlowLayoutPanel flpSearchOptions;
+        private CheckBox chkSearchMatchCase;
+        private CheckBox chkSearchMatchWholeWords;
+        private CheckBox chkSearchRegex;
+        private FlowLayoutPanel flpSearchAndReplaceButtons;
+        private Button btnSearch;
+        private Button btnGoNextSearchResult;
+        private Button btnReplaceCurrent;
+        private Button btnReplaceAll;
+        private Label lblSearchResultsSummary;
     }
 }

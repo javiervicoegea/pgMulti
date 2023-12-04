@@ -3,6 +3,7 @@ using System.Text;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace FastColoredTextBoxNS
 {
@@ -1717,6 +1718,16 @@ namespace FastColoredTextBoxNS
         }
 
         #endregion
+
+        public override bool Equals(object obj)
+        {
+            return obj != null && (obj is Range) && ((Range)obj).Start.Equals(start) && ((Range)obj).End.Equals(end);
+        }
+
+        public override int GetHashCode()
+        {
+            return start.GetHashCode() + end.GetHashCode();
+        }
     }
 
     public struct RangeRect
