@@ -1557,7 +1557,7 @@ namespace PgMulti
             fctbExecutedSql.DefaultMarkerSize = 8;
             fctbExecutedSql.DisabledColor = Color.FromArgb(100, 180, 180, 180);
             fctbExecutedSql.Dock = DockStyle.Fill;
-            fctbExecutedSql.Font = new Font("Courier New", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            fctbExecutedSql.Font = new Font("Cascadia Code", 10F, FontStyle.Regular, GraphicsUnit.Point);
             fctbExecutedSql.Hotkeys = resources.GetString("fctbExecutedSql.Hotkeys");
             fctbExecutedSql.IsReplaceMode = false;
             fctbExecutedSql.Location = new Point(0, 0);

@@ -21,7 +21,6 @@ using Newtonsoft.Json;
 using PgMulti.Properties;
 using System;
 using System.Linq;
-using System.Windows.Forms.VisualStyles;
 
 namespace PgMulti
 {
@@ -1538,26 +1537,25 @@ namespace PgMulti
 
         private TabPage CreateNewTabPage()
         {
-            CustomFctb fctbSql = new CustomFctb();
+            CustomFctb fctbSql = new CustomFctb(true);
             fctbSql.SetParser(_Data!.PGLanguageData);
             fctbSql.CaretBlinking = false;
-            fctbSql.AutoScrollMinSize = new System.Drawing.Size(669, 645);
+            fctbSql.AutoScrollMinSize = new Size(669, 645);
             fctbSql.BackBrush = null;
             fctbSql.CharHeight = 15;
             fctbSql.CharWidth = 7;
-            fctbSql.Cursor = System.Windows.Forms.Cursors.IBeam;
-            fctbSql.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
-            fctbSql.Dock = System.Windows.Forms.DockStyle.Fill;
-            fctbSql.Font = new System.Drawing.Font("Cascadia Code", _Data!.Config.FontSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            fctbSql.Cursor = Cursors.IBeam;
+            fctbSql.DisabledColor = Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+            fctbSql.Dock = DockStyle.Fill;
+            fctbSql.Font = new Font("Cascadia Code", _Data!.Config.FontSize, FontStyle.Regular, GraphicsUnit.Point, ((byte)(204)));
             fctbSql.IsReplaceMode = false;
-            fctbSql.Location = new System.Drawing.Point(0, 0);
+            fctbSql.Location = new Point(0, 0);
             fctbSql.Name = "fctbSql";
-            fctbSql.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
-            fctbSql.Size = new System.Drawing.Size(668, 380);
+            fctbSql.SelectionColor = Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
+            fctbSql.Size = new Size(668, 380);
             fctbSql.TabIndex = 0;
             fctbSql.Text = "";
             fctbSql.Zoom = 100;
-            fctbSql.ShowScrollBars = true;
             fctbSql.AcceptsTab = true;
             fctbSql.AcceptsReturn = true;
             fctbSql.AutoIndent = true;
@@ -1578,8 +1576,10 @@ namespace PgMulti
             fctbSql.KeyPressing += fctbExecutedSql_KeyPressing;
 
             TabPage tp = new TabPage(Properties.Text.new_doc_title);
-            tp.Controls.Add(fctbSql);
             tcSql.SuspendDrawing();
+            tp.Controls.Add(fctbSql);
+            tp.Controls.Add(fctbSql.HScrollBar);
+            tp.Controls.Add(fctbSql.VScrollBar);
             tcSql.TabPages.Insert(tcSql.TabPages.Count - 1, tp);
             tcSql.ResumeDrawing();
 
@@ -3430,11 +3430,11 @@ namespace PgMulti
         {
             if (e.ColumnIndex == -1)
             {
-                gvTable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+                gvTable.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             }
             else
             {
-                gvTable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+                gvTable.SelectionMode = DataGridViewSelectionMode.CellSelect;
             }
         }
 
@@ -3840,6 +3840,26 @@ namespace PgMulti
             txtSearchText.Focus();
             txtSearchText.SelectionStart = 0;
             txtSearchText.SelectionLength = txtSearchText.Text.Length;
+
+            CustomFctb tb = ((CustomFctb)tcSql.SelectedTab.Controls[0]);
+            if (tb.Selection.Length > 0)
+            {
+                txtSearchText.SelectedText = tb.SelectedText;
+            }
+        }
+        public void HideSearchAndReplace()
+        {
+            txtSearchText.Text = "";
+            tcLeftPanel.SelectedTab = tpConnections;
+
+            CustomFctb tb = ((CustomFctb)tcSql.SelectedTab.Controls[0]);
+            if (tb.SearchRange != null)
+            {
+                tb.SearchRange = null;
+            }
+
+            UpdateSearchResults();
+            UpdateSearchHighlighting();
         }
 
         private bool UpdateSearchRange()
@@ -4104,7 +4124,13 @@ namespace PgMulti
                 btnGoNextSearchResult_Click(sender, e);
                 e.Handled = true;
             }
+            else if (e.KeyData == Keys.Escape)
+            {
+                HideSearchAndReplace();
+                e.Handled = true;
+            }
         }
+
         #endregion
     }
 }

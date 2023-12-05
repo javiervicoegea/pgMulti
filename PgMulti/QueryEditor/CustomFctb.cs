@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using FastColoredTextBoxNS;
 using Irony.Parsing;
 using PgMulti.SqlSyntax;
@@ -11,23 +12,31 @@ namespace PgMulti.QueryEditor
         public event EventHandler<StyleNeededEventArgs>? StyleNeeded;
         public event EventHandler<EventArgs>? ParseTreeUpdated;
 
-        public Style WavyLineStyle;
-        //public Style DefaultTextStyle;
-        public Style FunctionsTextStyle;
-        public Style StringTextStyle;
-        public Style CommentTextStyle;
-        public Style NumberTextStyle;
-        public Style VariableTextStyle;
-        public Style KeywordCaseTextStyle;
-        public Style KeywordHeaderCaseTextStyle;
-        public Style TypesCaseStyle;
-        public Style SearchRangeTextStyle;
-        public Style SearchMatchTextStyle;
+        public readonly HScrollBar? HScrollBar = null;
+        public readonly CustomVerticalScrollBar? VScrollBar = null;
+
+        private bool UseCustomScrollBars;
+
+        private Style WavyLineStyle;
+        private Style FunctionsTextStyle;
+        private Style StringTextStyle;
+        private Style CommentTextStyle;
+        private Style NumberTextStyle;
+        private Style VariableTextStyle;
+        private Style KeywordCaseTextStyle;
+        private Style KeywordHeaderCaseTextStyle;
+        private Style TypesCaseStyle;
+        private Style SearchRangeTextStyle;
+        private Style SearchMatchTextStyle;
 
         private Parser? parser;
         private ParseTree? _ParseTree = null;
         private List<FastColoredTextBoxNS.Range>? _SearchMatches = null;
         private FastColoredTextBoxNS.Range? _SearchRange = null;
+
+        internal SortedList<int, int> CommentLines = new SortedList<int, int>();
+        internal SortedList<int, int> ErrorLines = new SortedList<int, int>();
+        internal SortedList<int, int> SearchMatchLines = new SortedList<int, int>();
 
         public ParseTree? ParseTree
         {
@@ -45,7 +54,43 @@ namespace PgMulti.QueryEditor
             }
             set
             {
+                SearchMatchLines.Clear();
+                if (value != null)
+                {
+                    foreach (FastColoredTextBoxNS.Range r in value)
+                    {
+                        AddLinesToList(SearchMatchLines, r);
+                    }
+                }
+
                 _SearchMatches = value;
+            }
+        }
+
+        private void AddLinesToList(SortedList<int, int> list, FastColoredTextBoxNS.Range r)
+        {
+            int lineStart;
+            int lineEnd;
+
+            if (r.Start.iLine == r.End.iLine)
+            {
+                list[r.Start.iLine] = r.Start.iLine;
+                return;
+            }
+            else if (r.Start.iLine < r.End.iLine)
+            {
+                lineStart = r.Start.iLine;
+                lineEnd = r.End.iLine;
+            }
+            else
+            {
+                lineStart = r.End.iLine;
+                lineEnd = r.Start.iLine;
+            }
+
+            for (int i = lineStart; i <= lineEnd; i++)
+            {
+                list[i] = i;
             }
         }
 
@@ -61,11 +106,10 @@ namespace PgMulti.QueryEditor
             }
         }
 
-        public CustomFctb()
+        public CustomFctb(bool customScrollBars = false)
         {
             SearchRangeTextStyle = new SelectionStyle(Brushes.LightGray);
             WavyLineStyle = new WavyLineStyle(255, Color.Red);
-            //DefaultTextStyle = new TextStyle(Brushes.Black, null, FontStyle.Regular);
             FunctionsTextStyle = new TextStyle(Brushes.Maroon, null, FontStyle.Bold);
             StringTextStyle = SyntaxHighlighter.BrownStyle;
             CommentTextStyle = SyntaxHighlighter.GreenStyle;
@@ -79,7 +123,6 @@ namespace PgMulti.QueryEditor
             ClearStylesBuffer();
             AddStyle(SearchRangeTextStyle);
             AddStyle(WavyLineStyle);
-            //AddStyle(DefaultTextStyle);
             AddStyle(FunctionsTextStyle);
             AddStyle(StringTextStyle);
             AddStyle(CommentTextStyle);
@@ -90,12 +133,37 @@ namespace PgMulti.QueryEditor
             AddStyle(TypesCaseStyle);
             AddStyle(SearchMatchTextStyle);
 
-            //SyntaxHighlighter.InitStyleSchema(Language.Custom);
-            //SyntaxHighlighter.StringStyle = SyntaxHighlighter.BrownStyle;
-            //SyntaxHighlighter.CommentStyle = SyntaxHighlighter.GreenStyle;
-            //SyntaxHighlighter.NumberStyle = SyntaxHighlighter.MagentaStyle;
-            //SyntaxHighlighter.FunctionsStyle = FunctionsStyle;
-            //SyntaxHighlighter.VariableStyle = SyntaxHighlighter.BlackStyle;
+            UseCustomScrollBars = customScrollBars;
+
+            if (customScrollBars)
+            {
+                ShowScrollBars = false;
+
+                HScrollBar = new HScrollBar();
+
+                HScrollBar.Dock = DockStyle.Bottom;
+                HScrollBar.Height = 20;
+                HScrollBar.TabIndex = 9;
+                HScrollBar.Scroll += scrollBar_Scroll;
+
+                VScrollBar = new CustomVerticalScrollBar(this);
+                VScrollBar.Dock = DockStyle.Right;
+                VScrollBar.Width = 20;
+                VScrollBar.BackColor = SystemColors.ControlLightLight;
+                VScrollBar.BorderColor = SystemColors.ActiveBorder;
+                VScrollBar.Maximum = 100;
+                VScrollBar.TabIndex = 6;
+                VScrollBar.ThumbColor = SystemColors.ControlDark;
+                VScrollBar.ErrorColor = Color.FromArgb(200, 200, 50, 50);
+                VScrollBar.CommentColor = Color.FromArgb(200, 50, 200, 50);
+                VScrollBar.SearchMatchColor = Color.FromArgb(200, 200, 200, 50);
+                VScrollBar.Value = 0;
+                VScrollBar.Scroll += scrollBar_Scroll;
+            }
+            else
+            {
+                ShowScrollBars = true;
+            }
         }
 
         public virtual void SetParser(LanguageData language)
@@ -189,10 +257,9 @@ namespace PgMulti.QueryEditor
                 }
             }
 
+            ErrorLines.Clear();
+            CommentLines.Clear();
             ClearStyle(StyleIndex.All);
-
-            //Range.SetStyle(DefaultStyle);
-            //StyleIndex defaultStyleIndex = GetStyleIndexMask(new Style[] { DefaultTextStyle });
 
             if (_SearchRange != null)
             {
@@ -213,6 +280,7 @@ namespace PgMulti.QueryEditor
                         f = r.GetFragment(@"[\S]");
                     }
                     f.SetStyle(WavyLineStyle);
+                    AddLinesToList(ErrorLines, r);
                 }
             }
             else if (_ParseTree.Status == ParseTreeStatus.Parsed)
@@ -233,7 +301,6 @@ namespace PgMulti.QueryEditor
 
                 if (arg.Style != null)
                 {
-                    //tr.ClearStyle(defaultStyleIndex);
                     tr.SetStyle(arg.Style);
                     continue;
                 }
@@ -243,7 +310,6 @@ namespace PgMulti.QueryEditor
                 switch (t.Terminal.Name)
                 {
                     case "NULL":
-                        //tr.ClearStyle(defaultStyleIndex);
                         if (nodoAst != null && nodoAst.Parent != null && nodoAst.Parent.Name == "term")
                         {
                             tr.SetStyle(NumberTextStyle);
@@ -256,12 +322,10 @@ namespace PgMulti.QueryEditor
                         break;
                     case "boolLit":
                     case "number":
-                        //tr.ClearStyle(defaultStyleIndex);
                         tr.SetStyle(NumberTextStyle);
                         break;
                     case "string":
                     case "escaped_string":
-                        //tr.ClearStyle(defaultStyleIndex);
                         tr.SetStyle(StringTextStyle);
                         break;
                     case "comment":
@@ -270,11 +334,11 @@ namespace PgMulti.QueryEditor
                         {
                             tr = GetRange(new Place(tr.Start.iChar, tr.Start.iLine), new Place(tr.End.iChar - 1, tr.End.iLine));
                         }
-                        //tr.ClearStyle(defaultStyleIndex);
                         tr.SetStyle(CommentTextStyle);
+                        AddLinesToList(CommentLines, tr);
+
                         break;
                     case "id_simple":
-                        //tr.ClearStyle(defaultStyleIndex);
                         if (nodoAst != null && nodoAst.Parent != null && nodoAst.Parent.Parent != null && nodoAst.Parent.Parent.Name == "funCall")
                         {
                             tr.SetStyle(FunctionsTextStyle);
@@ -285,20 +349,17 @@ namespace PgMulti.QueryEditor
                         }
                         break;
                     case "":
-                        //tr.ClearStyle(defaultStyleIndex);
                         tr.SetStyle(VariableTextStyle);
                         break;
                     default:
                         if (nodoAst != null && nodoAst.GetRecursiveParentNamedAs("typeNameAndParams") != null)
                         {
-                            //tr.ClearStyle(defaultStyleIndex);
                             tr.SetStyle(TypesCaseStyle);
                         }
                         else if (t.Terminal.GetType().Name == "KeyTerm")
                         {
                             if ((t.Terminal.Flags & TermFlags.IsKeyword) != 0)
                             {
-                                //tr.ClearStyle(defaultStyleIndex);
                                 if (nodoAst != null && nodoAst.IsStatementHeader)
                                 {
                                     tr.SetStyle(KeywordHeaderCaseTextStyle);
@@ -322,10 +383,15 @@ namespace PgMulti.QueryEditor
                 }
             }
 
+            if (VScrollBar != null)
+            {
+                VScrollBar.Invalidate();
+            }
+
             if (ParseTreeUpdated != null) ParseTreeUpdated(this, new EventArgs());
         }
 
-        private Tuple<string,RegexOptions> GetRegexPatternAndOptions(string pattern, bool matchCase, bool matchWholeWords, bool regex)
+        private Tuple<string, RegexOptions> GetRegexPatternAndOptions(string pattern, bool matchCase, bool matchWholeWords, bool regex)
         {
             RegexOptions opt = matchCase ? RegexOptions.None : RegexOptions.IgnoreCase;
             if (!regex)
@@ -345,7 +411,7 @@ namespace PgMulti.QueryEditor
 
         public List<FastColoredTextBoxNS.Range> FindAll(string pattern, bool matchCase, bool matchWholeWords, bool regex)
         {
-            Tuple<string, RegexOptions> t= GetRegexPatternAndOptions(pattern, matchCase, matchWholeWords, regex);
+            Tuple<string, RegexOptions> t = GetRegexPatternAndOptions(pattern, matchCase, matchWholeWords, regex);
 
             pattern = t.Item1;
             RegexOptions opt = t.Item2;
@@ -423,6 +489,39 @@ namespace PgMulti.QueryEditor
                 LeftBracket = '(';
                 RightBracket = ')';
             }
+        }
+
+        protected override void OnScrollbarsUpdated()
+        {
+            base.OnScrollbarsUpdated();
+
+            if (UseCustomScrollBars)
+            {
+                AdjustScrollbar(VScrollBar!, VerticalScroll.Maximum, VerticalScroll.Value, ClientSize.Height * VScrollBar!.Height / (TextHeight + Paddings.Top + Paddings.Bottom));
+                AdjustScrollbar(HScrollBar!, HorizontalScroll.Maximum, HorizontalScroll.Value, ClientSize.Width);
+            }
+        }
+
+        private void AdjustScrollbar(CustomVerticalScrollBar scrollBar, int max, int value, int thumbSize)
+        {
+            scrollBar.Maximum = max;
+            scrollBar.Visible = max > 0;
+            scrollBar.Value = Math.Min(scrollBar.Maximum, value);
+            scrollBar.ThumbSize = thumbSize;
+        }
+
+        private void AdjustScrollbar(ScrollBar scrollBar, int max, int value, int clientSize)
+        {
+            scrollBar.LargeChange = clientSize / 3;
+            scrollBar.SmallChange = clientSize / 11;
+            scrollBar.Maximum = max + scrollBar.LargeChange;
+            scrollBar.Visible = max > 0;
+            scrollBar.Value = Math.Min(scrollBar.Maximum, value);
+        }
+
+        private void scrollBar_Scroll(object? sender, ScrollEventArgs e)
+        {
+            OnScroll(e, e.Type != ScrollEventType.ThumbTrack && e.Type != ScrollEventType.ThumbPosition);
         }
     }
 

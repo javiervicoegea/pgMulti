@@ -1,0 +1,160 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace PgMulti.QueryEditor
+{
+
+    public class CustomVerticalScrollBar : Control
+    {
+        private int @value;
+
+        private CustomFctb tb;
+
+        public int Value
+        {
+            get { return value; }
+            set
+            {
+                if (this.value == value)
+                    return;
+                this.value = value;
+                Invalidate();
+                OnScroll();
+            }
+        }
+
+        private int maximum = 100;
+        public int Maximum
+        {
+            get { return maximum; }
+            set { maximum = value; Invalidate(); }
+        }
+
+        private int thumbSize = 10;
+        public int ThumbSize
+        {
+            get { return thumbSize; }
+            set { thumbSize = value; Invalidate(); }
+        }
+
+        private Color thumbColor = Color.Gray;
+        public Color ThumbColor
+        {
+            get { return thumbColor; }
+            set { thumbColor = value; Invalidate(); }
+        }
+
+        private Color errorColor = Color.Gray;
+        public Color ErrorColor
+        {
+            get { return errorColor; }
+            set { errorColor = value; Invalidate(); }
+        }
+
+        private Color commentColor = Color.Gray;
+        public Color CommentColor
+        {
+            get { return commentColor; }
+            set { commentColor = value; Invalidate(); }
+        }
+
+        private Color searchMatchColor = Color.Gray;
+        public Color SearchMatchColor
+        {
+            get { return searchMatchColor; }
+            set { searchMatchColor = value; Invalidate(); }
+        }
+
+        private Color borderColor = Color.Silver;
+        public Color BorderColor
+        {
+            get { return borderColor; }
+            set { borderColor = value; Invalidate(); }
+        }
+
+        public event ScrollEventHandler? Scroll = null;
+
+        public CustomVerticalScrollBar(CustomFctb tb)
+        {
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint, true);
+
+            this.tb = tb;
+        }
+
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+                MouseScroll(e);
+            base.OnMouseDown(e);
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                MouseScroll(e);
+                Refresh();
+            }
+            base.OnMouseMove(e);
+
+        }
+
+        private void MouseScroll(MouseEventArgs e)
+        {
+            int v = 0;
+            v = Maximum * (e.Y - thumbSize / 2) / (Height - thumbSize);
+            Value = Math.Max(0, Math.Min(Maximum, v));
+        }
+
+        public virtual void OnScroll(ScrollEventType type = ScrollEventType.ThumbPosition)
+        {
+            if (Scroll != null)
+                Scroll(this, new ScrollEventArgs(type, Value, ScrollOrientation.VerticalScroll));
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            if (Maximum <= 0)
+                return;
+
+            Rectangle thumbRect = new Rectangle(2, value * (Height - thumbSize) / Maximum, Width - 4, thumbSize);
+
+            using (var brush = new SolidBrush(thumbColor))
+                e.Graphics.FillRectangle(brush, thumbRect);
+
+
+            int lineHeight = Height / tb.LinesCount;
+            Rectangle r = new Rectangle(4, 0, Width - 8, 0);
+
+            DrawMarkList(e.Graphics, tb.CommentLines, lineHeight, commentColor, r);
+            DrawMarkList(e.Graphics, tb.ErrorLines, lineHeight, errorColor, r);
+            DrawMarkList(e.Graphics, tb.SearchMatchLines, lineHeight, searchMatchColor, r);
+
+            using (var pen = new Pen(borderColor))
+                e.Graphics.DrawRectangle(pen, new Rectangle(0, 0, Width - 1, Height - 1));
+        }
+
+        private void DrawMarkList(Graphics g, SortedList<int,int> list, int lineHeight, Color c, Rectangle baseRectangle)
+        {
+            for (int i = 0; i < list.Count;)
+            {
+                int ini = list.GetValueAtIndex(i);
+                int fin = ini;
+                i++;
+                for (; i < list.Count && list.GetValueAtIndex(i) == fin + 1; i++)
+                {
+                    fin++;
+                }
+
+                baseRectangle.Y = ini * lineHeight;
+                baseRectangle.Height = (fin - ini + 1) * lineHeight;
+
+                using (var brush = new SolidBrush(c))
+                    g.FillRectangle(brush, baseRectangle);
+            }
+        }
+    }
+}

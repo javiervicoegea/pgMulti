@@ -58,7 +58,7 @@ namespace PgMulti.QueryEditor
         private void _Fctb_KeyDown(object? sender, KeyEventArgs e)
         {
             e.Handled = true;
-            if (e.KeyData == (Keys.Control | Keys.F) || e.KeyData==(Keys.Control | Keys.R))
+            if (e.KeyData == (Keys.Control | Keys.F) || e.KeyData == (Keys.Control | Keys.R))
             {
                 _MainForm.ShowSearchAndReplace();
             }
@@ -68,7 +68,15 @@ namespace PgMulti.QueryEditor
             }
             else if (e.KeyData == (Keys.Alt | Keys.F) || e.KeyData == (Keys.Control | Keys.H))
             {
-                
+
+            }
+            else if (e.KeyData == Keys.Escape)
+            {
+                CustomFctb tb = (CustomFctb)sender!;
+                if (tb.SearchMatches != null && tb.SearchMatches.Count > 0)
+                {
+                    _MainForm.HideSearchAndReplace();
+                }
             }
             else
             {

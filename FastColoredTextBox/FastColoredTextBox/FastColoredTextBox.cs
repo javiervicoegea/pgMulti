@@ -3146,6 +3146,18 @@ namespace FastColoredTextBoxNS
 #endif
         }
 
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+
+            //adjust AutoScrollMinSize
+            int minWidth;
+            CalcMinAutosizeWidth(out minWidth, ref maxLineLength);
+
+            AutoScrollMinSize = new Size(minWidth, TextHeight + Paddings.Top + Paddings.Bottom);
+            UpdateScrollbars();
+        }
+
         private void CalcMinAutosizeWidth(out int minWidth, ref int maxLineLength)
         {
             //adjust AutoScrollMinSize
@@ -5850,11 +5862,11 @@ namespace FastColoredTextBoxNS
                     if (iLine < lineSelectFrom)
                     {
                         Selection.Start = new Place(0, iLine);
-                        Selection.End = new Place(GetLineLength(lineSelectFrom), lineSelectFrom);
+                        Selection.End = LinesCount - 1 > lineSelectFrom ? new Place(0, lineSelectFrom + 1) : new Place(GetLineLength(lineSelectFrom), lineSelectFrom);
                     }
                     else
                     {
-                        Selection.Start = new Place(GetLineLength(iLine), iLine);
+                        Selection.Start = LinesCount - 1 > iLine ? new Place(0, iLine + 1) : new Place(GetLineLength(iLine), iLine);
                         Selection.End = new Place(0, lineSelectFrom);
                     }
 
