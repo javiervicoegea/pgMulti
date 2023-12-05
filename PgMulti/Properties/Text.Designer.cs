@@ -2074,6 +2074,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Buscar solo dentro del texto seleccionado.
+        /// </summary>
+        internal static string search_only_within_selected_text {
+            get {
+                return ResourceManager.GetString("search_only_within_selected_text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Texto a buscar.
         /// </summary>
         internal static string search_text {
@@ -2466,6 +2475,15 @@ namespace PgMulti.Properties {
         internal static string update_available {
             get {
                 return ResourceManager.GetString("update_available", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Actualizar texto seleccionado.
+        /// </summary>
+        internal static string update_selected_text {
+            get {
+                return ResourceManager.GetString("update_selected_text", resourceCulture);
             }
         }
         

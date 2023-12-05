@@ -33,7 +33,7 @@ namespace PgMulti
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             splitContainer1 = new SplitContainer();
             splitContainer2 = new SplitContainer();
             tcLeftPanel = new TabControl();
@@ -72,18 +72,23 @@ namespace PgMulti
             tsbRefresh = new ToolStripButton();
             tpSearchAndReplace = new TabPage();
             tlpSearchAndReplace = new TableLayoutPanel();
+            lblSearch = new Label();
             txtSearchText = new TextBox();
-            txtReplaceText = new TextBox();
             flpSearchOptions = new FlowLayoutPanel();
             chkSearchMatchCase = new CheckBox();
             chkSearchMatchWholeWords = new CheckBox();
             chkSearchRegex = new CheckBox();
-            flpSearchAndReplaceButtons = new FlowLayoutPanel();
+            chkSearchWithinSelectedText = new CheckBox();
+            lblSearchResultsSummary = new Label();
+            flpSearchButtons = new FlowLayoutPanel();
             btnSearch = new Button();
             btnGoNextSearchResult = new Button();
+            btnUpdateSearchSelectedText = new Button();
+            lblReplace = new Label();
+            txtReplaceText = new TextBox();
+            flpReplaceButtons = new FlowLayoutPanel();
             btnReplaceCurrent = new Button();
             btnReplaceAll = new Button();
-            lblSearchResultsSummary = new Label();
             toolStripContainer1 = new ToolStripContainer();
             tcSql = new TabControlExtra();
             tpNewTab = new TabPage();
@@ -234,7 +239,8 @@ namespace PgMulti
             tpSearchAndReplace.SuspendLayout();
             tlpSearchAndReplace.SuspendLayout();
             flpSearchOptions.SuspendLayout();
-            flpSearchAndReplaceButtons.SuspendLayout();
+            flpSearchButtons.SuspendLayout();
+            flpReplaceButtons.SuspendLayout();
             toolStripContainer1.ContentPanel.SuspendLayout();
             toolStripContainer1.TopToolStripPanel.SuspendLayout();
             toolStripContainer1.SuspendLayout();
@@ -286,8 +292,8 @@ namespace PgMulti
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.Controls.Add(splitContainer3);
-            splitContainer1.Size = new Size(1539, 502);
-            splitContainer1.SplitterDistance = 295;
+            splitContainer1.Size = new Size(1539, 1262);
+            splitContainer1.SplitterDistance = 740;
             splitContainer1.TabIndex = 0;
             // 
             // splitContainer2
@@ -304,7 +310,7 @@ namespace PgMulti
             // splitContainer2.Panel2
             // 
             splitContainer2.Panel2.Controls.Add(toolStripContainer1);
-            splitContainer2.Size = new Size(1539, 295);
+            splitContainer2.Size = new Size(1539, 740);
             splitContainer2.SplitterDistance = 410;
             splitContainer2.TabIndex = 0;
             // 
@@ -317,7 +323,7 @@ namespace PgMulti
             tcLeftPanel.Location = new Point(0, 0);
             tcLeftPanel.Name = "tcLeftPanel";
             tcLeftPanel.SelectedIndex = 0;
-            tcLeftPanel.Size = new Size(410, 295);
+            tcLeftPanel.Size = new Size(410, 740);
             tcLeftPanel.TabIndex = 2;
             // 
             // tpConnections
@@ -326,7 +332,7 @@ namespace PgMulti
             tpConnections.Location = new Point(4, 4);
             tpConnections.Name = "tpConnections";
             tpConnections.Padding = new Padding(3);
-            tpConnections.Size = new Size(402, 262);
+            tpConnections.Size = new Size(402, 707);
             tpConnections.TabIndex = 0;
             tpConnections.UseVisualStyleBackColor = true;
             // 
@@ -336,11 +342,11 @@ namespace PgMulti
             // toolStripContainer2.ContentPanel
             // 
             toolStripContainer2.ContentPanel.Controls.Add(tvaConnections);
-            toolStripContainer2.ContentPanel.Size = new Size(396, 219);
+            toolStripContainer2.ContentPanel.Size = new Size(396, 664);
             toolStripContainer2.Dock = DockStyle.Fill;
             toolStripContainer2.Location = new Point(3, 3);
             toolStripContainer2.Name = "toolStripContainer2";
-            toolStripContainer2.Size = new Size(396, 256);
+            toolStripContainer2.Size = new Size(396, 701);
             toolStripContainer2.TabIndex = 1;
             toolStripContainer2.Text = "toolStripContainer2";
             // 
@@ -371,7 +377,7 @@ namespace PgMulti
             tvaConnections.NodeControls.Add(ntb);
             tvaConnections.RowHeight = 25;
             tvaConnections.SelectedNode = null;
-            tvaConnections.Size = new Size(396, 219);
+            tvaConnections.Size = new Size(396, 664);
             tvaConnections.TabIndex = 0;
             tvaConnections.ItemDrag += tvaConnections_ItemDrag;
             tvaConnections.SelectionChanged += tvaServers_SelectionChanged;
@@ -629,7 +635,7 @@ namespace PgMulti
             tpSearchAndReplace.Location = new Point(4, 4);
             tpSearchAndReplace.Name = "tpSearchAndReplace";
             tpSearchAndReplace.Padding = new Padding(3);
-            tpSearchAndReplace.Size = new Size(402, 262);
+            tpSearchAndReplace.Size = new Size(402, 707);
             tpSearchAndReplace.TabIndex = 1;
             tpSearchAndReplace.UseVisualStyleBackColor = true;
             // 
@@ -637,54 +643,64 @@ namespace PgMulti
             // 
             tlpSearchAndReplace.ColumnCount = 1;
             tlpSearchAndReplace.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tlpSearchAndReplace.Controls.Add(txtSearchText, 0, 0);
-            tlpSearchAndReplace.Controls.Add(txtReplaceText, 0, 3);
-            tlpSearchAndReplace.Controls.Add(flpSearchOptions, 0, 1);
-            tlpSearchAndReplace.Controls.Add(flpSearchAndReplaceButtons, 0, 4);
-            tlpSearchAndReplace.Controls.Add(lblSearchResultsSummary, 0, 2);
+            tlpSearchAndReplace.Controls.Add(lblSearch, 0, 0);
+            tlpSearchAndReplace.Controls.Add(txtSearchText, 0, 1);
+            tlpSearchAndReplace.Controls.Add(flpSearchOptions, 0, 2);
+            tlpSearchAndReplace.Controls.Add(lblSearchResultsSummary, 0, 3);
+            tlpSearchAndReplace.Controls.Add(flpSearchButtons, 0, 4);
+            tlpSearchAndReplace.Controls.Add(lblReplace, 0, 5);
+            tlpSearchAndReplace.Controls.Add(txtReplaceText, 0, 6);
+            tlpSearchAndReplace.Controls.Add(flpReplaceButtons, 0, 7);
             tlpSearchAndReplace.Dock = DockStyle.Fill;
             tlpSearchAndReplace.Location = new Point(3, 3);
             tlpSearchAndReplace.Name = "tlpSearchAndReplace";
-            tlpSearchAndReplace.RowCount = 6;
+            tlpSearchAndReplace.RowCount = 8;
+            tlpSearchAndReplace.RowStyles.Add(new RowStyle(SizeType.Absolute, 50F));
             tlpSearchAndReplace.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
-            tlpSearchAndReplace.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F));
+            tlpSearchAndReplace.RowStyles.Add(new RowStyle(SizeType.Absolute, 140F));
             tlpSearchAndReplace.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+            tlpSearchAndReplace.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F));
+            tlpSearchAndReplace.RowStyles.Add(new RowStyle(SizeType.Absolute, 50F));
             tlpSearchAndReplace.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
             tlpSearchAndReplace.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F));
             tlpSearchAndReplace.RowStyles.Add(new RowStyle());
-            tlpSearchAndReplace.Size = new Size(396, 256);
+            tlpSearchAndReplace.Size = new Size(396, 701);
             tlpSearchAndReplace.TabIndex = 0;
+            // 
+            // lblSearch
+            // 
+            lblSearch.AutoSize = true;
+            lblSearch.Dock = DockStyle.Fill;
+            lblSearch.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lblSearch.Location = new Point(3, 0);
+            lblSearch.Name = "lblSearch";
+            lblSearch.Size = new Size(390, 50);
+            lblSearch.Padding = new Padding(0, 20, 0, 0);
+            lblSearch.TabIndex = 5;
             // 
             // txtSearchText
             // 
             txtSearchText.Dock = DockStyle.Fill;
-            txtSearchText.Location = new Point(3, 3);
+            txtSearchText.Location = new Point(3, 53);
             txtSearchText.Name = "txtSearchText";
             txtSearchText.Size = new Size(390, 27);
             txtSearchText.TabIndex = 0;
             txtSearchText.TextChanged += txtSearchText_TextChanged;
+            txtSearchText.Enter += txtSearchText_Enter;
             txtSearchText.KeyUp += txtSearchText_KeyUp;
-            // 
-            // txtReplaceText
-            // 
-            txtReplaceText.Dock = DockStyle.Fill;
-            txtReplaceText.Location = new Point(3, 173);
-            txtReplaceText.Name = "txtReplaceText";
-            txtReplaceText.Size = new Size(390, 27);
-            txtReplaceText.TabIndex = 1;
-            txtReplaceText.KeyUp += txtReplaceText_KeyUp;
             // 
             // flpSearchOptions
             // 
             flpSearchOptions.Controls.Add(chkSearchMatchCase);
             flpSearchOptions.Controls.Add(chkSearchMatchWholeWords);
             flpSearchOptions.Controls.Add(chkSearchRegex);
+            flpSearchOptions.Controls.Add(chkSearchWithinSelectedText);
             flpSearchOptions.Dock = DockStyle.Fill;
             flpSearchOptions.FlowDirection = FlowDirection.TopDown;
-            flpSearchOptions.Location = new Point(3, 33);
+            flpSearchOptions.Location = new Point(3, 83);
             flpSearchOptions.Name = "flpSearchOptions";
-            flpSearchOptions.Size = new Size(390, 94);
-            flpSearchOptions.TabIndex = 2;
+            flpSearchOptions.Size = new Size(390, 134);
+            flpSearchOptions.TabIndex = 1;
             // 
             // chkSearchMatchCase
             // 
@@ -716,17 +732,35 @@ namespace PgMulti
             chkSearchRegex.UseVisualStyleBackColor = true;
             chkSearchRegex.CheckedChanged += chkSearchRegex_CheckedChanged;
             // 
-            // flpSearchAndReplaceButtons
+            // chkSearchWithinSelectedText
             // 
-            flpSearchAndReplaceButtons.Controls.Add(btnSearch);
-            flpSearchAndReplaceButtons.Controls.Add(btnGoNextSearchResult);
-            flpSearchAndReplaceButtons.Controls.Add(btnReplaceCurrent);
-            flpSearchAndReplaceButtons.Controls.Add(btnReplaceAll);
-            flpSearchAndReplaceButtons.Dock = DockStyle.Fill;
-            flpSearchAndReplaceButtons.Location = new Point(3, 203);
-            flpSearchAndReplaceButtons.Name = "flpSearchAndReplaceButtons";
-            flpSearchAndReplaceButtons.Size = new Size(390, 94);
-            flpSearchAndReplaceButtons.TabIndex = 3;
+            chkSearchWithinSelectedText.AutoSize = true;
+            chkSearchWithinSelectedText.Location = new Point(3, 72);
+            chkSearchWithinSelectedText.Name = "chkSearchWithinSelectedText";
+            chkSearchWithinSelectedText.Size = new Size(18, 17);
+            chkSearchWithinSelectedText.TabIndex = 3;
+            chkSearchWithinSelectedText.UseVisualStyleBackColor = true;
+            chkSearchWithinSelectedText.CheckedChanged += chkSearchWithinSelectedText_CheckedChanged;
+            // 
+            // lblSearchResultsSummary
+            // 
+            lblSearchResultsSummary.AutoSize = true;
+            lblSearchResultsSummary.Dock = DockStyle.Fill;
+            lblSearchResultsSummary.Location = new Point(3, 220);
+            lblSearchResultsSummary.Name = "lblSearchResultsSummary";
+            lblSearchResultsSummary.Size = new Size(390, 40);
+            lblSearchResultsSummary.TabIndex = 4;
+            // 
+            // flpSearchButtons
+            // 
+            flpSearchButtons.Controls.Add(btnSearch);
+            flpSearchButtons.Controls.Add(btnGoNextSearchResult);
+            flpSearchButtons.Controls.Add(btnUpdateSearchSelectedText);
+            flpSearchButtons.Dock = DockStyle.Fill;
+            flpSearchButtons.Location = new Point(3, 263);
+            flpSearchButtons.Name = "flpSearchButtons";
+            flpSearchButtons.Size = new Size(390, 94);
+            flpSearchButtons.TabIndex = 2;
             // 
             // btnSearch
             // 
@@ -736,6 +770,7 @@ namespace PgMulti
             btnSearch.Size = new Size(94, 30);
             btnSearch.TabIndex = 0;
             btnSearch.UseVisualStyleBackColor = true;
+            btnSearch.Visible = false;
             btnSearch.Click += btnSearch_Click;
             // 
             // btnGoNextSearchResult
@@ -745,18 +780,58 @@ namespace PgMulti
             btnGoNextSearchResult.Location = new Point(103, 3);
             btnGoNextSearchResult.Name = "btnGoNextSearchResult";
             btnGoNextSearchResult.Size = new Size(94, 30);
-            btnGoNextSearchResult.TabIndex = 0;
+            btnGoNextSearchResult.TabIndex = 1;
             btnGoNextSearchResult.UseVisualStyleBackColor = true;
             btnGoNextSearchResult.Click += btnGoNextSearchResult_Click;
+            // 
+            // btnUpdateSearchSelectedText
+            // 
+            btnUpdateSearchSelectedText.AutoSize = true;
+            btnUpdateSearchSelectedText.Enabled = false;
+            btnUpdateSearchSelectedText.Location = new Point(203, 3);
+            btnUpdateSearchSelectedText.Name = "btnUpdateSearchSelectedText";
+            btnUpdateSearchSelectedText.Size = new Size(94, 30);
+            btnUpdateSearchSelectedText.TabIndex = 1;
+            btnUpdateSearchSelectedText.UseVisualStyleBackColor = true;
+            btnUpdateSearchSelectedText.Click += btnUpdateSearchSelectedText_Click;
+            // 
+            // lblReplace
+            // 
+            lblReplace.AutoSize = true;
+            lblReplace.Dock = DockStyle.Fill;
+            lblReplace.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lblReplace.Location = new Point(3, 360);
+            lblReplace.Name = "lblReplace";
+            lblReplace.Padding = new Padding(0, 20, 0, 0);
+            lblReplace.Size = new Size(390, 50);
+            lblReplace.TabIndex = 6;
+            // 
+            // txtReplaceText
+            // 
+            txtReplaceText.Dock = DockStyle.Fill;
+            txtReplaceText.Location = new Point(3, 413);
+            txtReplaceText.Name = "txtReplaceText";
+            txtReplaceText.Size = new Size(390, 27);
+            txtReplaceText.TabIndex = 3;
+            // 
+            // flpReplaceButtons
+            // 
+            flpReplaceButtons.Controls.Add(btnReplaceCurrent);
+            flpReplaceButtons.Controls.Add(btnReplaceAll);
+            flpReplaceButtons.Dock = DockStyle.Fill;
+            flpReplaceButtons.Location = new Point(3, 443);
+            flpReplaceButtons.Name = "flpReplaceButtons";
+            flpReplaceButtons.Size = new Size(390, 255);
+            flpReplaceButtons.TabIndex = 4;
             // 
             // btnReplaceCurrent
             // 
             btnReplaceCurrent.AutoSize = true;
             btnReplaceCurrent.Enabled = false;
-            btnReplaceCurrent.Location = new Point(203, 3);
+            btnReplaceCurrent.Location = new Point(3, 3);
             btnReplaceCurrent.Name = "btnReplaceCurrent";
             btnReplaceCurrent.Size = new Size(94, 30);
-            btnReplaceCurrent.TabIndex = 1;
+            btnReplaceCurrent.TabIndex = 0;
             btnReplaceCurrent.UseVisualStyleBackColor = true;
             btnReplaceCurrent.Click += btnReplaceCurrent_Click;
             // 
@@ -764,21 +839,12 @@ namespace PgMulti
             // 
             btnReplaceAll.AutoSize = true;
             btnReplaceAll.Enabled = false;
-            btnReplaceAll.Location = new Point(3, 39);
+            btnReplaceAll.Location = new Point(103, 3);
             btnReplaceAll.Name = "btnReplaceAll";
             btnReplaceAll.Size = new Size(94, 30);
-            btnReplaceAll.TabIndex = 2;
+            btnReplaceAll.TabIndex = 1;
             btnReplaceAll.UseVisualStyleBackColor = true;
             btnReplaceAll.Click += btnReplaceAll_Click;
-            // 
-            // lblSearchResultsSummary
-            // 
-            lblSearchResultsSummary.AutoSize = true;
-            lblSearchResultsSummary.Dock = DockStyle.Fill;
-            lblSearchResultsSummary.Location = new Point(3, 130);
-            lblSearchResultsSummary.Name = "lblSearchResultsSummary";
-            lblSearchResultsSummary.Size = new Size(390, 40);
-            lblSearchResultsSummary.TabIndex = 4;
             // 
             // toolStripContainer1
             // 
@@ -786,11 +852,11 @@ namespace PgMulti
             // toolStripContainer1.ContentPanel
             // 
             toolStripContainer1.ContentPanel.Controls.Add(tcSql);
-            toolStripContainer1.ContentPanel.Size = new Size(1125, 258);
+            toolStripContainer1.ContentPanel.Size = new Size(1125, 703);
             toolStripContainer1.Dock = DockStyle.Fill;
             toolStripContainer1.Location = new Point(0, 0);
             toolStripContainer1.Name = "toolStripContainer1";
-            toolStripContainer1.Size = new Size(1125, 295);
+            toolStripContainer1.Size = new Size(1125, 740);
             toolStripContainer1.TabIndex = 1;
             toolStripContainer1.Text = "toolStripContainer1";
             // 
@@ -870,7 +936,7 @@ namespace PgMulti
             tcSql.Name = "tcSql";
             tcSql.NewTabButton = true;
             tcSql.SelectedIndex = 0;
-            tcSql.Size = new Size(1125, 258);
+            tcSql.Size = new Size(1125, 703);
             tcSql.TabIndex = 0;
             tcSql.TabClosing += tcSql_TabClosing;
             tcSql.ReorderedTabs += tcSql_ReorderedTabs;
@@ -883,7 +949,7 @@ namespace PgMulti
             tpNewTab.ImageIndex = 0;
             tpNewTab.Location = new Point(4, 32);
             tpNewTab.Name = "tpNewTab";
-            tpNewTab.Size = new Size(1117, 222);
+            tpNewTab.Size = new Size(1117, 667);
             tpNewTab.TabIndex = 0;
             // 
             // ilTabControl
@@ -900,7 +966,7 @@ namespace PgMulti
             toolStrip1.Items.AddRange(new ToolStripItem[] { tsbOpen, tsbSave, tsbSaveAll, toolStripSeparator2, tsbRun, tsbExportCsv, tsddbTransactions, toolStripSeparator3, tsbSearchAndReplace, tsbGoTo, toolStripSeparator5, tsbFormat, tsbHistory, toolStripSeparator7, tsbOpenDiagram, tsbNewDiagram, toolStripSeparator1, tsddbErrors, toolStripSeparator6, tslPosition });
             toolStrip1.Location = new Point(4, 0);
             toolStrip1.Name = "toolStrip1";
-            toolStrip1.Size = new Size(540, 37);
+            toolStrip1.Size = new Size(511, 37);
             toolStrip1.TabIndex = 1;
             toolStrip1.Text = "toolStrip1";
             // 
@@ -1125,7 +1191,7 @@ namespace PgMulti
             // splitContainer3.Panel2
             // 
             splitContainer3.Panel2.Controls.Add(tcResult);
-            splitContainer3.Size = new Size(1539, 203);
+            splitContainer3.Size = new Size(1539, 518);
             splitContainer3.SplitterDistance = 505;
             splitContainer3.TabIndex = 0;
             // 
@@ -1135,11 +1201,11 @@ namespace PgMulti
             // toolStripContainer3.ContentPanel
             // 
             toolStripContainer3.ContentPanel.Controls.Add(lbResult);
-            toolStripContainer3.ContentPanel.Size = new Size(505, 166);
+            toolStripContainer3.ContentPanel.Size = new Size(505, 481);
             toolStripContainer3.Dock = DockStyle.Fill;
             toolStripContainer3.Location = new Point(0, 0);
             toolStripContainer3.Name = "toolStripContainer3";
-            toolStripContainer3.Size = new Size(505, 203);
+            toolStripContainer3.Size = new Size(505, 518);
             toolStripContainer3.TabIndex = 1;
             toolStripContainer3.Text = "toolStripContainer3";
             // 
@@ -1157,7 +1223,7 @@ namespace PgMulti
             lbResult.Location = new Point(0, 0);
             lbResult.Name = "lbResult";
             lbResult.SelectionMode = SelectionMode.MultiExtended;
-            lbResult.Size = new Size(505, 166);
+            lbResult.Size = new Size(505, 481);
             lbResult.TabIndex = 0;
             lbResult.DrawItem += lbResult_DrawItem;
             lbResult.MeasureItem += lbResult_MeasureItem;
@@ -1237,7 +1303,7 @@ namespace PgMulti
             tcResult.Location = new Point(0, 0);
             tcResult.Name = "tcResult";
             tcResult.SelectedIndex = 0;
-            tcResult.Size = new Size(1030, 203);
+            tcResult.Size = new Size(1030, 518);
             tcResult.TabIndex = 0;
             // 
             // tpResult
@@ -1246,7 +1312,7 @@ namespace PgMulti
             tpResult.Location = new Point(4, 29);
             tpResult.Name = "tpResult";
             tpResult.Padding = new Padding(3);
-            tpResult.Size = new Size(1022, 170);
+            tpResult.Size = new Size(1022, 485);
             tpResult.TabIndex = 0;
             tpResult.UseVisualStyleBackColor = true;
             // 
@@ -1256,11 +1322,11 @@ namespace PgMulti
             // toolStripContainer6.ContentPanel
             // 
             toolStripContainer6.ContentPanel.Controls.Add(txtResult);
-            toolStripContainer6.ContentPanel.Size = new Size(1016, 137);
+            toolStripContainer6.ContentPanel.Size = new Size(1016, 452);
             toolStripContainer6.Dock = DockStyle.Fill;
             toolStripContainer6.Location = new Point(3, 3);
             toolStripContainer6.Name = "toolStripContainer6";
-            toolStripContainer6.Size = new Size(1016, 164);
+            toolStripContainer6.Size = new Size(1016, 479);
             toolStripContainer6.TabIndex = 1;
             toolStripContainer6.Text = "toolStripContainer6";
             // 
@@ -1278,7 +1344,7 @@ namespace PgMulti
             txtResult.Name = "txtResult";
             txtResult.ReadOnly = true;
             txtResult.ScrollBars = ScrollBars.Vertical;
-            txtResult.Size = new Size(1016, 137);
+            txtResult.Size = new Size(1016, 452);
             txtResult.TabIndex = 0;
             // 
             // toolStrip6
@@ -1320,7 +1386,7 @@ namespace PgMulti
             tpTable.Location = new Point(4, 29);
             tpTable.Name = "tpTable";
             tpTable.Padding = new Padding(3);
-            tpTable.Size = new Size(1022, 170);
+            tpTable.Size = new Size(1022, 485);
             tpTable.TabIndex = 1;
             tpTable.UseVisualStyleBackColor = true;
             // 
@@ -1330,11 +1396,11 @@ namespace PgMulti
             // toolStripContainer5.ContentPanel
             // 
             toolStripContainer5.ContentPanel.Controls.Add(gvTable);
-            toolStripContainer5.ContentPanel.Size = new Size(1016, 137);
+            toolStripContainer5.ContentPanel.Size = new Size(1016, 452);
             toolStripContainer5.Dock = DockStyle.Fill;
             toolStripContainer5.Location = new Point(3, 3);
             toolStripContainer5.Name = "toolStripContainer5";
-            toolStripContainer5.Size = new Size(1016, 164);
+            toolStripContainer5.Size = new Size(1016, 479);
             toolStripContainer5.TabIndex = 1;
             toolStripContainer5.Text = "toolStripContainer5";
             // 
@@ -1347,15 +1413,15 @@ namespace PgMulti
             gvTable.AllowUserToAddRows = false;
             gvTable.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             gvTable.ContextMenuStrip = cmsTable;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Window;
-            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
-            dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle1.NullValue = "[NULL]";
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
-            gvTable.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = SystemColors.Window;
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle2.NullValue = "[NULL]";
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+            gvTable.DefaultCellStyle = dataGridViewCellStyle2;
             gvTable.Dock = DockStyle.Fill;
             gvTable.Location = new Point(0, 0);
             gvTable.Name = "gvTable";
@@ -1365,7 +1431,7 @@ namespace PgMulti
             gvTable.ShowCellErrors = false;
             gvTable.ShowEditingIcon = false;
             gvTable.ShowRowErrors = false;
-            gvTable.Size = new Size(1016, 137);
+            gvTable.Size = new Size(1016, 452);
             gvTable.TabIndex = 0;
             gvTable.CellMouseDown += gvTable_CellMouseDown;
             gvTable.CellMouseUp += gvTable_CellMouseUp;
@@ -1446,7 +1512,7 @@ namespace PgMulti
             tpExecutedSql.Controls.Add(toolStripContainer4);
             tpExecutedSql.Location = new Point(4, 29);
             tpExecutedSql.Name = "tpExecutedSql";
-            tpExecutedSql.Size = new Size(1022, 170);
+            tpExecutedSql.Size = new Size(1022, 485);
             tpExecutedSql.TabIndex = 2;
             tpExecutedSql.UseVisualStyleBackColor = true;
             // 
@@ -1456,11 +1522,11 @@ namespace PgMulti
             // toolStripContainer4.ContentPanel
             // 
             toolStripContainer4.ContentPanel.Controls.Add(fctbExecutedSql);
-            toolStripContainer4.ContentPanel.Size = new Size(1022, 133);
+            toolStripContainer4.ContentPanel.Size = new Size(1022, 448);
             toolStripContainer4.Dock = DockStyle.Fill;
             toolStripContainer4.Location = new Point(0, 0);
             toolStripContainer4.Name = "toolStripContainer4";
-            toolStripContainer4.Size = new Size(1022, 170);
+            toolStripContainer4.Size = new Size(1022, 485);
             toolStripContainer4.TabIndex = 1;
             toolStripContainer4.Text = "toolStripContainer4";
             // 
@@ -1499,9 +1565,10 @@ namespace PgMulti
             fctbExecutedSql.Paddings = new Padding(20);
             fctbExecutedSql.ReadOnly = true;
             fctbExecutedSql.SearchMatches = null;
+            fctbExecutedSql.SearchRange = null;
             fctbExecutedSql.SelectionColor = Color.FromArgb(60, 0, 0, 255);
             fctbExecutedSql.ServiceColors = (FastColoredTextBoxNS.ServiceColors)resources.GetObject("fctbExecutedSql.ServiceColors");
-            fctbExecutedSql.Size = new Size(1022, 133);
+            fctbExecutedSql.Size = new Size(1022, 448);
             fctbExecutedSql.TabIndex = 0;
             fctbExecutedSql.Zoom = 100;
             fctbExecutedSql.SecondaryFormShowed += fctbExecutedSql_SecondaryFormShowed;
@@ -1872,7 +1939,7 @@ namespace PgMulti
             cmsFctb.ImageScalingSize = new Size(20, 20);
             cmsFctb.Items.AddRange(new ToolStripItem[] { tscmiBack, tscmiForward, tscmiUndo, tscmiRedo, tscmiCut, tscmiCopy, tscmiPaste, tscmiSearchAndReplace, tscmiGoTo, tscmiFormat });
             cmsFctb.Name = "cmsFctb";
-            cmsFctb.Size = new Size(74, 290);
+            cmsFctb.Size = new Size(74, 264);
             // 
             // sfdCsv
             // 
@@ -2010,7 +2077,7 @@ namespace PgMulti
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1539, 530);
+            ClientSize = new Size(1539, 1290);
             Controls.Add(splitContainer1);
             Controls.Add(mm);
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -2044,8 +2111,10 @@ namespace PgMulti
             tlpSearchAndReplace.PerformLayout();
             flpSearchOptions.ResumeLayout(false);
             flpSearchOptions.PerformLayout();
-            flpSearchAndReplaceButtons.ResumeLayout(false);
-            flpSearchAndReplaceButtons.PerformLayout();
+            flpSearchButtons.ResumeLayout(false);
+            flpSearchButtons.PerformLayout();
+            flpReplaceButtons.ResumeLayout(false);
+            flpReplaceButtons.PerformLayout();
             toolStripContainer1.ContentPanel.ResumeLayout(false);
             toolStripContainer1.TopToolStripPanel.ResumeLayout(false);
             toolStripContainer1.TopToolStripPanel.PerformLayout();
@@ -2280,11 +2349,16 @@ namespace PgMulti
         private CheckBox chkSearchMatchCase;
         private CheckBox chkSearchMatchWholeWords;
         private CheckBox chkSearchRegex;
-        private FlowLayoutPanel flpSearchAndReplaceButtons;
+        private FlowLayoutPanel flpSearchButtons;
+        private FlowLayoutPanel flpReplaceButtons;
         private Button btnSearch;
         private Button btnGoNextSearchResult;
         private Button btnReplaceCurrent;
         private Button btnReplaceAll;
         private Label lblSearchResultsSummary;
+        private CheckBox chkSearchWithinSelectedText;
+        private Label lblSearch;
+        private Label lblReplace;
+        private Button btnUpdateSearchSelectedText;
     }
 }

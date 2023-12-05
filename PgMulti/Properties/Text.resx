@@ -1048,6 +1048,12 @@ Unlike other tools, this application does not reuse the connection between diffe
   <data name="searching_the_entire_text" xml:space="preserve">
     <value>Buscando en todo el texto</value>
   </data>
+  <data name="search_only_within_selected_text" xml:space="preserve">
+    <value>Buscar solo dentro del texto seleccionado</value>
+  </data>
+  <data name="update_selected_text" xml:space="preserve">
+    <value>Actualizar texto seleccionado</value>
+  </data>
   <data name="searching_only_within_selected_text" xml:space="preserve">
     <value>Buscando solo dentro del texto seleccionado</value>
   </data>

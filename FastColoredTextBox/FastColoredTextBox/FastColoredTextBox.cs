@@ -96,7 +96,7 @@ namespace FastColoredTextBoxNS
         private uint lineNumberStartValue;
         private LineNumberFormatting lineNumberFormatting;
         private int lineSelectFrom;
-        private TextSource lines;
+        protected TextSource lines;
         private IntPtr m_hImc;
         private int maxLineLength;
         private bool wholeWordSelectMode = false;

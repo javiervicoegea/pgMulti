@@ -21,6 +21,7 @@ using Newtonsoft.Json;
 using PgMulti.Properties;
 using System;
 using System.Linq;
+using System.Windows.Forms.VisualStyles;
 
 namespace PgMulti
 {
@@ -1920,7 +1921,7 @@ namespace PgMulti
                 tmrSaveTabs.Enabled = true;
             }
 
-            UpdateSearch(false);
+            UpdateSearchResults();
         }
 
         private void tcSql_SelectedIndexChanged(object sender, EventArgs e)
@@ -3817,13 +3818,15 @@ namespace PgMulti
             this.tsmiOpenDiagram.Text = Properties.Text.open_diagram;
             this.tpConnections.Text = Properties.Text.db_list;
             this.tpSearchAndReplace.Text = Properties.Text.search_for_and_replace;
-            this.txtSearchText.PlaceholderText = Properties.Text.search_text;
-            this.txtReplaceText.PlaceholderText = Properties.Text.replace_text;
+            this.lblSearch.Text = Properties.Text.search_text;
+            this.lblReplace.Text = Properties.Text.replace_text;
             this.chkSearchMatchCase.Text = Properties.Text.match_case;
             this.chkSearchMatchWholeWords.Text = Properties.Text.match_whole_words;
             this.chkSearchRegex.Text = Properties.Text.regex;
+            this.chkSearchWithinSelectedText.Text = Properties.Text.search_only_within_selected_text;
             this.btnSearch.Text = Properties.Text.search;
             this.btnGoNextSearchResult.Text = Properties.Text.go_next;
+            this.btnUpdateSearchSelectedText.Text = Properties.Text.update_selected_text;
             this.btnReplaceCurrent.Text = Properties.Text.replace_current;
             this.btnReplaceAll.Text = Properties.Text.replace_all;
         }
@@ -3839,60 +3842,89 @@ namespace PgMulti
             txtSearchText.SelectionLength = txtSearchText.Text.Length;
         }
 
-        private void UpdateSearch(bool doHighlighting)
+        private bool UpdateSearchRange()
+        {
+            CustomFctb tb = ((CustomFctb)tcSql.SelectedTab.Controls[0]);
+            FastColoredTextBoxNS.Range? searchRange;
+
+            if (chkSearchWithinSelectedText.Checked)
+            {
+                searchRange = tb.Selection.Clone();
+                searchRange.Normalize();
+            }
+            else
+            {
+                searchRange = null;
+            }
+
+            if (tb.SearchRange != searchRange)
+            {
+                tb.SearchRange = searchRange;
+
+                lblSearchResultsSummary.Text = string.Format(Properties.Text.number_of_search_results_found, tb.SearchMatches == null ? 0 : tb.SearchMatches.Count) + "\r\n"
+                    + (searchRange == null ? Properties.Text.searching_the_entire_text : Properties.Text.searching_only_within_selected_text);
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private bool UpdateSearchResults()
         {
             string pattern = txtSearchText.Text;
             CustomFctb tb = ((CustomFctb)tcSql.SelectedTab.Controls[0]);
 
+            List<FastColoredTextBoxNS.Range> matches;
+
             if (pattern == "")
             {
-                tb.SearchMatches = null;
-                if (doHighlighting) tb.DoHighlighting();
-
-                btnGoNextSearchResult.Enabled = false;
-                btnReplaceCurrent.Enabled = false;
-                btnReplaceAll.Enabled = false;
-                lblSearchResultsSummary.Text = "";
+                matches = new List<FastColoredTextBoxNS.Range>();
             }
             else
             {
-                FastColoredTextBoxNS.Range wholeSearchRange = tb.Selection.Clone();
-                bool onlyWithinSelectedText;
 
-                if (wholeSearchRange.Start == wholeSearchRange.End)
-                {
-                    wholeSearchRange = tb.Range.Clone();
-                    onlyWithinSelectedText = false;
-                }
-                else
-                {
-                    onlyWithinSelectedText = true;
-                }
+                matches = tb.FindAll(pattern, chkSearchMatchCase.Checked, chkSearchMatchWholeWords.Checked, chkSearchRegex.Checked);
+            }
 
-                wholeSearchRange.Normalize();
-
-                List<FastColoredTextBoxNS.Range> matches = tb.FindAll(pattern, chkSearchMatchCase.Checked, chkSearchMatchWholeWords.Checked, chkSearchRegex.Checked, wholeSearchRange);
-
-                if (
-                        (matches.Count == 0 && tb.SearchMatches != null && tb.SearchMatches.Count > 0)
-                        || (matches.Count > 0 && (tb.SearchMatches == null || !matches.SequenceEqual(tb.SearchMatches)))
-                    )
-                {
-                    tb.SearchMatches = matches;
-                    if (doHighlighting) tb.DoHighlighting();
-                }
-
+            if (
+                    (matches.Count == 0 && tb.SearchMatches != null && tb.SearchMatches.Count > 0)
+                    || (matches.Count > 0 && (tb.SearchMatches == null || !matches.SequenceEqual(tb.SearchMatches)))
+                )
+            {
+                tb.SearchMatches = matches;
                 btnGoNextSearchResult.Enabled = matches.Count > 0;
                 btnReplaceCurrent.Enabled = matches.Count > 0;
                 btnReplaceAll.Enabled = matches.Count > 0;
                 lblSearchResultsSummary.Text = string.Format(Properties.Text.number_of_search_results_found, matches.Count) + "\r\n"
-                    + (onlyWithinSelectedText ? Properties.Text.searching_only_within_selected_text : Properties.Text.searching_the_entire_text);
+                    + (tb.SearchRange != tb.Range ? Properties.Text.searching_only_within_selected_text : Properties.Text.searching_the_entire_text);
+
+                return true;
             }
+            else
+            {
+                return false;
+            }
+        }
+
+        private void UpdateSearchHighlighting()
+        {
+            CustomFctb tb = ((CustomFctb)tcSql.SelectedTab.Controls[0]);
+            tb.DoHighlighting();
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            UpdateSearch(true);
+            UpdateSearchResults();
+            UpdateSearchHighlighting();
+
+            CustomFctb tb = ((CustomFctb)tcSql.SelectedTab.Controls[0]);
+            if (tb.SearchMatches != null && tb.SearchMatches.Count > 0)
+            {
+                GoNextSearchResult();
+            }
         }
 
         public void GoNextSearchResult()
@@ -3909,6 +3941,7 @@ namespace PgMulti
 
             tb.Selection = r;
             tb.DoSelectionVisible();
+            tb.Focus();
             tb.Invalidate();
             return;
         }
@@ -3918,44 +3951,160 @@ namespace PgMulti
             GoNextSearchResult();
         }
 
+        private void btnUpdateSearchSelectedText_Click(object sender, EventArgs e)
+        {
+            if (UpdateSearchRange() | UpdateSearchResults())
+            {
+                UpdateSearchHighlighting();
+            }
+        }
+
         private void btnReplaceCurrent_Click(object sender, EventArgs e)
         {
+            CustomFctb tb = ((CustomFctb)tcSql.SelectedTab.Controls[0]);
+            if (tb.SearchMatches != null && tb.SearchMatches.Count > 0)
+            {
+                if (tb.Selection.Length > 0 && tb.SearchMatches.Any(sm => tb.Selection.Equals(sm)))
+                {
+                    string replaceText = txtReplaceText.Text;
+                    if (chkSearchRegex.Checked)
+                    {
+                        System.Text.RegularExpressions.Regex r = tb.GetRegex(txtSearchText.Text, chkSearchMatchCase.Checked, chkSearchMatchWholeWords.Checked, chkSearchRegex.Checked);
 
+                        replaceText = r.Replace(tb.SelectedText, replaceText);
+                    }
+
+                    tb.InsertText(replaceText);
+
+                    if (UpdateSearchResults())
+                    {
+                        UpdateSearchHighlighting();
+                    }
+
+                    if (tb.SearchMatches != null && tb.SearchMatches.Count > 0)
+                    {
+                        GoNextSearchResult();
+                    }
+                    else
+                    {
+                        tb.Focus();
+                    }
+                }
+                else
+                {
+                    GoNextSearchResult();
+                }
+            }
         }
 
         private void btnReplaceAll_Click(object sender, EventArgs e)
         {
+            CustomFctb tb = ((CustomFctb)tcSql.SelectedTab.Controls[0]);
 
+            if (tb.SearchMatches != null && tb.SearchMatches.Count > 0)
+            {
+                tb.Selection.BeginUpdate();
+                tb.BeginAutoUndo();
+                try
+                {
+                    if (chkSearchRegex.Checked)
+                    {
+                        System.Text.RegularExpressions.Regex r = tb.GetRegex(txtSearchText.Text, chkSearchMatchCase.Checked, chkSearchMatchWholeWords.Checked, chkSearchRegex.Checked);
+
+                        foreach(FastColoredTextBoxNS.Range ri in tb.SearchMatches)
+                        {
+                            string replaceText = r.Replace(ri.Text, txtReplaceText.Text);
+
+                            tb.Selection.Start = ri.Start;
+                            tb.Selection.End = ri.End;
+                            tb.InsertText(replaceText);
+                            //tb.TextSource.Manager.ExecuteCommand(new ReplaceTextCommand(tb.TextSource, new List<FastColoredTextBoxNS.Range> { ri }, replaceText));
+                        }
+                    }
+                    else
+                    {
+                        tb.TextSource.Manager.ExecuteCommand(new ReplaceTextCommand(tb.TextSource, tb.SearchMatches, txtReplaceText.Text));
+                    }
+
+
+                    if (tb.SearchRange == null)
+                    {
+                        tb.Selection.Start = new Place(0, 0);
+                    }
+                    else
+                    {
+                        tb.Selection.Start = tb.SearchRange.Start;
+                    }
+                }
+                finally
+                {
+                    tb.EndAutoUndo();
+                    tb.Selection.EndUpdate();
+                }
+
+                tb.DoSelectionVisible();
+                tb.Focus();
+                tb.Invalidate();
+
+                if (UpdateSearchResults())
+                {
+                    UpdateSearchHighlighting();
+                }
+            }
         }
 
         private void txtSearchText_TextChanged(object sender, EventArgs e)
         {
-            UpdateSearch(true);
+            if (UpdateSearchResults())
+            {
+                UpdateSearchHighlighting();
+            }
         }
 
         private void chkSearchMatchCase_CheckedChanged(object sender, EventArgs e)
         {
-            UpdateSearch(true);
+            if (UpdateSearchResults())
+            {
+                UpdateSearchHighlighting();
+            }
         }
 
         private void chkSearchMatchWholeWords_CheckedChanged(object sender, EventArgs e)
         {
-            UpdateSearch(true);
+            if (UpdateSearchResults())
+            {
+                UpdateSearchHighlighting();
+            }
         }
 
         private void chkSearchRegex_CheckedChanged(object sender, EventArgs e)
         {
-            UpdateSearch(true);
+            if (UpdateSearchResults())
+            {
+                UpdateSearchHighlighting();
+            }
+        }
+
+        private void chkSearchWithinSelectedText_CheckedChanged(object sender, EventArgs e)
+        {
+            if (UpdateSearchRange() | UpdateSearchResults())
+            {
+                UpdateSearchHighlighting();
+            }
+            btnUpdateSearchSelectedText.Enabled = chkSearchWithinSelectedText.Checked;
+        }
+
+        private void txtSearchText_Enter(object sender, EventArgs e)
+        {
         }
 
         private void txtSearchText_KeyUp(object sender, KeyEventArgs e)
         {
-            // si se pulsa intro: btnGoNextSearchResult_Click(sender, e);
-        }
-
-        private void txtReplaceText_KeyUp(object sender, KeyEventArgs e)
-        {
-            // si se pulsa intro: btnReplaceCurrent_Click(sender, e);
+            if (e.KeyData == Keys.Enter)
+            {
+                btnGoNextSearchResult_Click(sender, e);
+                e.Handled = true;
+            }
         }
         #endregion
     }
