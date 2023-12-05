@@ -554,7 +554,7 @@ namespace TradeWright.UI.Forms
 
                     Refresh();
 
-                    if (raiseEvent) ReorderedTabs(this, new EventArgs());
+                    if (raiseEvent && ReorderedTabs != null) ReorderedTabs(this, new EventArgs());
                 }
                 else
                 {

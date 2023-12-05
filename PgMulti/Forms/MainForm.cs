@@ -4011,14 +4011,13 @@ namespace PgMulti
                     {
                         System.Text.RegularExpressions.Regex r = tb.GetRegex(txtSearchText.Text, chkSearchMatchCase.Checked, chkSearchMatchWholeWords.Checked, chkSearchRegex.Checked);
 
-                        foreach(FastColoredTextBoxNS.Range ri in tb.SearchMatches)
+                        for (int i = tb.SearchMatches.Count - 1; i >= 0; i--)
                         {
+                            FastColoredTextBoxNS.Range ri = tb.SearchMatches[i];
+
                             string replaceText = r.Replace(ri.Text, txtReplaceText.Text);
 
-                            tb.Selection.Start = ri.Start;
-                            tb.Selection.End = ri.End;
-                            tb.InsertText(replaceText);
-                            //tb.TextSource.Manager.ExecuteCommand(new ReplaceTextCommand(tb.TextSource, new List<FastColoredTextBoxNS.Range> { ri }, replaceText));
+                            tb.TextSource.Manager.ExecuteCommand(new ReplaceTextCommand(tb.TextSource, new List<FastColoredTextBoxNS.Range> { ri }, replaceText));
                         }
                     }
                     else
