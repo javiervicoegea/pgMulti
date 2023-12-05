@@ -221,6 +221,7 @@ namespace PgMulti.SqlSyntax
             var columnConstraintListOpt = new NonTerminal("columnConstraintListOpt");
             var semiOpt = new NonTerminal("semiOpt");
             var stmtList = new NonTerminal("stmtList");
+            var stmtAndSemi = new NonTerminal("stmtAndSemi");
             var binOpNot = new NonTerminal("binOpNot");
             var setTransactionStmt = new NonTerminal("setTransactionStmt");
             var setConstraintsStmt = new NonTerminal("setConstraintsStmt");
@@ -304,7 +305,9 @@ namespace PgMulti.SqlSyntax
             SnippetRoots.Add(createTriggerStmt);
 
             root.Rule = stmtList;
-            stmtList.Rule = MakeStarRule(stmtList, semi, stmt);
+            stmtList.Rule = MakeStarRule(stmtList, stmtAndSemi);
+            stmtAndSemi.Rule = stmt + semi;
+            stmtAndSemi.ErrorRule = SyntaxError + semi; //skip all until semicolon
 
             //ID
             id.Rule = id_simple | id_simple + CustomActionHere(ResolveAsteriskConflict) + dot + id_simple | id_simple + dot + id_simple + CustomActionHere(ResolveAsteriskConflict) + dot + id_simple;
@@ -316,7 +319,6 @@ namespace PgMulti.SqlSyntax
                       | truncateStmt | grantStmt | revokeStmt | createTriggerStmt | createSequenceStmt | createSchemaStmt | createText
                       | dropTriggerStmt | dropSchemaStmt | showStmt | createFunctionStmt | commentStmt;
 
-            stmt.ErrorRule = SyntaxError + semi; //skip all until semicolon
 
             setStmt.Rule = SET + (Empty | "SESSION" | "BEGIN") + id_simple + (TO | "=") + (exprList | DEFAULT);
             setTransactionStmt.Rule = SET + "TRANSACTION" + isolationLevel;
