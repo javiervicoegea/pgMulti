@@ -63,6 +63,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Text.resx</DependentUpon>
     </Compile>
+    <Compile Update="Properties\TransactionIcons.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TransactionIcons.resx</DependentUpon>
+    </Compile>
     <Compile Update="QueryEditor\CustomFctb.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -89,6 +94,10 @@
     <EmbeddedResource Update="Properties\Text.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Text.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Properties\TransactionIcons.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>TransactionIcons.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

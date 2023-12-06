@@ -154,7 +154,9 @@ namespace PgMulti.QueryEditor
             LocalPath = dr.Field<string?>("path");
             _Position = (short)dr.Field<long>("position");
             _Id = (int)dr.Field<long>("id");
-            ((CustomFctb)_TabPage.Controls[0]).Text = dr.Field<string>("text");
+            CustomFctb tb = ((CustomFctb)_TabPage.Controls[0]);
+            tb.Text = dr.Field<string>("text");
+            tb.ClearUndo();
             _TabPage.Text = dr.Field<string>("name");
 
             _TabPage.Tag = this;

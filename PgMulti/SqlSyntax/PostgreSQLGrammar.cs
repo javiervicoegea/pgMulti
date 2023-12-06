@@ -272,6 +272,7 @@ namespace PgMulti.SqlSyntax
 
             var plStmtList = new NonTerminal("plStmtList");
             var plStmt = new NonTerminal("plStmt");
+            var plStmtAndSemi = new NonTerminal("plStmtAndSemi");
             var sqlStmtList = new NonTerminal("sqlStmtList");
             var sqlStmt = new NonTerminal("sqlStmt");
             var plBlockCodeStmt = new NonTerminal("plBlockCodeStmt");
@@ -416,7 +417,10 @@ namespace PgMulti.SqlSyntax
             plDeclareClauseOpt.Rule = Empty | "DECLARE" + plDeclareStmts;
             plDeclareStmts.Rule = MakeStarRule(plDeclareStmts, id_simple + (Empty | "CONSTANT") + typeNameAndParams + (Empty | notNull) + (Empty | (DEFAULT | ToTerm(":=") | "=") + expression) + semi);
             plBeginClause.Rule = "BEGIN" + plStmtList;
-            plStmtList.Rule = MakeStarRule(plStmtList, plStmt + semi);
+            plStmtList.Rule = MakeStarRule(plStmtList, plStmtAndSemi);
+
+            plStmtAndSemi.Rule = plStmt + semi;
+            plStmtAndSemi.ErrorRule = SyntaxError + semi; //skip all until semicolon
 
             sqlStmtList.Rule = MakeStarRule(sqlStmtList, semi, sqlStmt);
             sqlStmt.Rule = Empty | createTableStmt | createIndexStmt | createExtensionStmt | createRoleStmt | alterStmt

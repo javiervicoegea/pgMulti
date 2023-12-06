@@ -138,7 +138,7 @@ namespace PgMulti
             CheckUpdates();
         }
 
-        private void RefreshTransactionsConfig()
+        private void RefreshTransactionsConfig() 
         {
             tsmiTransactionModeManual.Image = null;
             tsmiTransactionModeAutoSingle.Image = null;
@@ -176,6 +176,61 @@ namespace PgMulti
                 default:
                     throw new NotSupportedException();
             }
+
+            switch (_Data!.Config.TransactionMode)
+            {
+                case Config.TransactionModeEnum.Manual:
+                    switch (_Data!.Config.TransactionLevel)
+                    {
+                        case Config.TransactionLevelEnum.ReadCommited:
+                            tsddbTransactions.Image = Properties.TransactionIcons.ManualReadCommited;
+                            break;
+                        case Config.TransactionLevelEnum.RepeatableRead:
+                            tsddbTransactions.Image = Properties.TransactionIcons.ManualRepeatableRead;
+                            break;
+                        case Config.TransactionLevelEnum.Serializable:
+                            tsddbTransactions.Image = Properties.TransactionIcons.ManualSerializable;
+                            break;
+                        default:
+                            throw new NotSupportedException();
+                    }
+                    break;
+                case Config.TransactionModeEnum.AutoSingle:
+                    switch (_Data!.Config.TransactionLevel)
+                    {
+                        case Config.TransactionLevelEnum.ReadCommited:
+                            tsddbTransactions.Image = Properties.TransactionIcons.AutomaticIndependentReadCommited;
+                            break;
+                        case Config.TransactionLevelEnum.RepeatableRead:
+                            tsddbTransactions.Image = Properties.TransactionIcons.AutomaticIndependentRepeatableRead;
+                            break;
+                        case Config.TransactionLevelEnum.Serializable:
+                            tsddbTransactions.Image = Properties.TransactionIcons.AutomaticIndependentSerializable;
+                            break;
+                        default:
+                            throw new NotSupportedException();
+                    }
+                    break;
+                case Config.TransactionModeEnum.AutoCoordinated:
+                    switch (_Data!.Config.TransactionLevel)
+                    {
+                        case Config.TransactionLevelEnum.ReadCommited:
+                            tsddbTransactions.Image = Properties.TransactionIcons.AutomaticCoordinatedReadCommited;
+                            break;
+                        case Config.TransactionLevelEnum.RepeatableRead:
+                            tsddbTransactions.Image = Properties.TransactionIcons.AutomaticCoordinatedRepeatableRead;
+                            break;
+                        case Config.TransactionLevelEnum.Serializable:
+                            tsddbTransactions.Image = Properties.TransactionIcons.AutomaticCoordinatedSerializable;
+                            break;
+                        default:
+                            throw new NotSupportedException();
+                    }
+                    break;
+                default:
+                    throw new NotSupportedException();
+            }
+
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -3919,7 +3974,7 @@ namespace PgMulti
                 btnReplaceCurrent.Enabled = matches.Count > 0;
                 btnReplaceAll.Enabled = matches.Count > 0;
                 lblSearchResultsSummary.Text = string.Format(Properties.Text.number_of_search_results_found, matches.Count) + "\r\n"
-                    + (tb.SearchRange != tb.Range ? Properties.Text.searching_only_within_selected_text : Properties.Text.searching_the_entire_text);
+                    + (tb.SearchRange == null ? Properties.Text.searching_the_entire_text : Properties.Text.searching_only_within_selected_text) ;
 
                 return true;
             }
@@ -4110,7 +4165,7 @@ namespace PgMulti
             {
                 UpdateSearchHighlighting();
             }
-            btnUpdateSearchSelectedText.Enabled = chkSearchWithinSelectedText.Checked;
+            btnUpdateSearchSelectedText.Visible = chkSearchWithinSelectedText.Checked;
         }
 
         private void txtSearchText_Enter(object sender, EventArgs e)

@@ -658,7 +658,7 @@ namespace PgMulti
             tlpSearchAndReplace.RowStyles.Add(new RowStyle(SizeType.Absolute, 50F));
             tlpSearchAndReplace.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
             tlpSearchAndReplace.RowStyles.Add(new RowStyle(SizeType.Absolute, 140F));
-            tlpSearchAndReplace.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+            tlpSearchAndReplace.RowStyles.Add(new RowStyle(SizeType.Absolute, 60F));
             tlpSearchAndReplace.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F));
             tlpSearchAndReplace.RowStyles.Add(new RowStyle(SizeType.Absolute, 50F));
             tlpSearchAndReplace.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
@@ -787,7 +787,7 @@ namespace PgMulti
             // btnUpdateSearchSelectedText
             // 
             btnUpdateSearchSelectedText.AutoSize = true;
-            btnUpdateSearchSelectedText.Enabled = false;
+            btnUpdateSearchSelectedText.Visible = false;
             btnUpdateSearchSelectedText.Location = new Point(203, 3);
             btnUpdateSearchSelectedText.Name = "btnUpdateSearchSelectedText";
             btnUpdateSearchSelectedText.Size = new Size(94, 30);
