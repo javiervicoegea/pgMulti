@@ -21,6 +21,7 @@ using Newtonsoft.Json;
 using PgMulti.Properties;
 using System;
 using System.Linq;
+using Irony;
 
 namespace PgMulti
 {
@@ -55,7 +56,11 @@ namespace PgMulti
             ntb.DrawText += ntb_DrawText;
             ncb.CheckStateChanged += ncb_CheckStateChanged;
             ncb.IsVisibleValueNeeded += ncb_IsVisibleValueNeeded;
+
+
         }
+
+
 
         public List<DB> SelectedDBs
         {
@@ -2994,7 +2999,8 @@ namespace PgMulti
                     lbResult.SelectedIndices.Clear();
                     lbResult.SelectedIndices.Add(0);
                     _IgnoreLbResult_SelectedIndexChanged = false;
-                    txtResult.Text = "";
+                    fctbResult.Text = "";
+                    fctbResult.ClearUndo();
                     gvTable.Tag = null;
                     gvTable.DataSource = null;
                     tsddbTables.Text = Properties.Text.no_results;
@@ -3047,7 +3053,8 @@ namespace PgMulti
         {
             if (_IgnoreLbResult_SelectedIndexChanged) return;
             lbResult.Refresh();
-            txtResult.Text = "";
+            fctbResult.Text = "";
+            fctbResult.ClearUndo();
             gvTable.Tag = null;
             gvTable.DataSource = null;
             tsddbTables.Text = Properties.Text.no_results;
@@ -3077,8 +3084,10 @@ namespace PgMulti
                 {
                     gvTable.Tag = null;
                     gvTable.DataSource = null;
-                    txtResult.Text = "";
+                    fctbResult.Text = "";
+                    fctbResult.ClearUndo();
                     fctbExecutedSql.Text = "";
+                    fctbExecutedSql.ClearUndo();
                     tsbEditExecutedSql.Enabled = false;
                     tsddbTables.Visible = false;
                 }
@@ -3087,11 +3096,11 @@ namespace PgMulti
                     PgTask t;
                     t = (PgTask)lbResult.SelectedItem!;
 
-                    int scrollAnt = GetScrollPos(txtResult.Handle, 1);
-                    int selStartAnt = txtResult.SelectionStart;
-                    int selLengthAnt = txtResult.SelectionLength;
+                    int scrollAnt = fctbResult.VerticalScroll.Value;
+                    FastColoredTextBoxNS.Range selAnt = fctbResult.Selection.Clone();
 
-                    txtResult.Text = t.Log;
+                    fctbResult.Text = t.Log;
+                    fctbResult.ClearUndo();
 
                     if (t.State == PgTask.StateEnum.Finished)
                     {
@@ -3099,11 +3108,11 @@ namespace PgMulti
 
                         if (t.Exception == null)
                         {
-                            txtResult.ForeColor = Color.DarkGreen;
+                            fctbResult.ForeColor = Color.DarkGreen;
                         }
                         else
                         {
-                            txtResult.ForeColor = Color.DarkRed;
+                            fctbResult.ForeColor = Color.DarkRed;
                         }
 
                         if (t.Queries.Count > 0 && t.Exception == null)
@@ -3117,8 +3126,9 @@ namespace PgMulti
                     }
                     else
                     {
-                        txtResult.ForeColor = Color.DarkBlue;
-                        txtResult.Text += $"\r\n\r\n{Properties.Text.executing_since}: {t.StartTimestamp!.Value:g}";
+                        fctbResult.ForeColor = Color.DarkBlue;
+                        fctbResult.Text += $"\r\n\r\n{Properties.Text.executing_since}: {t.StartTimestamp!.Value:g}";
+                        fctbResult.ClearUndo();
                     }
 
                     bool tsddbTablesPrevEmpty = tsddbTables.DropDown.Items.Count == 0;
@@ -3136,21 +3146,26 @@ namespace PgMulti
                     }
 
                     fctbExecutedSql.Text = t.Sql;
+                    fctbExecutedSql.ClearUndo();
                     tsbEditExecutedSql.Enabled = true;
 
                     if (_AutomaticScroll)
                     {
-                        txtResult.SelectionStart = txtResult.Text.Length;
-                        txtResult.SelectionLength = 0;
-                        txtResult.ScrollToCaret();
+                        //txtResult.SelectionStart = txtResult.Text.Length;
+                        //txtResult.SelectionLength = 0;
+                        //txtResult.ScrollToCaret();
+                        fctbResult.OnScroll(new ScrollEventArgs(ScrollEventType.EndScroll, fctbResult.VerticalScroll.Value, fctbResult.VerticalScroll.Maximum, ScrollOrientation.VerticalScroll), true);
                     }
                     else
                     {
-                        txtResult.SelectionStart = selStartAnt;
-                        txtResult.SelectionLength = selLengthAnt;
-                        SetScrollPos(txtResult.Handle, 1, scrollAnt, true);
-                        SendMessage(txtResult.Handle, 0x00B6, 0, scrollAnt);
+                        //txtResult.SelectionStart = selStartAnt;
+                        //txtResult.SelectionLength = selLengthAnt;
+                        //SetScrollPos(txtResult.Handle, 1, scrollAnt, true);
+                        //SendMessage(txtResult.Handle, 0x00B6, 0, scrollAnt);
+                        fctbResult.OnScroll(new ScrollEventArgs(ScrollEventType.EndScroll, fctbResult.VerticalScroll.Value, scrollAnt, ScrollOrientation.VerticalScroll), true);
                     }
+                    fctbResult.Selection = selAnt;
+
                     fctbExecutedSql.SelectionStart = 0;
                     fctbExecutedSql.SelectionLength = 0;
                 }
@@ -3167,15 +3182,6 @@ namespace PgMulti
             _GvTable_IgnoreEvents = false;
             tsddbTables.Text = e.ClickedItem.Text;
         }
-
-        [DllImport("user32.dll")]
-        static extern int SetScrollPos(IntPtr hWnd, int nBar, int nPos, bool bRedraw);
-
-        [DllImport("user32.dll")]
-        static extern int SendMessage(IntPtr hWnd, int wMsg, int wParam, int lParam);
-
-        [DllImport("user32.dll")]
-        static extern int GetScrollPos(IntPtr hWnd, int nBar);
 
         private void lbResult_DrawItem(object sender, DrawItemEventArgs e)
         {
@@ -3720,173 +3726,27 @@ namespace PgMulti
         }
 
 
-        private void fctbExecutedSql_SecondaryFormClosed(object sender, SecondaryFormEventArgs e)
+        private void fctbExecutedSql_SecondaryFormClosed(object? sender, SecondaryFormEventArgs e)
         {
             _SecondaryForms.Remove(e.Form);
         }
 
-        private void fctbExecutedSql_SecondaryFormShowed(object sender, SecondaryFormEventArgs e)
+        private void fctbExecutedSql_SecondaryFormShowed(object? sender, SecondaryFormEventArgs e)
+        {
+            _SecondaryForms.Add(e.Form);
+        }
+
+        private void fctbResult_SecondaryFormClosed(object? sender, SecondaryFormEventArgs e)
+        {
+            _SecondaryForms.Remove(e.Form);
+        }
+
+        private void fctbResult_SecondaryFormShowed(object? sender, SecondaryFormEventArgs e)
         {
             _SecondaryForms.Add(e.Form);
         }
 
         #endregion
-
-        #region TextI18n
-        private void RefreshLanguage()
-        {
-            if (Thread.CurrentThread.CurrentCulture.Name == AppLanguage.CurrentLanguage.Id) return;
-
-            CultureInfo cu = AppLanguage.CurrentLanguage.CultureInfo;
-            Application.CurrentCulture = cu;
-            CultureInfo.DefaultThreadCurrentCulture = cu;
-            CultureInfo.DefaultThreadCurrentUICulture = cu;
-            Thread.CurrentThread.CurrentCulture = cu;
-            Thread.CurrentThread.CurrentUICulture = cu;
-            _Data!.PGLanguageData.Grammar.DefaultCulture = cu;
-            _Data!.PGSimpleLanguageData.Grammar.DefaultCulture = cu;
-            Irony.Resources.Culture = cu;
-
-            InitializeText();
-            _NRoot.Text = Properties.Text.all_databases;
-            tvaConnections.Refresh();
-
-        }
-
-        private void InitializeText()
-        {
-            this.tscmiNewGroup.Text = Properties.Text.new_group;
-            this.tscmiNewDB.Text = Properties.Text.add_db;
-            this.tscmiExploreTable.Text = Properties.Text.explore_table;
-            this.tscmiRecursiveRemove.Text = Properties.Text.recursive_remove;
-            this.tscmiCreateTableDiagram.Text = Properties.Text.create_table_diagram;
-            this.tscmiCopyText.Text = Properties.Text.copy_text;
-            this.tscmiEdit.Text = Properties.Text.edit;
-            this.tscmiRemove.Text = Properties.Text.remove;
-            this.tscmiUp.Text = Properties.Text.up;
-            this.tscmiDown.Text = Properties.Text.down;
-            this.tscmiRefresh.Text = Properties.Text.refresh;
-            this.tsbNewGroup.Text = Properties.Text.new_group;
-            this.tsbNewDB.Text = Properties.Text.add_db;
-            this.tsbExploreTable.Text = Properties.Text.explore_table;
-            this.tsbRecursiveRemove.Text = Properties.Text.recursive_remove;
-            this.tsbCreateTableDiagram.Text = Properties.Text.create_table_diagram;
-            this.tsbEdit.Text = Properties.Text.edit;
-            this.tsbRemove.Text = Properties.Text.remove;
-            this.tsbUp.Text = Properties.Text.up;
-            this.tsbDown.Text = Properties.Text.down;
-            this.tsbCollapseAll.Text = Properties.Text.collapse_all;
-            this.tsbRefresh.Text = Properties.Text.refresh;
-            this.tsmiFile.Text = Properties.Text.file;
-            this.tsmiNew.Text = Properties.Text._new;
-            this.tsmiOpen.Text = Properties.Text.open;
-            this.tsbOpen.Text = Properties.Text.open;
-            this.tsmiSave.Text = Properties.Text.save;
-            this.tsbSave.Text = Properties.Text.save;
-            this.tsmiSaveAs.Text = Properties.Text.save_as;
-            this.tsmiSaveAll.Text = Properties.Text.save_all;
-            this.tsbSaveAll.Text = Properties.Text.save_all;
-            this.tsmiClose.Text = Properties.Text.close;
-            this.tsmiCloseAll.Text = Properties.Text.close_all;
-            this.tsmiEdit.Text = Properties.Text.edit;
-            this.tsmiBack.Text = Properties.Text.back;
-            this.tsmiForward.Text = Properties.Text.forward;
-            this.tsmiUndo.Text = Properties.Text.undo_sc;
-            this.tsmiRedo.Text = Properties.Text.redo_sc;
-            this.tsmiCut.Text = Properties.Text.cut_sc;
-            this.tsmiCopy.Text = Properties.Text.copy_sc;
-            this.tsmiPaste.Text = Properties.Text.paste_sc;
-            this.tsmiSearchAndReplace.Text = Properties.Text.search_for_and_replace;
-            this.tsmiGoTo.Text = Properties.Text.goto_sc;
-            this.tsmiFormat.Text = Properties.Text.format_sc;
-            this.tsbSearchAndReplace.Text = Properties.Text.search_for_and_replace;
-            this.tsbGoTo.Text = Properties.Text.goto_sc;
-            this.tsbFormat.Text = Properties.Text.format_sc;
-            this.tsmiOptions.Text = Properties.Text.options;
-            this.tsmiIncreaseFont.Text = Properties.Text.increase_font;
-            this.tsmiReduceFont.Text = Properties.Text.reduce_font;
-            this.tsmiChangePassword.Text = Properties.Text.change_pass;
-            this.tsmiImportConnections.Text = Properties.Text.import_databases;
-            this.tsmiExportConnections.Text = Properties.Text.export_databases;
-            this.tsmiMoreOptions.Text = Properties.Text.more_options;
-            this.tsmiRunMenu.Text = Properties.Text.run;
-            this.tsbExportCsv.Text = Properties.Text.export_csv;
-            this.tsmiExportCsv.Text = Properties.Text.export_csv;
-            this.tsddbErrors.Text = Properties.Text.no_errors;
-            this.tsbHistory.Text = Properties.Text.history;
-            this.tsmiHistory.Text = Properties.Text.history;
-            this.tsmiAbout.Text = Properties.Text.about;
-            this.tsbRemoveSelected.Text = Properties.Text.remove_selected;
-            this.tsbRemoveAll.Text = Properties.Text.remove_completed;
-            this.tsbStopSelected.Text = Properties.Text.stop_selected;
-            this.tsbStopAll.Text = Properties.Text.stop_all;
-            this.tsbCurrentTabLastTask.Text = Properties.Text.current_tab_last_task + " (ctrl + L)";
-            this.tpResult.Text = Properties.Text.result;
-            this.tsddbAutoScroll.Text = Properties.Text.auto_scroll;
-            this.tsmiAutoScroll.Text = Properties.Text.auto_scroll;
-            this.tsmiManualScroll.Text = Properties.Text.manual_scroll;
-            this.tpTable.Text = Properties.Text.table;
-            this.tsbTextEditor.Text = Properties.Text.show_text_window;
-            this.tsbSetNull.Text = Properties.Text.set_null;
-            this.tsddbTables.Text = Properties.Text.no_results;
-            this.tsddbInsertRow.Text = Properties.Text.insert_row;
-            this.tsbDeleteRows.Text = Properties.Text.delete_rows;
-            this.tsbApplyTableChanges.Text = Properties.Text.apply_changes;
-            this.tpExecutedSql.Text = Properties.Text.executed_query;
-            this.tsbEditExecutedSql.Text = Properties.Text.edit;
-            this.tsmiCloseTab.Text = Properties.Text.close_this_tab;
-            this.tsmiCloseAllTabs.Text = Properties.Text.close_all_tabs;
-            this.tsmiCloseAllTabsExceptThisOne.Text = Properties.Text.close_all_tabs_except_this_one;
-            this.tsmiClosedTabsLog.Text = Properties.Text.closed_tabs_log;
-            this.tsmiReopenLastClosedTab.Text = Properties.Text.reopen_last_closed_tab;
-            this.tscmiBack.Text = Properties.Text.back;
-            this.tscmiForward.Text = Properties.Text.forward;
-            this.tscmiUndo.Text = Properties.Text.undo_sc;
-            this.tscmiRedo.Text = Properties.Text.redo_sc;
-            this.tscmiCut.Text = Properties.Text.cut_sc;
-            this.tscmiCopy.Text = Properties.Text.copy_sc;
-            this.tscmiPaste.Text = Properties.Text.paste_sc;
-            this.tscmiSearchAndReplace.Text = Properties.Text.search_for_and_replace;
-            this.tscmiGoTo.Text = Properties.Text.goto_sc;
-            this.tscmiFormat.Text = Properties.Text.format_sc;
-            this.ofdSql.Filter = Properties.Text.sql_file_filter;
-            this.ofdSql.Title = Properties.Text.select_open_file;
-            this.sfdSql.Filter = Properties.Text.sql_file_filter;
-            this.sfdSql.Title = Properties.Text.select_save_file;
-            this.sfdCsv.Filter = Properties.Text.csv_file_filter;
-            this.sfdCsv.Title = Properties.Text.select_save_file;
-            this.tpNewTab.ToolTipText = Properties.Text._new;
-            this.tsddbTransactions.Text = Properties.Text.transactions;
-            this.tsmiTransactionModeManual.Text = Properties.Text.manual_transactions;
-            this.tsmiTransactionModeAutoSingle.Text = Properties.Text.auto_single_transactions;
-            this.tsmiTransactionModeAutoCoordinated.Text = Properties.Text.auto_coordinated_transactions;
-            this.ofdImportConfig.Filter = Properties.Text.pgcx_file_filter;
-            this.ofdImportConfig.Title = Properties.Text.select_open_file;
-            this.ofdOpenDiagram.Filter = Properties.Text.pgdx_file_filter;
-            this.ofdOpenDiagram.Title = Properties.Text.select_open_file;
-            this.sfdSaveDiagram.Filter = Properties.Text.pgdx_file_filter;
-            this.sfdSaveDiagram.Title = Properties.Text.select_open_file;
-            this.tsbNewDiagram.Text = Properties.Text.new_diagram;
-            this.tsbOpenDiagram.Text = Properties.Text.open_diagram;
-            this.tsmiDiagrams.Text = Properties.Text.diagrams;
-            this.tsmiNewDiagram.Text = Properties.Text.new_diagram;
-            this.tsmiOpenDiagram.Text = Properties.Text.open_diagram;
-            this.tpConnections.Text = Properties.Text.db_list;
-            this.tpSearchAndReplace.Text = Properties.Text.search_for_and_replace;
-            this.lblSearch.Text = Properties.Text.search_text;
-            this.lblReplace.Text = Properties.Text.replace_text;
-            this.chkSearchMatchCase.Text = Properties.Text.match_case;
-            this.chkSearchMatchWholeWords.Text = Properties.Text.match_whole_words;
-            this.chkSearchRegex.Text = Properties.Text.regex;
-            this.chkSearchWithinSelectedText.Text = Properties.Text.search_only_within_selected_text;
-            this.btnSearch.Text = Properties.Text.search;
-            this.btnGoNextSearchResult.Text = Properties.Text.go_next;
-            this.btnUpdateSearchSelectedText.Text = Properties.Text.update_selected_text;
-            this.btnReplaceCurrent.Text = Properties.Text.replace_current;
-            this.btnReplaceAll.Text = Properties.Text.replace_all;
-        }
-        #endregion
-
 
         #region "Search and replace"
         public void ShowSearchAndReplace()
@@ -3974,7 +3834,7 @@ namespace PgMulti
                 btnReplaceCurrent.Enabled = matches.Count > 0;
                 btnReplaceAll.Enabled = matches.Count > 0;
                 lblSearchResultsSummary.Text = string.Format(Properties.Text.number_of_search_results_found, matches.Count) + "\r\n"
-                    + (tb.SearchRange == null ? Properties.Text.searching_the_entire_text : Properties.Text.searching_only_within_selected_text) ;
+                    + (tb.SearchRange == null ? Properties.Text.searching_the_entire_text : Properties.Text.searching_only_within_selected_text);
 
                 return true;
             }
@@ -4187,5 +4047,161 @@ namespace PgMulti
         }
 
         #endregion
+
+        #region TextI18n
+        private void RefreshLanguage()
+        {
+            if (Thread.CurrentThread.CurrentCulture.Name == AppLanguage.CurrentLanguage.Id) return;
+
+            CultureInfo cu = AppLanguage.CurrentLanguage.CultureInfo;
+            Application.CurrentCulture = cu;
+            CultureInfo.DefaultThreadCurrentCulture = cu;
+            CultureInfo.DefaultThreadCurrentUICulture = cu;
+            Thread.CurrentThread.CurrentCulture = cu;
+            Thread.CurrentThread.CurrentUICulture = cu;
+            _Data!.PGLanguageData.Grammar.DefaultCulture = cu;
+            _Data!.PGSimpleLanguageData.Grammar.DefaultCulture = cu;
+            Irony.Resources.Culture = cu;
+
+            InitializeText();
+            _NRoot.Text = Properties.Text.all_databases;
+            tvaConnections.Refresh();
+
+        }
+
+        private void InitializeText()
+        {
+            this.tscmiNewGroup.Text = Properties.Text.new_group;
+            this.tscmiNewDB.Text = Properties.Text.add_db;
+            this.tscmiExploreTable.Text = Properties.Text.explore_table;
+            this.tscmiRecursiveRemove.Text = Properties.Text.recursive_remove;
+            this.tscmiCreateTableDiagram.Text = Properties.Text.create_table_diagram;
+            this.tscmiCopyText.Text = Properties.Text.copy_text;
+            this.tscmiEdit.Text = Properties.Text.edit;
+            this.tscmiRemove.Text = Properties.Text.remove;
+            this.tscmiUp.Text = Properties.Text.up;
+            this.tscmiDown.Text = Properties.Text.down;
+            this.tscmiRefresh.Text = Properties.Text.refresh;
+            this.tsbNewGroup.Text = Properties.Text.new_group;
+            this.tsbNewDB.Text = Properties.Text.add_db;
+            this.tsbExploreTable.Text = Properties.Text.explore_table;
+            this.tsbRecursiveRemove.Text = Properties.Text.recursive_remove;
+            this.tsbCreateTableDiagram.Text = Properties.Text.create_table_diagram;
+            this.tsbEdit.Text = Properties.Text.edit;
+            this.tsbRemove.Text = Properties.Text.remove;
+            this.tsbUp.Text = Properties.Text.up;
+            this.tsbDown.Text = Properties.Text.down;
+            this.tsbCollapseAll.Text = Properties.Text.collapse_all;
+            this.tsbRefresh.Text = Properties.Text.refresh;
+            this.tsmiFile.Text = Properties.Text.file;
+            this.tsmiNew.Text = Properties.Text._new;
+            this.tsmiOpen.Text = Properties.Text.open;
+            this.tsbOpen.Text = Properties.Text.open;
+            this.tsmiSave.Text = Properties.Text.save;
+            this.tsbSave.Text = Properties.Text.save;
+            this.tsmiSaveAs.Text = Properties.Text.save_as;
+            this.tsmiSaveAll.Text = Properties.Text.save_all;
+            this.tsbSaveAll.Text = Properties.Text.save_all;
+            this.tsmiClose.Text = Properties.Text.close;
+            this.tsmiCloseAll.Text = Properties.Text.close_all;
+            this.tsmiEdit.Text = Properties.Text.edit;
+            this.tsmiBack.Text = Properties.Text.back;
+            this.tsmiForward.Text = Properties.Text.forward;
+            this.tsmiUndo.Text = Properties.Text.undo_sc;
+            this.tsmiRedo.Text = Properties.Text.redo_sc;
+            this.tsmiCut.Text = Properties.Text.cut_sc;
+            this.tsmiCopy.Text = Properties.Text.copy_sc;
+            this.tsmiPaste.Text = Properties.Text.paste_sc;
+            this.tsmiSearchAndReplace.Text = Properties.Text.search_for_and_replace;
+            this.tsmiGoTo.Text = Properties.Text.goto_sc;
+            this.tsmiFormat.Text = Properties.Text.format_sc;
+            this.tsbSearchAndReplace.Text = Properties.Text.search_for_and_replace;
+            this.tsbGoTo.Text = Properties.Text.goto_sc;
+            this.tsbFormat.Text = Properties.Text.format_sc;
+            this.tsmiOptions.Text = Properties.Text.options;
+            this.tsmiIncreaseFont.Text = Properties.Text.increase_font;
+            this.tsmiReduceFont.Text = Properties.Text.reduce_font;
+            this.tsmiChangePassword.Text = Properties.Text.change_pass;
+            this.tsmiImportConnections.Text = Properties.Text.import_databases;
+            this.tsmiExportConnections.Text = Properties.Text.export_databases;
+            this.tsmiMoreOptions.Text = Properties.Text.more_options;
+            this.tsmiRunMenu.Text = Properties.Text.run;
+            this.tsbExportCsv.Text = Properties.Text.export_csv;
+            this.tsmiExportCsv.Text = Properties.Text.export_csv;
+            this.tsddbErrors.Text = Properties.Text.no_errors;
+            this.tsbHistory.Text = Properties.Text.history;
+            this.tsmiHistory.Text = Properties.Text.history;
+            this.tsmiAbout.Text = Properties.Text.about;
+            this.tsbRemoveSelected.Text = Properties.Text.remove_selected;
+            this.tsbRemoveAll.Text = Properties.Text.remove_completed;
+            this.tsbStopSelected.Text = Properties.Text.stop_selected;
+            this.tsbStopAll.Text = Properties.Text.stop_all;
+            this.tsbCurrentTabLastTask.Text = Properties.Text.current_tab_last_task + " (ctrl + L)";
+            this.tpResult.Text = Properties.Text.result;
+            this.tsddbAutoScroll.Text = Properties.Text.auto_scroll;
+            this.tsmiAutoScroll.Text = Properties.Text.auto_scroll;
+            this.tsmiManualScroll.Text = Properties.Text.manual_scroll;
+            this.tpTable.Text = Properties.Text.table;
+            this.tsbTextEditor.Text = Properties.Text.show_text_window;
+            this.tsbSetNull.Text = Properties.Text.set_null;
+            this.tsddbTables.Text = Properties.Text.no_results;
+            this.tsddbInsertRow.Text = Properties.Text.insert_row;
+            this.tsbDeleteRows.Text = Properties.Text.delete_rows;
+            this.tsbApplyTableChanges.Text = Properties.Text.apply_changes;
+            this.tpExecutedSql.Text = Properties.Text.executed_query;
+            this.tsbEditExecutedSql.Text = Properties.Text.edit;
+            this.tsmiCloseTab.Text = Properties.Text.close_this_tab;
+            this.tsmiCloseAllTabs.Text = Properties.Text.close_all_tabs;
+            this.tsmiCloseAllTabsExceptThisOne.Text = Properties.Text.close_all_tabs_except_this_one;
+            this.tsmiClosedTabsLog.Text = Properties.Text.closed_tabs_log;
+            this.tsmiReopenLastClosedTab.Text = Properties.Text.reopen_last_closed_tab;
+            this.tscmiBack.Text = Properties.Text.back;
+            this.tscmiForward.Text = Properties.Text.forward;
+            this.tscmiUndo.Text = Properties.Text.undo_sc;
+            this.tscmiRedo.Text = Properties.Text.redo_sc;
+            this.tscmiCut.Text = Properties.Text.cut_sc;
+            this.tscmiCopy.Text = Properties.Text.copy_sc;
+            this.tscmiPaste.Text = Properties.Text.paste_sc;
+            this.tscmiSearchAndReplace.Text = Properties.Text.search_for_and_replace;
+            this.tscmiGoTo.Text = Properties.Text.goto_sc;
+            this.tscmiFormat.Text = Properties.Text.format_sc;
+            this.ofdSql.Filter = Properties.Text.sql_file_filter;
+            this.ofdSql.Title = Properties.Text.select_open_file;
+            this.sfdSql.Filter = Properties.Text.sql_file_filter;
+            this.sfdSql.Title = Properties.Text.select_save_file;
+            this.sfdCsv.Filter = Properties.Text.csv_file_filter;
+            this.sfdCsv.Title = Properties.Text.select_save_file;
+            this.tpNewTab.ToolTipText = Properties.Text._new;
+            this.tsddbTransactions.Text = Properties.Text.transactions;
+            this.tsmiTransactionModeManual.Text = Properties.Text.manual_transactions;
+            this.tsmiTransactionModeAutoSingle.Text = Properties.Text.auto_single_transactions;
+            this.tsmiTransactionModeAutoCoordinated.Text = Properties.Text.auto_coordinated_transactions;
+            this.ofdImportConfig.Filter = Properties.Text.pgcx_file_filter;
+            this.ofdImportConfig.Title = Properties.Text.select_open_file;
+            this.ofdOpenDiagram.Filter = Properties.Text.pgdx_file_filter;
+            this.ofdOpenDiagram.Title = Properties.Text.select_open_file;
+            this.sfdSaveDiagram.Filter = Properties.Text.pgdx_file_filter;
+            this.sfdSaveDiagram.Title = Properties.Text.select_open_file;
+            this.tsbNewDiagram.Text = Properties.Text.new_diagram;
+            this.tsbOpenDiagram.Text = Properties.Text.open_diagram;
+            this.tsmiDiagrams.Text = Properties.Text.diagrams;
+            this.tsmiNewDiagram.Text = Properties.Text.new_diagram;
+            this.tsmiOpenDiagram.Text = Properties.Text.open_diagram;
+            this.tpConnections.Text = Properties.Text.db_list;
+            this.tpSearchAndReplace.Text = Properties.Text.search_for_and_replace;
+            this.lblSearch.Text = Properties.Text.search_text;
+            this.lblReplace.Text = Properties.Text.replace_text;
+            this.chkSearchMatchCase.Text = Properties.Text.match_case;
+            this.chkSearchMatchWholeWords.Text = Properties.Text.match_whole_words;
+            this.chkSearchRegex.Text = Properties.Text.regex;
+            this.chkSearchWithinSelectedText.Text = Properties.Text.search_only_within_selected_text;
+            this.btnSearch.Text = Properties.Text.search;
+            this.btnGoNextSearchResult.Text = Properties.Text.go_next;
+            this.btnUpdateSearchSelectedText.Text = Properties.Text.update_selected_text;
+            this.btnReplaceCurrent.Text = Properties.Text.replace_current;
+            this.btnReplaceAll.Text = Properties.Text.replace_all;
+        }
+        #endregion
+
     }
 }

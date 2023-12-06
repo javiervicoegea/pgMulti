@@ -1,4 +1,5 @@
-﻿using PgMulti.QueryEditor;
+﻿using FastColoredTextBoxNS;
+using PgMulti.QueryEditor;
 using TradeWright.UI.Forms;
 
 namespace PgMulti
@@ -33,7 +34,7 @@ namespace PgMulti
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             splitContainer1 = new SplitContainer();
             splitContainer2 = new SplitContainer();
             tcLeftPanel = new TabControl();
@@ -134,7 +135,7 @@ namespace PgMulti
             tcResult = new TabControl();
             tpResult = new TabPage();
             toolStripContainer6 = new ToolStripContainer();
-            txtResult = new TextBox();
+            fctbResult = new FastColoredTextBox();
             toolStrip6 = new ToolStrip();
             tsddbAutoScroll = new ToolStripDropDownButton();
             tsmiAutoScroll = new ToolStripMenuItem();
@@ -268,7 +269,6 @@ namespace PgMulti
             cmsTable.SuspendLayout();
             toolStrip5.SuspendLayout();
             tpExecutedSql.SuspendLayout();
-            toolStripContainer4.ContentPanel.SuspendLayout();
             toolStripContainer4.TopToolStripPanel.SuspendLayout();
             toolStripContainer4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)fctbExecutedSql).BeginInit();
@@ -674,8 +674,8 @@ namespace PgMulti
             lblSearch.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
             lblSearch.Location = new Point(3, 0);
             lblSearch.Name = "lblSearch";
-            lblSearch.Size = new Size(390, 50);
             lblSearch.Padding = new Padding(0, 20, 0, 0);
+            lblSearch.Size = new Size(390, 50);
             lblSearch.TabIndex = 5;
             // 
             // txtSearchText
@@ -748,7 +748,7 @@ namespace PgMulti
             lblSearchResultsSummary.Dock = DockStyle.Fill;
             lblSearchResultsSummary.Location = new Point(3, 220);
             lblSearchResultsSummary.Name = "lblSearchResultsSummary";
-            lblSearchResultsSummary.Size = new Size(390, 40);
+            lblSearchResultsSummary.Size = new Size(390, 60);
             lblSearchResultsSummary.TabIndex = 4;
             // 
             // flpSearchButtons
@@ -757,7 +757,7 @@ namespace PgMulti
             flpSearchButtons.Controls.Add(btnGoNextSearchResult);
             flpSearchButtons.Controls.Add(btnUpdateSearchSelectedText);
             flpSearchButtons.Dock = DockStyle.Fill;
-            flpSearchButtons.Location = new Point(3, 263);
+            flpSearchButtons.Location = new Point(3, 283);
             flpSearchButtons.Name = "flpSearchButtons";
             flpSearchButtons.Size = new Size(390, 94);
             flpSearchButtons.TabIndex = 2;
@@ -787,12 +787,12 @@ namespace PgMulti
             // btnUpdateSearchSelectedText
             // 
             btnUpdateSearchSelectedText.AutoSize = true;
-            btnUpdateSearchSelectedText.Visible = false;
             btnUpdateSearchSelectedText.Location = new Point(203, 3);
             btnUpdateSearchSelectedText.Name = "btnUpdateSearchSelectedText";
             btnUpdateSearchSelectedText.Size = new Size(94, 30);
             btnUpdateSearchSelectedText.TabIndex = 1;
             btnUpdateSearchSelectedText.UseVisualStyleBackColor = true;
+            btnUpdateSearchSelectedText.Visible = false;
             btnUpdateSearchSelectedText.Click += btnUpdateSearchSelectedText_Click;
             // 
             // lblReplace
@@ -800,7 +800,7 @@ namespace PgMulti
             lblReplace.AutoSize = true;
             lblReplace.Dock = DockStyle.Fill;
             lblReplace.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            lblReplace.Location = new Point(3, 360);
+            lblReplace.Location = new Point(3, 380);
             lblReplace.Name = "lblReplace";
             lblReplace.Padding = new Padding(0, 20, 0, 0);
             lblReplace.Size = new Size(390, 50);
@@ -809,7 +809,7 @@ namespace PgMulti
             // txtReplaceText
             // 
             txtReplaceText.Dock = DockStyle.Fill;
-            txtReplaceText.Location = new Point(3, 413);
+            txtReplaceText.Location = new Point(3, 433);
             txtReplaceText.Name = "txtReplaceText";
             txtReplaceText.Size = new Size(390, 27);
             txtReplaceText.TabIndex = 3;
@@ -819,9 +819,9 @@ namespace PgMulti
             flpReplaceButtons.Controls.Add(btnReplaceCurrent);
             flpReplaceButtons.Controls.Add(btnReplaceAll);
             flpReplaceButtons.Dock = DockStyle.Fill;
-            flpReplaceButtons.Location = new Point(3, 443);
+            flpReplaceButtons.Location = new Point(3, 463);
             flpReplaceButtons.Name = "flpReplaceButtons";
-            flpReplaceButtons.Size = new Size(390, 255);
+            flpReplaceButtons.Size = new Size(390, 235);
             flpReplaceButtons.TabIndex = 4;
             // 
             // btnReplaceCurrent
@@ -1321,7 +1321,7 @@ namespace PgMulti
             // 
             // toolStripContainer6.ContentPanel
             // 
-            toolStripContainer6.ContentPanel.Controls.Add(txtResult);
+            toolStripContainer6.ContentPanel.Controls.Add(fctbResult);
             toolStripContainer6.ContentPanel.Size = new Size(1016, 452);
             toolStripContainer6.Dock = DockStyle.Fill;
             toolStripContainer6.Location = new Point(3, 3);
@@ -1334,19 +1334,25 @@ namespace PgMulti
             // 
             toolStripContainer6.TopToolStripPanel.Controls.Add(toolStrip6);
             // 
-            // txtResult
+            // fctbResult
             // 
-            txtResult.BackColor = Color.White;
-            txtResult.Dock = DockStyle.Fill;
-            txtResult.Font = new Font("Cascadia Code", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            txtResult.Location = new Point(0, 0);
-            txtResult.Multiline = true;
-            txtResult.Name = "txtResult";
-            txtResult.ReadOnly = true;
-            txtResult.ScrollBars = ScrollBars.Vertical;
-            txtResult.Size = new Size(1016, 452);
-            txtResult.TabIndex = 0;
-            // 
+            fctbResult.Name = "fctbResult";
+            fctbResult.BackBrush = null;
+            fctbResult.CharHeight = 19;
+            fctbResult.CharWidth = 10;
+            fctbResult.Dock = DockStyle.Fill;
+            fctbResult.Font = new Font("Cascadia Code", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            fctbResult.Hotkeys = "PgUp=GoPageUp, PgDn=GoPageDown, End=GoEnd, Home=GoHome, Left=GoLeft, Up=GoUp, Right=GoRight, Down=GoDown, F3=FindNext, Shift+PgUp=GoPageUpWithSelection, Shift+PgDn=GoPageDownWithSelection, Shift+End=GoEndWithSelection, Shift+Home=GoHomeWithSelection, Shift+Left=GoLeftWithSelection, Shift+Up=GoUpWithSelection, Shift+Right=GoRightWithSelection, Shift+Down=GoDownWithSelection, Ctrl+End=GoLastLine, Ctrl+Home=GoFirstLine, Ctrl+Left=GoWordLeft, Ctrl+Up=ScrollUp, Ctrl+Right=GoWordRight, Ctrl+Down=ScrollDown, Ctrl+Ins=Copy, Ctrl+Del=ClearWordRight, Ctrl+0=ZoomNormal, Ctrl+A=SelectAll, Ctrl+C=Copy, Ctrl+F=FindDialog, Ctrl+G=GoToDialog, Ctrl+Add=ZoomIn, Ctrl+Subtract=ZoomOut, Ctrl+OemMinus=NavigateBackward, Ctrl+Shift+End=GoLastLineWithSelection, Ctrl+Shift+Home=GoFirstLineWithSelection, Ctrl+Shift+Left=GoWordLeftWithSelection, Ctrl+Shift+Right=GoWordRightWithSelection, Ctrl+Shift+OemMinus=NavigateForward, Alt+F=FindChar";
+            fctbResult.IsReplaceMode = false;
+            fctbResult.Location = new Point(0, 0);
+            fctbResult.Paddings = new Padding(20);
+            fctbResult.ReadOnly = true;
+            fctbResult.SelectionColor = Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
+            fctbResult.TabIndex = 0;
+            fctbResult.Zoom = 100;
+            fctbResult.ShowLineNumbers = false;
+            fctbResult.SecondaryFormShowed += fctbResult_SecondaryFormShowed;
+            fctbResult.SecondaryFormClosed += fctbResult_SecondaryFormClosed;
             // toolStrip6
             // 
             toolStrip6.Dock = DockStyle.None;
@@ -1413,15 +1419,15 @@ namespace PgMulti
             gvTable.AllowUserToAddRows = false;
             gvTable.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             gvTable.ContextMenuStrip = cmsTable;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = SystemColors.Window;
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
-            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle2.NullValue = "[NULL]";
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
-            gvTable.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = SystemColors.Window;
+            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle1.NullValue = "[NULL]";
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
+            gvTable.DefaultCellStyle = dataGridViewCellStyle1;
             gvTable.Dock = DockStyle.Fill;
             gvTable.Location = new Point(0, 0);
             gvTable.Name = "gvTable";
@@ -2155,7 +2161,6 @@ namespace PgMulti
             toolStrip5.ResumeLayout(false);
             toolStrip5.PerformLayout();
             tpExecutedSql.ResumeLayout(false);
-            toolStripContainer4.ContentPanel.ResumeLayout(false);
             toolStripContainer4.TopToolStripPanel.ResumeLayout(false);
             toolStripContainer4.TopToolStripPanel.PerformLayout();
             toolStripContainer4.ResumeLayout(false);
@@ -2202,7 +2207,6 @@ namespace PgMulti
         private OpenFileDialog ofdSql;
         private SaveFileDialog sfdSql;
         private TabControlExtra tcSql;
-        private TextBox txtResult;
         private DataGridView gvTable;
         private ToolStripContainer toolStripContainer3;
         private ToolStrip toolStrip3;
@@ -2216,6 +2220,7 @@ namespace PgMulti
         private System.Windows.Forms.Timer tmrSaveTabs;
         private TabPage tpExecutedSql;
         private CustomFctb fctbExecutedSql;
+        private FastColoredTextBox fctbResult;
         private ToolStripContainer toolStripContainer4;
         private ToolStrip toolStrip4;
         private ToolStripButton tsbEditExecutedSql;

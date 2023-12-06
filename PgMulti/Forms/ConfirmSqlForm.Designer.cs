@@ -78,14 +78,9 @@ namespace PgMulti
         '\"',
         '\'',
         '\''};
-            this.fctbSql.AutoIndentCharsPatterns = "^\\s*[\\w\\.]+(\\s\\w+)?\\s*(?<range>=)\\s*(?<range>[^;=]+);\n^\\s*(case|default)\\s*[^:]*(" +
-    "?<range>:)\\s*(?<range>[^;]+);";
-            this.fctbSql.AutoScrollMinSize = new System.Drawing.Size(71, 59);
             this.fctbSql.BackBrush = null;
             this.fctbSql.CharHeight = 19;
             this.fctbSql.CharWidth = 10;
-            this.fctbSql.DefaultMarkerSize = 8;
-            this.fctbSql.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
             this.fctbSql.Dock = System.Windows.Forms.DockStyle.Fill;
             this.fctbSql.Font = new System.Drawing.Font("Cascadia Code", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.fctbSql.Hotkeys = resources.GetString("fctbSql.Hotkeys");
