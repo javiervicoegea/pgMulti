@@ -10,7 +10,6 @@ namespace PgMulti.Tasks
         private bool _Symmetric;
         private Thread? _Thread = null;
         private Mutex _Mutex;
-        private Mutex _MutexStringBuilder;
         private string? _CoordinatedTransactionId = null;
 
         public PgTaskIntegrator(Data d, OnUpdate onUpdate, string sql, bool symmetric)
@@ -22,7 +21,6 @@ namespace PgMulti.Tasks
             _AvailableStatementCount = -1;
             _Symmetric = symmetric;
             _Mutex = new Mutex(false);
-            _MutexStringBuilder = new Mutex(false);
         }
 
         internal string CoordinatedTransactionId
@@ -88,9 +86,9 @@ namespace PgMulti.Tasks
                     newCurrentStatementIndex = Math.Min(newCurrentStatementIndex, tes.CurrentStatementIndex);
                 }
 
-                if (newCurrentStatementIndex != _CurrentStatementIndex)
+                if (newCurrentStatementIndex != _AvailableStatementCount)
                 {
-                    if (newCurrentStatementIndex > 0) StringBuilderAppendIndentedLine(string.Format(Properties.Text.completed_statement_n_in_all_tasks, newCurrentStatementIndex), true);
+                    if (newCurrentStatementIndex > 0) StringBuilderAppendIndentedLine(string.Format(Properties.Text.completed_statement_n_in_all_tasks, newCurrentStatementIndex), true, LogStyle.Query);
 
 
                     if (_Symmetric)
@@ -141,13 +139,13 @@ namespace PgMulti.Tasks
                         _TotalDuration = DateTime.Now.Subtract(_StartTimestamp!.Value);
                         if (_Exception == null)
                         {
-                            StringBuilderAppendIndentedLine(Properties.Text.all_tasks_finished, true);
+                            StringBuilderAppendIndentedLine(Properties.Text.all_tasks_finished, true, LogStyle.TaskSuccessfullyCompleted);
                         }
                         else
                         {
-                            StringBuilderAppendIndentedLine(Properties.Text.tasks_finished_with_error, true);
+                            StringBuilderAppendIndentedLine(Properties.Text.tasks_finished_with_error, true, LogStyle.TaskFailed);
                         }
-                        _StringBuilder.AppendLine($"\r\n{Properties.Text.total_duration}: {EllapsedTimeDescription(_TotalDuration!.Value, true)}");
+                        StringBuilderAppendSummaryLine($"\r\n{Properties.Text.total_duration}: {EllapsedTimeDescription(_TotalDuration!.Value, true)}", _Exception == null ? LogStyle.TaskSuccessfullyCompleted : LogStyle.TaskFailed);
                     }
 
                     _OnUpdate(this);
@@ -158,7 +156,7 @@ namespace PgMulti.Tasks
 
         internal void OnTesException(PgTaskExecutorSqlTables tes)
         {
-            StringBuilderAppendIndentedLine($"{string.Format(Properties.Text.error_in_task, tes.DB.Alias)}:\r\n" + tes.Exception!.Message.Replace("\r\n\r\n", "\r\n"), true);
+            StringBuilderAppendIndentedLine($"{string.Format(Properties.Text.error_in_task, tes.DB.Alias)}:\r\n" + tes.Exception!.Message.Replace("\r\n\r\n", "\r\n"), true, LogStyle.Error);
             _Exception = tes.Exception;
         }
 
@@ -193,7 +191,7 @@ namespace PgMulti.Tasks
 
             base.Cancel();
 
-            StringBuilderAppendIndentedLine(Properties.Text.canceling_all_tasks, true);
+            StringBuilderAppendIndentedLine(Properties.Text.canceling_all_tasks, true, LogStyle.Error);
             foreach (PgTaskExecutorSqlTables tes in _ExecutorTasks)
             {
                 tes.Cancel();
@@ -223,7 +221,7 @@ namespace PgMulti.Tasks
                     catch (IncompatibleQueryException iqex)
                     {
                         _Exception = iqex;
-                        StringBuilderAppendIndentedLine(string.Format(Properties.Text.incompatible_query, _CurrentStatementIndex + 1), true);
+                        StringBuilderAppendIndentedLine(string.Format(Properties.Text.incompatible_query, _CurrentStatementIndex + 1), true, LogStyle.Error);
                         qi = null;
                         break;
                     }
@@ -247,16 +245,6 @@ namespace PgMulti.Tasks
                 }
                 finally { _Mutex.ReleaseMutex(); }
             }
-        }
-
-        protected override void StringBuilderAppendIndentedLine(string s, bool includeTimestamp)
-        {
-            _MutexStringBuilder.WaitOne();
-            try
-            {
-                base.StringBuilderAppendIndentedLine(s, includeTimestamp);
-            }
-            finally { _MutexStringBuilder.ReleaseMutex(); }
         }
 
         public override string ToString()

@@ -1,4 +1,6 @@
-﻿using PgMulti.AppData;
+﻿using FastColoredTextBoxNS;
+using PgMulti.AppData;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -16,11 +18,12 @@ namespace PgMulti.Tasks
         protected TimeSpan? _TotalDuration;
         protected StateEnum _State = StateEnum.Init;
         protected OnUpdate _OnUpdate;
-        protected StringBuilder _StringBuilder;
         protected List<Query> _Queries;
         protected int _StatementCount = -1;
         protected int _CurrentStatementIndex = -1;
         protected bool _Cancel = false;
+
+        private StringBuilder _StringBuilder;
 
         public PgTask(Data d, OnUpdate onUpdate, string sql)
         {
@@ -80,7 +83,7 @@ namespace PgMulti.Tasks
             }
         }
 
-        public string Log
+        private string Log
         {
             get
             {
@@ -128,7 +131,7 @@ namespace PgMulti.Tasks
                 switch (_State)
                 {
                     case StateEnum.Init:
-                        return Properties.Text. initializing;
+                        return Properties.Text.initializing;
                     case StateEnum.Running:
                         return Properties.Text.running + " (" + EllapsedTimeDescription(DateTime.Now.Subtract(_StartTimestamp!.Value), false) + ")";
                     case StateEnum.Finished:
@@ -166,19 +169,97 @@ namespace PgMulti.Tasks
             }
         }
 
-        protected virtual void StringBuilderAppendIndentedLine(string s, bool includeTimestamp)
+        public void PrintLog(FastColoredTextBox tb, Dictionary<LogStyle, FastColoredTextBoxNS.Style> styles)
+        {
+
+            Regex r = new Regex(@"<style name=""([^\""]+)"">([^<>]*)<\/style>([^<>]*)");
+
+            string s = Log;
+            Match m = r.Match(s);
+
+            if (m.Success)
+            {
+                if (m.Index > 0)
+                {
+                    tb.AppendText(s.Substring(0, m.Index));
+                }
+
+                while (m.Success)
+                {
+                    if (m.Groups[2].Value != "")
+                    {
+                        tb.AppendText(m.Groups[2].Value, styles[Enum.Parse<LogStyle>(m.Groups[1].Value)]);
+                    }
+                    if (m.Groups[3].Value != "")
+                    {
+                        tb.AppendText(m.Groups[3].Value);
+                    }
+
+                    m = m.NextMatch();
+                }
+            }
+            else
+            {
+                if (s != "")
+                {
+                    tb.AppendText(s);
+                }
+            }
+        }
+
+        private string ApplyStyle(string s, LogStyle style)
+        {
+            return $"<style name=\"{style.ToString()}\">{s.Replace("<", "&lt;").Replace(">", "&gt;")}</style>";
+        }
+
+        protected void StringBuilderAppendIndentedLine(string s, bool includeTimestamp, LogStyle? style = null)
         {
             lock (_StringBuilder)
             {
                 if (includeTimestamp)
                 {
-                    _StringBuilder.Append($"[{DateTime.Now.ToShortTimeString()}] ");
+                    _StringBuilder.Append(ApplyStyle($"[{DateTime.Now.ToShortTimeString()}]", LogStyle.Timestamp) + " ");
                 }
                 else
                 {
                     _StringBuilder.Append(TimestampGap);
                 }
-                _StringBuilder.AppendLine(s.Replace("\n", "\n" + TimestampGap));
+
+                if (style.HasValue)
+                {
+                    string[] lines = s.Split("\r\n");
+                    for (int i = 0; i < lines.Length; i++)
+                    {
+                        if (i > 0) _StringBuilder.Append(TimestampGap);
+
+                        _StringBuilder.AppendLine(ApplyStyle(lines[i], style.Value));
+                    }
+                }
+                else
+                {
+                    _StringBuilder.AppendLine(s.Replace("\n", "\n" + TimestampGap));
+                }
+            }
+        }
+
+        protected void StringBuilderAppendSummaryLine(string s, LogStyle? style = null)
+        {
+            if (style.HasValue)
+            {
+                s = ApplyStyle(s, style.Value);
+            }
+
+            lock (_StringBuilder)
+            {
+                _StringBuilder.AppendLine(s);
+            }
+        }
+
+        protected void StringBuilderAppendEmptyLine()
+        {
+            lock (_StringBuilder)
+            {
+                _StringBuilder.AppendLine();
             }
         }
 
@@ -201,6 +282,16 @@ namespace PgMulti.Tasks
             Init,
             Running,
             Finished
+        }
+
+        public enum LogStyle
+        {
+            Timestamp,
+            Query,
+            TaskIsRunning,
+            TaskSuccessfullyCompleted,
+            TaskFailed,
+            Error
         }
     }
 }

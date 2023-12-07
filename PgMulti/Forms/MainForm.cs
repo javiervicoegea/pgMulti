@@ -22,6 +22,7 @@ using PgMulti.Properties;
 using System;
 using System.Linq;
 using Irony;
+using static PgMulti.Tasks.PgTask;
 
 namespace PgMulti
 {
@@ -34,6 +35,8 @@ namespace PgMulti
         private bool _AutomaticScroll = true;
         private MainFormTreeModel _TreeModel;
         private List<Form> _SecondaryForms = new List<Form>();
+        private Dictionary<LogStyle, FastColoredTextBoxNS.Style> _FctbResultStyles;
+
 
         private static Font _CheckedNodeFont = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point);
         private static Font _NodeFont = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
@@ -57,7 +60,13 @@ namespace PgMulti
             ncb.CheckStateChanged += ncb_CheckStateChanged;
             ncb.IsVisibleValueNeeded += ncb_IsVisibleValueNeeded;
 
-
+            _FctbResultStyles = new Dictionary<LogStyle, Style>();
+            _FctbResultStyles[LogStyle.Timestamp] = new TextStyle(Brushes.Black, null, FontStyle.Bold);
+            _FctbResultStyles[LogStyle.Query] = new TextStyle(Brushes.White, Brushes.Black, FontStyle.Bold);
+            _FctbResultStyles[LogStyle.TaskIsRunning] = new TextStyle(Brushes.White, Brushes.DarkBlue, FontStyle.Bold);
+            _FctbResultStyles[LogStyle.TaskSuccessfullyCompleted] = new TextStyle(Brushes.White, Brushes.DarkGreen, FontStyle.Bold);
+            _FctbResultStyles[LogStyle.TaskFailed] = new TextStyle(Brushes.White, Brushes.DarkRed, FontStyle.Bold);
+            _FctbResultStyles[LogStyle.Error] = new TextStyle(Brushes.DarkRed, null, FontStyle.Bold);
         }
 
 
@@ -143,7 +152,7 @@ namespace PgMulti
             CheckUpdates();
         }
 
-        private void RefreshTransactionsConfig() 
+        private void RefreshTransactionsConfig()
         {
             tsmiTransactionModeManual.Image = null;
             tsmiTransactionModeAutoSingle.Image = null;
@@ -2999,8 +3008,7 @@ namespace PgMulti
                     lbResult.SelectedIndices.Clear();
                     lbResult.SelectedIndices.Add(0);
                     _IgnoreLbResult_SelectedIndexChanged = false;
-                    fctbResult.Text = "";
-                    fctbResult.ClearUndo();
+                    fctbResult.Clear();
                     gvTable.Tag = null;
                     gvTable.DataSource = null;
                     tsddbTables.Text = Properties.Text.no_results;
@@ -3053,8 +3061,7 @@ namespace PgMulti
         {
             if (_IgnoreLbResult_SelectedIndexChanged) return;
             lbResult.Refresh();
-            fctbResult.Text = "";
-            fctbResult.ClearUndo();
+            fctbResult.Clear();
             gvTable.Tag = null;
             gvTable.DataSource = null;
             tsddbTables.Text = Properties.Text.no_results;
@@ -3084,8 +3091,7 @@ namespace PgMulti
                 {
                     gvTable.Tag = null;
                     gvTable.DataSource = null;
-                    fctbResult.Text = "";
-                    fctbResult.ClearUndo();
+                    fctbResult.Clear();
                     fctbExecutedSql.Text = "";
                     fctbExecutedSql.ClearUndo();
                     tsbEditExecutedSql.Enabled = false;
@@ -3099,8 +3105,11 @@ namespace PgMulti
                     int scrollAnt = fctbResult.VerticalScroll.Value;
                     FastColoredTextBoxNS.Range selAnt = fctbResult.Selection.Clone();
 
-                    fctbResult.Text = t.Log;
-                    fctbResult.ClearUndo();
+                    fctbResult.BeginUpdate();
+                    fctbResult.Selection.BeginUpdate();
+                    fctbResult.Clear();
+
+                    t.PrintLog(fctbResult, _FctbResultStyles);
 
                     if (t.State == PgTask.StateEnum.Finished)
                     {
@@ -3108,11 +3117,11 @@ namespace PgMulti
 
                         if (t.Exception == null)
                         {
-                            fctbResult.ForeColor = Color.DarkGreen;
+                            //fctbResult.ForeColor = Color.DarkGreen;
                         }
                         else
                         {
-                            fctbResult.ForeColor = Color.DarkRed;
+                            //fctbResult.ForeColor = Color.DarkRed;
                         }
 
                         if (t.Queries.Count > 0 && t.Exception == null)
@@ -3126,9 +3135,9 @@ namespace PgMulti
                     }
                     else
                     {
-                        fctbResult.ForeColor = Color.DarkBlue;
-                        fctbResult.Text += $"\r\n\r\n{Properties.Text.executing_since}: {t.StartTimestamp!.Value:g}";
-                        fctbResult.ClearUndo();
+                        //fctbResult.ForeColor = Color.DarkBlue;
+                        fctbResult.AppendText("\r\n\r\n");
+                        fctbResult.AppendText($"{Properties.Text.executing_since}: {t.StartTimestamp!.Value:g}", _FctbResultStyles[LogStyle.TaskIsRunning]);
                     }
 
                     bool tsddbTablesPrevEmpty = tsddbTables.DropDown.Items.Count == 0;
@@ -3151,20 +3160,17 @@ namespace PgMulti
 
                     if (_AutomaticScroll)
                     {
-                        //txtResult.SelectionStart = txtResult.Text.Length;
-                        //txtResult.SelectionLength = 0;
-                        //txtResult.ScrollToCaret();
-                        fctbResult.OnScroll(new ScrollEventArgs(ScrollEventType.EndScroll, fctbResult.VerticalScroll.Value, fctbResult.VerticalScroll.Maximum, ScrollOrientation.VerticalScroll), true);
+                        fctbResult.GoEnd();
                     }
                     else
                     {
-                        //txtResult.SelectionStart = selStartAnt;
-                        //txtResult.SelectionLength = selLengthAnt;
-                        //SetScrollPos(txtResult.Handle, 1, scrollAnt, true);
-                        //SendMessage(txtResult.Handle, 0x00B6, 0, scrollAnt);
+                        fctbResult.Selection = selAnt;
                         fctbResult.OnScroll(new ScrollEventArgs(ScrollEventType.EndScroll, fctbResult.VerticalScroll.Value, scrollAnt, ScrollOrientation.VerticalScroll), true);
                     }
-                    fctbResult.Selection = selAnt;
+
+                    fctbResult.Selection.EndUpdate();
+                    fctbResult.ClearUndo();
+                    fctbResult.EndUpdate();
 
                     fctbExecutedSql.SelectionStart = 0;
                     fctbExecutedSql.SelectionLength = 0;
@@ -3470,7 +3476,7 @@ namespace PgMulti
 
         private void gvTable_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
-            if (e.ColumnIndex != -1 && ((Query.QueryColumn)gvTable.Columns[e.ColumnIndex].Tag!).EditableOnEdit && e.RowIndex == -1)
+            if (e.ColumnIndex != -1 && gvTable.Columns[e.ColumnIndex].Tag != null && ((Query.QueryColumn)gvTable.Columns[e.ColumnIndex].Tag).EditableOnEdit && e.RowIndex == -1)
             {
                 e.PaintBackground(e.ClipBounds, false);
                 e.PaintContent(e.ClipBounds);

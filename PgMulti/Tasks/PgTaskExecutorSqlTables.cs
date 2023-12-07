@@ -67,7 +67,7 @@ namespace PgMulti.Tasks
                 }
                 catch (Exception ex)
                 {
-                    StringBuilderAppendIndentedLine($"{Properties.Text.error_processing_task}: " + ex.Message, true);
+                    StringBuilderAppendIndentedLine($"{Properties.Text.error_processing_task}: " + ex.Message, true, LogStyle.Error);
                     throw new AlreadyLoggedException(ex.Message, ex);
                 }
 
@@ -79,7 +79,7 @@ namespace PgMulti.Tasks
                     {
                         if (stmt.Item3 == "BEGIN" || stmt.Item3 == "COMMIT" || stmt.Item3 == "ROLLBACK")
                         {
-                            StringBuilderAppendIndentedLine(Properties.Text.error_no_manual_transaction_allowed_in_auto_transactions, true);
+                            StringBuilderAppendIndentedLine(Properties.Text.error_no_manual_transaction_allowed_in_auto_transactions, true, LogStyle.Error);
                             throw new AlreadyLoggedException(Properties.Text.error_no_manual_transaction_allowed_in_auto_transactions);
                         }
                     }
@@ -130,9 +130,10 @@ namespace PgMulti.Tasks
                             int linea = stmt.Item1;
                             string sql = stmt.Item2;
 
-                            _StringBuilder.AppendLine();
-                            StringBuilderAppendIndentedLine(string.Format(Properties.Text.query_counter, _CurrentStatementIndex + 1, StatementCount, linea + 1) + $":\r\n{sql}", true);
-                            _StringBuilder.AppendLine();
+                            StringBuilderAppendEmptyLine();
+                            StringBuilderAppendIndentedLine(string.Format(Properties.Text.query_counter, _CurrentStatementIndex + 1, StatementCount, linea + 1) + ":", true, LogStyle.Query);
+                            StringBuilderAppendIndentedLine(sql, false);
+                            StringBuilderAppendEmptyLine();
 
                             _NpgsqlCommand.CommandText = sql;
 
@@ -189,7 +190,7 @@ namespace PgMulti.Tasks
                                 _NpgsqlCommand.CommandText = "COMMIT";
                                 _NpgsqlCommand.ExecuteNonQuery();
 
-                                _StringBuilder.AppendLine();
+                                StringBuilderAppendEmptyLine();
                                 StringBuilderAppendIndentedLine(Properties.Text.commited_single_auto_transaction, true);
                                 break;
                             case Config.TransactionModeEnum.AutoCoordinated:
@@ -199,7 +200,7 @@ namespace PgMulti.Tasks
                                 _NpgsqlCommand.ExecuteNonQuery();
                                 _PreparedCommit = true;
 
-                                _StringBuilder.AppendLine();
+                                StringBuilderAppendEmptyLine();
                                 StringBuilderAppendIndentedLine(string.Format(Properties.Text.prepared_coordinated_auto_transaction, idTransaccion), true);
                                 StringBuilderAppendIndentedLine(Properties.Text.waiting_tasks, false);
                                 _TaskIntegrator.OnTesWaitingCoordinatedCommit(this);
@@ -214,7 +215,7 @@ namespace PgMulti.Tasks
                                     _NpgsqlCommand.CommandText = $"ROLLBACK PREPARED '{idTransaccion}'";
                                     _NpgsqlCommand.ExecuteNonQuery();
 
-                                    _StringBuilder.AppendLine();
+                                    StringBuilderAppendEmptyLine();
                                     StringBuilderAppendIndentedLine(Properties.Text.rollbacked_coordinated_auto_transaction, true);
                                     _Exception = new Exception(Properties.Text.rollbacked_prepared_transaction);
                                 }
@@ -223,7 +224,7 @@ namespace PgMulti.Tasks
                                     _NpgsqlCommand.CommandText = $"COMMIT PREPARED '{idTransaccion}'";
                                     _NpgsqlCommand.ExecuteNonQuery();
 
-                                    _StringBuilder.AppendLine();
+                                    StringBuilderAppendEmptyLine();
                                     StringBuilderAppendIndentedLine(Properties.Text.commited_coordinated_auto_transaction, true);
                                 }
                                 break;
@@ -236,19 +237,24 @@ namespace PgMulti.Tasks
                         Exception? exi = ex;
                         while (exi != null)
                         {
-                            StringBuilderAppendIndentedLine($"{Properties.Text.error_processing_task}: {exi.Message}", false);
+                            StringBuilderAppendIndentedLine($"{Properties.Text.error_processing_task}: {exi.Message}", false, LogStyle.Error);
 
                             if (exi is NpgsqlException)
                             {
                                 NpgsqlException nex = (NpgsqlException)exi;
-                                if (!string.IsNullOrWhiteSpace(nex.SqlState)) StringBuilderAppendIndentedLine($"{Properties.Text.pg_error_code}: {nex.SqlState}", false);
+                                if (!string.IsNullOrWhiteSpace(nex.SqlState))
+                                {
+                                    StringBuilderAppendEmptyLine();
+                                    StringBuilderAppendIndentedLine($"{Properties.Text.pg_error_code}: {nex.SqlState}", false, LogStyle.Error);
+                                }
 
                                 if (exi is PostgresException)
                                 {
                                     PostgresException pex = (PostgresException)exi;
                                     if (!string.IsNullOrEmpty(pex.Detail))
                                     {
-                                        StringBuilderAppendIndentedLine($"{Properties.Text.pg_exception_detail}: {pex.Detail}", false);
+                                        StringBuilderAppendEmptyLine();
+                                        StringBuilderAppendIndentedLine($"{Properties.Text.pg_exception_detail}: {pex.Detail}", false, LogStyle.Error);
                                     }
                                 }
                             }
@@ -260,7 +266,7 @@ namespace PgMulti.Tasks
                             _NpgsqlCommand.CommandText = "ROLLBACK";
                             _NpgsqlCommand.ExecuteNonQuery();
 
-                            _StringBuilder.AppendLine();
+                            StringBuilderAppendEmptyLine();
                             StringBuilderAppendIndentedLine(Properties.Text.rollbacked_single_auto_transaction, true);
                         }
                         throw new AlreadyLoggedException(ex.Message, ex);
@@ -275,7 +281,7 @@ namespace PgMulti.Tasks
             }
             catch (Exception ex2)
             {
-                StringBuilderAppendIndentedLine($"{Properties.Text.error_processing_task}: {ex2.Message}", true);
+                StringBuilderAppendIndentedLine($"{Properties.Text.error_processing_task}: {ex2.Message}", true, LogStyle.Error);
 
                 _Exception = ex2;
                 if (_TaskIntegrator != null) _TaskIntegrator.OnTesException(this);
@@ -287,8 +293,8 @@ namespace PgMulti.Tasks
                 StringBuilderAppendIndentedLine(Properties.Text.closed_connection, true);
 
                 _TotalDuration = DateTime.Now.Subtract(_StartTimestamp!.Value);
-                _StringBuilder.AppendLine();
-                _StringBuilder.AppendLine($"{Properties.Text.total_duration}: {EllapsedTimeDescription(_TotalDuration!.Value, true)}");
+                StringBuilderAppendEmptyLine();
+                StringBuilderAppendSummaryLine($"{Properties.Text.total_duration}: {EllapsedTimeDescription(_TotalDuration!.Value, true)}", _Exception == null ? LogStyle.TaskSuccessfullyCompleted : LogStyle.TaskFailed);
 
                 _State = StateEnum.Finished;
 

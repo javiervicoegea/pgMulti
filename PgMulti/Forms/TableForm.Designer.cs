@@ -657,7 +657,6 @@
         private CheckBox chkIdentity;
         private Label lblColumnDefault;
         private TextBox txtColumnDefault;
-        private Panel panel1;
         private Panel panel3;
         private DataGridView gvColumns;
         private DataGridViewTextBoxColumn gvcName;

@@ -79,11 +79,6 @@ namespace PgMulti.Diagrams
             return CalculateDistanceToPointSquared(p, p2);
         }
 
-        protected DiagramObject()
-        {
-            _BoundingBox = new Rectangle();
-        }
-
         public Rectangle BoundingBox { get { return _BoundingBox; } }
 
         public bool Dragging

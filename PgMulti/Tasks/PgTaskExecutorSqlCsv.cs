@@ -53,7 +53,7 @@ namespace PgMulti.Tasks
                 }
                 catch (Exception ex)
                 {
-                    _StringBuilder.AppendLine($"{Properties.Text.error_processing_task}: " + ex.Message);
+                    StringBuilderAppendSummaryLine($"{Properties.Text.error_processing_task}: " + ex.Message, LogStyle.Error);
                     throw new AlreadyLoggedException(ex.Message, ex);
                 }
 
@@ -124,9 +124,10 @@ namespace PgMulti.Tasks
                                     int linea = stmt.Item1;
                                     string sql = stmt.Item2;
 
-                                    _StringBuilder.AppendLine();
-                                    StringBuilderAppendIndentedLine(string.Format(Properties.Text.query_counter, _CurrentStatementIndex + 1, StatementCount, linea + 1) + $":\r\n{sql}", true);
-                                    _StringBuilder.AppendLine();
+                                    StringBuilderAppendEmptyLine();
+                                    StringBuilderAppendIndentedLine(string.Format(Properties.Text.query_counter, _CurrentStatementIndex + 1, StatementCount, linea + 1) + ":", true, LogStyle.Query);
+                                    StringBuilderAppendIndentedLine(sql, false);
+                                    StringBuilderAppendEmptyLine();
 
                                     _NpgsqlCommand.CommandText = sql;
 
@@ -257,7 +258,7 @@ namespace PgMulti.Tasks
                                         _NpgsqlCommand.CommandText = "COMMIT";
                                         _NpgsqlCommand.ExecuteNonQuery();
 
-                                        _StringBuilder.AppendLine();
+                                        StringBuilderAppendEmptyLine();
                                         StringBuilderAppendIndentedLine(Properties.Text.commited_single_auto_transaction, true);
                                         break;
                                     default:
@@ -269,19 +270,24 @@ namespace PgMulti.Tasks
                                 Exception? exi = ex;
                                 while (exi != null)
                                 {
-                                    StringBuilderAppendIndentedLine($"{Properties.Text.error_processing_task}: {exi.Message}", false);
+                                    StringBuilderAppendIndentedLine($"{Properties.Text.error_processing_task}: {exi.Message}", false, LogStyle.Error);
 
                                     if (exi is NpgsqlException)
                                     {
                                         NpgsqlException nex = (NpgsqlException)exi;
-                                        if (!string.IsNullOrWhiteSpace(nex.SqlState)) StringBuilderAppendIndentedLine($"{Properties.Text.pg_error_code}: {nex.SqlState}", false);
+                                        if (!string.IsNullOrWhiteSpace(nex.SqlState))
+                                        {
+                                            StringBuilderAppendEmptyLine();
+                                            StringBuilderAppendIndentedLine($"{Properties.Text.pg_error_code}: {nex.SqlState}", false, LogStyle.Error);
+                                        }
 
                                         if (nex is PostgresException)
                                         {
                                             PostgresException pex = (PostgresException)nex;
                                             if (!string.IsNullOrEmpty(pex.Detail))
                                             {
-                                                StringBuilderAppendIndentedLine($"{Properties.Text.pg_exception_detail}: {pex.Detail}", false);
+                                                StringBuilderAppendEmptyLine();
+                                                StringBuilderAppendIndentedLine($"{Properties.Text.pg_exception_detail}: {pex.Detail}", false, LogStyle.Error);
                                             }
                                         }
                                     }
@@ -294,7 +300,7 @@ namespace PgMulti.Tasks
                                     _NpgsqlCommand.CommandText = "ROLLBACK";
                                     _NpgsqlCommand.ExecuteNonQuery();
 
-                                    _StringBuilder.AppendLine();
+                                    StringBuilderAppendEmptyLine();
                                     StringBuilderAppendIndentedLine(Properties.Text.rollbacked_single_auto_transaction, true);
                                 }
                                 throw new AlreadyLoggedException(ex.Message, ex);
@@ -311,7 +317,7 @@ namespace PgMulti.Tasks
             }
             catch (Exception ex2)
             {
-                StringBuilderAppendIndentedLine($"{Properties.Text.error_processing_task}: {ex2.Message}", true);
+                StringBuilderAppendIndentedLine($"{Properties.Text.error_processing_task}: {ex2.Message}", true, LogStyle.Error);
 
                 _Exception = ex2;
             }
@@ -321,8 +327,8 @@ namespace PgMulti.Tasks
                 StringBuilderAppendIndentedLine(Properties.Text.closed_connection, true);
 
                 _TotalDuration = DateTime.Now.Subtract(_StartTimestamp!.Value);
-                _StringBuilder.AppendLine();
-                _StringBuilder.AppendLine($"{Properties.Text.total_duration}: {EllapsedTimeDescription(_TotalDuration!.Value, true)}");
+                StringBuilderAppendEmptyLine();
+                StringBuilderAppendSummaryLine($"{Properties.Text.total_duration}: {EllapsedTimeDescription(_TotalDuration!.Value, true)}", _Exception == null ? LogStyle.TaskSuccessfullyCompleted: LogStyle.TaskFailed);
 
                 _State = StateEnum.Finished;
 
