@@ -21,7 +21,8 @@ namespace PgMulti.QueryEditor
                 if (this.value == value)
                     return;
                 this.value = value;
-                Invalidate();
+                //Invalidate();
+                Refresh();
                 OnScroll();
             }
         }
@@ -33,12 +34,28 @@ namespace PgMulti.QueryEditor
             set { maximum = value; Invalidate(); }
         }
 
-        private int thumbSize = 10;
+        private int _ThumbSize = 10;
         public int ThumbSize
         {
-            get { return thumbSize; }
-            set { thumbSize = value; Invalidate(); }
+            get { return _ThumbSize; }
+            set { _ThumbSize = value; Invalidate(); }
         }
+
+        private int _FirstLineY = 0;
+        public int FirstLineY
+        {
+            get { return _FirstLineY; }
+            set { _FirstLineY = value; Invalidate(); }
+        }
+
+        private float _LineHeight = 5.0f;
+        public float LineHeight
+        {
+            get { return _LineHeight; }
+            set { _LineHeight = value; Invalidate(); }
+        }
+
+
 
         private Color thumbColor = Color.Gray;
         public Color ThumbColor
@@ -99,13 +116,11 @@ namespace PgMulti.QueryEditor
                 Refresh();
             }
             base.OnMouseMove(e);
-
         }
 
         private void MouseScroll(MouseEventArgs e)
         {
-            int v = 0;
-            v = Maximum * (e.Y - thumbSize / 2) / (Height - thumbSize);
+            int v = Maximum * (e.Y - _ThumbSize / 2) / (Height - _ThumbSize);
             Value = Math.Max(0, Math.Min(Maximum, v));
         }
 
@@ -120,24 +135,24 @@ namespace PgMulti.QueryEditor
             if (Maximum <= 0)
                 return;
 
-            Rectangle thumbRect = new Rectangle(2, value * (Height - thumbSize) / Maximum, Width - 4, thumbSize);
+            Rectangle thumbRect = new Rectangle(2, 1 + (value * (Height - 2 - _ThumbSize)) / Maximum, Width - 4, _ThumbSize);
 
             using (var brush = new SolidBrush(thumbColor))
                 e.Graphics.FillRectangle(brush, thumbRect);
 
 
-            int lineHeight = Height / tb.LinesCount;
+
             Rectangle r = new Rectangle(4, 0, Width - 8, 0);
 
-            DrawMarkList(e.Graphics, tb.CommentLines, lineHeight, commentColor, r);
-            DrawMarkList(e.Graphics, tb.ErrorLines, lineHeight, errorColor, r);
-            DrawMarkList(e.Graphics, tb.SearchMatchLines, lineHeight, searchMatchColor, r);
+            DrawMarkList(e.Graphics, tb.CommentLines, _FirstLineY, _LineHeight, commentColor, r);
+            DrawMarkList(e.Graphics, tb.ErrorLines, _FirstLineY, _LineHeight, errorColor, r);
+            DrawMarkList(e.Graphics, tb.SearchMatchLines, _FirstLineY, _LineHeight, searchMatchColor, r);
 
             using (var pen = new Pen(borderColor))
                 e.Graphics.DrawRectangle(pen, new Rectangle(0, 0, Width - 1, Height - 1));
         }
 
-        private void DrawMarkList(Graphics g, SortedList<int,int> list, int lineHeight, Color c, Rectangle baseRectangle)
+        private void DrawMarkList(Graphics g, SortedList<int, int> list, int firstLineY, float lineHeight, Color c, Rectangle baseRectangle)
         {
             for (int i = 0; i < list.Count;)
             {
@@ -149,8 +164,8 @@ namespace PgMulti.QueryEditor
                     fin++;
                 }
 
-                baseRectangle.Y = ini * lineHeight;
-                baseRectangle.Height = (fin - ini + 1) * lineHeight;
+                baseRectangle.Y = Math.Min(firstLineY + (int)(ini * lineHeight), Height - 6);
+                baseRectangle.Height = Math.Max(5, (int)((fin - ini + 1) * lineHeight));
 
                 using (var brush = new SolidBrush(c))
                     g.FillRectangle(brush, baseRectangle);

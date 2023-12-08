@@ -5686,8 +5686,7 @@ namespace FastColoredTextBoxNS
                 ChangeFontSize(2 * Math.Sign(e.Delta));
                 ((HandledMouseEventArgs)e).Handled = true;
             }
-            else
-            if (VerticalScroll.Visible || !ShowScrollBars)
+            else if (VerticalScroll.Visible || !ShowScrollBars)
             {
                 //base.OnMouseWheel(e);
 
@@ -5702,7 +5701,7 @@ namespace FastColoredTextBoxNS
             DeactivateMiddleClickScrollingMode();
         }
 
-        private void DoScrollVertical(int countLines, int direction)
+        protected void DoScrollVertical(int countLines, int direction)
         {
             if (VerticalScroll.Visible || !ShowScrollBars)
             {
@@ -5739,7 +5738,7 @@ namespace FastColoredTextBoxNS
         /// <returns>
         /// Number of lines to scrol l when the mouse wheel is turned
         /// </returns>
-        private static int GetControlPanelWheelScrollLinesValue()
+        protected static int GetControlPanelWheelScrollLinesValue()
         {
             try
             {

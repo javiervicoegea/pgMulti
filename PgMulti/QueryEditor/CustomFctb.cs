@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using FastColoredTextBoxNS;
 using Irony.Parsing;
+using Newtonsoft.Json.Linq;
 using PgMulti.SqlSyntax;
 
 namespace PgMulti.QueryEditor
@@ -159,6 +160,7 @@ namespace PgMulti.QueryEditor
                 VScrollBar.SearchMatchColor = Color.FromArgb(200, 200, 200, 50);
                 VScrollBar.Value = 0;
                 VScrollBar.Scroll += scrollBar_Scroll;
+                VScrollBar.MouseWheel += vScrollBar_MouseWheel;
             }
             else
             {
@@ -457,6 +459,7 @@ namespace PgMulti.QueryEditor
             return r;
         }
 
+
         protected virtual void InitBraces()
         {
             LeftBracket = '\x0';
@@ -497,31 +500,43 @@ namespace PgMulti.QueryEditor
 
             if (UseCustomScrollBars)
             {
-                AdjustScrollbar(VScrollBar!, VerticalScroll.Maximum, VerticalScroll.Value, ClientSize.Height * VScrollBar!.Height / (TextHeight + Paddings.Top + Paddings.Bottom));
-                AdjustScrollbar(HScrollBar!, HorizontalScroll.Maximum, HorizontalScroll.Value, ClientSize.Width);
+                AdjustCustomVerticalScrollbar(VScrollBar!, VerticalScroll.Maximum, VerticalScroll.Value, (ClientSize.Height * (VScrollBar!.Height-2)) / (TextHeight + Paddings.Top + Paddings.Bottom));
+                AdjustHorizontalScrollbar(HScrollBar!, HorizontalScroll.Maximum, HorizontalScroll.Value, ClientSize.Width);
             }
         }
 
-        private void AdjustScrollbar(CustomVerticalScrollBar scrollBar, int max, int value, int thumbSize)
+        private void AdjustCustomVerticalScrollbar(CustomVerticalScrollBar vScrollBar, int max, int value, int thumbSize)
         {
-            scrollBar.Maximum = max;
-            scrollBar.Visible = max > 0;
-            scrollBar.Value = Math.Min(scrollBar.Maximum, value);
-            scrollBar.ThumbSize = thumbSize;
+            vScrollBar.Maximum = max;
+            vScrollBar.Visible = max > 0;
+            vScrollBar.Value = Math.Min(vScrollBar.Maximum, value);
+            vScrollBar.ThumbSize = Math.Max(10, thumbSize);
+            vScrollBar.FirstLineY = (int)(((float)Paddings.Top * (vScrollBar.Height - 2)) / (TextHeight + Paddings.Top + Paddings.Bottom));
+            vScrollBar.LineHeight = ((float)TextHeight * (vScrollBar.Height - 2)) / (LinesCount * (TextHeight + Paddings.Top + Paddings.Bottom));
+
         }
 
-        private void AdjustScrollbar(ScrollBar scrollBar, int max, int value, int clientSize)
+        private void AdjustHorizontalScrollbar(ScrollBar hScrollBar, int max, int value, int clientSize)
         {
-            scrollBar.LargeChange = clientSize / 3;
-            scrollBar.SmallChange = clientSize / 11;
-            scrollBar.Maximum = max + scrollBar.LargeChange;
-            scrollBar.Visible = max > 0;
-            scrollBar.Value = Math.Min(scrollBar.Maximum, value);
+            hScrollBar.LargeChange = clientSize / 3;
+            hScrollBar.SmallChange = clientSize / 11;
+            hScrollBar.Maximum = max + hScrollBar.LargeChange;
+            hScrollBar.Visible = max > 0;
+            hScrollBar.Value = Math.Min(hScrollBar.Maximum, value);
         }
 
         private void scrollBar_Scroll(object? sender, ScrollEventArgs e)
         {
             OnScroll(e, e.Type != ScrollEventType.ThumbTrack && e.Type != ScrollEventType.ThumbPosition);
+        }
+
+        private void vScrollBar_MouseWheel(object? sender, MouseEventArgs e)
+        {
+            int mouseWheelScrollLinesSetting = GetControlPanelWheelScrollLinesValue();
+
+            DoScrollVertical(mouseWheelScrollLinesSetting, e.Delta);
+
+            ((HandledMouseEventArgs)e).Handled = true;
         }
     }
 
