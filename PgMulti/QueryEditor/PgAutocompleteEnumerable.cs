@@ -728,7 +728,7 @@ namespace PgMulti.QueryEditor
                     {
                         case "deleteStmt":
                         case "updateStmt":
-                            _ProcessTableAlias(n["id"], n["aliasOpt"], tables, true);
+                            _ProcessTableAlias(n["tableId"]!["id"], n["aliasOpt"], tables, true);
                             break;
                         case "createIndexStmt":
                             _ProcessTableAlias(n["tableId"]!["id"], null, tables, true);

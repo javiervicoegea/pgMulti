@@ -138,9 +138,7 @@ namespace PgMulti
 
             if (tcSql.TabCount == 1)
             {
-                CreateEditorTabOptions o = new CreateEditorTabOptions();
-                o.Focus = true;
-                CreateEditorTab(o);
+                CreateEditorTab(new CreateEditorTabOptions() { Focus = true });
             }
             else
             {
@@ -1413,6 +1411,7 @@ namespace PgMulti
         {
             public string? Title = null;
             public string? Text = null;
+            public string? Path = null;
             public bool Focus = false;
         }
 
@@ -1599,6 +1598,10 @@ namespace PgMulti
             {
                 tcSql.SelectedTab = tp;
                 fctbSql.Focus();
+            }
+            if (o.Path != null)
+            {
+                tp.ToolTipText = o.Path;
             }
 
             return si;
@@ -2088,6 +2091,7 @@ namespace PgMulti
             {
                 File.WriteAllText(sfdSql.FileName, tp.Controls[0].Text);
                 tp.Text = Path.GetFileName(sfdSql.FileName);
+                tp.ToolTipText = sfdSql.FileName;
                 EditorTab si = (EditorTab)tp.Tag!;
                 si.PendingSaveDB = true;
                 si.LocalPath = sfdSql.FileName;
@@ -2146,6 +2150,11 @@ namespace PgMulti
                             cmsTabs.Tag = tp;
                             tsmiCloseTab.Visible = tp != tpNewTab;
                             tsmiCloseAllTabsExceptThisOne.Visible = tp != tpNewTab;
+
+                            EditorTab et = ((EditorTab)tp.Tag!);
+                            tsmiCopyPath.Visible = et.LocalPath != null;
+                            tsmiOpenFolder.Visible = et.LocalPath != null;
+
                             cmsTabs.Show(Cursor.Position);
                         }
                         else if (e.Button == MouseButtons.Middle)
@@ -2206,6 +2215,20 @@ namespace PgMulti
         private void tsmiClosedTabsLog_Click(object sender, EventArgs e)
         {
             ShowLogForm(true);
+        }
+
+        private void tsmiCopyPath_Click(object sender, EventArgs e)
+        {
+            EditorTab et = ((EditorTab)((TabPage)cmsTabs.Tag!).Tag!);
+
+            System.Windows.Forms.Clipboard.SetText(et.LocalPath!);
+        }
+
+        private void tsmiOpenFolder_Click(object sender, EventArgs e)
+        {
+            EditorTab et = ((EditorTab)((TabPage)cmsTabs.Tag!).Tag!);
+
+            System.Diagnostics.Process.Start("explorer.exe", "/select, \"" + et.LocalPath! + "\"");
         }
 
         private void tsmiReopenLastClosedTab_Click(object sender, EventArgs e)
@@ -2709,7 +2732,7 @@ namespace PgMulti
                 }
                 else
                 {
-                    tp = CreateEditorTab(new CreateEditorTabOptions() { Focus = true }).TabPage;
+                    tp = CreateEditorTab(new CreateEditorTabOptions() { Focus = true, Path = ofdSql.FileName }).TabPage;
                 }
 
                 tp.Controls[0].Text = txt;
@@ -4160,6 +4183,8 @@ namespace PgMulti
             this.tsmiCloseAllTabs.Text = Properties.Text.close_all_tabs;
             this.tsmiCloseAllTabsExceptThisOne.Text = Properties.Text.close_all_tabs_except_this_one;
             this.tsmiClosedTabsLog.Text = Properties.Text.closed_tabs_log;
+            this.tsmiCopyPath.Text = Properties.Text.copy_path;
+            this.tsmiOpenFolder.Text = Properties.Text.open_folder;
             this.tsmiReopenLastClosedTab.Text = Properties.Text.reopen_last_closed_tab;
             this.tscmiBack.Text = Properties.Text.back;
             this.tscmiForward.Text = Properties.Text.forward;

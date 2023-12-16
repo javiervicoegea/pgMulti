@@ -331,7 +331,9 @@ namespace PgMulti.AppData
                 foreach (DataRow dr in dt.Rows)
                 {
                     TabPage tp = createNewSqlTabPageDelegate();
-                    l.Add(new EditorTab(this, dr, tp, mainForm));
+                    EditorTab et = new EditorTab(this, dr, tp, mainForm);
+                    tp.ToolTipText = et.LocalPath;
+                    l.Add(et);
                 }
                 return l;
             }

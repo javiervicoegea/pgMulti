@@ -1057,5 +1057,10 @@ Unlike other tools, this application does not reuse the connection between diffe
   <data name="searching_only_within_selected_text" xml:space="preserve">
     <value>Buscando solo dentro del texto seleccionado</value>
   </data>
-
+  <data name="copy_path" xml:space="preserve">
+    <value>Copiar ruta de acceso</value>
+  </data>
+  <data name="open_folder" xml:space="preserve">
+    <value>Abrir carpeta contenedora</value>
+  </data>
 </root>

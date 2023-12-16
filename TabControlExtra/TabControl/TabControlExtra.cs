@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -44,6 +45,15 @@ namespace TradeWright.UI.Forms
             this._BackBufferGraphics = Graphics.FromImage(this._BackBuffer);
             this._TabBuffer = new Bitmap(this.Width, this.Height);
             this._TabBufferGraphics = Graphics.FromImage(this._TabBuffer);
+
+            this.components = new System.ComponentModel.Container();
+
+            this._TmrToolTip = new Timer(this.components);
+            this._TmrToolTip.Enabled = false;
+            this._TmrToolTip.Interval = 500;
+            this._TmrToolTip.Tick += _TmrToolTip_Tick;
+
+            this._ToolTip = new ToolTip(this.components);
 
             this.SuspendLayout();
             this.DisplayStyle = TabStyle.Default;
@@ -100,6 +110,10 @@ namespace TradeWright.UI.Forms
                     this._StyleProvider.Dispose();
                 }
             }
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
         }
 
         #endregion
@@ -125,6 +139,13 @@ namespace TradeWright.UI.Forms
         private List<TabPage> _TabPages;
 
         private bool _SuspendDrawing;
+
+        private System.ComponentModel.IContainer components = null;
+        private Timer _TmrToolTip;
+        private ToolTip _ToolTip;
+        private int? _ToolTipActiveIndex = null;
+        private Point? _ToolTipPoint = null;
+        private DateTime? _ToolTipIgnoreMouseMove = null;
 
         #endregion
 
@@ -862,10 +883,46 @@ namespace TradeWright.UI.Forms
             }
         }
 
+        protected override void OnMouseLeave(EventArgs e)
+        {
+            base.OnMouseLeave(e);
+
+            _ToolTip.Hide(this);
+            _ToolTipIgnoreMouseMove = null;
+            _TmrToolTip.Enabled = false;
+            _ToolTipActiveIndex = null;
+            _ToolTipPoint = null;
+        }
+
+
+        private void _TmrToolTip_Tick(object sender, EventArgs e)
+        {
+            _TmrToolTip.Enabled = false;
+            _TmrToolTip.Stop();
+
+            if (_ToolTipActiveIndex.HasValue)
+            {
+                _ToolTipIgnoreMouseMove = DateTime.Now.AddSeconds(1);
+                _ToolTip.Show(this.TabPages[_ToolTipActiveIndex.Value].ToolTipText, this, _ToolTipPoint.Value, 10000);
+                _ToolTipActiveIndex = null;
+            }
+        }
+
         protected override void OnMouseMove(MouseEventArgs e)
         {
+            if (_ToolTipIgnoreMouseMove.HasValue && _ToolTipIgnoreMouseMove.Value>DateTime.Now)
+            {
+                return;
+            }
+
             base.OnMouseMove(e);
             var mousePos = this.MousePosition;
+
+            _ToolTip.Hide(this);
+            _TmrToolTip.Enabled = false;
+            _TmrToolTip.Stop();
+            _ToolTipActiveIndex = null;
+            _ToolTipPoint = null;
 
             if (_PrevTabCloserButtonPath != null && _PrevTabCloserButtonPath.IsVisible(mousePos))
             {
@@ -908,6 +965,20 @@ namespace TradeWright.UI.Forms
             else if (this.AllowDrop && e.Button == MouseButtons.Left)
             {
                 this.StartDragDrop();
+            }
+            else
+            {
+                if (e.Button == MouseButtons.None)
+                {
+                    int index = GetActiveIndex(mousePos);
+                    if (index != -1)
+                    {
+                        _TmrToolTip.Enabled = true;
+                        _TmrToolTip.Start();
+                        _ToolTipActiveIndex = index;
+                        _ToolTipPoint = new Point(mousePos.X, mousePos.Y + 20);
+                    }
+                }
             }
         }
 

@@ -186,6 +186,8 @@ namespace PgMulti
             tsmiCloseAllTabsExceptThisOne = new ToolStripMenuItem();
             tsmiReopenLastClosedTab = new ToolStripMenuItem();
             tsmiClosedTabsLog = new ToolStripMenuItem();
+            tsmiCopyPath = new ToolStripMenuItem();
+            tsmiOpenFolder = new ToolStripMenuItem();
             tscmiBack = new ToolStripMenuItem();
             tscmiForward = new ToolStripMenuItem();
             tscmiUndo = new ToolStripMenuItem();
@@ -1770,7 +1772,7 @@ namespace PgMulti
             // cmsTabs
             // 
             cmsTabs.ImageScalingSize = new Size(20, 20);
-            cmsTabs.Items.AddRange(new ToolStripItem[] { tsmiCloseTab, tsmiCloseAllTabs, tsmiCloseAllTabsExceptThisOne, tsmiReopenLastClosedTab, tsmiClosedTabsLog });
+            cmsTabs.Items.AddRange(new ToolStripItem[] { tsmiCloseTab, tsmiCloseAllTabs, tsmiCloseAllTabsExceptThisOne, tsmiReopenLastClosedTab, tsmiClosedTabsLog, tsmiCopyPath, tsmiOpenFolder });
             cmsTabs.Name = "cmsTabs";
             cmsTabs.Size = new Size(74, 134);
             // 
@@ -1808,6 +1810,20 @@ namespace PgMulti
             tsmiClosedTabsLog.Name = "tsmiClosedTabsLog";
             tsmiClosedTabsLog.Size = new Size(73, 26);
             tsmiClosedTabsLog.Click += tsmiClosedTabsLog_Click;
+            // 
+            // tsmiCopyPath
+            // 
+            tsmiCopyPath.Image = Properties.Resources.copiar;
+            tsmiCopyPath.Name = "tsmiCopyPath";
+            tsmiCopyPath.Size = new Size(73, 26);
+            tsmiCopyPath.Click += tsmiCopyPath_Click;
+            // 
+            // tsmiOpenFolder
+            // 
+            tsmiOpenFolder.Image = Properties.Resources.abrir;
+            tsmiOpenFolder.Name = "tsmiOpenFolder";
+            tsmiOpenFolder.Size = new Size(73, 26);
+            tsmiOpenFolder.Click += tsmiOpenFolder_Click;
             // 
             // tscmiBack
             // 
@@ -2340,6 +2356,8 @@ namespace PgMulti
         private ToolStripMenuItem tsmiNewDiagram;
         private ToolStripMenuItem tsmiOpenDiagram;
         private ToolStripMenuItem tsmiClosedTabsLog;
+        private ToolStripMenuItem tsmiCopyPath;
+        private ToolStripMenuItem tsmiOpenFolder;
         private System.Windows.Forms.Timer tmrReenableRunButton;
         private ToolStripMenuItem tsmiReopenLastClosedTab;
         private ToolStripButton tsbCreateTableDiagram;

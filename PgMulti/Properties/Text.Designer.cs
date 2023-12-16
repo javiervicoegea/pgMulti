@@ -626,6 +626,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Copiar ruta de acceso.
+        /// </summary>
+        internal static string copy_path {
+            get {
+                return ResourceManager.GetString("copy_path", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Copy (ctrl + c).
         /// </summary>
         internal static string copy_sc {
@@ -1566,6 +1575,15 @@ namespace PgMulti.Properties {
         internal static string open_diagram {
             get {
                 return ResourceManager.GetString("open_diagram", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Abrir carpeta contenedora.
+        /// </summary>
+        internal static string open_folder {
+            get {
+                return ResourceManager.GetString("open_folder", resourceCulture);
             }
         }
         
