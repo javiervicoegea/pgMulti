@@ -41,7 +41,7 @@ namespace PgMulti.DataStructure
 
             string def = drd.Ref<string>("indexdef")!;
             ParseTree parseTree = parser.Parse(def);
-            AstNode nCreateIndexStmt = AstNode.ProcesarParseTree(parseTree);
+            AstNode nCreateIndexStmt = AstNode.ProcessParseTree(parseTree);
 
             _OrderList = nCreateIndexStmt["orderList"]!.SingleLineText;
 

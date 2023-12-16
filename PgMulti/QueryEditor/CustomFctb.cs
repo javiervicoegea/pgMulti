@@ -287,7 +287,7 @@ namespace PgMulti.QueryEditor
             }
             else if (_ParseTree.Status == ParseTreeStatus.Parsed)
             {
-                raizAst = AstNode.ProcesarParseTree(_ParseTree);
+                raizAst = AstNode.ProcessParseTree(_ParseTree);
             }
 
 
@@ -309,70 +309,73 @@ namespace PgMulti.QueryEditor
 
                 AstNode? nodoAst = (raizAst == null || !raizAst.TokenDict.ContainsKey(t)) ? null : raizAst.TokenDict[t];
 
-                switch (t.Terminal.Name)
+                if (nodoAst != null && (nodoAst.GetRecursiveParentNamedAs("typeNameAndParams") != null || nodoAst.GetRecursiveParentNamedAs("plTypeNameAndParams") != null))
                 {
-                    case "NULL":
-                        if (nodoAst != null && nodoAst.Parent != null && nodoAst.Parent.Name == "term")
-                        {
-                            tr.SetStyle(NumberTextStyle);
-                        }
-                        else
-                        {
-                            tr.SetStyle(KeywordCaseTextStyle);
-                        }
-
-                        break;
-                    case "boolLit":
-                    case "number":
-                        tr.SetStyle(NumberTextStyle);
-                        break;
-                    case "string":
-                    case "escaped_string":
-                        tr.SetStyle(StringTextStyle);
-                        break;
-                    case "comment":
-                    case "line_comment":
-                        if (insertPoint.HasValue && tr.End.iLine == insertPoint.Value.iLine && tr.End.iChar >= insertPoint.Value.iChar)
-                        {
-                            tr = GetRange(new Place(tr.Start.iChar, tr.Start.iLine), new Place(tr.End.iChar - 1, tr.End.iLine));
-                        }
-                        tr.SetStyle(CommentTextStyle);
-                        AddLinesToList(CommentLines, tr);
-
-                        break;
-                    case "id_simple":
-                        if (nodoAst != null && nodoAst.Parent != null && nodoAst.Parent.Parent != null && nodoAst.Parent.Parent.Name == "funCall")
-                        {
-                            tr.SetStyle(FunctionsTextStyle);
-                        }
-                        else
-                        {
-                            tr.SetStyle(VariableTextStyle);
-                        }
-                        break;
-                    case "":
-                        tr.SetStyle(VariableTextStyle);
-                        break;
-                    default:
-                        if (nodoAst != null && nodoAst.GetRecursiveParentNamedAs("typeNameAndParams") != null)
-                        {
-                            tr.SetStyle(TypesCaseStyle);
-                        }
-                        else if (t.Terminal.GetType().Name == "KeyTerm")
-                        {
-                            if ((t.Terminal.Flags & TermFlags.IsKeyword) != 0)
+                    tr.SetStyle(TypesCaseStyle);
+                }
+                else
+                {
+                    switch (t.Terminal.Name)
+                    {
+                        case "NULL":
+                            if (nodoAst != null && nodoAst.Parent != null && nodoAst.Parent.Name == "term")
                             {
-                                if (nodoAst != null && nodoAst.IsStatementHeader)
+                                tr.SetStyle(NumberTextStyle);
+                            }
+                            else
+                            {
+                                tr.SetStyle(KeywordCaseTextStyle);
+                            }
+
+                            break;
+                        case "boolLit":
+                        case "number":
+                            tr.SetStyle(NumberTextStyle);
+                            break;
+                        case "string":
+                        case "escaped_string":
+                            tr.SetStyle(StringTextStyle);
+                            break;
+                        case "comment":
+                        case "line_comment":
+                            if (insertPoint.HasValue && tr.End.iLine == insertPoint.Value.iLine && tr.End.iChar >= insertPoint.Value.iChar)
+                            {
+                                tr = GetRange(new Place(tr.Start.iChar, tr.Start.iLine), new Place(tr.End.iChar - 1, tr.End.iLine));
+                            }
+                            tr.SetStyle(CommentTextStyle);
+                            AddLinesToList(CommentLines, tr);
+
+                            break;
+                        case "id_simple":
+                            if (nodoAst != null && nodoAst.Parent != null && nodoAst.Parent.Parent != null && nodoAst.Parent.Parent.Name == "funCall")
+                            {
+                                tr.SetStyle(FunctionsTextStyle);
+                            }
+                            else
+                            {
+                                tr.SetStyle(VariableTextStyle);
+                            }
+                            break;
+                        case "":
+                            tr.SetStyle(VariableTextStyle);
+                            break;
+                        default:
+                            if (t.Terminal.GetType().Name == "KeyTerm")
+                            {
+                                if ((t.Terminal.Flags & TermFlags.IsKeyword) != 0)
                                 {
-                                    tr.SetStyle(KeywordHeaderCaseTextStyle);
-                                }
-                                else
-                                {
-                                    tr.SetStyle(KeywordCaseTextStyle);
+                                    if (nodoAst != null && nodoAst.IsStatementHeader)
+                                    {
+                                        tr.SetStyle(KeywordHeaderCaseTextStyle);
+                                    }
+                                    else
+                                    {
+                                        tr.SetStyle(KeywordCaseTextStyle);
+                                    }
                                 }
                             }
-                        }
-                        break;
+                            break;
+                    }
                 }
             }
 
@@ -500,7 +503,7 @@ namespace PgMulti.QueryEditor
 
             if (UseCustomScrollBars)
             {
-                AdjustCustomVerticalScrollbar(VScrollBar!, VerticalScroll.Maximum, VerticalScroll.Value, (ClientSize.Height * (VScrollBar!.Height-2)) / (TextHeight + Paddings.Top + Paddings.Bottom));
+                AdjustCustomVerticalScrollbar(VScrollBar!, VerticalScroll.Maximum, VerticalScroll.Value, (ClientSize.Height * (VScrollBar!.Height - 2)) / (TextHeight + Paddings.Top + Paddings.Bottom));
                 AdjustHorizontalScrollbar(HScrollBar!, HorizontalScroll.Maximum, HorizontalScroll.Value, ClientSize.Width);
             }
         }

@@ -1881,7 +1881,7 @@ namespace PgMulti
 
             if (parseTree.Status == ParseTreeStatus.Error) return null;
 
-            AstNode astRoot = AstNode.ProcesarParseTree(parseTree);
+            AstNode astRoot = AstNode.ProcessParseTree(parseTree);
 
             if (astRoot.Children.Count == 0) return null;
 
@@ -2647,7 +2647,7 @@ namespace PgMulti
             }
 
 
-            AstNode globalRootAstNode = AstNode.ProcesarParseTree(parseTreeGlobal);
+            AstNode globalRootAstNode = AstNode.ProcessParseTree(parseTreeGlobal);
 
             int pos = 0;
             StringBuilder sb = new StringBuilder();
@@ -2679,7 +2679,7 @@ namespace PgMulti
                 }
                 else
                 {
-                    AstNode queryRootAstNode = AstNode.ProcesarParseTree(parseTreeQuery);
+                    AstNode queryRootAstNode = AstNode.ProcessParseTree(parseTreeQuery);
                     queryRootAstNode.Format(sb, parseTreeQuery, prevIndentation);
 
                     sb.AppendLine();

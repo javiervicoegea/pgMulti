@@ -50,7 +50,7 @@ namespace PgMulti.DataStructure
 
             try
             {
-                nCreateTriggerStmt = AstNode.ProcesarParseTree(parseTree)[0][0][0][0];
+                nCreateTriggerStmt = AstNode.ProcessParseTree(parseTree);
             }
             catch (Exception ex)
             {

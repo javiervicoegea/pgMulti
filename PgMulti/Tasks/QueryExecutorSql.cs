@@ -112,7 +112,7 @@ namespace PgMulti.Tasks
                 return;
             }
 
-            AstNode root = AstNode.ProcesarParseTree(pt);
+            AstNode root = AstNode.ProcessParseTree(pt);
             if (root["stmtList"]!.Children.Count != 1 || root["stmtList"]!["stmtAndSemi"]!["stmt"]![0].Name != "selectStmt")
             {
                 return;

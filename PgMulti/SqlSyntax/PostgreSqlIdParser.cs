@@ -41,7 +41,7 @@ namespace PgMulti.SqlSyntax
             ParseTree parseTree = _Parser.Parse(s);
             if (parseTree.Status != ParseTreeStatus.Parsed) return null;
 
-            AstNode nId = AstNode.ProcesarParseTree(parseTree);
+            AstNode nId = AstNode.ProcessParseTree(parseTree);
             return TryParse(nId);
         }
     }

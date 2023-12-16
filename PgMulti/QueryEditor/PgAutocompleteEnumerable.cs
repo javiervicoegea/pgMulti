@@ -43,6 +43,8 @@ namespace PgMulti.QueryEditor
             Place currentFragmentStart = _AutocompleteMenu.Fragment.Start;
             Place currentFragmentEnd = _AutocompleteMenu.Fragment.End;
 
+            if (new FastColoredTextBoxNS.Range(_Fctb, new Place(0, currentFragmentStart.iLine), currentFragmentStart).Text.Contains("--")) yield break;
+
             FastColoredTextBoxNS.Range r = new FastColoredTextBoxNS.Range(_Fctb, currentFragmentStart, currentFragmentStart);
             Place startQuery;
             while (r.Start.iChar > 0 || r.Start.iLine > 0)
@@ -380,7 +382,7 @@ namespace PgMulti.QueryEditor
                 yield break;
             }
 
-            AstNode rootAst = AstNode.ProcesarParseTree(parseTree);
+            AstNode rootAst = AstNode.ProcessParseTree(parseTree);
 
             if (rootAst.RecursiveTokens.Count == 0) yield break;
 

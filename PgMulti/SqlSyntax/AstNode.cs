@@ -21,7 +21,7 @@ namespace PgMulti.SqlSyntax
         private FormatDefinition? _PrevFormatDefinition = null;
         private FormatDefinition? _NextFormatDefinition = null;
 
-        public static AstNode ProcesarParseTree(ParseTree tree)
+        public static AstNode ProcessParseTree(ParseTree tree)
         {
             if (tree.Status != ParseTreeStatus.Parsed || tree.Root == null)
             {

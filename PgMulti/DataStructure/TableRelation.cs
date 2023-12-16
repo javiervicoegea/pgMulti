@@ -50,7 +50,7 @@ namespace PgMulti.DataStructure
             _Definition = drd.Ref<string>("def")!;
 
             ParseTree parseTree = parser.Parse(_Definition);
-            AstNode nAlterTableAddConstraint = AstNode.ProcesarParseTree(parseTree);
+            AstNode nAlterTableAddConstraint = AstNode.ProcessParseTree(parseTree);
 
             ChildColumns = nAlterTableAddConstraint["tableConstraintDef"]!["tableConstraintDefClause"]!["fkTableConstraint"]!["idlistPar"]!["idSimpleList"]!.Children.Where(ni => ni.Name== "id_simple").Select(ni => SqlSyntax.PostgreSqlGrammar.IdFromString(ni.SingleLineText)).ToArray();
             ParentColumns = nAlterTableAddConstraint["tableConstraintDef"]!["tableConstraintDefClause"]!["fkTableConstraint"]!["fkConstraint"]!["idlistPar"]!["idSimpleList"]!.Children.Where(ni => ni.Name == "id_simple").Select(ni => SqlSyntax.PostgreSqlGrammar.IdFromString(ni.SingleLineText)).ToArray();

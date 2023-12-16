@@ -81,7 +81,7 @@ namespace PgMulti.Tasks
                 throw new Exception(Properties.Text.basic_parse_error + "\r\n" + string.Format(Properties.Text.line_column, parseTree.ParserMessages[0].Location.Line + 1, parseTree.ParserMessages[0].Location.Column + 1) + ": " + parseTree.ParserMessages[0].Message);
             }
 
-            AstNode astRoot = AstNode.ProcesarParseTree(parseTree);
+            AstNode astRoot = AstNode.ProcessParseTree(parseTree);
 
             List<Tuple<int, string, string>> statements = new List<Tuple<int, string, string>>();
 

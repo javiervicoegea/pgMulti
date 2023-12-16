@@ -111,6 +111,7 @@ namespace PgMulti.SqlSyntax
             var CASE = ToTerm("CASE");
             var EXISTS = ToTerm("EXISTS");
             var EXTRACT = ToTerm("EXTRACT");
+            var PERFORM = ToTerm("PERFORM");
 
             //Non-terminals
             var id = new NonTerminal("id");
@@ -269,6 +270,7 @@ namespace PgMulti.SqlSyntax
             var notNull = new NonTerminal("notNull");
             var showStmt = new NonTerminal("showStmt");
             var commentStmt = new NonTerminal("commentStmt");
+            var performStmt = new NonTerminal("performStmt");
 
             var plStmtList = new NonTerminal("plStmtList");
             var plStmt = new NonTerminal("plStmt");
@@ -278,6 +280,8 @@ namespace PgMulti.SqlSyntax
             var plBlockCodeStmt = new NonTerminal("plBlockCodeStmt");
             var plDeclareClauseOpt = new NonTerminal("plDeclareClauseOpt");
             var plDeclareStmts = new NonTerminal("plDeclareStmts");
+            var plDeclareStmt = new NonTerminal("plDeclareStmt");
+            var plTypeNameAndParams = new NonTerminal("plTypeNameAndParams");
             var plBeginClause = new NonTerminal("plBeginClause");
             var plExceptionClauseOpt = new NonTerminal("plExceptionClause");
             var plExceptionClauseStruct = new NonTerminal("plExceptionClauseStruct");
@@ -415,7 +419,10 @@ namespace PgMulti.SqlSyntax
             dollarStringBodyFunction.Rule = dollar_string_tag + (plBlockCodeStmt + (Empty | semi) | sqlStmtList) + dollar_string_tag;
             plBlockCodeStmt.Rule = plDeclareClauseOpt + plBeginClause + plExceptionClauseOpt + END;
             plDeclareClauseOpt.Rule = Empty | "DECLARE" + plDeclareStmts;
-            plDeclareStmts.Rule = MakeStarRule(plDeclareStmts, id_simple + (Empty | "CONSTANT") + typeNameAndParams + (Empty | notNull) + (Empty | (DEFAULT | ToTerm(":=") | "=") + expression) + semi);
+            plDeclareStmts.Rule = MakeStarRule(plDeclareStmts, plDeclareStmt);
+            plDeclareStmt.Rule = id_simple + (Empty | "CONSTANT") + plTypeNameAndParams + (Empty | notNull) + (Empty | (DEFAULT | ToTerm(":=") | "=") + expression) + semi;
+            plTypeNameAndParams.Rule = typeNameAndParams | "RECORD" | id + "%" + ToTerm("ROWTYPE");
+            plDeclareStmt.ErrorRule = SyntaxError + semi; //skip all until semicolon
             plBeginClause.Rule = "BEGIN" + plStmtList;
             plStmtList.Rule = MakeStarRule(plStmtList, plStmtAndSemi);
 
@@ -428,11 +435,11 @@ namespace PgMulti.SqlSyntax
                 | selectStmt | insertStmt | updateStmt | deleteStmt
                 | "GO" | setStmt | setTransactionStmt | setConstraintsStmt
                 | truncateStmt | grantStmt | revokeStmt | createTriggerStmt | createSequenceStmt | createSchemaStmt
-                | dropTriggerStmt | dropSchemaStmt | showStmt | createFunctionStmt | commentStmt;
+                | dropTriggerStmt | dropSchemaStmt | showStmt | createFunctionStmt | commentStmt | performStmt;
 
             plStmt.Rule = plBlockCodeStmt | plAssignmentStmt | plReturnStmt | plIfStmt | plCaseStmt | plForStmt | plWhileLoopStmt | plLoopStmt | plRaiseStmt | plExecuteStmt | sqlStmt;
             plAssignmentStmt.Rule = id + (ToTerm("=") | ToTerm(":=")) + expression;
-            plReturnStmt.Rule = "RETURN" + expression;
+            plReturnStmt.Rule = "RETURN" + (expression | Empty);
             plIfStmt.Rule = IF + expression + "THEN" + plStmtList + (Empty | "ELSIF" + expression + "THEN" + plStmtList) + (Empty | "ELSE" + plStmtList) + END + IF;
             plCaseStmt.Rule = CASE + (Empty | expression) + plCaseWhenElseList + END + CASE;
             plCaseWhenElseList.Rule = plCaseWhenList + (Empty | "ELSE" + plStmtList);
@@ -613,8 +620,8 @@ namespace PgMulti.SqlSyntax
 
             //Select stmt
             selectStmt.Rule = cteClauseOpt + selectBody + selectCombineClauseOpt + orderClauseOpt + limitClauseOpt + offsetClauseOpt;
-            selectBody.Rule = selectBaseClauses | "(" + selectStmt + ")";
-            selectBaseClauses.Rule = SELECT + selRestrOpt + selList + intoClauseOpt + fromClauseOpt + whereClauseOpt + groupClauseOpt + havingClauseOpt;
+            selectBody.Rule = SELECT + selectBaseClauses | "(" + selectStmt + ")";
+            selectBaseClauses.Rule = selRestrOpt + selList + intoClauseOpt + fromClauseOpt + whereClauseOpt + groupClauseOpt + havingClauseOpt;
             selectCombineClauseOpt.Rule = Empty | ((ToTerm("UNION") | "INTERSECT" | "EXCEPT") + (ALL | Empty) + selectBody);
             cteClauseOpt.Rule = Empty | WITH + cteClauseList;
             cteClauseList.Rule = MakeStarRule(cteClauseList, comma, id + AS + "(" + (selectStmt | insertStmt | updateStmt | deleteStmt) + ")");
@@ -647,9 +654,8 @@ namespace PgMulti.SqlSyntax
                 | tuple | parSelectStmtExpr | caseExpression
                 | term + "::" + typeNameAndParams
                 | term + "[" + expression + "]" | extractExpr | castExpr
-                | SUBSTRING + "(" + expression + FROM + expression + "FOR" + expression + ")"
+                | SUBSTRING + "(" + expression + (FROM + expression + "FOR" | comma + expression + comma) + expression + ")"
                 | POSITION + "(" + expression + IN + expression + ")"
-                //| ARRAY + "(" + selectBaseClauses + ")"
                 | dollar_variable;
             funCall.Rule = "(" + funArgs + ")" + winFunOpt;
             winFunOpt.Rule = Empty | ToTerm("OVER") + "(" + (Empty | ToTerm("PARTITION") + BY + exprList) + orderClauseOpt + ")";
@@ -691,6 +697,8 @@ namespace PgMulti.SqlSyntax
                     "EXTENSION" + id_simple + IS + string_literal
                     | COLUMN + columnId + IS + string_literal
                 );
+
+            performStmt.Rule = PERFORM + selectBaseClauses + selectCombineClauseOpt + orderClauseOpt + limitClauseOpt + offsetClauseOpt;
 
             //Operators
             RegisterOperators(10, "*", "/", "%");

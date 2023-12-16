@@ -181,18 +181,18 @@ namespace PgMulti.Tasks
             {
                 if (m.Index > 0)
                 {
-                    tb.AppendText(s.Substring(0, m.Index));
+                    FastColoredTextBoxAppendText(tb, s.Substring(0, m.Index));
                 }
 
                 while (m.Success)
                 {
                     if (m.Groups[2].Value != "")
                     {
-                        tb.AppendText(m.Groups[2].Value, styles[Enum.Parse<LogStyle>(m.Groups[1].Value)]);
+                        FastColoredTextBoxAppendText(tb, m.Groups[2].Value, styles[Enum.Parse<LogStyle>(m.Groups[1].Value)]);
                     }
                     if (m.Groups[3].Value != "")
                     {
-                        tb.AppendText(m.Groups[3].Value);
+                        FastColoredTextBoxAppendText(tb, m.Groups[3].Value);
                     }
 
                     m = m.NextMatch();
@@ -202,14 +202,24 @@ namespace PgMulti.Tasks
             {
                 if (s != "")
                 {
-                    tb.AppendText(s);
+                    FastColoredTextBoxAppendText(tb, s);
                 }
             }
         }
 
+        private void FastColoredTextBoxAppendText(FastColoredTextBox tb, string text, Style? style = null)
+        {
+            tb.AppendText(text.Replace("&lt;", "<").Replace("&gt;", ">").Replace("&quot;", "\""), style);
+        }
+
+        private string EncodeText(string s)
+        {
+            return s.Replace("<", "&lt;").Replace(">", "&gt;").Replace("\"", "&quot;");
+        }
+
         private string ApplyStyle(string s, LogStyle style)
         {
-            return $"<style name=\"{style.ToString()}\">{s.Replace("<", "&lt;").Replace(">", "&gt;")}</style>";
+            return $"<style name=\"{style.ToString()}\">{s}</style>";
         }
 
         protected void StringBuilderAppendIndentedLine(string s, bool includeTimestamp, LogStyle? style = null)
@@ -227,7 +237,7 @@ namespace PgMulti.Tasks
 
                 if (style.HasValue)
                 {
-                    string[] lines = s.Split("\r\n");
+                    string[] lines = EncodeText(s).Split("\r\n");
                     for (int i = 0; i < lines.Length; i++)
                     {
                         if (i > 0) _StringBuilder.Append(TimestampGap);
@@ -237,13 +247,15 @@ namespace PgMulti.Tasks
                 }
                 else
                 {
-                    _StringBuilder.AppendLine(s.Replace("\n", "\n" + TimestampGap));
+                    _StringBuilder.AppendLine(EncodeText(s).Replace("\n", "\n" + TimestampGap));
                 }
             }
         }
 
         protected void StringBuilderAppendSummaryLine(string s, LogStyle? style = null)
         {
+            s = EncodeText(s);
+
             if (style.HasValue)
             {
                 s = ApplyStyle(s, style.Value);
