@@ -2634,12 +2634,12 @@ namespace PgMulti
             if (string.IsNullOrWhiteSpace(globalText)) return;
 
             ParseTree parseTreeGlobal = parserGlobal.Parse(globalText);
-
+            bool addedSemicolon = false;
             if (parseTreeGlobal.Status == ParseTreeStatus.Error)
             {
                 globalText += "\r\n;";
                 parseTreeGlobal = parserGlobal.Parse(globalText);
-
+                addedSemicolon = true;
                 if (parseTreeGlobal.Status == ParseTreeStatus.Error)
                 {
                     return;
@@ -2648,6 +2648,8 @@ namespace PgMulti
 
 
             AstNode globalRootAstNode = AstNode.ProcessParseTree(parseTreeGlobal);
+
+            if (globalRootAstNode.Children.Count == 0) return;
 
             int pos = 0;
             StringBuilder sb = new StringBuilder();
@@ -2675,6 +2677,11 @@ namespace PgMulti
                         sb.Append(" ");
                     }
 
+                    if (addedSemicolon && i == globalRootAstNode.Children[0].Children.Count - 1)
+                    {
+                        stmtText = stmtText.Substring(0, stmtText.Length - 3);
+                    }
+
                     sb.Append(stmtText);
                 }
                 else
@@ -2688,6 +2695,8 @@ namespace PgMulti
                 pos = end;
             }
 
+            string formattedText = sb.ToString();
+
             fctb.BeginAutoUndo();
 
             if (string.IsNullOrEmpty(fctb.SelectedText))
@@ -2697,7 +2706,7 @@ namespace PgMulti
                 fctb.Selection.End = new Place(fctb.Lines[fctb.LinesCount - 1].Length, fctb.LinesCount - 1);
             }
 
-            fctb.InsertText(sb.ToString());
+            fctb.InsertText(formattedText);
             fctb.TextSource.Manager.ExecuteCommand(new SelectCommand(fctb.TextSource));
 
             fctb.EndAutoUndo();

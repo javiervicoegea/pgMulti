@@ -487,6 +487,7 @@ namespace PgMulti.SqlSyntax
             int prevTokenLine = 0;
             int lineLength = 0;
             bool lastCommentIsLineComment = false;
+            bool previousToFirstToken = true;
 
             while (pila.Count > 0)
             {
@@ -519,6 +520,7 @@ namespace PgMulti.SqlSyntax
                 else if (na.Token != null)
                 {
                     string? indentationString = null;
+                    bool lastCommentAddedLine = false;
 
                     while (nextCommentIndex < comments.Length && comments[nextCommentIndex].Location.Position < na.Token.Location.Position)
                     {
@@ -526,24 +528,37 @@ namespace PgMulti.SqlSyntax
                         if (indentationString == null) indentationString = _GetIndent(f.Indentation);
                         if (prevTokenLine == comment.Location.Line)
                         {
-                            sb.Append(" ");
-                            lineLength++;
+                            if (!previousToFirstToken)
+                            {
+                                sb.Append(" ");
+                                lineLength++;
+                            }
                         }
                         else
                         {
                             if (f.DoubleCR) sb.AppendLine();
-                            sb.Append("\r\n" + indentationString);
+
+                            if (!previousToFirstToken)
+                            {
+                                sb.AppendLine();
+                            }
+
+                            sb.Append(indentationString);
                             prevTokenLine = comment.Location.Line;
                             lineLength = f.Indentation;
                         }
 
-                        lastCommentIsLineComment = false;
+                        lastCommentAddedLine = false;
                         switch (comment.Terminal.Name)
                         {
                             case "line_comment":
                                 sb.Append(comment.Text);
                                 lineLength += comment.Text.Length;
-                                lastCommentIsLineComment = true;
+
+                                sb.AppendLine();
+                                lineLength = 0;
+                                lastCommentAddedLine = true;
+
                                 break;
                             case "comment":
                                 int retPos = comment.Text.LastIndexOf("\r\n");
@@ -557,15 +572,51 @@ namespace PgMulti.SqlSyntax
                                     sb.Append(comment.Text.Replace("\r\n", "\r\n" + indentationString));
                                     lineLength = f.Indentation + comment.Text.Length - retPos - 2;
                                 }
+
+                                if (previousToFirstToken)
+                                {
+                                    sb.AppendLine();
+                                    lineLength = 0;
+                                    lastCommentAddedLine = true;
+                                }
+
                                 break;
                             default:
                                 throw new NotSupportedException();
                         }
+
+                        if (previousToFirstToken)
+                        {
+                            sb.AppendLine();
+                            lastCommentAddedLine = true;
+                        }
+
+                        if (lastCommentAddedLine)
+                        {
+                            if (indentationString == null) indentationString = _GetIndent(f.Indentation);
+                            sb.Append(indentationString);
+                            lineLength += f.Indentation;
+                        }
+
                         nextCommentIndex++;
                     }
 
+                    if (lastCommentAddedLine)
+                    {
+                        if (f.DoubleCR)
+                        {
+                            f.DoubleCR = false;
+                            f.CR = true;
+                        }
+                        else if (f.CR)
+                        {
+                            f.CR = false;
+                            f.NoSpace = true;
+                        }
+                    }
 
-                    if (f.CR || f.DoubleCR || lastCommentIsLineComment)
+
+                    if (f.CR || f.DoubleCR)
                     {
                         sb.AppendLine();
                         lineLength = 0;
@@ -575,7 +626,6 @@ namespace PgMulti.SqlSyntax
                         if (indentationString == null) indentationString = _GetIndent(f.Indentation);
                         sb.Append(indentationString);
                         lineLength += f.Indentation;
-                        lastCommentIsLineComment = false;
                     }
                     else if (!f.NoSpace)
                     {
@@ -618,6 +668,7 @@ namespace PgMulti.SqlSyntax
                     }
 
                     prevTokenLine = na.Token.Location.Line;
+                    previousToFirstToken = false;
                 }
                 else
                 {
