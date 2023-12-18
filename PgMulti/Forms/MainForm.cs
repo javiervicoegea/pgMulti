@@ -3665,6 +3665,12 @@ namespace PgMulti
             q.SetDeletedRow(drCurrent);
         }
 
+        private void gvTable_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            Rectangle headerBounds = new Rectangle(e.RowBounds.Left, e.RowBounds.Top, gvTable.RowHeadersWidth, e.RowBounds.Height);
+            e.Graphics.DrawString((e.RowIndex + 1).ToString(), this.Font, SystemBrushes.ControlText, headerBounds, new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
+        }
+
         private void tsbDeleteRows_Click(object sender, EventArgs e)
         {
             if (gvTable.SelectedRows.Count == 0)

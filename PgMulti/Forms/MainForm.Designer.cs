@@ -1448,6 +1448,7 @@ namespace PgMulti
             gvTable.CellValueChanged += gvTable_CellValueChanged;
             gvTable.DataError += gvTable_DataError;
             gvTable.RowsRemoved += gvTable_RowsRemoved;
+            gvTable.RowPostPaint += gvTable_RowPostPaint;
             // 
             // cmsTable
             // 
