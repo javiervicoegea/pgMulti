@@ -95,6 +95,10 @@ namespace PgMulti
                 return l;
             }
         }
+
+        internal List<Form> SecondaryForms { get => _SecondaryForms; }
+        internal TradeWright.UI.Forms.TabControlExtra SqlEditorTabControl { get => tcSql; }
+
         #endregion
 
         #region "Form"
@@ -134,11 +138,11 @@ namespace PgMulti
             UpdateServersButtons();
             ExpandServersTree();
 
-            foreach (EditorTab si in _Data.ListOpenEditorTabs(new Data.CreateNewSqlTabPageDelegate(CreateNewTabPage), this)) { }
+            foreach (EditorTab si in _Data.ListOpenEditorTabs(this)) { }
 
             if (tcSql.TabCount == 1)
             {
-                CreateEditorTab(new CreateEditorTabOptions() { Focus = true });
+                CreateEditorTab(new EditorTab.CreateEditorTabOptions() { Focus = true, PendingFileSave = false });
             }
             else
             {
@@ -886,7 +890,7 @@ namespace PgMulti
             Table t = (Table)n.Tag;
             string sql = "SELECT * FROM " + SqlSyntax.PostgreSqlGrammar.IdToString(t.IdSchema) + "." + SqlSyntax.PostgreSqlGrammar.IdToString(t.Id) + ";";
 
-            CreateEditorTabOptions o = new CreateEditorTabOptions();
+            EditorTab.CreateEditorTabOptions o = new EditorTab.CreateEditorTabOptions();
             o.Title = string.Format(Properties.Text.explore_table_x, t.Id);
             o.Text = sql;
             o.Focus = true;
@@ -922,14 +926,14 @@ namespace PgMulti
                     PgMulti.RecursiveRemover.RecursiveRemover rr = f.RecursiveRemover!;
 
                     StringBuilder sb;
-                    CreateEditorTabOptions o;
+                    EditorTab.CreateEditorTabOptions o;
 
 
                     sb = new StringBuilder();
 
                     rr.WriteCollectTuplesScript(sb);
 
-                    o = new CreateEditorTabOptions();
+                    o = new EditorTab.CreateEditorTabOptions();
                     o.Title = Properties.Text.collect_tuples_script_name;
                     o.Text = sb.ToString();
                     o.Focus = true;
@@ -941,7 +945,7 @@ namespace PgMulti
 
                     rr.WriteDeleteScript(sb);
 
-                    o = new CreateEditorTabOptions();
+                    o = new EditorTab.CreateEditorTabOptions();
                     o.Title = Properties.Text.delete_tuples_script_name;
                     o.Text = sb.ToString();
                     o.Focus = false;
@@ -1204,7 +1208,7 @@ namespace PgMulti
 
         private void EditFunction(Function f)
         {
-            CreateEditorTabOptions o = new CreateEditorTabOptions();
+            EditorTab.CreateEditorTabOptions o = new EditorTab.CreateEditorTabOptions();
             o.Title = f.Id;
             o.Text = $"CREATE OR REPLACE FUNCTION {f.IdSchema}.{f.Id} ({f.Arguments}) RETURNS {f.Returns} AS $$\r\n{f.SourceCode}\r\n$$ language plpgsql";
             o.Focus = true;
@@ -1407,14 +1411,6 @@ namespace PgMulti
             }
         }
 
-        public class CreateEditorTabOptions
-        {
-            public string? Title = null;
-            public string? Text = null;
-            public string? Path = null;
-            public bool Focus = false;
-        }
-
         private void tvaConnections_ItemDrag(object sender, ItemDragEventArgs e)
         {
             TreeNodeAdv[] items = (TreeNodeAdv[])e.Item!;
@@ -1577,326 +1573,97 @@ namespace PgMulti
         #endregion
 
         #region "SQL editor & tab pages"
-        public EditorTab CreateEditorTab(CreateEditorTabOptions o)
+        public EditorTab CreateEditorTab(EditorTab.CreateEditorTabOptions o)
         {
-            TabPage tp = CreateNewTabPage();
-            EditorTab si = new EditorTab(_Data!, tp, this);
-            tp.Tag = si;
+            EditorTab et = new EditorTab(_Data!, this, o);
 
             tmrSaveTabs.Enabled = true;
 
-            CustomFctb fctbSql = (CustomFctb)tp.Controls[0];
-            if (o.Title != null)
-            {
-                tp.Text = o.Title;
-            }
-            if (o.Text != null)
-            {
-                fctbSql.Text = o.Text;
-            }
             if (o.Focus)
             {
-                tcSql.SelectedTab = tp;
-                fctbSql.Focus();
-            }
-            if (o.Path != null)
-            {
-                tp.ToolTipText = o.Path;
+                tcSql.SelectedTab = et.TabPage;
+                et.Fctb.Focus();
             }
 
-            return si;
+            return et;
         }
 
-        private TabPage CreateNewTabPage()
+        internal void EnableTimerSaveTabs()
         {
-            CustomFctb fctbSql = new CustomFctb(true);
-            fctbSql.SetParser(_Data!.PGLanguageData);
-            fctbSql.CaretBlinking = false;
-            fctbSql.AutoScrollMinSize = new Size(669, 645);
-            fctbSql.BackBrush = null;
-            fctbSql.CharHeight = 15;
-            fctbSql.CharWidth = 7;
-            fctbSql.Cursor = Cursors.IBeam;
-            fctbSql.DisabledColor = Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
-            fctbSql.Dock = DockStyle.Fill;
-            fctbSql.Font = new Font("Cascadia Code", _Data!.Config.FontSize, FontStyle.Regular, GraphicsUnit.Point, ((byte)(204)));
-            fctbSql.IsReplaceMode = false;
-            fctbSql.Location = new Point(0, 0);
-            fctbSql.Name = "fctbSql";
-            fctbSql.SelectionColor = Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
-            fctbSql.Size = new Size(668, 380);
-            fctbSql.TabIndex = 0;
-            fctbSql.Text = "";
-            fctbSql.Zoom = 100;
-            fctbSql.AcceptsTab = true;
-            fctbSql.AcceptsReturn = true;
-            fctbSql.AutoIndent = true;
-            fctbSql.AutoIndentExistingLines = false;
-            fctbSql.Paddings = new Padding(20);
-            fctbSql.AutoCompleteBrackets = true;
-            fctbSql.AutoIndentChars = false;
-
-            fctbSql.TextChangedDelayed += fctbSql_TextChangedDelayed;
-            fctbSql.Enter += fctbSql_Enter;
-            fctbSql.Leave += fctbSql_Leave;
-            fctbSql.KeyDown += fctbSql_KeyDown;
-            fctbSql.MouseUp += fctbSql_MouseUp;
-            fctbSql.ParseTreeUpdated += fctbSql_ParseTreeUpdated;
-            fctbSql.SecondaryFormShowed += fctbSql_SecondaryFormShowed;
-            fctbSql.SecondaryFormClosed += fctbSql_SecondaryFormClosed;
-            fctbSql.AutoIndentNeeded += fctbSql_AutoIndentNeeded;
-            fctbSql.KeyPressing += fctbExecutedSql_KeyPressing;
-
-            TabPage tp = new TabPage(Properties.Text.new_doc_title);
-            tcSql.SuspendDrawing();
-            tp.Controls.Add(fctbSql);
-            tp.Controls.Add(fctbSql.HScrollBar);
-            tp.Controls.Add(fctbSql.VScrollBar);
-            tcSql.TabPages.Insert(tcSql.TabPages.Count - 1, tp);
-            tcSql.ResumeDrawing();
-
-            return tp;
+            tmrSaveTabs.Enabled = true;
         }
 
-        private void fctbExecutedSql_KeyPressing(object? sender, KeyPressEventArgs e)
+        internal void EnableTimerPosition(bool v)
         {
-            if (e.KeyChar == '\b')
+            tmrPosition.Enabled = v;
+        }
+
+        internal void SqlEditorProcessKey(CustomFctb sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.F5 && tsbRun.Enabled)
             {
-                CustomFctb fctbSql = (CustomFctb)sender!;
+                tsbRun_Click(sender, e);
+            }
+            else if (e.KeyData == (Keys.D | Keys.Control))
+            {
+                tsmiFormat_Click(null, null);
+            }
+            else if (e.KeyData == (Keys.L | Keys.Control))
+            {
+                tsbCurrentTabLastTask_Click(null, null);
+            }
 
-                if (fctbSql.Selection.Start == fctbSql.Selection.End)
+            e.Handled = true;
+
+            if (e.KeyData == (Keys.Control | Keys.F) || e.KeyData == (Keys.Control | Keys.R))
+            {
+                ShowSearchAndReplace();
+            }
+            else if (e.KeyData == Keys.F3)
+            {
+                GoNextSearchResult();
+            }
+            else if (e.KeyData == (Keys.Alt | Keys.F) || e.KeyData == (Keys.Control | Keys.H))
+            {
+
+            }
+            else if (e.KeyData == Keys.Escape)
+            {
+                CustomFctb tb = (CustomFctb)sender!;
+                if (tb.SearchMatches != null && tb.SearchMatches.Count > 0)
                 {
-                    System.Text.RegularExpressions.Match m = System.Text.RegularExpressions.Regex.Match(fctbSql.Lines[fctbSql.Selection.Start.iLine].Substring(0, fctbSql.Selection.Start.iChar), @"^\s+$");
-
-                    if (m.Success)
-                    {
-                        int n = m.Length % fctbSql.TabLength;
-                        if (n == 0)
-                        {
-                            n = fctbSql.TabLength;
-                        }
-
-                        fctbSql.BeginAutoUndo();
-                        fctbSql.TextSource.Manager.ExecuteCommand(new SelectCommand(fctbSql.TextSource));
-
-                        fctbSql.Selection.End = new Place(fctbSql.Selection.End.iChar - n, fctbSql.Selection.End.iLine);
-                        fctbSql.InsertText("");
-                        fctbSql.TextSource.Manager.ExecuteCommand(new SelectCommand(fctbSql.TextSource));
-
-                        fctbSql.EndAutoUndo();
-
-                        e.Handled = true;
-                    }
-                }
-            }
-        }
-
-        private void fctbSql_AutoIndentNeeded(object? sender, AutoIndentEventArgs e)
-        {
-            if (e.IsCurrentLine)
-            {
-                CustomFctb fctbSql = (CustomFctb)sender!;
-                string currentLineText = e.LineText.Trim();
-                if (currentLineText == "" || currentLineText == ")")
-                {
-                    string previousText = fctbSql.GetRange(new Place(0, 0), new Place(0, e.iLine)).Text;
-                    bool semiColonAdded;
-                    bool dollarStringTagAdded;
-                    List<AstNode>? stmts = ListStatements(previousText, out semiColonAdded, out dollarStringTagAdded);
-                    if (stmts == null) return;
-
-                    List<AstNode> tokens = stmts[stmts.Count - 1].RecursiveTokens;
-
-                    int sentenceIndent = -1;
-                    bool isNewSentenceAfterSemiColon;
-
-                    if (dollarStringTagAdded)
-                    {
-                        AstNode dollarStringContent = stmts[stmts.Count - 1]["stmtContent"]!.Children.First(an => an[0].Name == "dollarString")[0]["dollarStringContent"]!;
-                        List<AstNode> dollarStringContentTokens = dollarStringContent.RecursiveTokens;
-
-                        if (dollarStringContentTokens[dollarStringContentTokens.Count - 1].Token!.Text == ";")
-                        {
-                            isNewSentenceAfterSemiColon = true;
-
-                            for (int i = dollarStringContentTokens.Count - 2; i >= 0; i--)
-                            {
-                                string tokenText = dollarStringContentTokens[i].Token!.Text.ToUpper();
-
-                                if (tokenText == ";" || tokenText == "DECLARE" || tokenText == "THEN" || tokenText == "ELSE" || tokenText == "LOOP"
-                                     || (tokenText == "BEGIN" && fctbSql.Lines[dollarStringContentTokens[i].Token!.Location.Line].ToUpper().EndsWith(tokenText))) // Because BEGIN can also be part of a stmt, but we cannot have complete syntax validation here
-                                {
-                                    sentenceIndent = System.Text.RegularExpressions.Regex.Match(fctbSql.Lines[dollarStringContentTokens[i + 1].Token!.Location.Line], @"^\s*").Length;
-                                    break;
-                                }
-                            }
-
-                            if (sentenceIndent == -1)
-                            {
-                                sentenceIndent = System.Text.RegularExpressions.Regex.Match(fctbSql.Lines[dollarStringContentTokens[0].Token!.Location.Line], @"^\s*").Length;
-                            }
-                        }
-                        else
-                        {
-                            isNewSentenceAfterSemiColon = false;
-                        }
-                    }
-                    else
-                    {
-                        isNewSentenceAfterSemiColon = !semiColonAdded;
-
-                        if (isNewSentenceAfterSemiColon)
-                        {
-                            int lastStmtStartLine = tokens[0].Token!.Location.Line;
-                            sentenceIndent = System.Text.RegularExpressions.Regex.Match(fctbSql.Lines[lastStmtStartLine], @"^\s*").Length;
-                        }
-                    }
-
-
-                    if (isNewSentenceAfterSemiColon)
-                    {
-                        e.AbsoluteIndentation = sentenceIndent;
-                    }
-                    else
-                    {
-                        int lastTokenIndex;
-                        if (dollarStringTagAdded)
-                        {
-                            lastTokenIndex = tokens.Count - 4;
-                        }
-                        else
-                        {
-                            lastTokenIndex = tokens.Count - 2;
-                        }
-                        Token previousToken = tokens[lastTokenIndex].Token!;
-                        string previousTokenText = previousToken.Text.ToUpper();
-
-                        if (previousTokenText == "(")
-                        {
-                            if (currentLineText == ")")
-                            {
-                                int previousIndent = System.Text.RegularExpressions.Regex.Match(fctbSql.Lines[previousToken.Location.Line], @"^\s*").Length;
-                                string replacementText;
-
-                                if (fctbSql.Lines[previousToken.Location.Line].Trim() == "(")
-                                {
-                                    replacementText = "(\r\n" + new String(' ', previousIndent + e.TabLength) + "\r\n" + new String(' ', previousIndent) + ")";
-                                }
-                                else
-                                {
-                                    replacementText = "\r\n" + new String(' ', previousIndent) + "(\r\n" + new String(' ', previousIndent + e.TabLength) + "\r\n" + new String(' ', previousIndent) + ")";
-                                }
-
-                                fctbSql.BeginAutoUndo();
-                                fctbSql.TextSource.Manager.ExecuteCommand(new SelectCommand(fctbSql.TextSource));
-
-                                fctbSql.Selection.Start = new Place(previousToken.Location.Column, previousToken.Location.Line);
-                                fctbSql.Selection.End = new Place(fctbSql.Lines[e.iLine].Length, e.iLine);
-                                fctbSql.InsertText(replacementText);
-                                fctbSql.TextSource.Manager.ExecuteCommand(new SelectCommand(fctbSql.TextSource));
-
-                                fctbSql.EndAutoUndo();
-
-                                Place finalCaretPosition;
-                                if (fctbSql.Lines[previousToken.Location.Line].Trim() == "(")
-                                {
-                                    finalCaretPosition = new Place(fctbSql.Lines[e.iLine].Length, e.iLine);
-                                }
-                                else
-                                {
-                                    finalCaretPosition = new Place(fctbSql.Lines[e.iLine + 1].Length, e.iLine + 1);
-                                }
-
-                                fctbSql.Selection.Start = finalCaretPosition;
-                                fctbSql.Selection.End = finalCaretPosition;
-                                e.AbsoluteIndentation = 0;
-                            }
-                            else
-                            {
-                                e.Shift = e.TabLength;
-                            }
-                        }
-                        else if (dollarStringTagAdded &&
-                                (
-                                    previousTokenText == "DECLARE"
-                                    || (previousTokenText == "BEGIN" && fctbSql.Lines[previousToken.Location.Line].ToUpper().EndsWith("BEGIN")) // Because BEGIN can also be part of a stmt, but we cannot have complete syntax validation here
-                                    || previousTokenText == "THEN"
-                                    || previousTokenText == "ELSE"
-                                    || previousTokenText == "LOOP"
-                                    || previousToken.Terminal.Name == "dollar_string_tag"
-                                )
-                            )
-                        {
-                            e.Shift = e.TabLength;
-                        }
-                    }
-                }
-
-            }
-
-        }
-
-        protected List<AstNode>? ListStatements(string txt, out bool semiColonAdded, out bool dollarStringTagAdded)
-        {
-            Parser parser = new Parser(_Data!.PGSimpleLanguageData);
-            ParseTree parseTree = parser.Parse(txt);
-
-            dollarStringTagAdded = false;
-
-            if (parseTree.Status == ParseTreeStatus.Error)
-            {
-                int indexInsertPointToken = parseTree.Tokens.Count - 1;
-                if (parseTree.Tokens[indexInsertPointToken].Terminal.Name == "EOF") indexInsertPointToken--;
-                if (parseTree.Tokens[indexInsertPointToken].Terminal.Name == "line_comment") indexInsertPointToken--;
-
-                Token insertPointToken = parseTree.Tokens[indexInsertPointToken];
-                Token endToken = parseTree.Tokens[parseTree.Tokens.Count - 1];
-
-                int insertPoint = insertPointToken.Location.Position + insertPointToken.Length;
-                int end = endToken.Location.Position + endToken.Length;
-
-                txt = txt.Substring(0, insertPoint) + ";" + txt.Substring(insertPoint, end - insertPoint);
-                semiColonAdded = true;
-
-                parseTree = parser.Parse(txt);
-
-                if (parseTree.Status == ParseTreeStatus.Error)
-                {
-                    string? stringTag = parseTree.Tokens.Select(tk => tk.Text).FirstOrDefault(tt => System.Text.RegularExpressions.Regex.Match(tt, @"^\$.*\$$").Success);
-
-                    if (stringTag != null)
-                    {
-                        txt = txt.Substring(0, insertPoint) + " x " + stringTag + txt.Substring(insertPoint, end - insertPoint);
-                        dollarStringTagAdded = true;
-
-                        parseTree = parser.Parse(txt);
-                    }
+                    HideSearchAndReplace();
                 }
             }
             else
             {
-                semiColonAdded = false;
+                e.Handled = false;
             }
 
-
-            if (parseTree.Status == ParseTreeStatus.Error) return null;
-
-            AstNode astRoot = AstNode.ProcessParseTree(parseTree);
-
-            if (astRoot.Children.Count == 0) return null;
-
-            return astRoot.Children[0].Children;
         }
 
-
-        private void fctbSql_SecondaryFormClosed(object? sender, SecondaryFormEventArgs e)
+        internal void SqlEditorProcessClick(CustomFctb sender, MouseEventArgs e)
         {
-            _SecondaryForms.Remove(e.Form);
+            if (e.Button == MouseButtons.XButton1)
+            {
+                tsmiBack_Click(null, null);
+            }
+            else if (e.Button == MouseButtons.XButton2)
+            {
+                tsmiForward_Click(null, null);
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+                cmsFctb.Show((Control)sender!, e.X, e.Y);
+            }
         }
 
-        private void fctbSql_SecondaryFormShowed(object? sender, SecondaryFormEventArgs e)
+        internal void SqlEditorProcessParseTreeUpdated(CustomFctb sender)
         {
-            _SecondaryForms.Add(e.Form);
+            if (tcSql.SelectedTab != null && tcSql.SelectedTab != tpNewTab && tcSql.SelectedTab.Controls[0] == sender)
+            {
+                RefreshErrors(sender);
+            }
         }
 
         private void RefreshErrors(CustomFctb fctbSql)
@@ -1927,73 +1694,9 @@ namespace PgMulti
             }
         }
 
-        private void fctbSql_MouseUp(object? sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.XButton1)
-            {
-                tsmiBack_Click(null, null);
-            }
-            else if (e.Button == MouseButtons.XButton2)
-            {
-                tsmiForward_Click(null, null);
-            }
-            else if (e.Button == MouseButtons.Right)
-            {
-                cmsFctb.Show((Control)sender!, e.X, e.Y);
-            }
-        }
-
-        private void fctbSql_ParseTreeUpdated(object? sender, EventArgs e)
-        {
-            CustomFctb fctbSql = (CustomFctb)sender!;
-
-            if (tcSql.SelectedTab != null && tcSql.SelectedTab != tpNewTab && tcSql.SelectedTab.Controls[0] == fctbSql)
-            {
-                RefreshErrors(fctbSql);
-            }
-        }
-
-        private void fctbSql_KeyDown(object? sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.F5 && tsbRun.Enabled)
-            {
-                tsbRun_Click(sender!, e);
-            }
-            else if (e.KeyData == (Keys.D | Keys.Control))
-            {
-                tsmiFormat_Click(null, null);
-            }
-            else if (e.KeyData == (Keys.L | Keys.Control))
-            {
-                tsbCurrentTabLastTask_Click(null, null);
-            }
-        }
-
         private void fctbSql_Leave(object? sender, EventArgs e)
         {
             tmrPosition.Enabled = false;
-        }
-
-        private void fctbSql_Enter(object? sender, EventArgs e)
-        {
-            tmrPosition.Enabled = true;
-        }
-
-        private void fctbSql_TextChangedDelayed(object? sender, EventArgs e)
-        {
-            CustomFctb fctbSql = (CustomFctb)sender!;
-            TabPage tp = (TabPage)fctbSql.Parent!;
-
-            if (!tp.Text.EndsWith(" *")) tp.Text += " *";
-
-            if (tp.Tag != null)
-            {
-                if (!Text.EndsWith(" *")) Text += " *";
-                ((EditorTab)tp.Tag!).PendingSaveDB = true;
-                tmrSaveTabs.Enabled = true;
-            }
-
-            UpdateSearchResults();
         }
 
         private void tcSql_SelectedIndexChanged(object sender, EventArgs e)
@@ -2030,7 +1733,7 @@ namespace PgMulti
         {
             EditorTab et = ((EditorTab)tp.Tag!);
 
-            if (string.IsNullOrWhiteSpace(((CustomFctb)tp.Controls[0]).Text))
+            if (string.IsNullOrWhiteSpace(et.Fctb.Text))
             {
                 et.Delete();
             }
@@ -2046,7 +1749,7 @@ namespace PgMulti
 
             if (tcSql.TabPages.Count == 1)
             {
-                CreateEditorTab(new CreateEditorTabOptions() { Focus = true });
+                CreateEditorTab(new EditorTab.CreateEditorTabOptions() { Focus = true, PendingFileSave = false });
             }
 
             return true;
@@ -2122,7 +1825,7 @@ namespace PgMulti
                 {
                     if (e.Button == MouseButtons.Left)
                     {
-                        CreateEditorTab(new CreateEditorTabOptions() { Focus = true });
+                        CreateEditorTab(new EditorTab.CreateEditorTabOptions() { Focus = true, PendingFileSave = false });
                     }
                 }
                 else
@@ -2197,7 +1900,7 @@ namespace PgMulti
                 tcSql.TabPages.Remove(tp);
             }
 
-            CreateEditorTab(new CreateEditorTabOptions() { Focus = true });
+            CreateEditorTab(new EditorTab.CreateEditorTabOptions() { Focus = true, PendingFileSave = false });
         }
 
         private void tsmiCloseAllTabsExceptThisOne_Click(object sender, EventArgs e)
@@ -2236,9 +1939,8 @@ namespace PgMulti
             ClosedEditorTab? cet = _Data!.GetLastClosedEditorTab();
             if (cet == null) return;
 
-            TabPage tp = CreateNewTabPage();
-            new EditorTab(_Data!, cet, tp, this, tcSql.TabCount);
-            tcSql.SelectedTab = tp;
+            EditorTab et = new EditorTab(_Data!, cet, this, tcSql.TabCount - 1);
+            tcSql.SelectedTab = et.TabPage;
         }
 
         #endregion
@@ -2364,16 +2066,15 @@ namespace PgMulti
             {
                 if (f.SelectedLog != null)
                 {
-                    CreateEditorTabOptions o = new CreateEditorTabOptions();
+                    EditorTab.CreateEditorTabOptions o = new EditorTab.CreateEditorTabOptions();
                     o.Text = f.SelectedLog.SqlText;
                     o.Focus = true;
                     CreateEditorTab(o);
                 }
                 else if (f.SelectedClosedTab != null)
                 {
-                    TabPage tp = CreateNewTabPage();
-                    new EditorTab(_Data!, f.SelectedClosedTab, tp, this, tcSql.TabCount);
-                    tcSql.SelectedTab = tp;
+                    EditorTab et = new EditorTab(_Data!, f.SelectedClosedTab, this, tcSql.TabCount - 1);
+                    tcSql.SelectedTab = et.TabPage;
                 }
             }
         }
@@ -2720,7 +2421,7 @@ namespace PgMulti
 
         private void tsmiNew_Click(object sender, EventArgs e)
         {
-            CreateEditorTab(new CreateEditorTabOptions() { Focus = true });
+            CreateEditorTab(new EditorTab.CreateEditorTabOptions() { Focus = true, PendingFileSave = false });
         }
 
         private void tsmiOpen_Click(object sender, EventArgs e)
@@ -2733,23 +2434,18 @@ namespace PgMulti
             {
                 string txt = File.ReadAllText(ofdSql.FileName);
 
-                TabPage tp;
-
+                TabPage? replaceTab = null;
                 if (string.IsNullOrWhiteSpace(tcSql.SelectedTab.Controls[0].Text) && (tcSql.SelectedTab.Text == Properties.Text.new_doc_title || tcSql.SelectedTab.Text == Properties.Text.new_doc_title + " *"))
                 {
-                    tp = tcSql.SelectedTab;
-                }
-                else
-                {
-                    tp = CreateEditorTab(new CreateEditorTabOptions() { Focus = true, Path = ofdSql.FileName }).TabPage;
+                    replaceTab = tcSql.SelectedTab;
                 }
 
-                tp.Controls[0].Text = txt;
-                tp.Text = Path.GetFileName(ofdSql.FileName);
-                EditorTab si = (EditorTab)tp.Tag!;
-                si.LocalPath = ofdSql.FileName;
-                si.PendingSaveDB = true;
-                tmrSaveTabs.Enabled = true;
+                CreateEditorTab(new EditorTab.CreateEditorTabOptions() { Text = txt, Title = Path.GetFileName(ofdSql.FileName), Focus = true, Path = ofdSql.FileName, PendingFileSave = false });
+
+                if (replaceTab != null)
+                {
+                    CloseTab(replaceTab);
+                }
             }
             catch (Exception ex)
             {
@@ -2810,7 +2506,7 @@ namespace PgMulti
                 tcSql.TabPages.Remove(tp);
             }
 
-            CreateEditorTab(new CreateEditorTabOptions() { Focus = true });
+            CreateEditorTab(new EditorTab.CreateEditorTabOptions() { Focus = true, PendingFileSave = false });
         }
 
         private void tsmiChangePassword_Click(object sender, EventArgs e)
@@ -3445,7 +3141,7 @@ namespace PgMulti
 
         private void tsbEditExecutedSql_Click(object sender, EventArgs e)
         {
-            CreateEditorTabOptions o = new CreateEditorTabOptions();
+            EditorTab.CreateEditorTabOptions o = new EditorTab.CreateEditorTabOptions();
             o.Text = fctbExecutedSql.Text;
             o.Focus = true;
             CreateEditorTab(o);
@@ -3627,7 +3323,7 @@ namespace PgMulti
                     case ConfirmSqlForm.ResultEnum.Edit:
                         foreach (Tuple<DB, string> t in ts)
                         {
-                            CreateEditorTabOptions o = new CreateEditorTabOptions();
+                            EditorTab.CreateEditorTabOptions o = new EditorTab.CreateEditorTabOptions();
                             o.Title = string.Format(Properties.Text.modifications_in, t.Item1.Alias);
                             o.Text = t.Item2;
                             o.Focus = true;
@@ -3793,7 +3489,7 @@ namespace PgMulti
         #endregion
 
         #region "Search and replace"
-        public void ShowSearchAndReplace()
+        private void ShowSearchAndReplace()
         {
             tcLeftPanel.SelectedTab = tpSearchAndReplace;
             txtSearchText.Focus();
@@ -3806,7 +3502,8 @@ namespace PgMulti
                 txtSearchText.SelectedText = tb.SelectedText;
             }
         }
-        public void HideSearchAndReplace()
+
+        private void HideSearchAndReplace()
         {
             txtSearchText.Text = "";
             tcLeftPanel.SelectedTab = tpConnections;
@@ -3851,7 +3548,7 @@ namespace PgMulti
             }
         }
 
-        private bool UpdateSearchResults()
+        internal bool UpdateSearchResults()
         {
             string pattern = txtSearchText.Text;
             CustomFctb tb = ((CustomFctb)tcSql.SelectedTab.Controls[0]);
@@ -3906,7 +3603,7 @@ namespace PgMulti
             }
         }
 
-        public void GoNextSearchResult()
+        private void GoNextSearchResult()
         {
             CustomFctb tb = ((CustomFctb)tcSql.SelectedTab.Controls[0]);
             if (tb.SearchMatches == null || tb.SearchMatches.Count == 0) return;

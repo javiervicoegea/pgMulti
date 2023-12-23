@@ -109,7 +109,7 @@ namespace FastColoredTextBoxNS
         private Point needRecalcWordWrapInterval;
         private bool needRecalcFoldingLines;
         private bool needRiseSelectionChangedDelayed;
-        private bool needRiseTextChangedDelayed;
+        protected bool needRiseTextChangedDelayed;
         private bool needRiseVisibleRangeChangedDelayed;
         private Color paddingBackColor;
         private int preferredLineWidth;

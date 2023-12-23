@@ -315,8 +315,7 @@ namespace PgMulti.AppData
         }
 
 
-        public delegate TabPage CreateNewSqlTabPageDelegate();
-        public List<EditorTab> ListOpenEditorTabs(CreateNewSqlTabPageDelegate createNewSqlTabPageDelegate, MainForm mainForm)
+        public List<EditorTab> ListOpenEditorTabs(MainForm mainForm)
         {
             using (Connection c = OpenConnection())
             {
@@ -330,9 +329,7 @@ namespace PgMulti.AppData
                 List<EditorTab> l = new List<EditorTab>();
                 foreach (DataRow dr in dt.Rows)
                 {
-                    TabPage tp = createNewSqlTabPageDelegate();
-                    EditorTab et = new EditorTab(this, dr, tp, mainForm);
-                    tp.ToolTipText = et.LocalPath;
+                    EditorTab et = new EditorTab(this, dr, mainForm);
                     l.Add(et);
                 }
                 return l;

@@ -462,6 +462,10 @@ namespace PgMulti.QueryEditor
             return r;
         }
 
+        public void ResetTextChangedDelayedEvent()
+        {
+            needRiseTextChangedDelayed = false;
+        }
 
         protected virtual void InitBraces()
         {
