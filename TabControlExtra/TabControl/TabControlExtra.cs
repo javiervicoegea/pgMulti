@@ -665,9 +665,7 @@ namespace TradeWright.UI.Forms
 
         protected override void OnFontChanged(EventArgs e)
         {
-            //IntPtr hFont = this.Font.ToHfont();
-            //NativeMethods.SendMessage(this.Handle, NativeMethods.WM_SETFONT, hFont, (IntPtr)(-1));
-            //NativeMethods.SendMessage(this.Handle, NativeMethods.WM_FONTCHANGE, IntPtr.Zero, IntPtr.Zero);
+            base.OnFontChanged(e);
             this.UpdateStyles();
         }
 
