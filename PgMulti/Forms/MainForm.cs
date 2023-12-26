@@ -310,20 +310,20 @@ namespace PgMulti
             if (ofdImportConfig.ShowDialog(this) != DialogResult.OK) return;
 
             ExportConnectionsFile ecf = new ExportConnectionsFile();
-            //try
-            //{
-            ecf.LoadFile(ofdImportConfig.FileName);
-            //}
-            //catch (Export.BadFormatException)
-            //{
-            //    MessageBox.Show(Properties.Text.warning_bad_format_export_file, Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //    return;
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(Properties.Text.error_opening_file + $":\r\n{ofdImportConfig.FileName}\r\n\r\n{ex.Message}", Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //    return;
-            //}
+            try
+            {
+                ecf.LoadFile(ofdImportConfig.FileName);
+            }
+            catch (Export.BadFormatException)
+            {
+                MessageBox.Show(Properties.Text.warning_bad_format_export_file, Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(Properties.Text.error_opening_file + $":\r\n{ofdImportConfig.FileName}\r\n\r\n{ex.Message}", Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
 
             ExportImportConnectionsForm eicf = new ExportImportConnectionsForm(_Data!, ecf, true);
@@ -477,6 +477,14 @@ namespace PgMulti
         #endregion
 
         #region "Connections tree control"
+
+        private void ResetStructureCache()
+        {
+            foreach (DB db in _Data!.AllDBs)
+            {
+                db.ResetSchemas();
+            }
+        }
 
         private void RefreshConnectionsTreeControl(bool reloadStructure = true)
         {
@@ -1335,11 +1343,7 @@ namespace PgMulti
 
         private void tsbRefresh_Click(object sender, EventArgs e)
         {
-            foreach (DB db in _Data!.AllDBs)
-            {
-                db.ResetSchemas();
-            }
-
+            ResetStructureCache();
             RefreshConnectionsTreeControl();
             UpdateServersButtons();
             ExpandServersTree();
@@ -1603,29 +1607,31 @@ namespace PgMulti
             if (e.KeyCode == Keys.F5 && tsbRun.Enabled)
             {
                 tsbRun_Click(sender, e);
+                e.Handled = true;
             }
             else if (e.KeyData == (Keys.D | Keys.Control))
             {
                 tsmiFormat_Click(null, null);
+                e.Handled = true;
             }
             else if (e.KeyData == (Keys.L | Keys.Control))
             {
                 tsbCurrentTabLastTask_Click(null, null);
+                e.Handled = true;
             }
-
-            e.Handled = true;
-
-            if (e.KeyData == (Keys.Control | Keys.F) || e.KeyData == (Keys.Control | Keys.R))
+            else if (e.KeyData == (Keys.Control | Keys.F) || e.KeyData == (Keys.Control | Keys.R))
             {
                 ShowSearchAndReplace();
+                e.Handled = true;
             }
             else if (e.KeyData == Keys.F3)
             {
                 GoNextSearchResult();
+                e.Handled = true;
             }
             else if (e.KeyData == (Keys.Alt | Keys.F) || e.KeyData == (Keys.Control | Keys.H))
             {
-
+                e.Handled = true;
             }
             else if (e.KeyData == Keys.Escape)
             {
@@ -1634,12 +1640,8 @@ namespace PgMulti
                 {
                     HideSearchAndReplace();
                 }
+                e.Handled = true;
             }
-            else
-            {
-                e.Handled = false;
-            }
-
         }
 
         internal void SqlEditorProcessClick(CustomFctb sender, MouseEventArgs e)
@@ -2178,6 +2180,8 @@ namespace PgMulti
             {
                 ClearSelectedNodesTreeView();
             }
+
+            ResetStructureCache();
 
             tsmiRun.Enabled = false;
             tsbRun.Enabled = false;
@@ -3204,7 +3208,7 @@ namespace PgMulti
 
         private void gvTable_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
-            if (e.ColumnIndex != -1 && gvTable.Columns[e.ColumnIndex].Tag != null && ((Query.QueryColumn)gvTable.Columns[e.ColumnIndex].Tag).EditableOnEdit && e.RowIndex == -1)
+            if (e.ColumnIndex != -1 && gvTable.Columns[e.ColumnIndex].Tag != null && ((Query.QueryColumn)gvTable.Columns[e.ColumnIndex].Tag!).EditableOnEdit && e.RowIndex == -1)
             {
                 e.PaintBackground(e.ClipBounds, false);
                 e.PaintContent(e.ClipBounds);
@@ -3387,33 +3391,183 @@ namespace PgMulti
             }
         }
 
-        private void tsbTextEditor_Click(object sender, EventArgs e)
+        private string? GetSelectedCellValue(out DataGridViewCell? cell, out Query? q, out Query.QueryColumn? col, out DataRow? drCurrent)
         {
-            DataGridViewCell cell = gvTable.SelectedCells[0];
-            if (cell.RowIndex == -1 || cell.ColumnIndex == -1) return;
-            Query q = (Query)gvTable.Tag!;
-            if (gvTable.RowCount <= cell.RowIndex) return;
-            DataRow drCurrent = ((DataRowView)gvTable.Rows[cell.RowIndex].DataBoundItem).Row;
-            object v = drCurrent[cell.ColumnIndex];
-            Query.QueryColumn col = q.Columns[cell.ColumnIndex];
+            cell = null;
+            col = null;
+            q = null;
+            drCurrent = null;
 
-            bool nulo = false;
-            string txt = "";
+            if (gvTable.SelectedCells.Count != 1) return null;
+            cell = gvTable.SelectedCells[0];
+
+            if (cell.RowIndex == -1 || cell.ColumnIndex == -1) return null;
+
+            if (gvTable.RowCount <= cell.RowIndex) return null;
+
+            drCurrent = ((DataRowView)gvTable.Rows[cell.RowIndex].DataBoundItem).Row;
+            object v = drCurrent[cell.ColumnIndex];
+            q = (Query)gvTable.Tag!;
+            col = q.Columns[cell.ColumnIndex];
+
             if (v == null || v == DBNull.Value)
             {
-                nulo = true;
+                return null;
             }
             else
             {
-                txt = v.ToString()!;
+                return v.ToString()!;
+            }
+        }
+
+        private void tsbCopyCellText_Click(object sender, EventArgs e)
+        {
+            DataGridViewCell? cell;
+            Query.QueryColumn? col;
+            Query? q;
+            DataRow? drCurrent;
+
+            string? txt = GetSelectedCellValue(out cell, out q, out col, out drCurrent);
+            if (cell == null || q == null || col == null || drCurrent == null) return;
+
+            Clipboard.SetText(txt == null ? "" : txt);
+        }
+
+        private void tsbLoadCellBinaryValueFromFile_Click(object sender, EventArgs e)
+        {
+            ofdBinaryCell.FileName = "";
+
+            if (ofdBinaryCell.ShowDialog(this) != DialogResult.OK) return;
+
+            byte[] ba = File.ReadAllBytes(ofdBinaryCell.FileName);
+
+            Query q = (Query)gvTable.Tag!;
+
+            foreach (DataGridViewCell cell in gvTable.SelectedCells)
+            {
+                if (cell.RowIndex == -1 || cell.ColumnIndex == -1) continue;
+                if (gvTable.RowCount <= cell.RowIndex) continue;
+                Query.QueryColumn col = q.Columns[cell.ColumnIndex];
+
+                if (q.Editable && col.EditableOnEdit)
+                {
+                    DataRow drCurrent = ((DataRowView)gvTable.Rows[cell.RowIndex].DataBoundItem).Row;
+                    switch (col.Type)
+                    {
+                        case "bytea":
+                            {
+                                StringBuilder sb = new StringBuilder(ba.Length * 2);
+                                foreach (byte b in ba)
+                                {
+                                    sb.AppendFormat("{0:x2}", b);
+                                }
+
+                                drCurrent[cell.ColumnIndex] = @"\x" + sb.ToString();
+                                q.SetEditedCell(drCurrent, cell.ColumnIndex);
+                            }
+                            break;
+                        case "bit varying":
+                        case "bit":
+                        case "varbit":
+                            {
+                                StringBuilder sb = new StringBuilder(ba.Length * 8);
+                                foreach (byte b in ba)
+                                {
+                                    sb.Append(Convert.ToString(b, 2).PadLeft(8, '0'));
+                                }
+
+                                drCurrent[cell.ColumnIndex] = @"\x" + sb.ToString();
+                                q.SetEditedCell(drCurrent, cell.ColumnIndex);
+                            }
+                            break;
+                    }
+                }
+            }
+        }
+
+        private void tsbSaveCellBinaryValueInFile_Click(object sender, EventArgs e)
+        {
+            Query.QueryColumn? col;
+            string? s = GetSelectedCellValue(out _, out _, out col, out _);
+            if (s == null || col == null) return;
+
+            byte[] b;
+
+            try
+            {
+                switch (col.Type)
+                {
+                    case "bytea":
+                        if (s.Length < 4 || !s.StartsWith(@"\x") || s.Length % 2 != 0)
+                        {
+                            MessageBox.Show(Properties.Text.invalid_hex_value, Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+
+                        b = Enumerable.Range(0, s.Length - 4)
+                                 .Where(x => x % 2 == 0)
+                                 .Select(x => Convert.ToByte(s.Substring(x + 2, 2), 16))
+                                 .ToArray();
+                        break;
+                    case "bit varying":
+                    case "bit":
+                    case "varbit":
+                        if (s.Length < 8 || s.Length % 8 != 0)
+                        {
+                            MessageBox.Show(Properties.Text.invalid_hex_value, Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+
+                        b = Enumerable.Range(0, s.Length - 8)
+                                 .Where(x => x % 8 == 0)
+                                 .Select(x => Convert.ToByte(s.Substring(x, 8), 2))
+                                 .ToArray();
+                        break;
+                    default:
+                        return;
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(Properties.Text.invalid_hex_value, Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
 
-            TextBoxForm f = new TextBoxForm(nulo, txt, q.Editable && col.EditableOnEdit);
+            sfdBinaryCell.FileName = "";
+            if (sfdBinaryCell.ShowDialog(this) != DialogResult.OK) return;
+
+            try
+            {
+                File.WriteAllBytes(sfdBinaryCell.FileName, b);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(Properties.Text.error_saving_file + $":\r\n{sfdBinaryCell.FileName}\r\n\r\n{ex.Message}", Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void tsbTextEditor_Click(object sender, EventArgs e)
+        {
+            DataGridViewCell? cell;
+            Query.QueryColumn? col;
+            Query? q;
+            DataRow? drCurrent;
+
+            string? txt = GetSelectedCellValue(out cell, out q, out col, out drCurrent);
+            if (cell == null || q == null || col == null || drCurrent == null) return;
+
+            if (txt != null && txt.Length > 1024 * 1024)
+            {
+                MessageBox.Show(Properties.Text.text_too_long, Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            TextBoxForm f = new TextBoxForm(txt, q.Editable && col.EditableOnEdit);
             f.ShowDialog(this);
 
             if (f.DialogResult == DialogResult.OK)
             {
-                if (f.IsNull)
+                if (f.Value == null)
                 {
                     drCurrent[cell.ColumnIndex] = DBNull.Value;
                 }
@@ -3427,16 +3581,20 @@ namespace PgMulti
 
         private void tsbSetNull_Click(object sender, EventArgs e)
         {
-            DataGridViewCell cell = gvTable.SelectedCells[0];
-            if (cell.RowIndex == -1 || cell.ColumnIndex == -1) return;
             Query q = (Query)gvTable.Tag!;
-            if (gvTable.RowCount <= cell.RowIndex) return;
-            Query.QueryColumn col = q.Columns[cell.ColumnIndex];
-            if (q.Editable && col.EditableOnEdit && !col.Column!.NotNull)
+
+            foreach (DataGridViewCell cell in gvTable.SelectedCells)
             {
-                DataRow drCurrent = ((DataRowView)gvTable.Rows[cell.RowIndex].DataBoundItem).Row;
-                drCurrent[cell.ColumnIndex] = DBNull.Value;
-                q.SetEditedCell(drCurrent, cell.ColumnIndex);
+                if (cell.RowIndex == -1 || cell.ColumnIndex == -1) continue;
+                if (gvTable.RowCount <= cell.RowIndex) continue;
+
+                Query.QueryColumn col = q.Columns[cell.ColumnIndex];
+                if (q.Editable && col.EditableOnEdit && !col.Column!.NotNull)
+                {
+                    DataRow drCurrent = ((DataRowView)gvTable.Rows[cell.RowIndex].DataBoundItem).Row;
+                    drCurrent[cell.ColumnIndex] = DBNull.Value;
+                    q.SetEditedCell(drCurrent, cell.ColumnIndex);
+                }
             }
         }
 
@@ -3450,15 +3608,34 @@ namespace PgMulti
             gvTable.CurrentCell = cell;
             cell.Selected = true;
 
+            tsbCopyCellText.Enabled = false;
+            tsbLoadCellBinaryValueFromFile.Visible = false;
+            tsbSaveCellBinaryValueInFile.Visible = false;
             tsbTextEditor.Enabled = false;
             tsbSetNull.Enabled = false;
 
             if (cell.ColumnIndex < q.Columns.Count && cell.RowIndex < gvTable.RowCount)
             {
                 Query.QueryColumn col = q.Columns[cell.ColumnIndex];
-                if (q.Editable && col.EditableOnEdit && !col.Column!.NotNull)
+
+                if (cell.Value != DBNull.Value)
                 {
-                    tsbSetNull.Enabled = true;
+                    tsbCopyCellText.Enabled = true;
+
+                    if (col.Type == "bytea" || col.Type == "varbit" || col.Type == "bit" || col.Type == "bit varying")
+                    {
+                        tsbSaveCellBinaryValueInFile.Visible = true;
+                    }
+
+                    if (q.Editable && col.EditableOnEdit && !col.Column!.NotNull)
+                    {
+                        tsbSetNull.Enabled = true;
+                    }
+                }
+
+                if (col.Type == "bytea" || col.Type == "varbit" || col.Type == "bit" || col.Type == "bit varying" && q.Editable && col.EditableOnEdit)
+                {
+                    tsbLoadCellBinaryValueFromFile.Visible = true;
                 }
 
                 tsbTextEditor.Enabled = true;
@@ -3884,6 +4061,9 @@ namespace PgMulti
             this.tsmiManualScroll.Text = Properties.Text.manual_scroll;
             this.tpTable.Text = Properties.Text.table;
             this.tsbTextEditor.Text = Properties.Text.show_text_window;
+            this.tsbCopyCellText.Text = Properties.Text.copy_text;
+            this.tsbLoadCellBinaryValueFromFile.Text = Properties.Text.load_binary_file;
+            this.tsbSaveCellBinaryValueInFile.Text = Properties.Text.save_binary_file;
             this.tsbSetNull.Text = Properties.Text.set_null;
             this.tsddbTables.Text = Properties.Text.no_results;
             this.tsddbInsertRow.Text = Properties.Text.insert_row;
@@ -3924,7 +4104,7 @@ namespace PgMulti
             this.ofdOpenDiagram.Filter = Properties.Text.pgdx_file_filter;
             this.ofdOpenDiagram.Title = Properties.Text.select_open_file;
             this.sfdSaveDiagram.Filter = Properties.Text.pgdx_file_filter;
-            this.sfdSaveDiagram.Title = Properties.Text.select_open_file;
+            this.sfdSaveDiagram.Title = Properties.Text.select_save_file;
             this.tsbNewDiagram.Text = Properties.Text.new_diagram;
             this.tsbOpenDiagram.Text = Properties.Text.open_diagram;
             this.tsmiDiagrams.Text = Properties.Text.diagrams;
@@ -3943,6 +4123,10 @@ namespace PgMulti
             this.btnUpdateSearchSelectedText.Text = Properties.Text.update_selected_text;
             this.btnReplaceCurrent.Text = Properties.Text.replace_current;
             this.btnReplaceAll.Text = Properties.Text.replace_all;
+            this.ofdBinaryCell.Filter = Properties.Text.all_file_filter;
+            this.ofdBinaryCell.Title = Properties.Text.select_open_file;
+            this.sfdBinaryCell.Filter = Properties.Text.all_file_filter;
+            this.sfdBinaryCell.Title = Properties.Text.select_save_file;
         }
         #endregion
 

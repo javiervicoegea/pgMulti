@@ -144,6 +144,9 @@ namespace PgMulti
             toolStripContainer5 = new ToolStripContainer();
             gvTable = new DataGridView();
             cmsTable = new ContextMenuStrip(components);
+            tsbCopyCellText = new ToolStripMenuItem();
+            tsbLoadCellBinaryValueFromFile = new ToolStripMenuItem();
+            tsbSaveCellBinaryValueInFile = new ToolStripMenuItem();
             tsbTextEditor = new ToolStripMenuItem();
             tsbSetNull = new ToolStripMenuItem();
             toolStrip5 = new ToolStrip();
@@ -201,6 +204,8 @@ namespace PgMulti
             ilServers = new ImageList(components);
             ofdSql = new OpenFileDialog();
             sfdSql = new SaveFileDialog();
+            ofdBinaryCell = new OpenFileDialog();
+            sfdBinaryCell = new SaveFileDialog();
             tmrPosition = new System.Windows.Forms.Timer(components);
             tmrSaveTabs = new System.Windows.Forms.Timer(components);
             tmrResult = new System.Windows.Forms.Timer(components);
@@ -1453,9 +1458,30 @@ namespace PgMulti
             // cmsTable
             // 
             cmsTable.ImageScalingSize = new Size(20, 20);
-            cmsTable.Items.AddRange(new ToolStripItem[] { tsbTextEditor, tsbSetNull });
+            cmsTable.Items.AddRange(new ToolStripItem[] { tsbCopyCellText, tsbLoadCellBinaryValueFromFile, tsbSaveCellBinaryValueInFile, tsbTextEditor, tsbSetNull });
             cmsTable.Name = "cmsTable";
             cmsTable.Size = new Size(74, 56);
+            // 
+            // tsbCopyCellText
+            // 
+            tsbCopyCellText.Image = Properties.Resources.copiar;
+            tsbCopyCellText.Name = "tsbCopyCellText";
+            tsbCopyCellText.Size = new Size(73, 26);
+            tsbCopyCellText.Click += tsbCopyCellText_Click;
+            // 
+            // tsbLoadCellBinaryValueFromFile
+            // 
+            tsbLoadCellBinaryValueFromFile.Image = Properties.Resources.abrir;
+            tsbLoadCellBinaryValueFromFile.Name = "tsbLoadCellBinaryValueFromFile";
+            tsbLoadCellBinaryValueFromFile.Size = new Size(73, 26);
+            tsbLoadCellBinaryValueFromFile.Click += tsbLoadCellBinaryValueFromFile_Click;
+            // 
+            // tsbSaveCellBinaryValueInFile
+            // 
+            tsbSaveCellBinaryValueInFile.Image = Properties.Resources.guardar_como;
+            tsbSaveCellBinaryValueInFile.Name = "tsbSaveCellBinaryValueInFile";
+            tsbSaveCellBinaryValueInFile.Size = new Size(73, 26);
+            tsbSaveCellBinaryValueInFile.Click += tsbSaveCellBinaryValueInFile_Click;
             // 
             // tsbTextEditor
             // 
@@ -1915,6 +1941,16 @@ namespace PgMulti
             sfdSql.DefaultExt = "sql";
             sfdSql.FilterIndex = 0;
             // 
+            // ofdBinaryCell
+            // 
+            ofdOpenDiagram.FileName = "";
+            ofdOpenDiagram.FilterIndex = 0;
+            // 
+            // sfdBinaryCell
+            // 
+            sfdBinaryCell.DefaultExt = "";
+            sfdBinaryCell.FilterIndex = 0;
+            // 
             // tmrPosition
             // 
             tmrPosition.Interval = 500;
@@ -2223,6 +2259,8 @@ namespace PgMulti
         private ToolStripButton tsbDown;
         private OpenFileDialog ofdSql;
         private SaveFileDialog sfdSql;
+        private OpenFileDialog ofdBinaryCell;
+        private SaveFileDialog sfdBinaryCell;
         private TabControlExtra tcSql;
         private DataGridView gvTable;
         private ToolStripContainer toolStripContainer3;
@@ -2288,6 +2326,9 @@ namespace PgMulti
         private ContextMenuStrip cmsFctb;
         private ToolStripButton tsbApplyTableChanges;
         private ContextMenuStrip cmsTable;
+        private ToolStripMenuItem tsbCopyCellText;
+        private ToolStripMenuItem tsbLoadCellBinaryValueFromFile;
+        private ToolStripMenuItem tsbSaveCellBinaryValueInFile;
         private ToolStripMenuItem tsbTextEditor;
         private ContextMenuStrip cmsServers;
         private ToolStripMenuItem tscmiNewGroup;

@@ -1063,4 +1063,28 @@ Unlike other tools, this application does not reuse the connection between diffe
   <data name="open_folder" xml:space="preserve">
     <value>Abrir carpeta contenedora</value>
   </data>
+  <data name="money_cannot_be_parsed" xml:space="preserve">
+    <value>Los campos de tipo money no se puede procesar porque el valor LC_MONETARY '{0}' no se puede mapear a una configuración regional de Windows</value>
+  </data>
+  <data name="money_culture_used" xml:space="preserve">
+    <value>Los campos de tipo money usarán la configuración regional '{0}' correspondiente al valor LC_MONETARY '{1}'</value>
+  </data>
+  <data name="invalid_hex_value" xml:space="preserve">
+    <value>La cadena de texto de la celda no corresponde a una secuencia válida de dígitos hexadecimales. Recuerde que esta secuencia debe tener un número par de dígitos y debe ir precedida por \x. Por ejemplo: \xf9e3.</value>
+  </data>
+  <data name="invalid_bin_value" xml:space="preserve">
+    <value>La cadena de texto de la celda no corresponde a una secuencia válida de bytes en dígitos binarios. Recuerde que esta secuencia debe tener un número múltiplo de 8 dígitos.</value>
+  </data>
+  <data name="all_file_filter" xml:space="preserve">
+    <value>Todos los ficheros|*.*</value>
+  </data>
+  <data name="load_binary_file" xml:space="preserve">
+    <value>Cargar de un fichero en binario</value>
+  </data>
+  <data name="save_binary_file" xml:space="preserve">
+    <value>Guardar en un fichero en binario</value>
+  </data>
+  <data name="text_too_long" xml:space="preserve">
+    <value>El contenido de la celda seleccionada es demasiado grande como para visualizarlo en texto plano</value>
+  </data>
 </root>

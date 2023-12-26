@@ -2,18 +2,16 @@
 {
     public partial class TextBoxForm : Form
     {
-        public bool IsNull;
         public string? Value;
 
-        public TextBoxForm(bool isNull, string? v, bool editable)
+        public TextBoxForm(string? v, bool editable)
         {
             InitializeComponent();
             InitializeText();
 
-            IsNull = isNull;
             Value = v;
 
-            tsbNull.Checked = isNull;
+            tsbNull.Checked = v == null;
             tsbNull_Click(null, null);
 
             if (editable)
@@ -59,21 +57,18 @@
         {
             if (tsbNull.Checked)
             {
-                IsNull = true;
                 Value = null;
             }
             else
             {
-                IsNull = false;
                 Value = txtText.Text;
             }
             DialogResult = DialogResult.OK;
             Close();
         }
-        
+
         private void tsbCancel_Click(object sender, EventArgs e)
         {
-            IsNull = true;
             Value = null;
             DialogResult = DialogResult.Cancel;
             Close();

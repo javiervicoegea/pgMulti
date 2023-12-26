@@ -1,23 +1,21 @@
 ﻿using Npgsql;
+using System;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace PgMulti.DataStructure
 {
     public class Column
     {
-        private string _Id;
-        private string _IdTable;
-        private string _IdSchema;
-        private string _Type;
-        private string? _TypeParams;
-        private string? _DefaultValue;
-        private bool _IsIdentity;
-        private bool _IsGeneratedAlways;
-        private bool _PK;
-        private bool _NotNull;
-        private int _Position;
-        private Table? _Table;
-
-        private string[] BooleanTypes = { "bool", "boolean" };
+        public readonly bool IsBoolean = false;
+        public readonly bool IsShort = false;
+        public readonly bool IsInt = false;
+        public readonly bool IsLong = false;
+        public readonly bool IsFloat = false;
+        public readonly bool IsDouble = false;
+        public readonly bool IsDecimal = false;
+        public readonly bool IsDate = false;
+        public readonly bool IsDateTime = false;
 
         public string Id { get => _Id; internal set => _Id = value; }
         public string IdTable { get => _IdTable; internal set => _IdTable = value; }
@@ -31,8 +29,35 @@ namespace PgMulti.DataStructure
         public bool NotNull { get => _NotNull; internal set => _NotNull = value; }
         public int Position { get => _Position; internal set => _Position = value; }
         public Table? Table { get => _Table; internal set => _Table = value; }
+        public int? Precission { get => _Precission; }
+        public int? Scale { get => _Scale; }
 
-        public bool IsBoolean { get => BooleanTypes.Contains(Type); }
+
+        private string _Id;
+        private string _IdTable;
+        private string _IdSchema;
+        private string _Type;
+        private string? _TypeParams;
+        private string? _DefaultValue;
+        private bool _IsIdentity;
+        private bool _IsGeneratedAlways;
+        private bool _PK;
+        private bool _NotNull;
+        private int _Position;
+        private Table? _Table;
+        private int? _Precission = null;
+        private int? _Scale = null;
+
+        private static string[] BooleanTypes = { "bool", "boolean" };
+        private static string[] ShortTypes = { "smallint", "int2", "serial2" };
+        private static string[] IntTypes = { "int", "integer", "int4", "serial4", "serial" };
+        private static string[] LongTypes = { "bigint", "int8", "serial8", "bigserial" };
+        private static string[] FloatTypes = { "real", "float4" };
+        private static string[] DoubleTypes = { "double precision", "float8" };
+        private static string[] DecimalTypes = { "money", "numeric", "decimal" };
+        private static string[] DateTypes = { "date" };
+        private static string[] DateTimeTypes = { "datetime", "timestamp", "timestamp with time zone", "timestamp without time zone" };
+        private static string[] NumericTypes = { "numeric", "decimal" };
 
         internal Column(NpgsqlDataReader drd)
         {
@@ -48,15 +73,93 @@ namespace PgMulti.DataStructure
             _Position = drd.Val<int>("ordinal_position")!.Value;
 
             _TypeParams = null;
-            if (_Type == "numeric")
+            if (NumericTypes.Contains(_Type))
             {
-                _TypeParams += $"({drd.Val<int>("numeric_precision")!},{drd.Val<int>("numeric_scale")!})";
+                _Precission = drd.Val<int>("numeric_precision")!;
+                _Scale = drd.Val<int>("numeric_scale")!;
+                _TypeParams = $"({_Precission},{_Scale})";
+            }
+            else
+            {
+                int? cml = drd.Val<int>("character_maximum_length");
+                if (cml.HasValue && cml.Value > 0)
+                {
+                    _TypeParams = $"({cml.Value})";
+                }
             }
 
-            int? cml = drd.Val<int>("character_maximum_length");
-            if (cml.HasValue && cml.Value > 0)
+
+            if (BooleanTypes.Contains(_Type))
             {
-                _TypeParams += $"({cml.Value})";
+                IsBoolean = true;
+            }
+            else if (ShortTypes.Contains(_Type) || (NumericTypes.Contains(_Type) && Scale!.Value == 0 && Precission!.Value <= 4))
+            {
+                IsShort = true;
+            }
+            else if (IntTypes.Contains(_Type) || (NumericTypes.Contains(_Type) && Scale!.Value == 0 && Precission!.Value > 4 && Precission!.Value <= 9))
+            {
+                IsInt = true;
+            }
+            else if (LongTypes.Contains(_Type) || (NumericTypes.Contains(_Type) && Scale!.Value == 0 && Precission!.Value > 9 && Precission!.Value <= 18))
+            {
+                IsLong = true;
+            }
+            else if (FloatTypes.Contains(_Type))
+            {
+                IsFloat = true;
+            }
+            else if (DoubleTypes.Contains(_Type))
+            {
+                IsDouble = true;
+            }
+            else if (DecimalTypes.Contains(_Type) || (NumericTypes.Contains(_Type) && (Scale!.Value > 0 || Precission!.Value > 18)))
+            {
+                IsDecimal = true;
+            }
+            else if (DateTypes.Contains(_Type))
+            {
+                IsDate = true;
+            }
+            else if (DateTimeTypes.Contains(_Type))
+            {
+                IsDateTime = true;
+            }
+        }
+
+        public static Type GetDotNetType(string pgType)
+        {
+            if (BooleanTypes.Contains(pgType))
+            {
+                return typeof(bool);
+            }
+            else if (ShortTypes.Contains(pgType))
+            {
+                return typeof(short);
+            }
+            else if (IntTypes.Contains(pgType))
+            {
+                return typeof(int);
+            }
+            else if (LongTypes.Contains(pgType))
+            {
+                return typeof(long);
+            }
+            else if (FloatTypes.Contains(pgType))
+            {
+                return typeof(float);
+            }
+            else if (DoubleTypes.Contains(pgType))
+            {
+                return typeof(double);
+            }
+            else if (DecimalTypes.Contains(pgType))
+            {
+                return typeof(decimal);
+            }
+            else
+            {
+                return typeof(string);
             }
         }
 
@@ -72,72 +175,65 @@ namespace PgMulti.DataStructure
         {
             if (v == null || v == DBNull.Value) return "null";
 
-            switch (Type)
+            if (IsBoolean)
             {
-                case "bit":
-                case "bit varying":
-                case "varbit":
-                case "bytea":
-                    return "decode('" + v.ToString() + "','hex')::" + Type;
-                case "decimal":
-                case "real":
-                case "float":
-                case "smallint":
-                case "integer":
-                case "int":
-                case "interval":
-                case "double precision":
-                case "bigint":
-                case "numeric":
-                case "money":
-                    return v.ToString()!;
-                case "boolean":
-                case "bool":
-                    return v.ToString()!.ToLower();
-                case "character":
-                case "character varying":
-                case "char":
-                case "varchar":
-                case "text":
-                    string s = v.ToString()!;
-                    if (s.Contains('\'') || s.Contains('\n') || s.Contains('\r'))
-                    {
-                        s = s.Replace("\'", "\\'");
-                        s = s.Replace("\n", "\\n");
-                        s = s.Replace("\r", "\\r");
-
-                        return "E'" + s + "'";
-                    }
-                    else
-                    {
-                        return "'" + s + "'";
-                    }
-                case "serial":
-                case "bigserial":
-                case "smallserial":
-                    throw new NotSupportedException();
-                case "datetime":
-                case "date":
-                case "time":
-                case "time without time zone":
-                case "time with time zone":
-                case "timestamp":
-                case "timestamp without time zone":
-                case "timestamp with time zone":
-                case "inet":
-                case "cidr":
-                case "json":
-                case "tsquery":
-                case "tsvector":
-                case "xml":
-                case "point":
-                case "regconfig":
-                case "regclass":
-                case "regnamespace":
-                    return "'" + v.ToString() + "'::" + Type;
-                default:
-                    throw new NotSupportedException();
+                return v.ToString()!.ToLower();
             }
+            else if (IsShort)
+            {
+                return ((short)v).ToString(CultureInfo.InvariantCulture);
+            }
+            else if (IsInt)
+            {
+                return ((int)v).ToString(CultureInfo.InvariantCulture);
+            }
+            else if (IsLong)
+            {
+                return ((long)v).ToString(CultureInfo.InvariantCulture);
+            }
+            else if (IsFloat)
+            {
+                return ((float)v).ToString(CultureInfo.InvariantCulture);
+            }
+            else if (IsDouble)
+            {
+                return ((double)v).ToString(CultureInfo.InvariantCulture);
+            }
+            else if (Type == "money")
+            {
+                return ((decimal)v).ToString(CultureInfo.InvariantCulture) + "::money";
+            }
+            else if (IsDecimal)
+            {
+                return ((decimal)v).ToString(CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                switch (Type)
+                {
+                    case "character":
+                    case "character varying":
+                    case "char":
+                    case "varchar":
+                    case "text":
+                        string s = v.ToString()!;
+                        if (s.Contains('\'') || s.Contains('\n') || s.Contains('\r'))
+                        {
+                            s = s.Replace("\'", "\\'");
+                            s = s.Replace("\n", "\\n");
+                            s = s.Replace("\r", "\\r");
+
+                            return "E'" + s + "'";
+                        }
+                        else
+                        {
+                            return "'" + s + "'";
+                        }
+                    default:
+                        return "'" + v.ToString() + "'::" + Type;
+                }
+            }
+
         }
     }
 }

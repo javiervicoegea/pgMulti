@@ -133,6 +133,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Todos los ficheros|*.*.
+        /// </summary>
+        internal static string all_file_filter {
+            get {
+                return ResourceManager.GetString("all_file_filter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a All tasks have finished successfully.
         /// </summary>
         internal static string all_tasks_finished {
@@ -1260,6 +1269,24 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a La cadena de texto de la celda no corresponde a una secuencia válida de bytes en dígitos binarios. Recuerde que esta secuencia debe tener un número múltiplo de 8 dígitos..
+        /// </summary>
+        internal static string invalid_bin_value {
+            get {
+                return ResourceManager.GetString("invalid_bin_value", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a La cadena de texto de la celda no corresponde a una secuencia válida de dígitos hexadecimales. Recuerde que esta secuencia debe tener un número par de dígitos y debe ir precedida por \x. Por ejemplo: \xf9e3..
+        /// </summary>
+        internal static string invalid_hex_value {
+            get {
+                return ResourceManager.GetString("invalid_hex_value", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Keep selected databases between runs.
         /// </summary>
         internal static string keep_db_selection {
@@ -1310,6 +1337,15 @@ namespace PgMulti.Properties {
         internal static string line_column {
             get {
                 return ResourceManager.GetString("line_column", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Cargar de un fichero en binario.
+        /// </summary>
+        internal static string load_binary_file {
+            get {
+                return ResourceManager.GetString("load_binary_file", resourceCulture);
             }
         }
         
@@ -1422,6 +1458,24 @@ namespace PgMulti.Properties {
         internal static string modifications_in {
             get {
                 return ResourceManager.GetString("modifications_in", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Los campos de tipo money no se puede procesar porque el valor LC_MONETARY &apos;{0}&apos; no se puede mapear a una configuración regional de Windows.
+        /// </summary>
+        internal static string money_cannot_be_parsed {
+            get {
+                return ResourceManager.GetString("money_cannot_be_parsed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Los campos de tipo money usarán la configuración regional &apos;{0}&apos; correspondiente al valor LC_MONETARY &apos;{1}&apos;.
+        /// </summary>
+        internal static string money_culture_used {
+            get {
+                return ResourceManager.GetString("money_culture_used", resourceCulture);
             }
         }
         
@@ -2029,6 +2083,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Guardar en un fichero en binario.
+        /// </summary>
+        internal static string save_binary_file {
+            get {
+                return ResourceManager.GetString("save_binary_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Total rows saved.
         /// </summary>
         internal static string saved_rows {
@@ -2367,6 +2430,15 @@ namespace PgMulti.Properties {
         internal static string text {
             get {
                 return ResourceManager.GetString("text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a El contenido de la celda seleccionada es demasiado grande como para visualizarlo en texto plano.
+        /// </summary>
+        internal static string text_too_long {
+            get {
+                return ResourceManager.GetString("text_too_long", resourceCulture);
             }
         }
         

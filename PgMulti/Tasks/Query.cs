@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text;
 using PgMulti.AppData;
+using System.Globalization;
 
 namespace PgMulti.Tasks
 {
@@ -114,6 +115,7 @@ namespace PgMulti.Tasks
                 dgvc.HeaderText = qc.Title;
                 dgvc.Tag = qc;
                 dgvc.Resizable = DataGridViewTriState.True;
+                dgvc.DefaultCellStyle.FormatProvider = CultureInfo.InvariantCulture;
 
                 if (qc.Column != null && qc.Column.IsBoolean && !qc.Column.NotNull && dgvc is DataGridViewCheckBoxColumn)
                 {
@@ -338,8 +340,8 @@ namespace PgMulti.Tasks
         public class QueryColumn
         {
             public string Title;
-            public Column? Column;
             public int Index;
+            public string? Type;
 
             public bool EditableOnEdit
             {
@@ -356,6 +358,26 @@ namespace PgMulti.Tasks
                     return Column != null && !Column.IsGeneratedAlways;
                 }
             }
+
+            public Column? Column 
+            { 
+                get => _Column;
+
+                set 
+                {
+                    _Column = value;
+                    if (value == null)
+                    {
+                        Type = null;
+                    }
+                    else
+                    {
+                        Type = value.Type;
+                    }
+                }
+            }
+
+            private Column? _Column;
 
             public QueryColumn(int index, string titulo)
             {

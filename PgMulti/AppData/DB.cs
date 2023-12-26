@@ -3,6 +3,7 @@ using PgMulti.DataStructure;
 using Npgsql;
 using System.Data;
 using Microsoft.Data.Sqlite;
+using System.Globalization;
 
 namespace PgMulti.AppData
 {
@@ -93,8 +94,8 @@ namespace PgMulti.AppData
                     {
                         //try
                         //{
-                            eb.Build();
-                            _Schemas = eb.Schemas;
+                        eb.Build();
+                        _Schemas = eb.Schemas;
                         //}
                         //catch (Exception)
                         //{

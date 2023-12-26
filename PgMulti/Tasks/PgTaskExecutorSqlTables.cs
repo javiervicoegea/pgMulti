@@ -149,7 +149,12 @@ namespace PgMulti.Tasks
                                 if (affectedRows == -1)
                                 {
                                     QueryExecutorSql ces = new QueryExecutorSql(_Data, this, _CurrentStatementIndex, sql);
-                                    ces.Load(drd);
+                                    string loadLog = ces.Load(drd);
+                                    if (loadLog != null)
+                                    {
+                                        StringBuilderAppendIndentedLine(loadLog, false);
+                                    }
+
                                     dt = ces.DataTable;
 
                                     if (dt.Columns.Count > 0)

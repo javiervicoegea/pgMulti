@@ -6,6 +6,9 @@ using System.Data;
 using System.Text;
 using PgMulti.AppData;
 using PgMulti.SqlSyntax;
+using System.Text.RegularExpressions;
+using System.Globalization;
+using PgMulti.DataAccess;
 
 namespace PgMulti.Tasks
 {
@@ -29,8 +32,10 @@ namespace PgMulti.Tasks
             }
         }
 
-        public void Load(NpgsqlDataReader drd)
+        public string Load(NpgsqlDataReader drd)
         {
+            string? log = null;
+
             var cols = drd.GetColumnSchema();
             for (int i = 0; i < cols.Count; i++)
             {
@@ -43,10 +48,39 @@ namespace PgMulti.Tasks
 
             foreach (QueryColumn qc in Columns)
             {
-                if (qc.Column != null && qc.Column.IsBoolean)
+                DataColumn dc = DataTable.Columns["_" + qc.Index]!;
+
+                if (qc.Column != null)
                 {
-                    DataColumn dc = DataTable.Columns["_" + qc.Index]!;
-                    dc.DataType = typeof(bool);
+                    if (qc.Column.IsBoolean)
+                    {
+                        dc.DataType = typeof(bool);
+                    }
+                    else if (qc.Column.IsShort)
+                    {
+                        dc.DataType = typeof(short);
+                    }
+                    else if (qc.Column.IsInt)
+                    {
+                        dc.DataType = typeof(int);
+                    }
+                    else if (qc.Column.IsLong)
+                    {
+                        dc.DataType = typeof(long);
+                    }
+                    else if (qc.Column.IsFloat)
+                    {
+                        dc.DataType = typeof(float);
+                    }
+                    else if (qc.Column.IsDouble)
+                    {
+                        dc.DataType = typeof(double);
+                    }
+                    else if (qc.Column.IsDecimal)
+                    {
+                        dc.DataType = typeof(decimal);
+                    }
+
                     if (qc.Column.NotNull)
                     {
                         dc.AllowDBNull = false;
@@ -56,45 +90,150 @@ namespace PgMulti.Tasks
                         dc.AllowDBNull = true;
                     }
                 }
+                else
+                {
+                    string pgType = drd.GetPostgresType(Index).Name;
+                    Type t = Column.GetDotNetType(pgType);
+                    qc.Type = pgType;
+                }
+            }
+
+            CultureInfo? monetaryCultureInfo = null;
+            if (Columns.Any(qc => qc.Type == "money"))
+            {
+                string lcMonetary;
+
+                using (NpgsqlConnection c = DB.Connection)
+                {
+                    c.Open();
+                    NpgsqlCommand cmd = c.CreateCommand();
+                    cmd.CommandText = "SHOW LC_MONETARY";
+                    lcMonetary = (string)cmd.ExecuteScalar()!;
+                }
+
+                if (lcMonetary == null)
+                {
+                    throw new NotSupportedException(string.Format(Properties.Text.money_cannot_be_parsed, "null"));
+                }
+                else
+                {
+                    string pgId = lcMonetary.Split('.')[0];
+
+                    monetaryCultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(cii => cii.Name == pgId);
+                    if (monetaryCultureInfo == null)
+                    {
+
+                        string[] pgIdParts = pgId.Split('_');
+                        string pgId2 = pgIdParts[0];
+
+                        if (pgIdParts.Length > 1)
+                        {
+                            pgId2 += " (" + pgIdParts[1] + ")";
+                        }
+
+                        monetaryCultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(ci => ci.EnglishName == pgId2);
+                        if (monetaryCultureInfo == null)
+                        {
+                            throw new NotSupportedException(string.Format(Properties.Text.money_cannot_be_parsed, lcMonetary));
+                        }
+                    }
+
+                    log = string.Format(string.Format(Properties.Text.money_culture_used, monetaryCultureInfo.Name, lcMonetary));
+                }
             }
 
             while (drd.Read() && DataTable.Rows.Count < _Data.Config.MaxRows)
             {
                 DataRow dr = DataTable.NewRow();
-                for (int i = 0; i < DataTable.Columns.Count; i++)
-                {
-                    QueryColumn qc = Columns[i];
 
-                    if (qc.Column != null && qc.Column.IsBoolean)
+                foreach (QueryColumn qc in Columns)
+                {
+                    DataColumn dc = DataTable.Columns["_" + qc.Index]!;
+                    object o;
+
+                    if (drd[qc.Index] == DBNull.Value)
                     {
-                        string? v = drd[i] == DBNull.Value ? null : (string)drd[i];
-                        if (v == null)
-                        {
-                            dr[i] = DBNull.Value;
-                        }
-                        else if (v == "t")
-                        {
-                            dr[i] = true;
-                        }
-                        else if (v == "f")
-                        {
-                            dr[i] = false;
-                        }
-                        else
-                        {
-                            throw new NotSupportedException();
-                        }
+                        o = DBNull.Value;
                     }
                     else
                     {
-                        dr[i] = drd[i];
+                        string s = (string)drd[qc.Index];
+
+                        if (dc.DataType == typeof(bool))
+                        {
+                            if (s == "t")
+                            {
+                                o = true;
+                            }
+                            else if (s == "f")
+                            {
+                                o = false;
+                            }
+                            else
+                            {
+                                throw new NotSupportedException();
+                            }
+                        }
+                        else if (dc.DataType == typeof(short))
+                        {
+                            o = short.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
+                        }
+                        else if (dc.DataType == typeof(int))
+                        {
+                            o = int.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
+                        }
+                        else if (dc.DataType == typeof(long))
+                        {
+                            o = long.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
+                        }
+                        else if (dc.DataType == typeof(float))
+                        {
+                            o = float.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
+                        }
+                        else if (dc.DataType == typeof(double))
+                        {
+                            o = double.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
+                        }
+                        else if (dc.DataType == typeof(decimal))
+                        {
+                            if (qc.Type == "money")
+                            {
+                                o = decimal.Parse(s, System.Globalization.NumberStyles.Currency, monetaryCultureInfo!);
+                            }
+                            else
+                            {
+                                o = decimal.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
+                            }
+                        }
+                        else
+                        {
+                            o = s;
+                        }
                     }
+
+                    dr[qc.Index] = o;
                 }
                 DataTable.Rows.Add(dr);
             }
             if (DataTable.Rows.Count == _Data.Config.MaxRows) MaxRowsReached = true;
 
             DataTable.AcceptChanges();
+
+            return log;
+        }
+
+        private static Type[] numericTypesHierarchy = new Type[] { typeof(string), typeof(double), typeof(decimal), typeof(long), typeof(int), typeof(short) };
+        private Type combineType(Type? t1, Type t2)
+        {
+            if (t1 == null) return t2;
+            if (t1 == typeof(bool) && t2 == typeof(bool)) return typeof(bool);
+
+            int n1 = Array.IndexOf(numericTypesHierarchy, t1);
+            int n2 = Array.IndexOf(numericTypesHierarchy, t2);
+
+            if (n1 == -1 || n2 == -1) return typeof(string);
+
+            return numericTypesHierarchy[Math.Min(n1, n2)];
         }
 
         public override DB GetDBOfRow(DataRow dr)
