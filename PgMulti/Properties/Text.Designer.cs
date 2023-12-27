@@ -2443,6 +2443,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Ajuste de línea.
+        /// </summary>
+        internal static string text_wrap {
+            get {
+                return ResourceManager.GetString("text_wrap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Suggestion.
         /// </summary>
         internal static string tip {
@@ -2511,6 +2520,15 @@ namespace PgMulti.Properties {
         internal static string triggers {
             get {
                 return ResourceManager.GetString("triggers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a TXT files (*.txt)|*.txt|All files|*.*.
+        /// </summary>
+        internal static string txt_file_filter {
+            get {
+                return ResourceManager.GetString("txt_file_filter", resourceCulture);
             }
         }
         

@@ -3556,11 +3556,13 @@ namespace PgMulti
             string? txt = GetSelectedCellValue(out cell, out q, out col, out drCurrent);
             if (cell == null || q == null || col == null || drCurrent == null) return;
 
+            /* Changed TextBox for FastColoredTextBox, which supports larger texts
             if (txt != null && txt.Length > 1024 * 1024)
             {
                 MessageBox.Show(Properties.Text.text_too_long, Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            */
 
             TextBoxForm f = new TextBoxForm(txt, q.Editable && col.EditableOnEdit);
             f.ShowDialog(this);

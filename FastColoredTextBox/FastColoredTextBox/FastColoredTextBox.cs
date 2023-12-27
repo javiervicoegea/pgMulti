@@ -236,7 +236,7 @@ namespace FastColoredTextBoxNS
 
         internal void OnSecondaryFormClosed(Form form)
         {
-            SecondaryFormClosed(this, new SecondaryFormEventArgs(form));
+            if (SecondaryFormClosed != null) SecondaryFormClosed(this, new SecondaryFormEventArgs(form));
         }
 
         /// <summary>
@@ -2446,7 +2446,7 @@ namespace FastColoredTextBoxNS
             findForm.tbFind.SelectAll();
             if (!findForm.Visible) findForm.Show(this);
             findForm.Focus();
-            SecondaryFormShowed(this, new SecondaryFormEventArgs(findForm));
+            if (SecondaryFormShowed!=null) SecondaryFormShowed(this, new SecondaryFormEventArgs(findForm));
         }
 
         /// <summary>
@@ -2477,7 +2477,7 @@ namespace FastColoredTextBoxNS
             replaceForm.tbFind.SelectAll();
             if (!replaceForm.Visible) replaceForm.Show(this);
             replaceForm.Focus();
-            SecondaryFormShowed(this, new SecondaryFormEventArgs(replaceForm));
+            if (SecondaryFormShowed != null) SecondaryFormShowed(this, new SecondaryFormEventArgs(replaceForm));
         }
 
         /// <summary>

@@ -1,4 +1,6 @@
-﻿namespace PgMulti
+﻿using FastColoredTextBoxNS;
+
+namespace PgMulti
 {
     partial class TextBoxForm
     {
@@ -29,12 +31,17 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TextBoxForm));
-            this.txtText = new System.Windows.Forms.TextBox();
+            this.txtText = new FastColoredTextBox();
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
             this.tsToolbar = new System.Windows.Forms.ToolStrip();
+            this.tsbWordWrap = new System.Windows.Forms.ToolStripButton();
+            this.tsbOpenFile = new System.Windows.Forms.ToolStripButton();
+            this.tsbSaveFile = new System.Windows.Forms.ToolStripButton();
             this.tsbNull = new System.Windows.Forms.ToolStripButton();
             this.tsbOk = new System.Windows.Forms.ToolStripButton();
             this.tsbCancel = new System.Windows.Forms.ToolStripButton();
+            this.ofdOpenFile = new OpenFileDialog();
+            this.sfdSaveFile = new SaveFileDialog();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
@@ -43,15 +50,23 @@
             // 
             // txtText
             // 
-            this.txtText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtText.Location = new System.Drawing.Point(0, 0);
-            this.txtText.Multiline = true;
             this.txtText.Name = "txtText";
-            this.txtText.ReadOnly = true;
-            this.txtText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtText.Size = new System.Drawing.Size(815, 459);
+            this.txtText.ShowScrollBars = true;
             this.txtText.TabIndex = 0;
             this.txtText.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtText_KeyUp);
+            this.txtText.BackBrush = null;
+            this.txtText.CharHeight = 19;
+            this.txtText.CharWidth = 10;
+            this.txtText.Dock = DockStyle.Fill;
+            this.txtText.Font = new Font("Cascadia Code", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            this.txtText.IsReplaceMode = false;
+            this.txtText.Location = new Point(0, 0);
+            this.txtText.Paddings = new Padding(20);
+            this.txtText.ReadOnly = true;
+            this.txtText.SelectionColor = Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
+            this.txtText.Zoom = 100;
+            this.txtText.ShowLineNumbers = true;
+            this.txtText.WordWrap = true;
             // 
             // toolStripContainer1
             // 
@@ -76,6 +91,9 @@
             this.tsToolbar.Dock = System.Windows.Forms.DockStyle.None;
             this.tsToolbar.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.tsToolbar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsbWordWrap,
+            this.tsbOpenFile,
+            this.tsbSaveFile,
             this.tsbNull,
             this.tsbOk,
             this.tsbCancel});
@@ -83,6 +101,32 @@
             this.tsToolbar.Name = "tsToolbar";
             this.tsToolbar.Size = new System.Drawing.Size(100, 27);
             this.tsToolbar.TabIndex = 0;
+            // 
+            // tsbWordWrap
+            // 
+            this.tsbWordWrap.CheckOnClick = true;
+            this.tsbWordWrap.Image = global::PgMulti.Properties.Resources.text_wrap;
+            this.tsbWordWrap.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbWordWrap.Name = "tsbWordWrap";
+            this.tsbWordWrap.Size = new System.Drawing.Size(29, 24);
+            this.tsbWordWrap.Checked = true;
+            this.tsbWordWrap.Click += new System.EventHandler(this.tsbWordWrap_Click);
+            // 
+            // tsbOpenFile
+            // 
+            this.tsbOpenFile.Image = global::PgMulti.Properties.Resources.abrir;
+            this.tsbOpenFile.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbOpenFile.Name = "tsbOpenFile";
+            this.tsbOpenFile.Size = new System.Drawing.Size(29, 24);
+            this.tsbOpenFile.Click += new System.EventHandler(this.tsbOpenFile_Click);
+            // 
+            // tsbSaveFile
+            // 
+            this.tsbSaveFile.Image = global::PgMulti.Properties.Resources.guardar_como;
+            this.tsbSaveFile.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbSaveFile.Name = "tsbSaveFile";
+            this.tsbSaveFile.Size = new System.Drawing.Size(29, 24);
+            this.tsbSaveFile.Click += new System.EventHandler(this.tsbSaveFile_Click);
             // 
             // tsbNull
             // 
@@ -109,6 +153,16 @@
             this.tsbCancel.Size = new System.Drawing.Size(29, 24);
             this.tsbCancel.Click += new System.EventHandler(this.tsbCancel_Click);
             // 
+            // ofdOpenFile
+            // 
+            ofdOpenFile.FileName = "txt";
+            ofdOpenFile.FilterIndex = 0;
+            // 
+            // sfdSaveFile
+            // 
+            sfdSaveFile.DefaultExt = "txt";
+            sfdSaveFile.FilterIndex = 0;
+            // 
             // TextBoxForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -133,11 +187,16 @@
 
         #endregion
 
-        private TextBox txtText;
+        private FastColoredTextBox txtText;
         private ToolStripContainer toolStripContainer1;
         private ToolStrip tsToolbar;
+        private ToolStripButton tsbWordWrap;
+        private ToolStripButton tsbOpenFile;
+        private ToolStripButton tsbSaveFile;
         private ToolStripButton tsbNull;
         private ToolStripButton tsbOk;
         private ToolStripButton tsbCancel;
+        private OpenFileDialog ofdOpenFile;
+        private SaveFileDialog sfdSaveFile;
     }
 }

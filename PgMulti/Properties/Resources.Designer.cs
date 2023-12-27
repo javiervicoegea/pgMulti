@@ -706,6 +706,16 @@ namespace PgMulti.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap text_wrap {
+            get {
+                object obj = ResourceManager.GetObject("text_wrap", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap transaccion {
             get {
                 object obj = ResourceManager.GetObject("transaccion", resourceCulture);

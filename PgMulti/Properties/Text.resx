@@ -1078,6 +1078,9 @@ Unlike other tools, this application does not reuse the connection between diffe
   <data name="all_file_filter" xml:space="preserve">
     <value>Todos los ficheros|*.*</value>
   </data>
+  <data name="txt_file_filter" xml:space="preserve">
+    <value>TXT files (*.txt)|*.txt|All files|*.*</value>
+  </data>
   <data name="load_binary_file" xml:space="preserve">
     <value>Cargar de un fichero en binario</value>
   </data>
@@ -1086,5 +1089,8 @@ Unlike other tools, this application does not reuse the connection between diffe
   </data>
   <data name="text_too_long" xml:space="preserve">
     <value>El contenido de la celda seleccionada es demasiado grande como para visualizarlo en texto plano</value>
+  </data>
+  <data name="text_wrap" xml:space="preserve">
+    <value>Ajuste de línea</value>
   </data>
 </root>
