@@ -219,6 +219,7 @@ namespace PgMulti
             tsmiRunMenu = new ToolStripMenuItem();
             tsmiRun = new ToolStripMenuItem();
             tsmiExportCsv = new ToolStripMenuItem();
+            tsmiCopyToTable = new ToolStripMenuItem();
             tsmiDiagrams = new ToolStripMenuItem();
             tsmiNewDiagram = new ToolStripMenuItem();
             tsmiOpenDiagram = new ToolStripMenuItem();
@@ -267,6 +268,7 @@ namespace PgMulti
             toolStripContainer6.ContentPanel.SuspendLayout();
             toolStripContainer6.TopToolStripPanel.SuspendLayout();
             toolStripContainer6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)fctbResult).BeginInit();
             toolStrip6.SuspendLayout();
             tpTable.SuspendLayout();
             toolStripContainer5.ContentPanel.SuspendLayout();
@@ -1343,23 +1345,43 @@ namespace PgMulti
             // 
             // fctbResult
             // 
-            fctbResult.Name = "fctbResult";
+            fctbResult.AutoCompleteBracketsList = new char[]
+    {
+    '(',
+    ')',
+    '{',
+    '}',
+    '[',
+    ']',
+    '"',
+    '"',
+    '\'',
+    '\''
+    };
+            fctbResult.AutoIndentCharsPatterns = "^\\s*[\\w\\.]+(\\s\\w+)?\\s*(?<range>=)\\s*(?<range>[^;=]+);\r\n^\\s*(case|default)\\s*[^:]*(?<range>:)\\s*(?<range>[^;]+);";
+            fctbResult.AutoScrollMinSize = new Size(42, 59);
             fctbResult.BackBrush = null;
             fctbResult.CharHeight = 19;
             fctbResult.CharWidth = 10;
+            fctbResult.DefaultMarkerSize = 8;
+            fctbResult.DisabledColor = Color.FromArgb(100, 180, 180, 180);
             fctbResult.Dock = DockStyle.Fill;
             fctbResult.Font = new Font("Cascadia Code", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            fctbResult.Hotkeys = "PgUp=GoPageUp, PgDn=GoPageDown, End=GoEnd, Home=GoHome, Left=GoLeft, Up=GoUp, Right=GoRight, Down=GoDown, F3=FindNext, Shift+PgUp=GoPageUpWithSelection, Shift+PgDn=GoPageDownWithSelection, Shift+End=GoEndWithSelection, Shift+Home=GoHomeWithSelection, Shift+Left=GoLeftWithSelection, Shift+Up=GoUpWithSelection, Shift+Right=GoRightWithSelection, Shift+Down=GoDownWithSelection, Ctrl+End=GoLastLine, Ctrl+Home=GoFirstLine, Ctrl+Left=GoWordLeft, Ctrl+Up=ScrollUp, Ctrl+Right=GoWordRight, Ctrl+Down=ScrollDown, Ctrl+Ins=Copy, Ctrl+Del=ClearWordRight, Ctrl+0=ZoomNormal, Ctrl+A=SelectAll, Ctrl+C=Copy, Ctrl+F=FindDialog, Ctrl+G=GoToDialog, Ctrl+Add=ZoomIn, Ctrl+Subtract=ZoomOut, Ctrl+OemMinus=NavigateBackward, Ctrl+Shift+End=GoLastLineWithSelection, Ctrl+Shift+Home=GoFirstLineWithSelection, Ctrl+Shift+Left=GoWordLeftWithSelection, Ctrl+Shift+Right=GoWordRightWithSelection, Ctrl+Shift+OemMinus=NavigateForward, Alt+F=FindChar";
+            fctbResult.Hotkeys = resources.GetString("fctbResult.Hotkeys");
             fctbResult.IsReplaceMode = false;
             fctbResult.Location = new Point(0, 0);
+            fctbResult.Name = "fctbResult";
             fctbResult.Paddings = new Padding(20);
             fctbResult.ReadOnly = true;
-            fctbResult.SelectionColor = Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
+            fctbResult.SelectionColor = Color.FromArgb(60, 0, 0, 255);
+            fctbResult.ServiceColors = (ServiceColors)resources.GetObject("fctbResult.ServiceColors");
+            fctbResult.ShowLineNumbers = false;
+            fctbResult.Size = new Size(1016, 452);
             fctbResult.TabIndex = 0;
             fctbResult.Zoom = 100;
-            fctbResult.ShowLineNumbers = false;
             fctbResult.SecondaryFormShowed += fctbResult_SecondaryFormShowed;
             fctbResult.SecondaryFormClosed += fctbResult_SecondaryFormClosed;
+            // 
             // toolStrip6
             // 
             toolStrip6.Dock = DockStyle.None;
@@ -1452,15 +1474,15 @@ namespace PgMulti
             gvTable.CellToolTipTextNeeded += gvTable_CellToolTipTextNeeded;
             gvTable.CellValueChanged += gvTable_CellValueChanged;
             gvTable.DataError += gvTable_DataError;
-            gvTable.RowsRemoved += gvTable_RowsRemoved;
             gvTable.RowPostPaint += gvTable_RowPostPaint;
+            gvTable.RowsRemoved += gvTable_RowsRemoved;
             // 
             // cmsTable
             // 
             cmsTable.ImageScalingSize = new Size(20, 20);
             cmsTable.Items.AddRange(new ToolStripItem[] { tsbCopyCellText, tsbLoadCellBinaryValueFromFile, tsbSaveCellBinaryValueInFile, tsbTextEditor, tsbSetNull });
             cmsTable.Name = "cmsTable";
-            cmsTable.Size = new Size(74, 56);
+            cmsTable.Size = new Size(74, 134);
             // 
             // tsbCopyCellText
             // 
@@ -1632,168 +1654,168 @@ namespace PgMulti
             // 
             tsmiAbout.Image = Properties.Resources.about;
             tsmiAbout.Name = "tsmiAbout";
-            tsmiAbout.Size = new Size(83, 26);
+            tsmiAbout.Size = new Size(224, 26);
             tsmiAbout.Click += tsmiAbout_Click;
             // 
             // tsmiNew
             // 
             tsmiNew.Image = Properties.Resources.nuevo_documento;
             tsmiNew.Name = "tsmiNew";
-            tsmiNew.Size = new Size(83, 26);
+            tsmiNew.Size = new Size(224, 26);
             tsmiNew.Click += tsmiNew_Click;
             // 
             // tsmiOpen
             // 
             tsmiOpen.Image = Properties.Resources.abrir;
             tsmiOpen.Name = "tsmiOpen";
-            tsmiOpen.Size = new Size(83, 26);
+            tsmiOpen.Size = new Size(224, 26);
             tsmiOpen.Click += tsmiOpen_Click;
             // 
             // tsmiSave
             // 
             tsmiSave.Image = Properties.Resources.guardar;
             tsmiSave.Name = "tsmiSave";
-            tsmiSave.Size = new Size(83, 26);
+            tsmiSave.Size = new Size(224, 26);
             tsmiSave.Click += tsmiSave_Click;
             // 
             // tsmiSaveAs
             // 
             tsmiSaveAs.Image = Properties.Resources.guardar_como;
             tsmiSaveAs.Name = "tsmiSaveAs";
-            tsmiSaveAs.Size = new Size(83, 26);
+            tsmiSaveAs.Size = new Size(224, 26);
             tsmiSaveAs.Click += tsmiSaveAs_Click;
             // 
             // tsmiSaveAll
             // 
             tsmiSaveAll.Image = Properties.Resources.guardar_todo;
             tsmiSaveAll.Name = "tsmiSaveAll";
-            tsmiSaveAll.Size = new Size(83, 26);
+            tsmiSaveAll.Size = new Size(224, 26);
             tsmiSaveAll.Click += tsmiSaveAll_Click;
             // 
             // tsmiClose
             // 
             tsmiClose.Image = Properties.Resources.cerrar;
             tsmiClose.Name = "tsmiClose";
-            tsmiClose.Size = new Size(83, 26);
+            tsmiClose.Size = new Size(224, 26);
             tsmiClose.Click += tsmiClose_Click;
             // 
             // tsmiCloseAll
             // 
             tsmiCloseAll.Image = Properties.Resources.cerrar_todo;
             tsmiCloseAll.Name = "tsmiCloseAll";
-            tsmiCloseAll.Size = new Size(83, 26);
+            tsmiCloseAll.Size = new Size(224, 26);
             tsmiCloseAll.Click += tsmiCloseAll_Click;
             // 
             // tsmiBack
             // 
             tsmiBack.Image = Properties.Resources.atras;
             tsmiBack.Name = "tsmiBack";
-            tsmiBack.Size = new Size(83, 26);
+            tsmiBack.Size = new Size(224, 26);
             tsmiBack.Click += tsmiBack_Click;
             // 
             // tsmiForward
             // 
             tsmiForward.Image = Properties.Resources.adelante;
             tsmiForward.Name = "tsmiForward";
-            tsmiForward.Size = new Size(83, 26);
+            tsmiForward.Size = new Size(224, 26);
             tsmiForward.Click += tsmiForward_Click;
             // 
             // tsmiUndo
             // 
             tsmiUndo.Image = Properties.Resources.undo;
             tsmiUndo.Name = "tsmiUndo";
-            tsmiUndo.Size = new Size(83, 26);
+            tsmiUndo.Size = new Size(224, 26);
             tsmiUndo.Click += tsmiUndo_Click;
             // 
             // tsmiRedo
             // 
             tsmiRedo.Image = Properties.Resources.redo;
             tsmiRedo.Name = "tsmiRedo";
-            tsmiRedo.Size = new Size(83, 26);
+            tsmiRedo.Size = new Size(224, 26);
             tsmiRedo.Click += tsmiRedo_Click;
             // 
             // tsmiCut
             // 
             tsmiCut.Image = Properties.Resources.cortar;
             tsmiCut.Name = "tsmiCut";
-            tsmiCut.Size = new Size(83, 26);
+            tsmiCut.Size = new Size(224, 26);
             tsmiCut.Click += tsmiCut_Click;
             // 
             // tsmiCopy
             // 
             tsmiCopy.Image = Properties.Resources.copiar;
             tsmiCopy.Name = "tsmiCopy";
-            tsmiCopy.Size = new Size(83, 26);
+            tsmiCopy.Size = new Size(224, 26);
             tsmiCopy.Click += tsmiCopy_Click;
             // 
             // tsmiPaste
             // 
             tsmiPaste.Image = Properties.Resources.pegar;
             tsmiPaste.Name = "tsmiPaste";
-            tsmiPaste.Size = new Size(83, 26);
+            tsmiPaste.Size = new Size(224, 26);
             tsmiPaste.Click += tsmiPaste_Click;
             // 
             // tsmiSearchAndReplace
             // 
             tsmiSearchAndReplace.Image = Properties.Resources.buscar;
             tsmiSearchAndReplace.Name = "tsmiSearchAndReplace";
-            tsmiSearchAndReplace.Size = new Size(83, 26);
+            tsmiSearchAndReplace.Size = new Size(224, 26);
             tsmiSearchAndReplace.Click += tsmiSearchAndReplace_Click;
             // 
             // tsmiGoTo
             // 
             tsmiGoTo.Image = Properties.Resources.linea;
             tsmiGoTo.Name = "tsmiGoTo";
-            tsmiGoTo.Size = new Size(83, 26);
+            tsmiGoTo.Size = new Size(224, 26);
             tsmiGoTo.Click += tsmiGoTo_Click;
             // 
             // tsmiFormat
             // 
             tsmiFormat.Image = Properties.Resources.autoformato;
             tsmiFormat.Name = "tsmiFormat";
-            tsmiFormat.Size = new Size(83, 26);
+            tsmiFormat.Size = new Size(224, 26);
             tsmiFormat.Click += tsmiFormat_Click;
             // 
             // tsmiIncreaseFont
             // 
             tsmiIncreaseFont.Image = Properties.Resources.zoomin;
             tsmiIncreaseFont.Name = "tsmiIncreaseFont";
-            tsmiIncreaseFont.Size = new Size(83, 26);
+            tsmiIncreaseFont.Size = new Size(224, 26);
             tsmiIncreaseFont.Click += tsmiIncreaseFont_Click;
             // 
             // tsmiReduceFont
             // 
             tsmiReduceFont.Image = Properties.Resources.zoomout;
             tsmiReduceFont.Name = "tsmiReduceFont";
-            tsmiReduceFont.Size = new Size(83, 26);
+            tsmiReduceFont.Size = new Size(224, 26);
             tsmiReduceFont.Click += tsmiReduceFont_Click;
             // 
             // tsmiChangePassword
             // 
             tsmiChangePassword.Image = Properties.Resources.password;
             tsmiChangePassword.Name = "tsmiChangePassword";
-            tsmiChangePassword.Size = new Size(83, 26);
+            tsmiChangePassword.Size = new Size(224, 26);
             tsmiChangePassword.Click += tsmiChangePassword_Click;
             // 
             // tsmiImportConnections
             // 
             tsmiImportConnections.Image = Properties.Resources.import;
             tsmiImportConnections.Name = "tsmiImportConnections";
-            tsmiImportConnections.Size = new Size(83, 26);
+            tsmiImportConnections.Size = new Size(224, 26);
             tsmiImportConnections.Click += tsmiImportConnections_Click;
             // 
             // tsmiExportConnections
             // 
             tsmiExportConnections.Image = Properties.Resources.export;
             tsmiExportConnections.Name = "tsmiExportConnections";
-            tsmiExportConnections.Size = new Size(83, 26);
+            tsmiExportConnections.Size = new Size(224, 26);
             tsmiExportConnections.Click += tsmiExportConnections_Click;
             // 
             // tsmiMoreOptions
             // 
             tsmiMoreOptions.Image = Properties.Resources.opciones;
             tsmiMoreOptions.Name = "tsmiMoreOptions";
-            tsmiMoreOptions.Size = new Size(83, 26);
+            tsmiMoreOptions.Size = new Size(224, 26);
             tsmiMoreOptions.Click += tsmMoreOptions_Click;
             // 
             // cmsTabs
@@ -1801,7 +1823,7 @@ namespace PgMulti
             cmsTabs.ImageScalingSize = new Size(20, 20);
             cmsTabs.Items.AddRange(new ToolStripItem[] { tsmiCloseTab, tsmiCloseAllTabs, tsmiCloseAllTabsExceptThisOne, tsmiReopenLastClosedTab, tsmiClosedTabsLog, tsmiCopyPath, tsmiOpenFolder });
             cmsTabs.Name = "cmsTabs";
-            cmsTabs.Size = new Size(74, 134);
+            cmsTabs.Size = new Size(74, 186);
             // 
             // tsmiCloseTab
             // 
@@ -1943,8 +1965,8 @@ namespace PgMulti
             // 
             // ofdBinaryCell
             // 
-            ofdOpenDiagram.FileName = "";
-            ofdOpenDiagram.FilterIndex = 0;
+            ofdBinaryCell.FileName = "";
+            ofdBinaryCell.FilterIndex = 0;
             // 
             // sfdBinaryCell
             // 
@@ -2022,8 +2044,7 @@ namespace PgMulti
             tsmiFile.ImageTransparentColor = Color.Magenta;
             tsmiFile.Name = "tsmiFile";
             tsmiFile.Overflow = ToolStripItemOverflow.AsNeeded;
-            tsmiFile.Size = new Size(93, 24);
-            tsmiFile.Text = "Archivo";
+            tsmiFile.Size = new Size(34, 24);
             // 
             // tsmiEdit
             // 
@@ -2032,33 +2053,36 @@ namespace PgMulti
             tsmiEdit.ImageTransparentColor = Color.Magenta;
             tsmiEdit.Name = "tsmiEdit";
             tsmiEdit.Overflow = ToolStripItemOverflow.AsNeeded;
-            tsmiEdit.Size = new Size(82, 24);
-            tsmiEdit.Text = "Editar";
+            tsmiEdit.Size = new Size(34, 24);
             // 
             // tsmiRunMenu
             // 
-            tsmiRunMenu.DropDownItems.AddRange(new ToolStripItem[] { tsmiRun, tsmiExportCsv });
+            tsmiRunMenu.DropDownItems.AddRange(new ToolStripItem[] { tsmiRun, tsmiExportCsv, tsmiCopyToTable });
             tsmiRunMenu.Image = Properties.Resources.ejecutar;
             tsmiRunMenu.Name = "tsmiRunMenu";
             tsmiRunMenu.Overflow = ToolStripItemOverflow.AsNeeded;
-            tsmiRunMenu.Size = new Size(68, 24);
-            tsmiRunMenu.Text = "Run";
+            tsmiRunMenu.Size = new Size(34, 24);
             // 
             // tsmiRun
             // 
             tsmiRun.Image = Properties.Resources.ejecutar;
             tsmiRun.Name = "tsmiRun";
-            tsmiRun.Size = new Size(263, 26);
-            tsmiRun.Text = "Run";
+            tsmiRun.Size = new Size(224, 26);
             tsmiRun.Click += tsmiRun_Click;
             // 
             // tsmiExportCsv
             // 
             tsmiExportCsv.Image = Properties.Resources.download;
             tsmiExportCsv.Name = "tsmiExportCsv";
-            tsmiExportCsv.Size = new Size(263, 26);
-            tsmiExportCsv.Text = "Run and download results";
+            tsmiExportCsv.Size = new Size(224, 26);
             tsmiExportCsv.Click += tsmiExportCsv_Click;
+            // 
+            // tsmiCopyToTable
+            // 
+            tsmiCopyToTable.Image = Properties.DiagramIcons.add_row;
+            tsmiCopyToTable.Name = "tsmiCopyToTable";
+            tsmiCopyToTable.Size = new Size(224, 26);
+            tsmiCopyToTable.Click += tsmiCopyToTable_Click;
             // 
             // tsmiDiagrams
             // 
@@ -2066,23 +2090,20 @@ namespace PgMulti
             tsmiDiagrams.Image = Properties.Resources.diagram;
             tsmiDiagrams.Name = "tsmiDiagrams";
             tsmiDiagrams.Overflow = ToolStripItemOverflow.AsNeeded;
-            tsmiDiagrams.Size = new Size(115, 24);
-            tsmiDiagrams.Text = "Diagramas";
+            tsmiDiagrams.Size = new Size(34, 24);
             // 
             // tsmiNewDiagram
             // 
             tsmiNewDiagram.Image = Properties.Resources.new_diagram;
             tsmiNewDiagram.Name = "tsmiNewDiagram";
-            tsmiNewDiagram.Size = new Size(203, 26);
-            tsmiNewDiagram.Text = "Nuevo diagrama";
+            tsmiNewDiagram.Size = new Size(224, 26);
             tsmiNewDiagram.Click += tsmiNewDiagram_Click;
             // 
             // tsmiOpenDiagram
             // 
             tsmiOpenDiagram.Image = Properties.Resources.open_diagram;
             tsmiOpenDiagram.Name = "tsmiOpenDiagram";
-            tsmiOpenDiagram.Size = new Size(203, 26);
-            tsmiOpenDiagram.Text = "Abrir diagrama";
+            tsmiOpenDiagram.Size = new Size(224, 26);
             tsmiOpenDiagram.Click += tsmiOpenDiagram_Click;
             // 
             // tsmiOptions
@@ -2092,14 +2113,13 @@ namespace PgMulti
             tsmiOptions.ImageTransparentColor = Color.Magenta;
             tsmiOptions.Name = "tsmiOptions";
             tsmiOptions.Overflow = ToolStripItemOverflow.AsNeeded;
-            tsmiOptions.Size = new Size(105, 24);
-            tsmiOptions.Text = "Opciones";
+            tsmiOptions.Size = new Size(34, 24);
             // 
             // tsmiHistory
             // 
             tsmiHistory.Image = Properties.Resources.historial;
             tsmiHistory.Name = "tsmiHistory";
-            tsmiHistory.Size = new Size(83, 26);
+            tsmiHistory.Size = new Size(224, 26);
             tsmiHistory.Click += tsmiHistory_Click;
             // 
             // tsmiUpdates
@@ -2107,8 +2127,7 @@ namespace PgMulti
             tsmiUpdates.Image = Properties.Resources.updates;
             tsmiUpdates.Name = "tsmiUpdates";
             tsmiUpdates.Overflow = ToolStripItemOverflow.AsNeeded;
-            tsmiUpdates.Size = new Size(191, 24);
-            tsmiUpdates.Text = "Buscar actualizaciones";
+            tsmiUpdates.Size = new Size(34, 24);
             tsmiUpdates.Visible = false;
             tsmiUpdates.Click += tsmiUpdates_Click;
             // 
@@ -2201,6 +2220,7 @@ namespace PgMulti
             toolStripContainer6.TopToolStripPanel.PerformLayout();
             toolStripContainer6.ResumeLayout(false);
             toolStripContainer6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)fctbResult).EndInit();
             toolStrip6.ResumeLayout(false);
             toolStrip6.PerformLayout();
             tpTable.ResumeLayout(false);
@@ -2425,5 +2445,6 @@ namespace PgMulti
         private Label lblSearch;
         private Label lblReplace;
         private Button btnUpdateSearchSelectedText;
+        private ToolStripMenuItem tsmiCopyToTable;
     }
 }

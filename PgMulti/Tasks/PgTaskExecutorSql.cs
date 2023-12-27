@@ -43,7 +43,7 @@ namespace PgMulti.Tasks
 
         public override void Cancel()
         {
-            if (_Cancel) return;
+            if (_Canceled) return;
 
             base.Cancel();
 

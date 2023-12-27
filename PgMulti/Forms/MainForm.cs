@@ -1955,6 +1955,7 @@ namespace PgMulti
             tsbRun.Enabled = false;
             tsmiExportCsv.Enabled = false;
             tsbExportCsv.Enabled = false;
+            tsmiCopyToTable.Enabled = false;
 
             if (dbs == null || dbs.Count == 0)
             {
@@ -1967,6 +1968,7 @@ namespace PgMulti
                 tsbRun.Enabled = true;
                 tsmiExportCsv.Enabled = true;
                 tsbExportCsv.Enabled = true;
+                tsmiCopyToTable.Enabled = true;
 
                 List<Group> wholeGroups = new List<Group>();
                 List<DB> singleDBs = new List<DB>();
@@ -2187,6 +2189,7 @@ namespace PgMulti
             tsbRun.Enabled = false;
             tsmiExportCsv.Enabled = false;
             tsbExportCsv.Enabled = false;
+            tsmiCopyToTable.Enabled = false;
             tmrReenableRunButton.Enabled = true;
         }
 
@@ -2659,12 +2662,75 @@ namespace PgMulti
             tsbRun.Enabled = false;
             tsmiExportCsv.Enabled = false;
             tsbExportCsv.Enabled = false;
+            tsmiCopyToTable.Enabled = false;
             tmrReenableRunButton.Enabled = true;
         }
 
         private void tsmiExportCsv_Click(object sender, EventArgs e)
         {
             tsbExportCsv_Click(sender, e);
+        }
+
+        private void tsmiCopyToTable_Click(object sender, EventArgs e)
+        {
+            EditorTab s = (EditorTab)tcSql.SelectedTab.Tag!;
+            string sql = ((CustomFctb)tcSql.SelectedTab.Controls[0]).SelectedText;
+            if (sql == "")
+            {
+                sql = ((CustomFctb)tcSql.SelectedTab.Controls[0]).Text;
+            }
+
+            if (string.IsNullOrWhiteSpace(sql))
+            {
+                MessageBox.Show(Properties.Text.warning_empty_query, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
+            List<DB> dbs = SelectedDBs;
+
+            if (dbs.Count == 0)
+            {
+                MessageBox.Show(Properties.Text.warning_no_selected_dbs, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
+            Log h = new Log(_Data!);
+
+            h.SqlText = sql;
+
+            Config.TransactionModeEnum modoTransacciones = _Data!.Config.TransactionMode;
+            if (dbs.Count == 1 && modoTransacciones == Config.TransactionModeEnum.AutoCoordinated)
+            {
+                modoTransacciones = Config.TransactionModeEnum.AutoSingle;
+            }
+
+            foreach (DB db in dbs)
+            {
+                h.DBIds.Add(db.Id);
+            }
+
+            PgTaskExecutorSqlCopyToTable t = new PgTaskExecutorSqlCopyToTable(_Data!, dbs, new PgTask.OnUpdate(Task_OnUpdate), sql, modoTransacciones, _Data!.Config.TransactionLevel, _Data!.PGSimpleLanguageData);
+            t.Start();
+
+            InsertIntoTableForm f = new InsertIntoTableForm(_Data, t);
+            f.Show(this);
+
+            s.LastTask = t;
+
+            h.Save();
+            _Data.CheckAppDbFileSize();
+
+            if (!_Data!.Config.KeepServerSelection)
+            {
+                ClearSelectedNodesTreeView();
+            }
+
+            tsmiRun.Enabled = false;
+            tsbRun.Enabled = false;
+            tsmiExportCsv.Enabled = false;
+            tsbExportCsv.Enabled = false;
+            tsmiCopyToTable.Enabled = false;
+            tmrReenableRunButton.Enabled = true;
         }
 
         private void tsmiTransactionModeManual_Click(object sender, EventArgs e)
@@ -4129,8 +4195,8 @@ namespace PgMulti
             this.ofdBinaryCell.Title = Properties.Text.select_open_file;
             this.sfdBinaryCell.Filter = Properties.Text.all_file_filter;
             this.sfdBinaryCell.Title = Properties.Text.select_save_file;
+            this.tsmiCopyToTable.Text = Properties.Text.run_and_copy_to_table;
         }
         #endregion
-
     }
 }

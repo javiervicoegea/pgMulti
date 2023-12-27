@@ -67,6 +67,8 @@ namespace PgMulti.Tasks
                 using (StreamWriter sw = new StreamWriter(s, Encoding.GetEncoding(1252)))
                 using (CsvWriter cw = new CsvWriter(sw, conf))
                 {
+                    StringBuilderAppendIndentedLine(string.Format(Properties.Text.saving_rows_on_file, _FileName), true, LogStyle.TaskIsRunning);
+
                     if (_TransactionMode != Config.TransactionModeEnum.Manual)
                     {
                         foreach (Tuple<int, string, string> stmt in statements)
@@ -118,7 +120,7 @@ namespace PgMulti.Tasks
 
                             try
                             {
-                                for (_CurrentStatementIndex = 0; _CurrentStatementIndex < statements.Count; _CurrentStatementIndex++)
+                                for (_CurrentStatementIndex = 0; _CurrentStatementIndex < statements.Count && !_Canceled; _CurrentStatementIndex++)
                                 {
                                     Tuple<int, string, string> stmt = statements[_CurrentStatementIndex];
                                     int linea = stmt.Item1;
@@ -197,7 +199,7 @@ namespace PgMulti.Tasks
                                                 }
 
                                                 int savedRows = 0;
-                                                while (drd.Read())
+                                                while (drd.Read() && !_Canceled)
                                                 {
                                                     if (savedRows > 0 && savedRows % 1000 == 0)
                                                     {
@@ -308,6 +310,8 @@ namespace PgMulti.Tasks
                         }
 
                         _CurrentDBIndex++;
+
+                        if (_Canceled) throw new Exception(Properties.Text.task_canceled_by_user);
                     }
                 }
             }

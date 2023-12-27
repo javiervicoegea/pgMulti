@@ -235,5 +235,27 @@ namespace PgMulti.DataStructure
             }
 
         }
+
+        public string GetSqlParameterExpression(string parameterName)
+        {
+            if (IsBoolean || IsShort || IsInt|| IsLong|| IsFloat|| IsDouble|| IsDecimal)
+            {
+                return ":" + parameterName;
+            }
+            else
+            {
+                switch (Type)
+                {
+                    case "character":
+                    case "character varying":
+                    case "char":
+                    case "varchar":
+                    case "text":
+                        return ":" + parameterName;
+                    default:
+                        return ":" + parameterName + "::" + Type;
+                }
+            }
+        }
     }
 }

@@ -48,7 +48,7 @@ namespace PgMulti.Tasks
 
         public override void Cancel()
         {
-            if (_Cancel) return;
+            if (_Canceled) return;
 
             base.Cancel();
 
@@ -149,7 +149,7 @@ namespace PgMulti.Tasks
                                 if (affectedRows == -1)
                                 {
                                     QueryExecutorSql ces = new QueryExecutorSql(_Data, this, _CurrentStatementIndex, sql);
-                                    string loadLog = ces.Load(drd);
+                                    string? loadLog = ces.Load(drd);
                                     if (loadLog != null)
                                     {
                                         StringBuilderAppendIndentedLine(loadLog, false);
@@ -210,12 +210,12 @@ namespace PgMulti.Tasks
                                 StringBuilderAppendIndentedLine(Properties.Text.waiting_tasks, false);
                                 _TaskIntegrator.OnTesWaitingCoordinatedCommit(this);
 
-                                while (!_Cancel && !_TaskIntegrator.AreAllTransactionsPrepared)
+                                while (!_Canceled && !_TaskIntegrator.AreAllTransactionsPrepared)
                                 {
                                     Thread.Sleep(500);
                                 }
 
-                                if (_Cancel)
+                                if (_Canceled)
                                 {
                                     _NpgsqlCommand.CommandText = $"ROLLBACK PREPARED '{idTransaccion}'";
                                     _NpgsqlCommand.ExecuteNonQuery();

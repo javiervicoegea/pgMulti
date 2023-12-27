@@ -63,6 +63,16 @@ namespace PgMulti.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap add_row {
+            get {
+                object obj = ResourceManager.GetObject("add_row", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap highlighted_cascade {
             get {
                 object obj = ResourceManager.GetObject("highlighted_cascade", resourceCulture);

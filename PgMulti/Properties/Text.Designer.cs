@@ -662,6 +662,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Tarea de ejecución y copia en tabla.
+        /// </summary>
+        internal static string copy_to_table_task {
+            get {
+                return ResourceManager.GetString("copy_to_table_task", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Crear diagrama a partir de esta tabla.
         /// </summary>
         internal static string create_table_diagram {
@@ -1197,6 +1206,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Se ignora la consulta por devolver un resultado incompatible con la primera consulta.
+        /// </summary>
+        internal static string ignoring_incompatible_query {
+            get {
+                return ResourceManager.GetString("ignoring_incompatible_query", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Import database list.
         /// </summary>
         internal static string import_databases {
@@ -1269,6 +1287,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Insertando filas en la tabla {0} de {1}.
+        /// </summary>
+        internal static string inserting_rows_on {
+            get {
+                return ResourceManager.GetString("inserting_rows_on", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a La cadena de texto de la celda no corresponde a una secuencia válida de bytes en dígitos binarios. Recuerde que esta secuencia debe tener un número múltiplo de 8 dígitos..
         /// </summary>
         internal static string invalid_bin_value {
@@ -1310,6 +1337,15 @@ namespace PgMulti.Properties {
         internal static string language {
             get {
                 return ResourceManager.GetString("language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Dejar sin asignar.
+        /// </summary>
+        internal static string leave_unassigned {
+            get {
+                return ResourceManager.GetString("leave_unassigned", resourceCulture);
             }
         }
         
@@ -2038,6 +2074,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Ejecutar y copiar resultados en una tabla.
+        /// </summary>
+        internal static string run_and_copy_to_table {
+            get {
+                return ResourceManager.GetString("run_and_copy_to_table", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Run on {0} databases.
         /// </summary>
         internal static string run_on {
@@ -2106,6 +2151,15 @@ namespace PgMulti.Properties {
         internal static string saving_row {
             get {
                 return ResourceManager.GetString("saving_row", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Guardando filas en el fichero CSV &apos;{0}&apos;.
+        /// </summary>
+        internal static string saving_rows_on_file {
+            get {
+                return ResourceManager.GetString("saving_rows_on_file", resourceCulture);
             }
         }
         
@@ -2196,6 +2250,15 @@ namespace PgMulti.Properties {
         internal static string select_db {
             get {
                 return ResourceManager.GetString("select_db", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Seleccione tabla destino.
+        /// </summary>
+        internal static string select_destination_table {
+            get {
+                return ResourceManager.GetString("select_destination_table", resourceCulture);
             }
         }
         
@@ -2367,6 +2430,15 @@ namespace PgMulti.Properties {
         internal static string table_name {
             get {
                 return ResourceManager.GetString("table_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Tarea cancelada por el usuario.
+        /// </summary>
+        internal static string task_canceled_by_user {
+            get {
+                return ResourceManager.GetString("task_canceled_by_user", resourceCulture);
             }
         }
         
@@ -2614,6 +2686,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Esperando selección de tabla destino y asignación de columnas.
+        /// </summary>
+        internal static string waiting_for_destination_table {
+            get {
+                return ResourceManager.GetString("waiting_for_destination_table", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Waiting for the rest of the tasks....
         /// </summary>
         internal static string waiting_tasks {
@@ -2740,7 +2821,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a El nombre del esquema a crear.
+        ///   Busca una cadena traducida similar a Debe escribir el nombre del esquema.
         /// </summary>
         internal static string warning_empty_schema {
             get {

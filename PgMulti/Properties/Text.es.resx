@@ -861,12 +861,6 @@ A diferencia de otras herramientas, esta aplicación no reutiliza la conexión e
   <data name="new_table" xml:space="preserve">
     <value>Nueva tabla</value>
   </data>
-  <data name="general" xml:space="preserve">
-    <value>General</value>
-  </data>
-  <data name="columns" xml:space="preserve">
-    <value>Columnas</value>
-  </data>
   <data name="table_name" xml:space="preserve">
     <value>Nombre de la tabla</value>
   </data>

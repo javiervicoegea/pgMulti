@@ -910,12 +910,6 @@ Unlike other tools, this application does not reuse the connection between diffe
   <data name="new_table" xml:space="preserve">
     <value>New table</value>
   </data>
-  <data name="general" xml:space="preserve">
-    <value>General</value>
-  </data>
-  <data name="columns" xml:space="preserve">
-    <value>Columns</value>
-  </data>
   <data name="table_name" xml:space="preserve">
     <value>Table name</value>
   </data>
@@ -999,9 +993,6 @@ Unlike other tools, this application does not reuse the connection between diffe
   </data>
   <data name="warning_empty_preserve_filter" xml:space="preserve">
     <value>El filtro de tuplas a preservar no puede estar vacío</value>
-  </data>
-  <data name="warning_empty_schema" xml:space="preserve">
-    <value>El nombre del esquema a crear</value>
   </data>
   <data name="collect_tuples_script_name" xml:space="preserve">
     <value>Determinar tuplas afectadas</value>
@@ -1092,5 +1083,32 @@ Unlike other tools, this application does not reuse the connection between diffe
   </data>
   <data name="text_wrap" xml:space="preserve">
     <value>Ajuste de línea</value>
+  </data>
+  <data name="run_and_copy_to_table" xml:space="preserve">
+    <value>Ejecutar y copiar resultados en una tabla</value>
+  </data>
+  <data name="ignoring_incompatible_query" xml:space="preserve">
+    <value>Se ignora la consulta por devolver un resultado incompatible con la primera consulta</value>
+  </data>
+  <data name="waiting_for_destination_table" xml:space="preserve">
+    <value>Esperando selección de tabla destino y asignación de columnas</value>
+  </data>
+  <data name="inserting_rows_on" xml:space="preserve">
+    <value>Insertando filas en la tabla {0} de {1}</value>
+  </data>
+  <data name="saving_rows_on_file" xml:space="preserve">
+    <value>Guardando filas en el fichero CSV '{0}'</value>
+  </data>
+  <data name="copy_to_table_task" xml:space="preserve">
+    <value>Tarea de ejecución y copia en tabla</value>
+  </data>
+  <data name="select_destination_table" xml:space="preserve">
+    <value>Seleccione tabla destino</value>
+  </data>
+  <data name="task_canceled_by_user" xml:space="preserve">
+    <value>Tarea cancelada por el usuario</value>
+  </data>
+  <data name="leave_unassigned" xml:space="preserve">
+    <value>Dejar sin asignar</value>
   </data>
 </root>

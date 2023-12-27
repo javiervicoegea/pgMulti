@@ -21,7 +21,7 @@ namespace PgMulti.Tasks
         protected List<Query> _Queries;
         protected int _StatementCount = -1;
         protected int _CurrentStatementIndex = -1;
-        protected bool _Cancel = false;
+        protected bool _Canceled = false;
 
         private StringBuilder _StringBuilder;
 
@@ -110,6 +110,14 @@ namespace PgMulti.Tasks
             }
         }
 
+        public bool Canceled
+        {
+            get
+            {
+                return _Canceled;
+            }
+        }
+
         public virtual void Start()
         {
             _StartTimestamp = DateTime.Now;
@@ -119,7 +127,7 @@ namespace PgMulti.Tasks
 
         public virtual void Cancel()
         {
-            _Cancel = true;
+            _Canceled = true;
         }
 
         protected abstract void Run();
