@@ -779,6 +779,51 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Columna destino.
+        /// </summary>
+        internal static string dest_column {
+            get {
+                return ResourceManager.GetString("dest_column", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a CONEXIÓN DESTINO ABIERTA A {0}.
+        /// </summary>
+        internal static string dest_connection_opened_to {
+            get {
+                return ResourceManager.GetString("dest_connection_opened_to", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Transacción confirmada en destino.
+        /// </summary>
+        internal static string dest_transaction_commited {
+            get {
+                return ResourceManager.GetString("dest_transaction_commited", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Transacción read commited iniciada en destino.
+        /// </summary>
+        internal static string dest_transaction_started {
+            get {
+                return ResourceManager.GetString("dest_transaction_started", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Tipo destino.
+        /// </summary>
+        internal static string dest_type {
+            get {
+                return ResourceManager.GetString("dest_type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a {0} - pgMulti diagram.
         /// </summary>
         internal static string diagram_title {
@@ -1287,7 +1332,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Insertando filas en la tabla {0} de {1}.
+        ///   Busca una cadena traducida similar a Insertando filas en la tabla {0}.
         /// </summary>
         internal static string inserting_rows_on {
             get {
@@ -2349,6 +2394,24 @@ namespace PgMulti.Properties {
         internal static string source_code {
             get {
                 return ResourceManager.GetString("source_code", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Columna origen.
+        /// </summary>
+        internal static string source_column {
+            get {
+                return ResourceManager.GetString("source_column", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a CONEXIÓN ORIGEN ABIERTA A {0}.
+        /// </summary>
+        internal static string source_connection_opened_to {
+            get {
+                return ResourceManager.GetString("source_connection_opened_to", resourceCulture);
             }
         }
         

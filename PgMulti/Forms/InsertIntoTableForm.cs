@@ -5,7 +5,7 @@ using PgMulti.AppData;
 using PgMulti.DataStructure;
 using PgMulti.Tasks;
 using System.Data;
-using static PgMulti.Forms.InsertIntoTableForm;
+using static PgMulti.AppData.InsertIntoTableFormTreeModel;
 
 namespace PgMulti.Forms
 {
@@ -18,6 +18,8 @@ namespace PgMulti.Forms
         private Font itemFont = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
         private List<ComboBox>? _ComboBoxes = null;
         private Table? _SelectedTable = null;
+        private Schema? _NewTableSchema = null;
+        private TextBox? txtTableName = null;
 
         public InsertIntoTableForm(Data d, PgTaskExecutorSqlCopyToTable t)
         {
@@ -104,10 +106,6 @@ namespace PgMulti.Forms
                 Close();
                 return;
             }
-
-
-
-
         }
 
         private void InsertIntoTableForm_FormClosed(object sender, EventArgs e)
@@ -127,75 +125,214 @@ namespace PgMulti.Forms
                 splitContainer1.Panel2.Controls.Remove(c);
             }
 
+            _NewTableSchema = null;
+            _SelectedTable = null;
+            _ComboBoxes = null;
+            txtTableName = null;
 
-            if (tna != null && tna.Tag != null && tna.Tag is Aga.Controls.Tree.Node && ((Aga.Controls.Tree.Node)tna.Tag).Tag != null && ((Aga.Controls.Tree.Node)tna.Tag).Tag is Table)
+            List<NpgsqlDbColumn> scs = _Task.SourceColumns!.OrderByDescending(sc => sc.IsKey).ThenBy(sc => sc.ColumnName).ToList();
+
+            if (tna != null && tna.Tag != null && tna.Tag is Node)
             {
-                _SelectedTable = (Table)((Aga.Controls.Tree.Node)tna.Tag).Tag;
-                _ComboBoxes = new List<ComboBox>();
-
-                TableLayoutPanel tlpColumnMapping = new TableLayoutPanel();
-
-                tlpColumnMapping.SuspendLayout();
-
-
-                tlpColumnMapping.ColumnCount = 2;
-                tlpColumnMapping.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-                tlpColumnMapping.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-                tlpColumnMapping.Dock = DockStyle.Fill;
-                tlpColumnMapping.Padding = new Padding(10);
-                tlpColumnMapping.RowCount = _SelectedTable.Columns.Count + 1;
-                tlpColumnMapping.Size = new Size(1006, 612);
-                tlpColumnMapping.TabIndex = 0;
-                tlpColumnMapping.AutoScroll = true;
-
-                int rowIndex = 0;
-                foreach (Column c in _SelectedTable.Columns)
+                if (((Node)tna.Tag).Tag is NewTable)
                 {
-                    tlpColumnMapping.RowStyles.Add(new RowStyle(SizeType.Absolute, 50F));
-                    Label lbl = new Label(); ;
-                    ComboBox cb = new ComboBox();
+                    _NewTableSchema = ((NewTable)((Node)tna.Tag).Tag).Schema;
 
-                    lbl.Dock = DockStyle.Fill;
-                    lbl.TextAlign = ContentAlignment.TopRight;
-                    lbl.Text = $"{c.Id} ({c.Type}):";
-                    lbl.Padding = new Padding(7);
+                    TableLayoutPanel tlpNewTable = new TableLayoutPanel();
 
-                    cb.Tag = c;
-                    cb.Items.Add(new SourceColumnListItem(null));
-                    cb.SelectedIndex = 0;
-                    cb.Width = 600;
-                    cb.DropDownStyle = ComboBoxStyle.DropDownList;
+                    tlpNewTable.SuspendLayout();
 
-                    foreach (NpgsqlDbColumn sc in _Task.SourceColumns!)
-                    {
-                        SourceColumnListItem scli = new SourceColumnListItem(sc);
-                        cb.Items.Add(scli);
 
-                        if (sc.ColumnName == c.Id)
-                        {
-                            cb.SelectedItem = scli;
-                        }
-                    }
+                    tlpNewTable.ColumnCount = 3;
+                    tlpNewTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33F));
+                    tlpNewTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33F));
+                    tlpNewTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33F));
+                    tlpNewTable.Dock = DockStyle.Fill;
+                    tlpNewTable.Padding = new Padding(10);
+                    tlpNewTable.RowCount = scs.Count + 3;
+                    tlpNewTable.TabIndex = 0;
+                    tlpNewTable.AutoScroll = true;
 
-                    _ComboBoxes.Add(cb);
+                    int rowIndex = 0;
 
-                    tlpColumnMapping.Controls.Add(lbl, 0, rowIndex);
-                    tlpColumnMapping.Controls.Add(cb, 1, rowIndex);
+                    tlpNewTable.RowStyles.Add(new RowStyle(SizeType.Absolute, 80F));
+
+                    Label lblTableName = new Label(); ;
+                    txtTableName = new TextBox();
+
+                    lblTableName.Dock = DockStyle.Fill;
+                    lblTableName.TextAlign = ContentAlignment.TopRight;
+                    lblTableName.Text = Properties.Text.table_name + ":";
+                    lblTableName.Padding = new Padding(7);
+
+                    txtTableName.Width = 600;
+
+                    tlpNewTable.Controls.Add(lblTableName, 0, rowIndex);
+                    tlpNewTable.Controls.Add(txtTableName, 1, rowIndex);
 
                     rowIndex++;
+
+                    tlpNewTable.RowStyles.Add(new RowStyle(SizeType.Absolute, 50F));
+
+                    Label lblColumns = new Label(); ;
+
+                    lblColumns.Dock = DockStyle.Fill;
+                    lblColumns.TextAlign = ContentAlignment.TopRight;
+                    lblColumns.Text = Properties.Text.columns + ":";
+                    lblColumns.Padding = new Padding(7);
+
+                    tlpNewTable.Controls.Add(lblColumns, 0, rowIndex);
+
+                    Label lblColumnHeader;
+
+                    lblColumnHeader = new Label(); ;
+                    lblColumnHeader.Dock = DockStyle.Fill;
+                    lblColumnHeader.TextAlign = ContentAlignment.TopLeft;
+                    lblColumnHeader.Text = Properties.Text.column_name;
+                    lblColumnHeader.Padding = new Padding(7);
+                    lblColumnHeader.Font = new Font(lblColumnHeader.Font, FontStyle.Bold);
+                    tlpNewTable.Controls.Add(lblColumnHeader, 1, rowIndex);
+
+                    lblColumnHeader = new Label(); ;
+                    lblColumnHeader.Dock = DockStyle.Fill;
+                    lblColumnHeader.TextAlign = ContentAlignment.TopLeft;
+                    lblColumnHeader.Text = Properties.Text.type_name;
+                    lblColumnHeader.Padding = new Padding(7);
+                    lblColumnHeader.Font = new Font(lblColumnHeader.Font, FontStyle.Bold);
+                    tlpNewTable.Controls.Add(lblColumnHeader, 2, rowIndex);
+
+                    rowIndex++;
+
+                    foreach (NpgsqlDbColumn c in scs)
+                    {
+                        tlpNewTable.RowStyles.Add(new RowStyle(SizeType.Absolute, 50F));
+
+                        Label lblColumnName = new Label();
+                        lblColumnName.Dock = DockStyle.Fill;
+                        lblColumnName.TextAlign = ContentAlignment.TopLeft;
+                        lblColumnName.Text = c.ColumnName;
+                        lblColumnName.Padding = new Padding(7);
+                        tlpNewTable.Controls.Add(lblColumnName, 1, rowIndex);
+
+                        Label lblColumnType = new Label();
+                        lblColumnType.Dock = DockStyle.Fill;
+                        lblColumnType.TextAlign = ContentAlignment.TopLeft;
+                        lblColumnType.Text = c.PostgresType.Name + (c.NumericPrecision.HasValue ? $" ({c.NumericPrecision.Value},{(c.NumericScale.HasValue ? c.NumericScale.Value : 0)})" : (c.ColumnSize.HasValue ? $" ({c.ColumnSize.Value})" : ""));
+                        lblColumnType.Padding = new Padding(7);
+                        tlpNewTable.Controls.Add(lblColumnType, 2, rowIndex);
+
+                        rowIndex++;
+                    }
+
+                    tlpNewTable.RowStyles.Add(new RowStyle());
+
+                    tlpNewTable.ResumeLayout(false);
+                    tlpNewTable.PerformLayout();
+
+                    splitContainer1.Panel2.Controls.Add(tlpNewTable);
                 }
+                else if (((Node)tna.Tag).Tag is Table)
+                {
+                    _SelectedTable = (Table)((Node)tna.Tag).Tag;
+                    _ComboBoxes = new List<ComboBox>();
 
-                tlpColumnMapping.RowStyles.Add(new RowStyle());
+                    TableLayoutPanel tlpColumnMapping = new TableLayoutPanel();
 
-                tlpColumnMapping.ResumeLayout(false);
-                tlpColumnMapping.PerformLayout();
+                    tlpColumnMapping.SuspendLayout();
 
-                splitContainer1.Panel2.Controls.Add(tlpColumnMapping);
-            }
-            else
-            {
-                _SelectedTable = null;
-                _ComboBoxes = null;
+
+                    tlpColumnMapping.ColumnCount = 3;
+                    tlpColumnMapping.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33F));
+                    tlpColumnMapping.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33F));
+                    tlpColumnMapping.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33F));
+                    tlpColumnMapping.Dock = DockStyle.Fill;
+                    tlpColumnMapping.Padding = new Padding(10);
+                    tlpColumnMapping.RowCount = _SelectedTable.Columns.Count + 2;
+                    tlpColumnMapping.TabIndex = 0;
+                    tlpColumnMapping.AutoScroll = true;
+
+                    int rowIndex = 0;
+
+                    tlpColumnMapping.RowStyles.Add(new RowStyle(SizeType.Absolute, 50F));
+
+                    Label lblColumnHeader;
+
+                    lblColumnHeader = new Label(); ;
+                    lblColumnHeader.Dock = DockStyle.Fill;
+                    lblColumnHeader.TextAlign = ContentAlignment.TopLeft;
+                    lblColumnHeader.Text = Properties.Text.dest_column;
+                    lblColumnHeader.Padding = new Padding(7);
+                    lblColumnHeader.Font = new Font(lblColumnHeader.Font, FontStyle.Bold);
+                    tlpColumnMapping.Controls.Add(lblColumnHeader, 0, rowIndex);
+
+                    lblColumnHeader = new Label(); ;
+                    lblColumnHeader.Dock = DockStyle.Fill;
+                    lblColumnHeader.TextAlign = ContentAlignment.TopLeft;
+                    lblColumnHeader.Text = Properties.Text.dest_type;
+                    lblColumnHeader.Padding = new Padding(7);
+                    lblColumnHeader.Font = new Font(lblColumnHeader.Font, FontStyle.Bold);
+                    tlpColumnMapping.Controls.Add(lblColumnHeader, 1, rowIndex);
+
+                    lblColumnHeader = new Label(); ;
+                    lblColumnHeader.Dock = DockStyle.Fill;
+                    lblColumnHeader.TextAlign = ContentAlignment.TopLeft;
+                    lblColumnHeader.Text = Properties.Text.source_column;
+                    lblColumnHeader.Padding = new Padding(7);
+                    lblColumnHeader.Font = new Font(lblColumnHeader.Font, FontStyle.Bold);
+                    tlpColumnMapping.Controls.Add(lblColumnHeader, 2, rowIndex);
+
+                    rowIndex++;
+
+                    foreach (Column c in _SelectedTable.Columns.OrderByDescending(ci => ci.PK).ThenBy(sc => sc.Id))
+                    {
+                        tlpColumnMapping.RowStyles.Add(new RowStyle(SizeType.Absolute, 50F));
+
+                        Label lblColumnName = new Label(); ;
+                        lblColumnName.Dock = DockStyle.Fill;
+                        lblColumnName.TextAlign = ContentAlignment.TopLeft;
+                        lblColumnName.Text = c.Id;
+                        lblColumnName.Padding = new Padding(7);
+                        tlpColumnMapping.Controls.Add(lblColumnName, 0, rowIndex);
+
+                        Label lblColumnType = new Label(); ;
+                        lblColumnType.Dock = DockStyle.Fill;
+                        lblColumnType.TextAlign = ContentAlignment.TopLeft;
+                        lblColumnType.Text = c.Type + (string.IsNullOrWhiteSpace(c.TypeParams) ? "" : " " + c.TypeParams);
+                        lblColumnType.Padding = new Padding(7);
+                        tlpColumnMapping.Controls.Add(lblColumnType, 1, rowIndex);
+
+                        ComboBox cb = new ComboBox();
+                        cb.Tag = c;
+                        cb.Items.Add(new SourceColumnListItem(null));
+                        cb.SelectedIndex = 0;
+                        cb.Width = 600;
+                        cb.DropDownStyle = ComboBoxStyle.DropDownList;
+
+                        foreach (NpgsqlDbColumn sc in scs)
+                        {
+                            SourceColumnListItem scli = new SourceColumnListItem(sc);
+                            cb.Items.Add(scli);
+
+                            if (sc.ColumnName == c.Id)
+                            {
+                                cb.SelectedItem = scli;
+                            }
+                        }
+
+                        _ComboBoxes.Add(cb);
+
+                        tlpColumnMapping.Controls.Add(cb, 2, rowIndex);
+
+                        rowIndex++;
+                    }
+
+                    tlpColumnMapping.RowStyles.Add(new RowStyle());
+
+                    tlpColumnMapping.ResumeLayout(false);
+                    tlpColumnMapping.PerformLayout();
+
+                    splitContainer1.Panel2.Controls.Add(tlpColumnMapping);
+                }
             }
         }
 
@@ -214,27 +351,40 @@ namespace PgMulti.Forms
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-            if (_SelectedTable == null || _ComboBoxes == null || _ComboBoxes.Any(cb => cb.SelectedItem == null))
+            if (_NewTableSchema == null && (_SelectedTable == null || _ComboBoxes == null || _ComboBoxes.Any(cb => cb.SelectedItem == null)))
             {
                 MessageBox.Show(this, Properties.Text.warning_no_table_selected, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            Dictionary<int, int> cm = new Dictionary<int, int>();
-
-            for (int i = 0; i < _ComboBoxes.Count; i++)
+            if (_NewTableSchema == null)
             {
-                ComboBox cb = _ComboBoxes[i];
-                Column dc = (Column)cb.Tag!;
-                NpgsqlDbColumn? sc = ((SourceColumnListItem)cb.SelectedItem).SourceColumn;
+                Dictionary<int, int> cm = new Dictionary<int, int>();
 
-                if (sc != null)
+                for (int i = 0; i < _ComboBoxes!.Count; i++)
                 {
-                    cm[i] = _Task.SourceColumns!.IndexOf(sc);
-                }
-            }
+                    ComboBox cb = _ComboBoxes[i];
+                    Column dc = (Column)cb.Tag!;
+                    NpgsqlDbColumn? sc = ((SourceColumnListItem)cb.SelectedItem).SourceColumn;
 
-            _Task.SetDestinationTableAndMapping(_SelectedTable, cm);
+                    if (sc != null)
+                    {
+                        cm[dc.Position] = sc.ColumnOrdinal!.Value;
+                    }
+                }
+
+                _Task.SetDestinationTableAndMapping(_SelectedTable!, cm); 
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(txtTableName!.Text))
+                {
+                    MessageBox.Show(this, Properties.Text.warning_empty_table_name, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                _Task.SetNewTable(_NewTableSchema, txtTableName!.Text);
+            }
 
             DialogResult = DialogResult.OK;
             Close();
@@ -278,7 +428,7 @@ namespace PgMulti.Forms
                 }
                 else
                 {
-                    return $"{_SourceColumn.ColumnName} ({_SourceColumn.DataTypeName})";
+                    return $"{_SourceColumn.ColumnName} - {_SourceColumn.PostgresType.Name}" + (_SourceColumn.NumericPrecision.HasValue ? $" ({_SourceColumn.NumericPrecision.Value},{(_SourceColumn.NumericScale.HasValue ? _SourceColumn.NumericScale.Value : 0)})" : (_SourceColumn.ColumnSize.HasValue ? $" ({_SourceColumn.ColumnSize.Value})" : ""));
                 }
             }
         }

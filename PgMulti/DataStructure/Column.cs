@@ -1,4 +1,5 @@
 ﻿using Npgsql;
+using Npgsql.Schema;
 using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -31,6 +32,7 @@ namespace PgMulti.DataStructure
         public Table? Table { get => _Table; internal set => _Table = value; }
         public int? Precission { get => _Precission; }
         public int? Scale { get => _Scale; }
+        public int? Size { get => _Size; }
 
 
         private string _Id;
@@ -47,6 +49,7 @@ namespace PgMulti.DataStructure
         private Table? _Table;
         private int? _Precission = null;
         private int? _Scale = null;
+        private int? _Size = null;
 
         private static string[] BooleanTypes = { "bool", "boolean" };
         private static string[] ShortTypes = { "smallint", "int2", "serial2" };
@@ -77,31 +80,45 @@ namespace PgMulti.DataStructure
             {
                 _Precission = drd.Val<int>("numeric_precision")!;
                 _Scale = drd.Val<int>("numeric_scale")!;
-                _TypeParams = $"({_Precission},{_Scale})";
+
+                if (_Precission.HasValue && _Precission.Value == 0)
+                {
+                    _Precission = null;
+                    _Scale = null;
+                }
+                else if (_Precission.HasValue && !_Scale.HasValue)
+                {
+                    _Scale = 0;
+                }
+                else if (!_Precission.HasValue)
+                {
+                    _Scale = null;
+                }
+
+                if (_Precission.HasValue) _TypeParams = $"({_Precission},{_Scale})";
             }
             else
             {
-                int? cml = drd.Val<int>("character_maximum_length");
-                if (cml.HasValue && cml.Value > 0)
+                _Size = drd.Val<int>("character_maximum_length");
+                if (_Size.HasValue && _Size.Value > 0)
                 {
-                    _TypeParams = $"({cml.Value})";
+                    _TypeParams = $"({_Size.Value})";
                 }
             }
-
 
             if (BooleanTypes.Contains(_Type))
             {
                 IsBoolean = true;
             }
-            else if (ShortTypes.Contains(_Type) || (NumericTypes.Contains(_Type) && Scale!.Value == 0 && Precission!.Value <= 4))
+            else if (ShortTypes.Contains(_Type) || (NumericTypes.Contains(_Type) && Precission.HasValue && Scale!.Value == 0 && Precission.Value <= 4))
             {
                 IsShort = true;
             }
-            else if (IntTypes.Contains(_Type) || (NumericTypes.Contains(_Type) && Scale!.Value == 0 && Precission!.Value > 4 && Precission!.Value <= 9))
+            else if (IntTypes.Contains(_Type) || (NumericTypes.Contains(_Type) && Precission.HasValue && Scale!.Value == 0 && Precission.Value > 4 && Precission.Value <= 9))
             {
                 IsInt = true;
             }
-            else if (LongTypes.Contains(_Type) || (NumericTypes.Contains(_Type) && Scale!.Value == 0 && Precission!.Value > 9 && Precission!.Value <= 18))
+            else if (LongTypes.Contains(_Type) || (NumericTypes.Contains(_Type) && Precission.HasValue && Scale!.Value == 0 && Precission.Value > 9 && Precission.Value <= 18))
             {
                 IsLong = true;
             }
@@ -113,7 +130,92 @@ namespace PgMulti.DataStructure
             {
                 IsDouble = true;
             }
-            else if (DecimalTypes.Contains(_Type) || (NumericTypes.Contains(_Type) && (Scale!.Value > 0 || Precission!.Value > 18)))
+            else if (DecimalTypes.Contains(_Type) || (NumericTypes.Contains(_Type) && (!Precission.HasValue || Scale!.Value > 0 || Precission.Value > 18)))
+            {
+                IsDecimal = true;
+            }
+            else if (DateTypes.Contains(_Type))
+            {
+                IsDate = true;
+            }
+            else if (DateTimeTypes.Contains(_Type))
+            {
+                IsDateTime = true;
+            }
+        }
+
+        internal Column(Table t, NpgsqlDbColumn c)
+        {
+            _Table = t;
+
+            _PK = false;
+            _IdSchema = t.Schema!.Id;
+            _IdTable = t.Id;
+            _Id = c.ColumnName;
+            _DefaultValue = null;
+            _IsIdentity = false;
+            _IsGeneratedAlways = false;
+            _NotNull = false;
+            _Type = c.PostgresType.Name;
+            _Position = c.ColumnOrdinal!.Value;
+
+            _TypeParams = null;
+            if (NumericTypes.Contains(_Type))
+            {
+                _Precission = c.NumericPrecision;
+                _Scale = c.NumericScale;
+
+                if (_Precission.HasValue && _Precission.Value == 0)
+                {
+                    _Precission = null;
+                    _Scale = null;
+                }
+                else if (_Precission.HasValue && !_Scale.HasValue)
+                {
+                    _Scale = 0;
+                }
+                else if (!_Precission.HasValue)
+                {
+                    _Scale = null;
+                }
+
+                if (_Precission.HasValue) _TypeParams = $"({_Precission},{_Scale})";
+            }
+            else
+            {
+                _Size = c.ColumnSize;
+
+                if (_Size.HasValue && _Size.Value > 0)
+                {
+                    _TypeParams = $"({_Size.Value})";
+                }
+            }
+
+            if (BooleanTypes.Contains(_Type))
+            {
+                IsBoolean = true;
+            }
+            else if (ShortTypes.Contains(_Type) || (NumericTypes.Contains(_Type) && Precission.HasValue && Scale!.Value == 0 && Precission.Value <= 4))
+            {
+                IsShort = true;
+            }
+            else if (IntTypes.Contains(_Type) || (NumericTypes.Contains(_Type) && Precission.HasValue && Scale!.Value == 0 && Precission.Value > 4 && Precission.Value <= 9))
+            {
+                IsInt = true;
+            }
+            else if (LongTypes.Contains(_Type) || (NumericTypes.Contains(_Type) && Precission.HasValue && Scale!.Value == 0 && Precission.Value > 9 && Precission.Value <= 18))
+            {
+                IsLong = true;
+            }
+            else if (FloatTypes.Contains(_Type))
+            {
+                IsFloat = true;
+            }
+            else if (DoubleTypes.Contains(_Type))
+            {
+                IsDouble = true;
+            }
+            else if (DecimalTypes.Contains(_Type) || (NumericTypes.Contains(_Type) && (!Precission.HasValue || Scale!.Value > 0 || Precission.Value > 18)))
             {
                 IsDecimal = true;
             }
@@ -238,7 +340,7 @@ namespace PgMulti.DataStructure
 
         public string GetSqlParameterExpression(string parameterName)
         {
-            if (IsBoolean || IsShort || IsInt|| IsLong|| IsFloat|| IsDouble|| IsDecimal)
+            if (IsBoolean || IsShort || IsInt || IsLong || IsFloat || IsDouble || IsDecimal)
             {
                 return ":" + parameterName;
             }

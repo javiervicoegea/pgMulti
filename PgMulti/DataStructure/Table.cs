@@ -20,15 +20,41 @@ namespace PgMulti.DataStructure
         public List<TableIndex> Indexes { get => _Indexes; }
         public List<Trigger> Triggers { get => _Triggers; }
 
-        internal Table(NpgsqlDataReader drd)
+        internal Table(NpgsqlDataReader drd) : this(drd.Ref<string>("schemaname")!, drd.Ref<string>("tablename")!)
+        {
+        }
+
+        internal Table(Schema s, string id) : this(s.Id, id)
+        {
+            _Schema = s;
+        }
+
+        private Table(string schemaId, string tableId)
         {
             _Columns = new List<Column>();
             _Relations = new List<TableRelation>();
             _Indexes = new List<TableIndex>();
             _Triggers = new List<Trigger>();
 
-            _IdSchema = drd.Ref<string>("schemaname")!;
-            _Id = drd.Ref<string>("tablename")!;
+            _IdSchema = schemaId;
+            _Id = tableId;
+        }
+
+        public void CreateInDB(NpgsqlConnection connection, NpgsqlTransaction t)
+        {
+            NpgsqlCommand cmdCreateTable = new NpgsqlCommand();
+            cmdCreateTable.CommandText = $"CREATE TABLE {IdSchema}.{Id} ({
+                    string.Join(",", Columns.Select(c => 
+                        c.Id + " " + c.Type 
+                        + (string.IsNullOrWhiteSpace(c.TypeParams)?"":" " + c.TypeParams) 
+                        + (c.NotNull?" NOT NULL":"") 
+                        + (string.IsNullOrWhiteSpace(c.DefaultValue)?"":" DEFAULT" + c.DefaultValue) 
+                        + (c.IsIdentity?" GENERATED " + (c.IsGeneratedAlways?"ALWAYS":"BY DEFAULT") + " AS IDENTITY":""))
+                    )
+                })";
+            cmdCreateTable.Connection = connection;
+            cmdCreateTable.Transaction = t;
+            cmdCreateTable.ExecuteNonQuery();
         }
 
         public override string ToString()

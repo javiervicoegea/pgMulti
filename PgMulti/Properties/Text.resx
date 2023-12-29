@@ -1094,7 +1094,7 @@ Unlike other tools, this application does not reuse the connection between diffe
     <value>Esperando selección de tabla destino y asignación de columnas</value>
   </data>
   <data name="inserting_rows_on" xml:space="preserve">
-    <value>Insertando filas en la tabla {0} de {1}</value>
+    <value>Insertando filas en la tabla {0}</value>
   </data>
   <data name="saving_rows_on_file" xml:space="preserve">
     <value>Guardando filas en el fichero CSV '{0}'</value>
@@ -1110,5 +1110,26 @@ Unlike other tools, this application does not reuse the connection between diffe
   </data>
   <data name="leave_unassigned" xml:space="preserve">
     <value>Dejar sin asignar</value>
+  </data>
+  <data name="source_connection_opened_to" xml:space="preserve">
+    <value>CONEXIÓN ORIGEN ABIERTA A {0}</value>
+  </data>
+  <data name="dest_connection_opened_to" xml:space="preserve">
+    <value>CONEXIÓN DESTINO ABIERTA A {0}</value>
+  </data>
+  <data name="dest_transaction_started" xml:space="preserve">
+    <value>Transacción read commited iniciada en destino</value>
+  </data>
+  <data name="dest_transaction_commited" xml:space="preserve">
+    <value>Transacción confirmada en destino</value>
+  </data>
+  <data name="dest_column" xml:space="preserve">
+    <value>Columna destino</value>
+  </data>
+  <data name="dest_type" xml:space="preserve">
+    <value>Tipo destino</value>
+  </data>
+  <data name="source_column" xml:space="preserve">
+    <value>Columna origen</value>
   </data>
 </root>

@@ -80,6 +80,13 @@ namespace PgMulti.AppData
                 else if (node.Tag is Schema)
                 {
                     Schema schema = (Schema)node.Tag;
+
+                    Node nNewTable = new Node($"[{Properties.Text.new_table}]");
+                    nNewTable.Image = Properties.Resources.tva_table;
+                    node.Nodes.Add(nNewTable);
+                    nNewTable.Tag = new NewTable(schema);
+                    yield return nNewTable;
+
                     foreach (Table t in schema.Tables.OrderBy(ti => ti.Id))
                     {
                         Node n = new Node(t.Id);
@@ -155,6 +162,15 @@ namespace PgMulti.AppData
             {
                 TreeModelEventArgs args = new TreeModelEventArgs(GetPath(parent), new int[] { index }, new object[] { node });
                 NodesRemoved(this, args);
+            }
+        }
+
+        public class NewTable
+        {
+            public readonly Schema Schema;
+            public NewTable(Schema s)
+            {
+                Schema = s;
             }
         }
     }
