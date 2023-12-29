@@ -521,7 +521,7 @@ namespace PgMulti.SqlSyntax
             createTableTablespaceClauseOpt.Rule = Empty | "TABLESPACE" + id_simple;
 
             //Create Index
-            createIndexStmt.Rule = CREATE + uniqueOpt + INDEX + ("CONCURRENTLY" | Empty) + ((IF + NOT + EXISTS | Empty) + id | Empty) + ON + ("ONLY" | Empty) + tableId + usingIndexClauseOpt + "(" + orderList + ")" + withClauseOpt + whereClauseOpt + tablespaceClauseOpt;
+            createIndexStmt.Rule = CREATE + uniqueOpt + INDEX + ("CONCURRENTLY" | Empty) + ((IF + NOT + EXISTS | Empty) + id | Empty) + ON + ("ONLY" | Empty) + tableId + usingIndexClauseOpt + "(" + orderList + ")" + withClauseOpt + tablespaceClauseOpt + whereClauseOpt;
             uniqueOpt.Rule = Empty | UNIQUE;
             tableId.Rule = id;
             orderList.Rule = MakePlusRule(orderList, comma, orderMember);
