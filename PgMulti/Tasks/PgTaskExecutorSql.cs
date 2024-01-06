@@ -28,6 +28,7 @@ namespace PgMulti.Tasks
             _TransactionMode = transactionMode;
             _TransactionLevel = transactionLevel;
             _Thread = new Thread(new ThreadStart(Run));
+            _Thread.Name = "PgTaskExecutorSql";
         }
 
         protected void Connection_Notice(object sender, NpgsqlNoticeEventArgs e)

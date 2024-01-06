@@ -98,6 +98,7 @@ namespace PgMulti.Tasks
                         if (_Thread == null)
                         {
                             _Thread = new Thread(new ThreadStart(Run));
+                            _Thread.Name = "PgTaskIntegrator";
                             _Thread.Start();
                         }
                     }
