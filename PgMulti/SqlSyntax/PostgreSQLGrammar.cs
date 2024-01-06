@@ -112,6 +112,10 @@ namespace PgMulti.SqlSyntax
             var EXISTS = ToTerm("EXISTS");
             var EXTRACT = ToTerm("EXTRACT");
             var PERFORM = ToTerm("PERFORM");
+            var PARALLEL = ToTerm("PARALLEL");
+            var UNSAFE = ToTerm("UNSAFE");
+            var RESTRICTED = ToTerm("RESTRICTED");
+            var SAFE = ToTerm("SAFE");
 
             //Non-terminals
             var id = new NonTerminal("id");
@@ -415,7 +419,8 @@ namespace PgMulti.SqlSyntax
                 | (NOT | Empty) + "LEAKPROOF"
                 | "COST" + number
                 | "ROWS" + number
-                | AS + (string_literal | escaped_string_literal | dollarStringBodyFunction);
+                | AS + (string_literal | escaped_string_literal | dollarStringBodyFunction)
+                | PARALLEL + (UNSAFE | RESTRICTED | SAFE);
             dollarStringBodyFunction.Rule = dollar_string_tag + (plBlockCodeStmt + (Empty | semi) | sqlStmtList) + dollar_string_tag;
             plBlockCodeStmt.Rule = plDeclareClauseOpt + plBeginClause + plExceptionClauseOpt + END;
             plDeclareClauseOpt.Rule = Empty | "DECLARE" + plDeclareStmts;
