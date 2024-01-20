@@ -93,7 +93,7 @@ namespace PgMulti.Tasks
                 }
                 else
                 {
-                    string pgType = drd.GetPostgresType(Index).Name;
+                    string pgType = drd.GetPostgresType(qc.Index).Name;
                     Type t = Column.GetDotNetType(pgType);
                     qc.Type = pgType;
                 }
@@ -387,7 +387,7 @@ namespace PgMulti.Tasks
                 {
                     if (dc.DefaultValue == DBNull.Value)
                     {
-                        drCurrent[dc.ColumnName] = Activator.CreateInstance(dc.DataType);
+                        drCurrent[dc.ColumnName] = dc.DataType == typeof(string) ? "" : Activator.CreateInstance(dc.DataType);
                     }
                     else
                     {

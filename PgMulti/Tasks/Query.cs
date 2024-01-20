@@ -211,7 +211,7 @@ namespace PgMulti.Tasks
                         {
                             if (dc.ColumnName == "__") continue;
                             QueryColumn c = Columns[int.Parse(dc.ColumnName.Substring(1))];
-                            if (c.EditableOnEdit || c.Column != null && dr[c.Index] != null && dr[c.Index] != DBNull.Value)
+                            if (c.EditableOnInsert && dr[c.Index] != null && dr[c.Index] != DBNull.Value)
                             {
                                 cols.Add(SqlSyntax.PostgreSqlGrammar.IdToString(c.Column!.Id));
                                 vals.Add(c.Column.GetSqlLiteralValue(dr[c.Index]));
@@ -319,7 +319,7 @@ namespace PgMulti.Tasks
                         v = dri[c.Index];
                     }
 
-                    if (v != ids[j])
+                    if (!Equals(v, ids[j]))
                     {
                         matchingRow = false;
                         break;
@@ -359,11 +359,11 @@ namespace PgMulti.Tasks
                 }
             }
 
-            public Column? Column 
-            { 
+            public Column? Column
+            {
                 get => _Column;
 
-                set 
+                set
                 {
                     _Column = value;
                     if (value == null)

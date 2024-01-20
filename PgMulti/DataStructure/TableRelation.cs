@@ -75,7 +75,7 @@ namespace PgMulti.DataStructure
                     AstNode? nOnActionClauseListItemUpdate = nOnActionClauseListOpt.Children.FirstOrDefault(ni => ni.Name == "onActionClauseListItem" && ni[1].SingleLineText.ToUpperInvariant() == "UPDATE");
                     if (nOnActionClauseListItemUpdate != null)
                     {
-                        OnDelete = nOnActionClauseListItemUpdate[2].SingleLineText.ToUpperInvariant();
+                        OnUpdate = nOnActionClauseListItemUpdate[2].SingleLineText.ToUpperInvariant();
                     }
                 }
 

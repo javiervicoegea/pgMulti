@@ -32,54 +32,39 @@ namespace PgMulti.Tasks
             _InsertedRowsQueriesMapping.Clear();
         }
 
-        public void Integrate(Data d, QueryExecutorSql ces)
+        public void Integrate(Data d, QueryExecutorSql qes)
         {
-            _IntegratedQueries.Add(ces);
-            ces._QueryIntegrator = this;
+            _IntegratedQueries.Add(qes);
+            qes._QueryIntegrator = this;
 
             Dictionary<int, int> mapping = new Dictionary<int, int>();
 
             if (Columns.Count == 0)
             {
-                _Table = ces.Table;
+                _Table = qes.Table;
 
-                for (int i = 0; i < ces.Columns.Count; i++)
+                for (int i = 0; i < qes.Columns.Count; i++)
                 {
-                    QueryColumn c = ces.Columns[i];
+                    QueryColumn c = qes.Columns[i];
                     Columns.Add(c);
-                    DataTable.Columns.Add("_" + i.ToString());
+                    DataColumn dcQes = qes.DataTable.Columns[i];
+                    DataColumn dc = DataTable.Columns.Add("_" + i.ToString(), dcQes.DataType);
+                    dc.AllowDBNull=dcQes.AllowDBNull;
                     mapping[i] = i;
                 }
 
                 DataTable.Columns.Add("__");
 
-                _Editable = ces.Editable;
-
-                foreach (QueryColumn qc in ces.Columns)
-                {
-                    if (qc.Column != null && qc.Column.IsBoolean)
-                    {
-                        DataColumn dc = DataTable.Columns["_" + qc.Index]!;
-                        dc.DataType = typeof(bool);
-                        if (qc.Column.NotNull)
-                        {
-                            dc.AllowDBNull = false;
-                        }
-                        else
-                        {
-                            dc.AllowDBNull = true;
-                        }
-                    }
-                }
+                _Editable = qes.Editable;
             }
             else
             {
-                if (Columns.Count != ces.Columns.Count) throw new IncompatibleQueryException();
-                if (_Editable != ces.Editable) throw new IncompatibleQueryException();
+                if (Columns.Count != qes.Columns.Count) throw new IncompatibleQueryException();
+                if (_Editable != qes.Editable) throw new IncompatibleQueryException();
                 for (int i = 0; i < Columns.Count; i++)
                 {
                     QueryColumn c1 = Columns[i];
-                    QueryColumn c2 = ces.Columns[i];
+                    QueryColumn c2 = qes.Columns[i];
 
                     if (
                         c1.Title == c2.Title
@@ -100,9 +85,9 @@ namespace PgMulti.Tasks
                     {
                         bool found = false;
 
-                        for (int j = 0; j < ces.Columns.Count; j++)
+                        for (int j = 0; j < qes.Columns.Count; j++)
                         {
-                            c2 = ces.Columns[j];
+                            c2 = qes.Columns[j];
 
                             if (
                                 !mapping.Values.Contains(j)
@@ -132,16 +117,16 @@ namespace PgMulti.Tasks
                 }
             }
 
-            for (int i = 0; i < ces.DataTable.Rows.Count && DataTable.Rows.Count < d.Config.MaxRows; i++)
+            for (int i = 0; i < qes.DataTable.Rows.Count && DataTable.Rows.Count < d.Config.MaxRows; i++)
             {
-                DataRow dr1 = ces.DataTable.Rows[i];
+                DataRow dr1 = qes.DataTable.Rows[i];
                 DataRow dr2 = DataTable.NewRow();
 
                 for (int j = 0; j < Columns.Count; j++)
                 {
                     dr2[j] = dr1[mapping[j]];
                 }
-                dr2[Columns.Count] = ces.DB.Alias;
+                dr2[Columns.Count] = qes.DB.Alias;
 
                 DataTable.Rows.Add(dr2);
             }
@@ -194,7 +179,8 @@ namespace PgMulti.Tasks
             DataGridView gv = t.Item1;
             QueryExecutorSql ces = t.Item2;
 
-            InsertRow(ces);
+            ces.InsertRow();
+            //InsertRow(ces);
             gv.Focus();
             gv.FirstDisplayedScrollingRowIndex = gv.RowCount - 1;
         }
@@ -248,19 +234,19 @@ namespace PgMulti.Tasks
             drOther.Delete();
         }
 
-        public void InsertRow(QueryExecutorSql ces)
-        {
-            DataRow drCurrent = DataTable.NewRow();
-            drCurrent[Columns.Count] = ces.DB.Alias;
-            DataTable.Rows.Add(drCurrent);
+        //public void InsertRow(QueryExecutorSql ces)
+        //{
+        //    DataRow drCurrent = DataTable.NewRow();
+        //    drCurrent[Columns.Count] = ces.DB.Alias;
+        //    DataTable.Rows.Add(drCurrent);
 
-            DataRow drOther = ces.DataTable.NewRow();
-            ces.DataTable.Rows.Add(drOther);
+        //    DataRow drOther = ces.DataTable.NewRow();
+        //    ces.DataTable.Rows.Add(drOther);
 
-            _InsertedRowsMapping[drCurrent] = drOther;
-            _InsertedRowsQueriesMapping[drCurrent] = ces;
-            ces._InsertedRowsMapping[drOther] = drCurrent;
-        }
+        //    _InsertedRowsMapping[drCurrent] = drOther;
+        //    _InsertedRowsQueriesMapping[drCurrent] = ces;
+        //    ces._InsertedRowsMapping[drOther] = drCurrent;
+        //}
 
         public override void CommitChanges()
         {
