@@ -214,20 +214,21 @@ namespace PgMulti.Tasks
             else
             {
                 string pgId = lcMonetary.Split('.')[0];
+                string pgId2 = pgId.Replace("_", "-");
 
-                monetaryCultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(cii => cii.Name == pgId);
+                monetaryCultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(cii => cii.Name == pgId || cii.Name == pgId2);
                 if (monetaryCultureInfo == null)
                 {
 
                     string[] pgIdParts = pgId.Split('_');
-                    string pgId2 = pgIdParts[0];
+                    string pgId3 = pgIdParts[0];
 
                     if (pgIdParts.Length > 1)
                     {
-                        pgId2 += " (" + pgIdParts[1] + ")";
+                        pgId3 += " (" + pgIdParts[1] + ")";
                     }
 
-                    monetaryCultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(ci => ci.EnglishName == pgId2);
+                    monetaryCultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(ci => ci.EnglishName == pgId3);
                     if (monetaryCultureInfo == null)
                     {
                         throw new NotSupportedException(string.Format(Properties.Text.money_cannot_be_parsed, lcMonetary));
