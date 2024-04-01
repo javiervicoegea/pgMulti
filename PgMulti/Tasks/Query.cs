@@ -182,7 +182,22 @@ namespace PgMulti.Tasks
                 {
                     case DataRowState.Added:
                     case DataRowState.Deleted:
+                        break;
                     case DataRowState.Modified:
+                        bool hasModifiedCells = false;
+
+                        foreach (DataColumn dc in dr.Table.Columns)
+                        {
+                            if (dc.ColumnName == "__") continue;
+                            QueryColumn c = Columns[int.Parse(dc.ColumnName.Substring(1))];
+                            if (c.Column != null && GetEditedCell(dr, c.Index))
+                            {
+                                hasModifiedCells = true;
+                            }
+                        }
+
+                        if (!hasModifiedCells) continue;
+
                         break;
                     default:
                         continue;
