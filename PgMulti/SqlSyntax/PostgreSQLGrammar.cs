@@ -116,6 +116,8 @@ namespace PgMulti.SqlSyntax
             var UNSAFE = ToTerm("UNSAFE");
             var RESTRICTED = ToTerm("RESTRICTED");
             var SAFE = ToTerm("SAFE");
+            var CASCADE = ToTerm("CASCADE");
+            var RESTRICT = ToTerm("RESTRICT");
 
             //Non-terminals
             var id = new NonTerminal("id");
@@ -518,7 +520,7 @@ namespace PgMulti.SqlSyntax
             idlistPar.Rule = "(" + idSimpleList + ")";
             idSimpleList.Rule = MakePlusRule(idSimpleList, comma, id_simple);
             idList.Rule = MakePlusRule(idList, comma, id);
-            onActionClauseListItem.Rule = ON + (UPDATE | DELETE | INSERT) + (SET + NULL | "RESTRICT" | "CASCADE" | ToTerm("NO") + "ACTION");
+            onActionClauseListItem.Rule = ON + (UPDATE | DELETE | INSERT) + (SET + NULL | RESTRICT | CASCADE | ToTerm("NO") + "ACTION");
             onActionClauseListOpt.Rule = MakeStarRule(onActionClauseListOpt, onActionClauseListItem);
             createTableWithClauseOpt.Rule = Empty | WITH + "(" + createTableWithList + ")";
             createTableWithList.Rule = MakeStarRule(createTableWithList, comma, createTableWithItem);
@@ -589,7 +591,7 @@ namespace PgMulti.SqlSyntax
                         | ADD + "GENERATED" + "ALWAYS" + AS + "IDENTITY" + (Empty | "(" + SEQUENCE + "NAME" + id + createSequenceClauseList + ")")
                     )
                 | ALTER + CONSTRAINT + id_simple + deferrable + initiallyDeferred
-                | DROP + COLUMN + id_simple + (Empty | "CASCADE")
+                | DROP + COLUMN + id_simple + (Empty | CASCADE | RESTRICT)
                 | DROP + CONSTRAINT + id_simple
                 | ToTerm("RENAME") + TO + id_simple
                 | "RENAME" + COLUMN + id_simple + TO + id_simple
@@ -601,12 +603,12 @@ namespace PgMulti.SqlSyntax
             alterTableAddConstraint.Rule = tableConstraintDef + (Empty | CustomActionHere(ResolveNotValidConflict) + NOT + VALID);
 
             //Drop stmts
-            dropTableStmt.Rule = DROP + TABLE + (Empty | IF + EXISTS) + tableId;
+            dropTableStmt.Rule = DROP + TABLE + (Empty | IF + EXISTS) + tableId + (Empty | CASCADE | RESTRICT);
             dropIndexStmt.Rule = DROP + INDEX + (Empty | IF + EXISTS) + id;
             dropSequenceStmt.Rule = DROP + SEQUENCE + (Empty | IF + EXISTS) + id;
             dropFunctionStmt.Rule = DROP + FUNCTION + (Empty | IF + EXISTS) + id + (Empty | "(" + createFunctionArgs + ")");
-            dropTriggerStmt.Rule = DROP + TRIGGER + (Empty | IF + EXISTS) + id_simple + ON + id + ("CASCADE" | Empty);
-            dropSchemaStmt.Rule = DROP + SCHEMA + (Empty | IF + EXISTS) + id_simple + ("CASCADE" | Empty);
+            dropTriggerStmt.Rule = DROP + TRIGGER + (Empty | IF + EXISTS) + id_simple + ON + id + (CASCADE | Empty);
+            dropSchemaStmt.Rule = DROP + SCHEMA + (Empty | IF + EXISTS) + id_simple + (CASCADE | Empty);
 
             //Insert stmt
             insertStmt.Rule = cteClauseOpt + INSERT + INTO + tableId + idlistParOpt + insertData + insertOnConflictClauseOpt + insertReturningClauseOpt;
