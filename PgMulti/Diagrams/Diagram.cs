@@ -29,11 +29,15 @@ namespace PgMulti.Diagrams
         private Point? _StartDraggingPoint = null;
         private Point? _CurrentDraggingPoint = null;
 
+        private DiagramTable? _RelatingTable = null;
+        private Point? _DcLastMousePositionWhenRelatingTable = null;
+
         private DiagramRelocator? _DiagramRelocator = null;
 
         private Rectangle _BoundingBox;
         private Rectangle _MaxBoundingBox;
 
+        private static Pen _RelatingTablesPen = new Pen(Color.FromArgb(255, 0, 0, 255), 5) { DashPattern = new float[]{ 5, 5 } };
         //private static Pen _BorderPen = new Pen(new SolidBrush(Color.FromArgb(255, 0, 0, 0)), 2);
         private static Brush _BackgroundBrush = new SolidBrush(Color.FromArgb(255, 245, 245, 245));
 
@@ -182,6 +186,22 @@ namespace PgMulti.Diagrams
             get
             {
                 return _CurrentDraggingPoint.HasValue;// && _StartDraggingPoint.HasValue;
+            }
+        }
+
+        public DiagramTable? RelatingTable
+        {
+            get
+            {
+                return _RelatingTable;
+            }
+        }
+
+        public Point? DcLastMousePositionWhenRelatingTable
+        {
+            get
+            {
+                return _DcLastMousePositionWhenRelatingTable;
             }
         }
 
@@ -536,6 +556,23 @@ namespace PgMulti.Diagrams
             _CurrentDraggingPoint = null;
         }
 
+        public void StartRelatingTables(DiagramTable t)
+        {
+            _RelatingTable = t;
+        }
+
+        public void UpdateMousePositionRelatingTables(Point p)
+        {
+            if (_RelatingTable == null) throw new NotSupportedException();
+            _DcLastMousePositionWhenRelatingTable = p;
+        }
+
+        public void StopRelatingTables()
+        {
+            _RelatingTable = null;
+            _DcLastMousePositionWhenRelatingTable = null;
+        }
+
         public void CenterTo(Rectangle dcRectangleViewPort, Point dcPoint)
         {
             Translate.X += dcRectangleViewPort.X + dcRectangleViewPort.Width / 2 - dcPoint.X;
@@ -602,6 +639,11 @@ namespace PgMulti.Diagrams
 
             g.FillRectangle(_BackgroundBrush, backgroundRectangle);
             //g.DrawRectangle(_BorderPen, backgroundRectangle);
+
+            if (_RelatingTable != null && _DcLastMousePositionWhenRelatingTable.HasValue)
+            {
+                g.DrawLine(_RelatingTablesPen, _RelatingTable.Center, _DcLastMousePositionWhenRelatingTable.Value);
+            }
 
             foreach (DiagramObject dro in Objects.OrderBy(droi => droi.ZIndex))
             {

@@ -182,6 +182,7 @@
             this.tsmiAddRelation.Name = "tsmiAddRelation";
             this.tsmiAddRelation.Size = new System.Drawing.Size(161, 24);
             this.tsmiAddRelation.Text = "Add relation";
+            this.tsmiAddRelation.Click += new System.EventHandler(tsmiAddRelation_Click);
             // 
             // tsmiRemove
             // 

@@ -338,7 +338,7 @@ namespace PgMulti.Forms
         {
             _LastWindowState = WindowState;
 
-            if (WindowState != FormWindowState.Minimized)
+            if (WindowState != FormWindowState.Minimized && _Diagram != null && _Canvas != null)
             {
                 Point lastCanvasCenter = _Diagram.UnProject(new Point(_LastDCCanvasSize.Width / 2, _LastDCCanvasSize.Height / 2));
                 Rectangle dcRectangleViewPort = _Diagram.UnProject(new Rectangle(0, 0, _Canvas.Width, _Canvas.Height));
@@ -508,6 +508,13 @@ namespace PgMulti.Forms
             }
         }
 
+        private void tsmiAddRelation_Click(object sender, EventArgs e)
+        {
+            if (_SelectedObject == null || !(_SelectedObject is DiagramTable)) return;
+
+            _Diagram.StartRelatingTables((DiagramTable)_SelectedObject);
+        }
+
         #endregion "Form events"
 
         #region "Other controls events"
@@ -672,7 +679,7 @@ namespace PgMulti.Forms
                 _DraggingDiagram = true;
                 _Diagram.StartDrag(dcMouseLocation);
             }
-            else if (e.Button == MouseButtons.Left)
+            else if (e.Button == MouseButtons.Left && _Diagram.RelatingTable == null)
             {
                 ClickOnPoint(e.Location, dcMouseLocation, _CtrlKeyPressed || _ShiftKeyPressed, true);
             }
@@ -709,13 +716,48 @@ namespace PgMulti.Forms
             }
 
             bool resize = false;
-            if (nextSelectedObject != null && nextSelectedObject is DiagramTable)
+
+            if (!canInitDrag && _Diagram.RelatingTable != null)
             {
-                DiagramTable dt = (DiagramTable)nextSelectedObject;
-                int bottomY = _Diagram.ProjectToInt(new Point(0, dt.BoundingBox.Y + dt.BoundingBox.Height)).Y;
-                if (ccMouseLocation.Y > bottomY - 10)
+                dcClipRectangle = Combine(dcClipRectangle, _Diagram.RelatingTable.BoundingBox);
+
+                if (_Diagram.DcLastMousePositionWhenRelatingTable.HasValue)
                 {
-                    resize = true;
+                    dcClipRectangle = Combine(
+                        dcClipRectangle,
+                        new Rectangle(
+                            Math.Min(_Diagram.DcLastMousePositionWhenRelatingTable.Value.X, _Diagram.RelatingTable.Center.X),
+                            Math.Min(_Diagram.DcLastMousePositionWhenRelatingTable.Value.Y, _Diagram.RelatingTable.Center.Y),
+                            Math.Abs(_Diagram.DcLastMousePositionWhenRelatingTable.Value.X - _Diagram.RelatingTable.Center.X),
+                            Math.Abs(_Diagram.DcLastMousePositionWhenRelatingTable.Value.Y - _Diagram.RelatingTable.Center.Y)
+                        )
+                    );
+                }
+
+                if (nextSelectedObject != null && nextSelectedObject is DiagramTable)
+                {
+                    DiagramTable dt = (DiagramTable)nextSelectedObject;
+                    //DiagramTableRelation dr=new DiagramTableRelation(_Diagram,_Diagram.RelatingTable, dt)
+                    //dt.Relations.Add(dr);
+                    //dcClipRectangle = Combine(dcClipRectangle, dr.BoundingBox);
+                    
+                    dcClipRectangle = Combine(dcClipRectangle, dt.BoundingBox);
+
+                    nextSelectedObject = null;
+                }
+
+                _Diagram.StopRelatingTables();
+            }
+            else
+            {
+                if (nextSelectedObject != null && nextSelectedObject is DiagramTable && _Diagram.RelatingTable == null)
+                {
+                    DiagramTable dt = (DiagramTable)nextSelectedObject;
+                    int bottomY = _Diagram.ProjectToInt(new Point(0, dt.BoundingBox.Y + dt.BoundingBox.Height)).Y;
+                    if (ccMouseLocation.Y > bottomY - 10)
+                    {
+                        resize = true;
+                    }
                 }
             }
 
@@ -965,7 +1007,7 @@ namespace PgMulti.Forms
                     }
                 }
 
-                if (_HighlightedObject == null)
+                if (_HighlightedObject == null && _Diagram.RelatingTable == null)
                 {
                     Cursor = _MoveCursor;
                 }
@@ -1064,6 +1106,45 @@ namespace PgMulti.Forms
                     Cursor = _DraggingCursor;
                     _Invalidate();
                 }
+            }
+
+            if (_Diagram.RelatingTable != null)
+            {
+                Point dcPoint;
+                if (_HighlightedObject!=null && _HighlightedObject is DiagramTable)
+                {
+                    dcPoint = ((DiagramTable)_HighlightedObject).Center;
+                }
+                else
+                {
+                    dcPoint = dcMouseLocation;
+                }
+
+                dcClipRectangle = Combine(dcClipRectangle, _Diagram.RelatingTable.BoundingBox);
+                dcClipRectangle = Combine(
+                    dcClipRectangle,
+                    new Rectangle(
+                        Math.Min(dcPoint.X, _Diagram.RelatingTable.Center.X),
+                        Math.Min(dcPoint.Y, _Diagram.RelatingTable.Center.Y),
+                        Math.Abs(dcPoint.X - _Diagram.RelatingTable.Center.X),
+                        Math.Abs(dcPoint.Y - _Diagram.RelatingTable.Center.Y)
+                    )
+                );
+
+                if (_Diagram.DcLastMousePositionWhenRelatingTable.HasValue)
+                {
+                    dcClipRectangle = Combine(
+                        dcClipRectangle,
+                        new Rectangle(
+                            Math.Min(_Diagram.DcLastMousePositionWhenRelatingTable.Value.X, _Diagram.RelatingTable.Center.X),
+                            Math.Min(_Diagram.DcLastMousePositionWhenRelatingTable.Value.Y, _Diagram.RelatingTable.Center.Y),
+                            Math.Abs(_Diagram.DcLastMousePositionWhenRelatingTable.Value.X - _Diagram.RelatingTable.Center.X),
+                            Math.Abs(_Diagram.DcLastMousePositionWhenRelatingTable.Value.Y - _Diagram.RelatingTable.Center.Y)
+                        )
+                    );
+                }
+
+                _Diagram.UpdateMousePositionRelatingTables(dcPoint);
             }
 
             if (dcClipRectangle.HasValue)
