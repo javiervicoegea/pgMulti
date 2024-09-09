@@ -646,7 +646,7 @@ namespace PgMulti.SqlSyntax
             join.Rule = joinKindOpt + JOIN + fromItem + ON + expression | comma + fromItem;
             joinKindOpt.Rule = Empty | "INNER" | "LEFT" + (Empty | "OUTER") | "RIGHT" + (Empty | "OUTER");
             whereClauseOpt.Rule = Empty | "WHERE" + expression;
-            groupClauseOpt.Rule = Empty | "GROUP" + BY + idList + havingClauseOpt;
+            groupClauseOpt.Rule = Empty | "GROUP" + BY + exprList + havingClauseOpt;
             havingClauseOpt.Rule = Empty | "HAVING" + expression;
             orderClauseOpt.Rule = Empty | ORDER + BY + orderList;
             limitClauseOpt.Rule = Empty | "LIMIT" + expression;
