@@ -581,7 +581,7 @@ ATTENTION: Databases within the group will also be deleted.</value>
     <value>SQL files (*.sql)|*.sql|All files|*.*</value>
   </data>
 	<data name="pgcx_file_filter" xml:space="preserve">
-    <value>pgMulti connection export PGCX files (*.pgcx)|*.pgmx|All files|*.*</value>
+    <value>pgMulti connection export PGCX files (*.pgcx)|*.pgcx|All files|*.*</value>
   </data>
 	<data name="starting_tasks" xml:space="preserve">
     <value>Starting tasks</value>
