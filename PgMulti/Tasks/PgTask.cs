@@ -3,12 +3,14 @@ using PgMulti.AppData;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
+using static PgMulti.Tasks.PgTask;
 
 namespace PgMulti.Tasks
 {
     public abstract class PgTask
     {
         public delegate void OnUpdate(PgTask t);
+        public delegate void OnComplete(PgTask t);
 
         protected Data _Data;
         protected string _Sql;
@@ -18,6 +20,7 @@ namespace PgMulti.Tasks
         protected TimeSpan? _TotalDuration;
         protected StateEnum _State = StateEnum.Init;
         protected OnUpdate _OnUpdate;
+        protected OnComplete _OnComplete;
         protected List<Query> _Queries;
         protected int _StatementCount = -1;
         protected int _CurrentStatementIndex = -1;
@@ -25,10 +28,11 @@ namespace PgMulti.Tasks
 
         private StringBuilder _StringBuilder;
 
-        public PgTask(Data d, OnUpdate onUpdate, string sql)
+        public PgTask(Data d, OnUpdate onUpdate, OnComplete? onComplete, string sql)
         {
             _Data = d;
             _OnUpdate = onUpdate;
+            _OnComplete = onComplete;
             _CreationTimestamp = DateTime.Now;
             _Sql = sql;
             _Queries = new List<Query>();

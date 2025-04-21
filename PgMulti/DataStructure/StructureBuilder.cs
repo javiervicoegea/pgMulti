@@ -33,6 +33,7 @@ namespace PgMulti.DataStructure
                 }
 
                 cmd.CommandText = "SHOW server_version";
+                cmd.CommandTimeout = 10;
                 int v = int.Parse(((string)cmd.ExecuteScalar()!).Split('.')[0]);
 
                 if (v >= 15)
@@ -65,7 +66,6 @@ namespace PgMulti.DataStructure
         {
             using (NpgsqlConnection c = _DB.Connection)
             {
-
                 c.Open();
 
                 ClearSearchPath(c);
@@ -85,6 +85,7 @@ namespace PgMulti.DataStructure
             NpgsqlCommand cmd = c.CreateCommand();
 
             cmd.CommandText = "SET search_path=''";
+            cmd.CommandTimeout = 10;
             cmd.ExecuteNonQuery();
         }
 
@@ -92,8 +93,8 @@ namespace PgMulti.DataStructure
         {
             NpgsqlDataReader drd;
             NpgsqlCommand cmd = c.CreateCommand();
-
             cmd.CommandText = "SELECT nspname FROM pg_catalog.pg_namespace";
+            cmd.CommandTimeout = 10;
             using (drd = cmd.ExecuteReader())
             {
                 while (drd.Read())
@@ -119,6 +120,7 @@ namespace PgMulti.DataStructure
             NpgsqlCommand cmd = c.CreateCommand();
 
             cmd.CommandText = "SELECT schemaname,tablename FROM pg_catalog.pg_tables WHERE schemaname <> ALL (:hiddenSchemas);";
+            cmd.CommandTimeout = 10;
             cmd.Parameters.AddWithValue("hiddenSchemas", _HiddenSchemas);
             using (drd = cmd.ExecuteReader())
             {
@@ -139,6 +141,7 @@ namespace PgMulti.DataStructure
             NpgsqlCommand cmd = c.CreateCommand();
 
             cmd.CommandText = "SELECT table_schema,table_name,column_name,ordinal_position,column_default,is_identity::bool is_identity,identity_generation='ALWAYS' is_generatedalways,is_nullable,data_type,character_maximum_length,numeric_precision,numeric_scale FROM information_schema.columns WHERE table_schema <> ALL (:hiddenSchemas)";
+            cmd.CommandTimeout = 10;
             cmd.Parameters.AddWithValue("hiddenSchemas", _HiddenSchemas);
             using (drd = cmd.ExecuteReader())
             {
@@ -161,6 +164,7 @@ namespace PgMulti.DataStructure
             NpgsqlCommand cmd = c.CreateCommand();
 
             cmd.CommandText = "SELECT kcu.table_schema,kcu.table_name,kcu.column_name FROM information_schema.table_constraints tco INNER JOIN information_schema.key_column_usage kcu ON kcu.constraint_name=tco.constraint_name AND kcu.constraint_schema=tco.constraint_schema AND kcu.constraint_name=tco.constraint_name WHERE tco.constraint_type='PRIMARY KEY' AND kcu.table_schema <> ALL (:hiddenSchemas)";
+            cmd.CommandTimeout = 10;
             cmd.Parameters.AddWithValue("hiddenSchemas", _HiddenSchemas);
             using (drd = cmd.ExecuteReader())
             {
@@ -179,6 +183,7 @@ namespace PgMulti.DataStructure
             Parser parser = TableRelation.CreateParser(_Data.PGLanguageData);
 
             cmd.CommandText = "SELECT ns1.nspname parent_schema,c1.relname parent_table,ns2.nspname child_schema,c2.relname child_table,confrelid::regclass AS table_name2,conname AS fk,pg_get_constraintdef(cons.oid) def FROM pg_constraint cons INNER JOIN pg_catalog.pg_class AS c1 ON c1.oid=cons.confrelid INNER JOIN pg_catalog.pg_namespace AS ns1 ON c1.relnamespace = ns1.oid INNER JOIN pg_catalog.pg_class AS c2 ON c2.oid=cons.conrelid INNER JOIN pg_catalog.pg_namespace AS ns2 ON c2.relnamespace = ns2.oid WHERE contype = 'f' AND ns1.nspname <> ALL (:hiddenSchemas) AND ns2.nspname <> ALL (:hiddenSchemas)";
+            cmd.CommandTimeout = 10;
             cmd.Parameters.AddWithValue("hiddenSchemas", _HiddenSchemas);
             using (drd = cmd.ExecuteReader())
             {
@@ -200,6 +205,7 @@ namespace PgMulti.DataStructure
             Parser parser = TableIndex.CreateParser(_Data.PGLanguageData);
 
             cmd.CommandText = "select indexname,schemaname,tablename,indexdef from pg_indexes WHERE schemaname <> ALL (:hiddenSchemas)";
+            cmd.CommandTimeout = 10;
             cmd.Parameters.AddWithValue("hiddenSchemas", _HiddenSchemas);
             using (drd = cmd.ExecuteReader())
             {
@@ -218,6 +224,7 @@ namespace PgMulti.DataStructure
             NpgsqlCommand cmd = c.CreateCommand();
 
             cmd.CommandText = "SELECT n.nspname,p.proname,pg_catalog.pg_get_function_arguments(p.oid) as arguments,pg_catalog.pg_get_function_result(p.oid) as returns,COALESCE(pg_catalog.pg_get_function_sqlbody(p.oid), p.prosrc) as source_code FROM pg_catalog.pg_proc p LEFT JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace WHERE n.nspname <> ALL (:hiddenSchemas)";
+            cmd.CommandTimeout = 10;
             cmd.Parameters.AddWithValue("hiddenSchemas", _HiddenSchemas);
             using (drd = cmd.ExecuteReader())
             {
@@ -237,6 +244,7 @@ namespace PgMulti.DataStructure
             Parser parser = Trigger.CreateParser(_Data.PGLanguageData);
 
             cmd.CommandText = "SELECT ns.nspname,c.relname,t.tgname,pg_catalog.pg_get_triggerdef(t.oid,true) triggerdef FROM pg_catalog.pg_trigger t INNER JOIN pg_catalog.pg_class AS c ON c.oid = t.tgrelid INNER JOIN pg_catalog.pg_namespace AS ns ON c.relnamespace = ns.oid WHERE NOT t.tgisinternal AND t.tgenabled != 'D' AND ns.nspname <> ALL (:hiddenSchemas)";
+            cmd.CommandTimeout = 10;
             cmd.Parameters.AddWithValue("hiddenSchemas", _HiddenSchemas);
             using (drd = cmd.ExecuteReader())
             {

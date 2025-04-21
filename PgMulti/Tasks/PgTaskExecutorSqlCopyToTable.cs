@@ -21,10 +21,10 @@ namespace PgMulti.Tasks
         private string? _DestinationNewTableName = null;
 
         public PgTaskExecutorSqlCopyToTable(
-            Data d, List<DB> dbs, OnUpdate onUpdate, string sql,
+            Data d, List<DB> dbs, OnUpdate onUpdate, OnComplete? onComplete, string sql,
             Config.TransactionModeEnum modoTransacciones, Config.TransactionLevelEnum nivelTransacciones,
             LanguageData sld
-        ) : base(d, onUpdate, sql, modoTransacciones, nivelTransacciones, sld)
+        ) : base(d, onUpdate, onComplete, sql, modoTransacciones, nivelTransacciones, sld)
         {
             _DBs = dbs;
         }
@@ -404,6 +404,8 @@ namespace PgMulti.Tasks
 
                 _OnUpdate(this);
             }
+
+            if (_OnComplete != null) _OnComplete(this);
         }
 
         public override string ToString()

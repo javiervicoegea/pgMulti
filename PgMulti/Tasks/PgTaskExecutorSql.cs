@@ -19,10 +19,10 @@ namespace PgMulti.Tasks
         protected Thread _Thread;
 
         public PgTaskExecutorSql(
-            Data d, OnUpdate onUpdate, string sql,
+            Data d, OnUpdate onUpdate, OnComplete? onComplete, string sql,
             Config.TransactionModeEnum transactionMode, Config.TransactionLevelEnum transactionLevel,
             LanguageData sld
-        ) : base(d, onUpdate, sql)
+        ) : base(d, onUpdate, onComplete, sql)
         {
             _PGSimpleLanguageData = sld;
             _TransactionMode = transactionMode;

@@ -85,26 +85,10 @@ namespace PgMulti.AppData
             {
                 if (_Schemas == null)
                 {
-                    StructureBuilder? eb = StructureBuilder.CreateStructureBuilder(_Data, this);
-                    if (eb == null)
-                    {
-                        _Schemas = new List<Schema>();
-                    }
-                    else
-                    {
-                        //try
-                        //{
-                        eb.Build();
-                        _Schemas = eb.Schemas;
-                        //}
-                        //catch (Exception)
-                        //{
-                        //    _Schemas = new List<Schema>();
-                        //}
-                    }
+                    InitSchemas();
                 }
 
-                return _Schemas;
+                return _Schemas!;
             }
         }
 
@@ -148,6 +132,27 @@ namespace PgMulti.AppData
                 }
 
                 return _SearchPathSchemas;
+            }
+        }
+
+        public void InitSchemas()
+        {
+            StructureBuilder? eb = StructureBuilder.CreateStructureBuilder(_Data, this);
+            if (eb == null)
+            {
+                _Schemas = new List<Schema>();
+            }
+            else
+            {
+                try
+                {
+                    eb.Build();
+                    _Schemas = eb.Schemas;
+                }
+                catch (Exception)
+                {
+                    _Schemas = new List<Schema>();
+                }
             }
         }
 

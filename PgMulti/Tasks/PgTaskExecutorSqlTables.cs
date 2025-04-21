@@ -14,10 +14,10 @@ namespace PgMulti.Tasks
         private bool _PreparedCommit = false;
 
         public PgTaskExecutorSqlTables(
-            Data d, DB db, OnUpdate onUpdate, string sql,
+            Data d, DB db, OnUpdate onUpdate, OnComplete? onComplete, string sql,
             Config.TransactionModeEnum transactionMode, Config.TransactionLevelEnum transactionLevel,
             LanguageData sld, PgTaskIntegrator? ti
-        ) : base(d, onUpdate, sql, transactionMode, transactionLevel, sld)
+        ) : base(d, onUpdate, onComplete, sql, transactionMode, transactionLevel, sld)
         {
             _DB = db;
             _TaskIntegrator = ti;
@@ -306,6 +306,8 @@ namespace PgMulti.Tasks
                 _OnUpdate(this);
                 if (_TaskIntegrator != null) _TaskIntegrator.OnTesStateChanged();
             }
+
+            if (_OnComplete != null) _OnComplete(this);
         }
 
         public override string ToString()

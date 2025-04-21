@@ -12,8 +12,8 @@ namespace PgMulti.Tasks
         private Mutex _Mutex;
         private string? _CoordinatedTransactionId = null;
 
-        public PgTaskIntegrator(Data d, OnUpdate onUpdate, string sql, bool symmetric)
-            : base(d, onUpdate, sql)
+        public PgTaskIntegrator(Data d, OnUpdate onUpdate, OnComplete? onComplete, string sql, bool symmetric)
+            : base(d, onUpdate, onComplete, sql)
         {
             _ExecutorTasks = new List<PgTaskExecutorSqlTables>();
             _StatementCount = -1;
@@ -153,6 +153,8 @@ namespace PgMulti.Tasks
                 }
             }
             finally { _Mutex.ReleaseMutex(); }
+
+            if (_OnComplete != null) _OnComplete(this);
         }
 
         internal void OnTesException(PgTaskExecutorSqlTables tes)

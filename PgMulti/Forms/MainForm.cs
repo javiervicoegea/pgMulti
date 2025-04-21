@@ -909,7 +909,7 @@ namespace PgMulti
 
             h.SqlText = sql;
 
-            PgTaskExecutorSqlTables tes = new PgTaskExecutorSqlTables(_Data!, t.Schema!.DB, new PgTask.OnUpdate(Task_OnUpdate), sql, Config.TransactionModeEnum.Manual, Config.TransactionLevelEnum.ReadCommited, _Data!.PGSimpleLanguageData, null);
+            PgTaskExecutorSqlTables tes = new PgTaskExecutorSqlTables(_Data!, t.Schema!.DB, new PgTask.OnUpdate(Task_OnUpdate), null, sql, Config.TransactionModeEnum.Manual, Config.TransactionLevelEnum.ReadCommited, _Data!.PGSimpleLanguageData, null);
             h.DBIds.Add(t.Schema!.DB.Id);
 
             tes.Start();
@@ -2132,6 +2132,11 @@ namespace PgMulti
                 return;
             }
 
+            foreach(DB db in dbs)
+            {
+                db.InitSchemas();
+            }
+
             Log h = new Log(_Data!);
 
             h.SqlText = sql;
@@ -2139,19 +2144,19 @@ namespace PgMulti
             PgTaskIntegrator? ti = null;
             if (dbs.Count > 1 && (_Data!.Config.MergeTables || _Data!.Config.TransactionMode == Config.TransactionModeEnum.AutoCoordinated))
             {
-                ti = new PgTaskIntegrator(_Data, new PgTask.OnUpdate(Task_OnUpdate), sql, true);
+                ti = new PgTaskIntegrator(_Data, new PgTask.OnUpdate(Task_OnUpdate), new PgTask.OnComplete(Task_OnComplete), sql, true);
             }
 
-            Config.TransactionModeEnum modoTransacciones = _Data!.Config.TransactionMode;
-            if (dbs.Count == 1 && modoTransacciones == Config.TransactionModeEnum.AutoCoordinated)
+            Config.TransactionModeEnum transactionMode = _Data!.Config.TransactionMode;
+            if (dbs.Count == 1 && transactionMode == Config.TransactionModeEnum.AutoCoordinated)
             {
-                modoTransacciones = Config.TransactionModeEnum.AutoSingle;
+                transactionMode = Config.TransactionModeEnum.AutoSingle;
             }
 
             List<PgTaskExecutorSqlTables> tess = new List<PgTaskExecutorSqlTables>();
             foreach (DB db in dbs)
             {
-                PgTaskExecutorSqlTables tes = new PgTaskExecutorSqlTables(_Data!, db, new PgTask.OnUpdate(Task_OnUpdate), sql, modoTransacciones, _Data!.Config.TransactionLevel, _Data!.PGSimpleLanguageData, ti);
+                PgTaskExecutorSqlTables tes = new PgTaskExecutorSqlTables(_Data!, db, new PgTask.OnUpdate(Task_OnUpdate), ti == null ? new PgTask.OnComplete(Task_OnComplete) : null, sql, transactionMode, _Data!.Config.TransactionLevel, _Data!.PGSimpleLanguageData, ti);
                 tess.Add(tes);
                 h.DBIds.Add(db.Id);
             }
@@ -2182,8 +2187,6 @@ namespace PgMulti
             {
                 ClearSelectedNodesTreeView();
             }
-
-            ResetStructureCache();
 
             tsmiRun.Enabled = false;
             tsbRun.Enabled = false;
@@ -2645,7 +2648,7 @@ namespace PgMulti
                 h.DBIds.Add(db.Id);
             }
 
-            PgTaskExecutorSqlCsv t = new PgTaskExecutorSqlCsv(_Data!, dbs, new PgTask.OnUpdate(Task_OnUpdate), sql, modoTransacciones, _Data!.Config.TransactionLevel, _Data!.PGSimpleLanguageData, sfdCsv.FileName);
+            PgTaskExecutorSqlCsv t = new PgTaskExecutorSqlCsv(_Data!, dbs, new PgTask.OnUpdate(Task_OnUpdate), null, sql, modoTransacciones, _Data!.Config.TransactionLevel, _Data!.PGSimpleLanguageData, sfdCsv.FileName);
             t.Start();
 
             s.LastTask = t;
@@ -2709,7 +2712,7 @@ namespace PgMulti
                 h.DBIds.Add(db.Id);
             }
 
-            PgTaskExecutorSqlCopyToTable t = new PgTaskExecutorSqlCopyToTable(_Data!, dbs, new PgTask.OnUpdate(Task_OnUpdate), sql, modoTransacciones, _Data!.Config.TransactionLevel, _Data!.PGSimpleLanguageData);
+            PgTaskExecutorSqlCopyToTable t = new PgTaskExecutorSqlCopyToTable(_Data!, dbs, new PgTask.OnUpdate(Task_OnUpdate), null, sql, modoTransacciones, _Data!.Config.TransactionLevel, _Data!.PGSimpleLanguageData);
             t.Start();
 
             InsertIntoTableForm f = new InsertIntoTableForm(_Data, t);
@@ -2787,6 +2790,11 @@ namespace PgMulti
             {
                 RefreshTaskListItem(t);
             });
+        }
+
+        void Task_OnComplete(PgTask t)
+        {
+            ResetStructureCache();
         }
 
         private void RefreshTaskListItem(PgTask t)
@@ -3348,7 +3356,7 @@ namespace PgMulti
                                 sbIntegratedSql.AppendLine(sql);
                             }
 
-                            PgTaskIntegrator ti = new PgTaskIntegrator(_Data!, new PgTask.OnUpdate(Task_OnUpdate), sbIntegratedSql.ToString(), false);
+                            PgTaskIntegrator ti = new PgTaskIntegrator(_Data!, new PgTask.OnUpdate(Task_OnUpdate), null, sbIntegratedSql.ToString(), false);
 
                             foreach (Tuple<DB, string> t in ts)
                             {
@@ -3356,7 +3364,7 @@ namespace PgMulti
                                 string sql = t.Item2;
 
                                 PgTaskExecutorSqlTables tes = new PgTaskExecutorSqlTables(
-                                    _Data!, db, new PgTask.OnUpdate(Task_OnUpdate), sql,
+                                    _Data!, db, new PgTask.OnUpdate(Task_OnUpdate), null, sql,
                                     _Data!.Config.TransactionMode == Config.TransactionModeEnum.AutoCoordinated ? Config.TransactionModeEnum.AutoCoordinated : Config.TransactionModeEnum.AutoSingle,
                                     Config.TransactionLevelEnum.ReadCommited, _Data!.PGSimpleLanguageData, ti);
 
@@ -3376,7 +3384,7 @@ namespace PgMulti
                             string sql = ts[0].Item2;
 
 
-                            PgTaskExecutorSqlTables tes = new PgTaskExecutorSqlTables(_Data!, db, new PgTask.OnUpdate(Task_OnUpdate), sql, Config.TransactionModeEnum.AutoSingle, Config.TransactionLevelEnum.ReadCommited, _Data!.PGSimpleLanguageData, null);
+                            PgTaskExecutorSqlTables tes = new PgTaskExecutorSqlTables(_Data!, db, new PgTask.OnUpdate(Task_OnUpdate), null, sql, Config.TransactionModeEnum.AutoSingle, Config.TransactionLevelEnum.ReadCommited, _Data!.PGSimpleLanguageData, null);
                             tes.Start();
 
                             Log h = new Log(_Data!);
