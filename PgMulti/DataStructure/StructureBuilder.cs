@@ -99,17 +99,21 @@ namespace PgMulti.DataStructure
             {
                 while (drd.Read())
                 {
-                    Schema schema = new Schema(drd, _DB);
+                    try
+                    {
+                        Schema schema = new Schema(drd, _DB);
 
-                    if (schema.Id.StartsWith("pg_") || schema.Id == "information_schema")
-                    {
-                        _HiddenSchemas.Add(schema.Id);
+                        if (schema.Id.StartsWith("pg_") || schema.Id == "information_schema")
+                        {
+                            _HiddenSchemas.Add(schema.Id);
+                        }
+                        else
+                        {
+                            _DictSchemas[schema.Id] = schema;
+                            _Schemas.Add(schema);
+                        }
                     }
-                    else
-                    {
-                        _DictSchemas[schema.Id] = schema;
-                        _Schemas.Add(schema);
-                    }
+                    catch (Exception) { }
                 }
             }
         }
@@ -126,11 +130,15 @@ namespace PgMulti.DataStructure
             {
                 while (drd.Read())
                 {
-                    Table table = new Table(drd);
-                    _DictTables[new Tuple<string, string>(table.IdSchema, table.Id)] = table;
-                    Schema schema = _DictSchemas[table.IdSchema];
-                    schema.Tables.Add(table);
-                    table.Schema = schema;
+                    try
+                    {
+                        Table table = new Table(drd);
+                        _DictTables[new Tuple<string, string>(table.IdSchema, table.Id)] = table;
+                        Schema schema = _DictSchemas[table.IdSchema];
+                        schema.Tables.Add(table);
+                        table.Schema = schema;
+                    }
+                    catch (Exception) { }
                 }
             }
         }
@@ -147,13 +155,17 @@ namespace PgMulti.DataStructure
             {
                 while (drd.Read())
                 {
-                    Column column = new Column(drd);
-                    Tuple<string, string> tk = new Tuple<string, string>(column.IdSchema, column.IdTable);
-                    if (!_DictTables.ContainsKey(tk)) continue; // if there is no table then it is a view
-                    _DictColumns[new Tuple<string, string, string>(column.IdSchema, column.IdTable, column.Id)] = column;
-                    Table table = _DictTables[tk];
-                    table.Columns.Add(column);
-                    column.Table = table;
+                    try
+                    {
+                        Column column = new Column(drd);
+                        Tuple<string, string> tk = new Tuple<string, string>(column.IdSchema, column.IdTable);
+                        if (!_DictTables.ContainsKey(tk)) continue; // if there is no table then it is a view
+                        _DictColumns[new Tuple<string, string, string>(column.IdSchema, column.IdTable, column.Id)] = column;
+                        Table table = _DictTables[tk];
+                        table.Columns.Add(column);
+                        column.Table = table;
+                    }
+                    catch (Exception) { }
                 }
             }
         }
@@ -170,8 +182,12 @@ namespace PgMulti.DataStructure
             {
                 while (drd.Read())
                 {
-                    Column columna = _DictColumns[new Tuple<string, string, string>(drd.GetString("table_schema"), drd.GetString("table_name"), drd.GetString("column_name"))];
-                    columna.PK = true;
+                    try
+                    {
+                        Column columna = _DictColumns[new Tuple<string, string, string>(drd.GetString("table_schema"), drd.GetString("table_name"), drd.GetString("column_name"))];
+                        columna.PK = true;
+                    }
+                    catch (Exception) { }
                 }
             }
         }
@@ -189,11 +205,15 @@ namespace PgMulti.DataStructure
             {
                 while (drd.Read())
                 {
-                    TableRelation tr = new TableRelation(drd, parser);
-                    tr.ParentTable = _DictTables[new Tuple<string, string>(tr.IdParentSchema, tr.IdParentTable)];
-                    tr.ChildTable = _DictTables[new Tuple<string, string>(tr.IdChildSchema, tr.IdChildTable)];
-                    tr.ParentTable.Relations.Add(tr);
-                    if (tr.ParentTable != tr.ChildTable) tr.ChildTable.Relations.Add(tr);
+                    try
+                    {
+                        TableRelation tr = new TableRelation(drd, parser);
+                        tr.ParentTable = _DictTables[new Tuple<string, string>(tr.IdParentSchema, tr.IdParentTable)];
+                        tr.ChildTable = _DictTables[new Tuple<string, string>(tr.IdChildSchema, tr.IdChildTable)];
+                        tr.ParentTable.Relations.Add(tr);
+                        if (tr.ParentTable != tr.ChildTable) tr.ChildTable.Relations.Add(tr);
+                    }
+                    catch (Exception) { }
                 }
             }
         }
@@ -211,9 +231,13 @@ namespace PgMulti.DataStructure
             {
                 while (drd.Read())
                 {
-                    TableIndex ind = new TableIndex(drd, parser);
-                    ind.Table = _DictTables[new Tuple<string, string>(ind.IdSchema, ind.IdTable)];
-                    ind.Table.Indexes.Add(ind);
+                    try
+                    {
+                        TableIndex ind = new TableIndex(drd, parser);
+                        ind.Table = _DictTables[new Tuple<string, string>(ind.IdSchema, ind.IdTable)];
+                        ind.Table.Indexes.Add(ind);
+                    }
+                    catch (Exception) { }
                 }
             }
         }
@@ -230,9 +254,13 @@ namespace PgMulti.DataStructure
             {
                 while (drd.Read())
                 {
-                    Function f = new Function(drd);
-                    f.Schema = _DictSchemas[f.IdSchema];
-                    f.Schema.Functions.Add(f);
+                    try
+                    {
+                        Function f = new Function(drd);
+                        f.Schema = _DictSchemas[f.IdSchema];
+                        f.Schema.Functions.Add(f);
+                    }
+                    catch (Exception) { }
                 }
             }
         }
@@ -250,28 +278,23 @@ namespace PgMulti.DataStructure
             {
                 while (drd.Read())
                 {
-                    Trigger tg;
-
                     try
                     {
-                        tg = new Trigger(drd, parser);
+                        Trigger tg = new Trigger(drd, parser);
+
+                        if (!_DictSchemas.ContainsKey(tg.IdSchemaFunction)) continue;
+
+                        Schema sf = _DictSchemas[tg.IdSchemaFunction];
+                        Function? f = sf.Functions.FirstOrDefault(fi => fi.Id == tg.IdFunction);
+                        if (f == null) throw new Exception($"Function {tg.IdSchemaFunction}.{tg.IdFunction} of trigger {tg.IdSchema}.{tg.Id} not found!");
+
+                        tg.Table = _DictTables[new Tuple<string, string>(tg.IdSchema, tg.IdTable)];
+                        tg.Table.Triggers.Add(tg);
+
+                        tg.Function = f;
+                        f.Triggers.Add(tg);
                     }
-                    catch (Trigger.NotSupportedTriggerSqlDefinition)
-                    {
-                        continue;
-                    }
-
-                    if (!_DictSchemas.ContainsKey(tg.IdSchemaFunction)) continue;
-
-                    Schema sf = _DictSchemas[tg.IdSchemaFunction];
-                    Function? f = sf.Functions.FirstOrDefault(fi => fi.Id == tg.IdFunction);
-                    if (f == null) throw new Exception($"Function {tg.IdSchemaFunction}.{tg.IdFunction} of trigger {tg.IdSchema}.{tg.Id} not found!");
-
-                    tg.Table = _DictTables[new Tuple<string, string>(tg.IdSchema, tg.IdTable)];
-                    tg.Table.Triggers.Add(tg);
-
-                    tg.Function = f;
-                    f.Triggers.Add(tg);
+                    catch (Exception) { }
                 }
             }
         }

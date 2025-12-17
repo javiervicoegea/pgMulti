@@ -144,15 +144,8 @@ namespace PgMulti.AppData
             }
             else
             {
-                try
-                {
-                    eb.Build();
-                    _Schemas = eb.Schemas;
-                }
-                catch (Exception)
-                {
-                    _Schemas = new List<Schema>();
-                }
+                eb.Build();
+                _Schemas = eb.Schemas;
             }
         }
 

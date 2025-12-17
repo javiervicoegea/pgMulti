@@ -40,8 +40,17 @@ namespace PgMulti.DataStructure
             _IdTable = drd.Ref<string>("tablename")!;
 
             string def = drd.Ref<string>("indexdef")!;
-            ParseTree parseTree = parser.Parse(def);
-            AstNode nCreateIndexStmt = AstNode.ProcessParseTree(parseTree);
+            AstNode nCreateIndexStmt;
+
+            try
+            {
+                ParseTree parseTree = parser.Parse(def);
+                nCreateIndexStmt = AstNode.ProcessParseTree(parseTree);
+            }
+            catch (Exception ex)
+            {
+                throw new NotSupportedTableIndexSqlDefinition(def, ex);
+            }
 
             _OrderList = nCreateIndexStmt["orderList"]!.SingleLineText;
 
@@ -58,6 +67,11 @@ namespace PgMulti.DataStructure
             {
                 _Filter = nWhereClauseOpt.SingleLineText;
             }
+        }
+
+        public class NotSupportedTableIndexSqlDefinition : Exception
+        {
+            public NotSupportedTableIndexSqlDefinition(string definition, Exception innerException) : base("Not supported table index definition '" + definition + "'", innerException) { }
         }
     }
 }

@@ -49,8 +49,17 @@ namespace PgMulti.DataStructure
             _Id = drd.Ref<string>("fk")!;
             _Definition = drd.Ref<string>("def")!;
 
-            ParseTree parseTree = parser.Parse(_Definition);
-            AstNode nAlterTableAddConstraint = AstNode.ProcessParseTree(parseTree);
+            AstNode nAlterTableAddConstraint;
+
+            try
+            {
+                ParseTree parseTree = parser.Parse(_Definition);
+                nAlterTableAddConstraint = AstNode.ProcessParseTree(parseTree);
+            }
+            catch (Exception ex)
+            {
+                throw new NotSupportedTableRelationSqlDefinition(_Definition, ex);
+            }
 
             ChildColumns = nAlterTableAddConstraint["tableConstraintDef"]!["tableConstraintDefClause"]!["fkTableConstraint"]!["idlistPar"]!["idSimpleList"]!.Children.Where(ni => ni.Name== "id_simple").Select(ni => SqlSyntax.PostgreSqlGrammar.IdFromString(ni.SingleLineText)).ToArray();
             ParentColumns = nAlterTableAddConstraint["tableConstraintDef"]!["tableConstraintDefClause"]!["fkTableConstraint"]!["fkConstraint"]!["idlistPar"]!["idSimpleList"]!.Children.Where(ni => ni.Name == "id_simple").Select(ni => SqlSyntax.PostgreSqlGrammar.IdFromString(ni.SingleLineText)).ToArray();
@@ -96,6 +105,11 @@ namespace PgMulti.DataStructure
         public override string ToString()
         {
             return Id + " (" + _ChildTable!.ToString() + " -> " + _ParentTable!.ToString() + ")";
+        }
+
+        public class NotSupportedTableRelationSqlDefinition : Exception
+        {
+            public NotSupportedTableRelationSqlDefinition(string definition, Exception innerException) : base("Not supported table relation definition '" + definition + "'", innerException) { }
         }
     }
 }

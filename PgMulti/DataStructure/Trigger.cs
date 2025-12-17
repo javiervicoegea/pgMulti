@@ -45,11 +45,11 @@ namespace PgMulti.DataStructure
 
             string def = drd.Ref<string>("triggerdef")!;
 
-            ParseTree parseTree = parser.Parse(def);
             AstNode nCreateTriggerStmt;
 
             try
             {
+                ParseTree parseTree = parser.Parse(def);
                 nCreateTriggerStmt = AstNode.ProcessParseTree(parseTree);
             }
             catch (Exception ex)

@@ -533,7 +533,7 @@ namespace PgMulti.SqlSyntax
             tableId.Rule = id;
             orderList.Rule = MakePlusRule(orderList, comma, orderMember);
             orderMember.Rule = expression + orderDirOpt + (Empty | ToTerm("NULLS") + (ToTerm("FIRST") | "LAST"));
-            orderDirOpt.Rule = Empty | "ASC" | "DESC" | id_simple;
+            orderDirOpt.Rule = Empty | "ASC" | "DESC" | id;
             usingIndexClauseOpt.Rule = Empty | "USING" + id;
             withClauseOpt.Rule = Empty | WITH + PRIMARY | WITH + "Disallow" + NULL | WITH + "Ignore" + NULL;
             tablespaceClauseOpt.Rule = Empty | "TABLESPACE" + id_simple;
