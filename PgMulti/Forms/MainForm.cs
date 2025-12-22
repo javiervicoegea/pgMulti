@@ -1807,6 +1807,12 @@ namespace PgMulti
             }
         }
 
+        private TabPage? _MouseMoveTabPage = null;
+        private void tcSql_MouseMove(object sender, MouseEventArgs e)
+        {
+            _MouseMoveTabPage = tcSql.GetActiveTab(new Point(e.X, e.Y));
+        }
+
         private TabPage? _MouseDownTabPage = null;
         private void tcSql_MouseDown(object sender, MouseEventArgs e)
         {
@@ -1815,21 +1821,26 @@ namespace PgMulti
 
             _MouseDownTabPage = null;
 
-            if (index != -1)
+            TabPage? tp;
+            if (index == -1)
             {
-                TabPage tp = tcSql.TabPages[index];
+                tp = _MouseMoveTabPage;
+            }
+            else
+            {
+                tp = tcSql.TabPages[index];
+            }
 
-                if (tp == tpNewTab)
+            if (tp == tpNewTab)
+            {
+                if (e.Button == MouseButtons.Left)
                 {
-                    if (e.Button == MouseButtons.Left)
-                    {
-                        CreateEditorTab(new EditorTab.CreateEditorTabOptions() { Focus = true, PendingFileSave = false });
-                    }
+                    CreateEditorTab(new EditorTab.CreateEditorTabOptions() { Focus = true, PendingFileSave = false });
                 }
-                else
-                {
-                    _MouseDownTabPage = tp;
-                }
+            }
+            else
+            {
+                _MouseDownTabPage = tp;
             }
         }
 
@@ -2128,7 +2139,7 @@ namespace PgMulti
                 return;
             }
 
-            foreach(DB db in dbs)
+            foreach (DB db in dbs)
             {
                 db.InitSchemas();
             }

@@ -951,6 +951,7 @@ namespace PgMulti
             tcSql.ReorderedTabs += tcSql_ReorderedTabs;
             tcSql.SelectedIndexChanged += tcSql_SelectedIndexChanged;
             tcSql.MouseDown += tcSql_MouseDown;
+            tcSql.MouseMove += tcSql_MouseMove;
             tcSql.MouseUp += tcSql_MouseUp;
             // 
             // tpNewTab
