@@ -118,6 +118,12 @@ namespace PgMulti.SqlSyntax
             var SAFE = ToTerm("SAFE");
             var CASCADE = ToTerm("CASCADE");
             var RESTRICT = ToTerm("RESTRICT");
+            var RENAME = ToTerm("RENAME");
+            var CHECK = ToTerm("CHECK");
+            var VACUUM = ToTerm("VACUUM");
+            var ANALYZE = ToTerm("ANALYZE");
+            var EXPLAIN = ToTerm("EXPLAIN");
+            var LATERAL = ToTerm("LATERAL");
 
             //Non-terminals
             var id = new NonTerminal("id");
@@ -145,6 +151,9 @@ namespace PgMulti.SqlSyntax
             var insertOnConflictClauseOpt = new NonTerminal("insertOnConflictClauseOpt");
             var updateStmt = new NonTerminal("updateStmt");
             var deleteStmt = new NonTerminal("deleteStmt");
+            var vacuumStmt = new NonTerminal("vacuumStmt");
+            var explainStmt = new NonTerminal("explainStmt");
+            var analyzeStmt = new NonTerminal("analyzeStmt");
             var fieldDef = new NonTerminal("fieldDef");
             var createTableDefList = new NonTerminal("createTableDefList");
             var nullColumnConstraint = new NonTerminal("nullColumnConstraint");
@@ -328,7 +337,7 @@ namespace PgMulti.SqlSyntax
                       | selectStmt | insertStmt | updateStmt | deleteStmt
                       | "GO" | "BEGIN" + (Empty | isolationLevel) | "COMMIT" | "ROLLBACK" | setStmt | setTransactionStmt | setConstraintsStmt
                       | truncateStmt | grantStmt | revokeStmt | createTriggerStmt | createSequenceStmt | createSchemaStmt | createText
-                      | dropTriggerStmt | dropSchemaStmt | showStmt | createFunctionStmt | commentStmt;
+                      | dropTriggerStmt | dropSchemaStmt | showStmt | createFunctionStmt | commentStmt | vacuumStmt | explainStmt | analyzeStmt;
 
 
             setStmt.Rule = SET + (Empty | "SESSION" | "BEGIN") + id_simple + (TO | "=") + (exprList | DEFAULT);
@@ -485,7 +494,7 @@ namespace PgMulti.SqlSyntax
                     | PRIMARY + KEY
                     | UNIQUE
                     | "DEFAULT" + expression
-                    | ToTerm("CHECK") + "(" + expression + ")"
+                    | CHECK + "(" + expression + ")"
                     | ToTerm("GENERATED") + ("ALWAYS" | BY + DEFAULT) + AS + "IDENTITY"
                 );
             nullColumnConstraint.Rule = NULL | notNull;
@@ -508,7 +517,8 @@ namespace PgMulti.SqlSyntax
             tableConstraintDef.Rule = constraintId + tableConstraintDefClause;
             tableConstraintDefClause.Rule = PRIMARY + KEY + idlistPar
                     | UNIQUE + idlistPar | notNull + idlistPar
-                    | fkTableConstraint;
+                    | fkTableConstraint
+                    | CHECK + "(" + expression + ")";
             constraintId.Rule = Empty | CONSTRAINT + id;
             fkTableConstraint.Rule = "FOREIGN" + KEY + idlistPar + fkConstraint;
             fkConstraint.Rule = REFERENCES + id + idlistPar + fkTableConstraintOpt;
@@ -551,22 +561,24 @@ namespace PgMulti.SqlSyntax
             alterStmt.Rule = ALTER
                 + (
                     TABLE + (Empty | IF + EXISTS) + (Empty | "ONLY") + id + alterTable
-                    | INDEX + (Empty | IF + EXISTS) + id + "RENAME" + TO + id
+                    | INDEX + (Empty | IF + EXISTS) + id + RENAME + TO + id
                     | SEQUENCE + (Empty | IF + EXISTS) + id
                         + (
                             "OWNED" + BY + columnId
                             | AS + typeNameAndParams + (Empty | "MAXVALUE" + number)
+                            | RENAME + TO + id
                         )
                     | (ToTerm("ROLE") | "USER") + (
                         (id_simple | "CURRENT_ROLE" | "CURRENT_USER" | "SESSION_USER") + (WITH | Empty) + alterRoleOptions
-                        | id_simple + "RENAME" + TO + id_simple
+                        | id_simple + RENAME + TO + id_simple
                         | (id_simple | "CURRENT_ROLE" | "CURRENT_USER" | "SESSION_USER" | ALL) + (Empty | IN + "DATABASE" + id_simple)
                             + (
                                 SET + id_simple + ((TO | "=") + ("DEFAULT" | expression) | FROM + "CURRENT")
                                 | "RESET" + (id_simple | ALL)
                             )
                         )
-                    | SCHEMA + id_simple + "RENAME" + TO + id_simple
+                    | SCHEMA + id_simple + RENAME + TO + id_simple
+                    | FUNCTION + id + RENAME + TO + id
                     | ToTerm("TEXT") + "SEARCH" + "CONFIGURATION" + id + "ADD" + "MAPPING" + "FOR" + id_simple + WITH + exprList
                 );
 
@@ -593,8 +605,9 @@ namespace PgMulti.SqlSyntax
                 | ALTER + CONSTRAINT + id_simple + deferrable + initiallyDeferred
                 | DROP + COLUMN + id_simple + (Empty | CASCADE | RESTRICT)
                 | DROP + CONSTRAINT + id_simple
-                | ToTerm("RENAME") + TO + id_simple
-                | "RENAME" + COLUMN + id_simple + TO + id_simple
+                | RENAME + TO + id_simple
+                | RENAME + COLUMN + id_simple + TO + id_simple
+                | RENAME + CONSTRAINT + id_simple + TO + id_simple
                 | ToTerm("SET") + SCHEMA + id_simple
                 | ToTerm("ENABLE") + TRIGGER + id_simple
                 | ToTerm("DISABLE") + TRIGGER + id_simple
@@ -639,7 +652,7 @@ namespace PgMulti.SqlSyntax
             asOpt.Rule = Empty | AS;
             intoClauseOpt.Rule = Empty | INTO + id;
             fromItemList.Rule = fromItem + joinChainOpt;
-            fromItem.Rule = (id + (funCall | Empty) | parSelectStmtExpr) + aliasOpt;
+            fromItem.Rule = (id + (funCall | Empty) | parSelectStmtExpr | LATERAL + parSelectStmtExpr) + aliasOpt;
             usingClauseOpt.Rule = Empty | USING + fromItemList;
             fromClauseOpt.Rule = Empty | FROM + fromItemList;
             joinChainOpt.Rule = MakeStarRule(joinChainOpt, join);
@@ -706,6 +719,15 @@ namespace PgMulti.SqlSyntax
                 );
 
             performStmt.Rule = PERFORM + selectBaseClauses + selectCombineClauseOpt + orderClauseOpt + limitClauseOpt + offsetClauseOpt;
+
+            //Vacuum stmt
+            vacuumStmt.Rule = VACUUM + (Empty | ANALYZE);
+
+            //Explain stmt
+            explainStmt.Rule = EXPLAIN + (ANALYZE | Empty) + stmt;
+
+            //Analyze stmt
+            analyzeStmt.Rule = ANALYZE + tableId;
 
             //Operators
             RegisterOperators(10, "*", "/", "%");
