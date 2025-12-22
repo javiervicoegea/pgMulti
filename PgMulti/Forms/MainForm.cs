@@ -2,26 +2,20 @@ using Aga.Controls.Tree;
 using Aga.Controls.Tree.NodeControls;
 using FastColoredTextBoxNS;
 using Irony.Parsing;
-using PgMulti.DataStructure;
-using System.Data;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using System.Text;
+using Newtonsoft.Json;
 using PgMulti.AppData;
+using PgMulti.DataStructure;
+using PgMulti.Diagrams;
+using PgMulti.Export;
+using PgMulti.Forms;
+using PgMulti.Properties;
 using PgMulti.QueryEditor;
 using PgMulti.SqlSyntax;
 using PgMulti.Tasks;
+using System.Data;
+using System.Diagnostics;
 using System.Globalization;
-using System.Net;
-using PgMulti.Export;
-using PgMulti.Forms;
-using System.Windows.Forms;
-using PgMulti.Diagrams;
-using Newtonsoft.Json;
-using PgMulti.Properties;
-using System;
-using System.Linq;
-using Irony;
+using System.Text;
 using static PgMulti.Tasks.PgTask;
 
 namespace PgMulti
@@ -1636,10 +1630,7 @@ namespace PgMulti
             else if (e.KeyData == Keys.Escape)
             {
                 CustomFctb tb = (CustomFctb)sender!;
-                if (tb.SearchMatches != null && tb.SearchMatches.Count > 0)
-                {
-                    HideSearchAndReplace();
-                }
+                HideSearchAndReplace();
                 e.Handled = true;
             }
         }
@@ -1717,6 +1708,11 @@ namespace PgMulti
 
                 CustomFctb fctbSql = (CustomFctb)tc.SelectedTab.Controls[0];
                 fctbSql.Focus();
+                if (UpdateSearchResults())
+                {
+                    UpdateSearchHighlighting();
+                }
+                UpdateSearchResultsSummary(fctbSql);
                 RefreshErrors(fctbSql);
             }
 
@@ -3814,7 +3810,6 @@ namespace PgMulti
             }
             else
             {
-
                 matches = tb.FindAll(pattern, chkSearchMatchCase.Checked, chkSearchMatchWholeWords.Checked, chkSearchRegex.Checked);
             }
 
@@ -3824,18 +3819,22 @@ namespace PgMulti
                 )
             {
                 tb.SearchMatches = matches;
-                btnGoNextSearchResult.Enabled = matches.Count > 0;
-                btnReplaceCurrent.Enabled = matches.Count > 0;
-                btnReplaceAll.Enabled = matches.Count > 0;
-                lblSearchResultsSummary.Text = string.Format(Properties.Text.number_of_search_results_found, matches.Count) + "\r\n"
-                    + (tb.SearchRange == null ? Properties.Text.searching_the_entire_text : Properties.Text.searching_only_within_selected_text);
-
+                UpdateSearchResultsSummary(tb);
                 return true;
             }
             else
             {
                 return false;
             }
+        }
+
+        private void UpdateSearchResultsSummary(CustomFctb tb)
+        {
+            btnGoNextSearchResult.Enabled = tb.SearchMatches != null && tb.SearchMatches.Count > 0;
+            btnReplaceCurrent.Enabled = tb.SearchMatches != null && tb.SearchMatches.Count > 0;
+            btnReplaceAll.Enabled = tb.SearchMatches != null && tb.SearchMatches.Count > 0;
+            lblSearchResultsSummary.Text = string.Format(Properties.Text.number_of_search_results_found, tb.SearchMatches == null ? 0 : tb.SearchMatches.Count) + "\r\n"
+                + (tb.SearchRange == null ? Properties.Text.searching_the_entire_text : Properties.Text.searching_only_within_selected_text);
         }
 
         private void UpdateSearchHighlighting()
