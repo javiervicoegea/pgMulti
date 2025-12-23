@@ -63,6 +63,9 @@ namespace PgMulti.SqlSyntax
             var ILIKE = ToTerm("ILIKE");
             var UNIQUE = ToTerm("UNIQUE");
             var WITH = ToTerm("WITH");
+            var WITHOUT = ToTerm("WITHOUT");
+            var RECURSIVE = ToTerm("RECURSIVE");
+            var MATERIALIZED = ToTerm("MATERIALIZED");
             var TABLE = ToTerm("TABLE");
             var ALTER = ToTerm("ALTER");
             var ADD = ToTerm("ADD");
@@ -501,7 +504,7 @@ namespace PgMulti.SqlSyntax
             fkColumnConstraint.Rule = constraintId + fkConstraint;
             typeNameAndParams.Rule = typeName + typeParamsOpt;
             typeName.Rule = ToTerm("BIT") + (Empty | "VARYING") | "VARBIT" | "DATE"
-                | "TIME" + (Empty | (ToTerm("WITHOUT") | "WITH") + "TIME" + ToTerm("ZONE"))
+                | "TIME" + (Empty | (WITHOUT | WITH) + "TIME" + ToTerm("ZONE"))
                 | "TIMESTAMP"
                 | "DECIMAL" | "REAL" | "FLOAT" | "FLOAT4" | "FLOAT8"
                 | "SMALLINT" | "INTEGER" | "INT" | "INTERVAL" | "CHARACTER" + (Empty | ToTerm("VARYING")) | "DATETIME"
@@ -511,7 +514,7 @@ namespace PgMulti.SqlSyntax
                 | "SMALLSERIAL" | "TSQUERY" | "TSVECTOR" | "XML" | "POINT" | "REGCONFIG" | "REGCLASS" | "REGNAMESPACE"
                 | "NAME" | "BPCHAR";
 
-            typeParamsOpt.Rule = (Empty | "(" + number + ")") + (Empty | (ToTerm("WITHOUT") | "WITH") + "TIME" + ToTerm("ZONE"))
+            typeParamsOpt.Rule = (Empty | "(" + number + ")") + (Empty | (WITHOUT | WITH) + "TIME" + ToTerm("ZONE"))
                 | "(" + number + comma + number + ")";
 
             tableConstraintDef.Rule = constraintId + tableConstraintDefClause;
@@ -643,8 +646,8 @@ namespace PgMulti.SqlSyntax
             selectBody.Rule = SELECT + selectBaseClauses | "(" + selectStmt + ")";
             selectBaseClauses.Rule = selRestrOpt + selList + intoClauseOpt + fromClauseOpt + whereClauseOpt + groupClauseOpt + havingClauseOpt;
             selectCombineClauseOpt.Rule = Empty | ((ToTerm("UNION") | "INTERSECT" | "EXCEPT") + (ALL | Empty) + selectBody);
-            cteClauseOpt.Rule = Empty | WITH + cteClauseList;
-            cteClauseList.Rule = MakeStarRule(cteClauseList, comma, id + AS + "(" + (selectStmt | insertStmt | updateStmt | deleteStmt) + ")");
+            cteClauseOpt.Rule = Empty | WITH + (Empty | RECURSIVE) + cteClauseList;
+            cteClauseList.Rule = MakeStarRule(cteClauseList, comma, id + idlistParOpt + AS + (Empty | MATERIALIZED | NOT + MATERIALIZED) + "(" + (selectStmt | insertStmt | updateStmt | deleteStmt) + ")");
             selRestrOpt.Rule = Empty | ALL | DISTINCT + (Empty | ON + tuple);
             selList.Rule = MakeStarRule(selList, comma, selItem);
             selItem.Rule = expression + aliasOpt | "*" | id + dot + "*";
