@@ -66,7 +66,7 @@ namespace PgMulti
             }
             catch (Exception ex)
             {
-                MessageBox.Show(Properties.Text.error_saving_file + $":\r\n{sfdSaveFile.FileName}\r\n\r\n{ex.Message}", Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, Properties.Text.error_saving_file + $":\r\n{sfdSaveFile.FileName}\r\n\r\n{ex.Message}", Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

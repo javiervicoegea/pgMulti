@@ -97,7 +97,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Añadir relación.
+        ///   Busca una cadena traducida similar a Add relation.
         /// </summary>
         internal static string add_relation {
             get {
@@ -106,7 +106,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Añadir tabla.
+        ///   Busca una cadena traducida similar a Add table.
         /// </summary>
         internal static string add_table {
             get {
@@ -133,7 +133,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Todos los ficheros|*.*.
+        ///   Busca una cadena traducida similar a All files|*.*.
         /// </summary>
         internal static string all_file_filter {
             get {
@@ -454,7 +454,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Determinar tuplas afectadas.
+        ///   Busca una cadena traducida similar a Determine affected tuples.
         /// </summary>
         internal static string collect_tuples_script_name {
             get {
@@ -553,7 +553,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a ¿Está seguro de que quiere eliminar la relación {0}?.
+        ///   Busca una cadena traducida similar a Are you sure you want to delete relation {0}?.
         /// </summary>
         internal static string confirm_relation_deletion {
             get {
@@ -608,7 +608,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a ¿Está seguro de que quiere eliminar la tabla {0}?.
+        ///   Busca una cadena traducida similar a Are you sure you want to delete table {0}?.
         /// </summary>
         internal static string confirm_table_deletion {
             get {
@@ -635,7 +635,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Copiar ruta de acceso.
+        ///   Busca una cadena traducida similar a Copy path.
         /// </summary>
         internal static string copy_path {
             get {
@@ -662,7 +662,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Tarea de ejecución y copia en tabla.
+        ///   Busca una cadena traducida similar a Execution and copy to table task.
         /// </summary>
         internal static string copy_to_table_task {
             get {
@@ -734,7 +734,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Lista de bases de datos.
+        ///   Busca una cadena traducida similar a Database list.
         /// </summary>
         internal static string db_list {
             get {
@@ -761,7 +761,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Eliminar tuplas.
+        ///   Busca una cadena traducida similar a Delete tuples.
         /// </summary>
         internal static string delete_tuples_script_name {
             get {
@@ -770,7 +770,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Filtro de las tuplas a eliminar.
+        ///   Busca una cadena traducida similar a Filter for tuples to delete.
         /// </summary>
         internal static string delete_tuples_where_clause {
             get {
@@ -779,7 +779,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Columna destino.
+        ///   Busca una cadena traducida similar a Destination column.
         /// </summary>
         internal static string dest_column {
             get {
@@ -788,7 +788,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a CONEXIÓN DESTINO ABIERTA A {0}.
+        ///   Busca una cadena traducida similar a DESTINATION CONNECTION OPENED TO {0}.
         /// </summary>
         internal static string dest_connection_opened_to {
             get {
@@ -797,7 +797,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Transacción confirmada en destino.
+        ///   Busca una cadena traducida similar a Transaction committed at destination {0}.
         /// </summary>
         internal static string dest_transaction_commited {
             get {
@@ -806,7 +806,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Transacción read commited iniciada en destino.
+        ///   Busca una cadena traducida similar a Read committed transaction started at destination.
         /// </summary>
         internal static string dest_transaction_started {
             get {
@@ -815,7 +815,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Tipo destino.
+        ///   Busca una cadena traducida similar a Destination type.
         /// </summary>
         internal static string dest_type {
             get {
@@ -1215,7 +1215,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Ir al siguiente resultado.
+        ///   Busca una cadena traducida similar a Go to next result.
         /// </summary>
         internal static string go_next {
             get {
@@ -1251,7 +1251,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Se ignora la consulta por devolver un resultado incompatible con la primera consulta.
+        ///   Busca una cadena traducida similar a Query ignored because it returns a result incompatible with the first query.
         /// </summary>
         internal static string ignoring_incompatible_query {
             get {
@@ -1332,7 +1332,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Insertando filas en la tabla {0}.
+        ///   Busca una cadena traducida similar a Inserting rows into table {0}.
         /// </summary>
         internal static string inserting_rows_on {
             get {
@@ -1341,7 +1341,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a La cadena de texto de la celda no corresponde a una secuencia válida de bytes en dígitos binarios. Recuerde que esta secuencia debe tener un número múltiplo de 8 dígitos..
+        ///   Busca una cadena traducida similar a The text string in the cell does not correspond to a valid byte sequence of binary digits. Remember that this sequence must have a multiple of 8 digits..
         /// </summary>
         internal static string invalid_bin_value {
             get {
@@ -1350,7 +1350,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a La cadena de texto de la celda no corresponde a una secuencia válida de dígitos hexadecimales. Recuerde que esta secuencia debe tener un número par de dígitos y debe ir precedida por \x. Por ejemplo: \xf9e3..
+        ///   Busca una cadena traducida similar a The text string in the cell does not correspond to a valid sequence of hexadecimal digits. Remember that this sequence must have an even number of digits and must be preceded by \x. For example: \xf9e3..
         /// </summary>
         internal static string invalid_hex_value {
             get {
@@ -1386,7 +1386,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Dejar sin asignar.
+        ///   Busca una cadena traducida similar a Leave unassigned.
         /// </summary>
         internal static string leave_unassigned {
             get {
@@ -1422,7 +1422,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Cargar de un fichero en binario.
+        ///   Busca una cadena traducida similar a Load from a binary file.
         /// </summary>
         internal static string load_binary_file {
             get {
@@ -1468,7 +1468,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Coincidir mayúsculas y minúsculas.
+        ///   Busca una cadena traducida similar a Match case.
         /// </summary>
         internal static string match_case {
             get {
@@ -1477,7 +1477,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Solo palabras completas.
+        ///   Busca una cadena traducida similar a Match whole words only.
         /// </summary>
         internal static string match_whole_words {
             get {
@@ -1543,7 +1543,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Los campos de tipo money no se puede procesar porque el valor LC_MONETARY &apos;{0}&apos; no se puede mapear a una configuración regional de Windows.
+        ///   Busca una cadena traducida similar a Money type fields cannot be processed because the LC_MONETARY value &apos;{0}&apos; cannot be mapped to a Windows locale.
         /// </summary>
         internal static string money_cannot_be_parsed {
             get {
@@ -1552,7 +1552,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Los campos de tipo money usarán la configuración regional &apos;{0}&apos; correspondiente al valor LC_MONETARY &apos;{1}&apos;.
+        ///   Busca una cadena traducida similar a Money type fields will use the locale &apos;{0}&apos; corresponding to the LC_MONETARY value &apos;{1}&apos;.
         /// </summary>
         internal static string money_culture_used {
             get {
@@ -1687,7 +1687,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a {0} resultados encontrados.
+        ///   Busca una cadena traducida similar a {0} results found.
         /// </summary>
         internal static string number_of_search_results_found {
             get {
@@ -1714,7 +1714,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Abrir carpeta contenedora.
+        ///   Busca una cadena traducida similar a Open containing folder.
         /// </summary>
         internal static string open_folder {
             get {
@@ -1822,7 +1822,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Filtro de las tuplas a preservar.
+        ///   Busca una cadena traducida similar a Filter for tuples to preserve.
         /// </summary>
         internal static string preserve_tuples_where_clause {
             get {
@@ -1840,7 +1840,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Eliminar en cascada algunas tuplas.
+        ///   Busca una cadena traducida similar a Cascade delete some tuples.
         /// </summary>
         internal static string recursive_remove {
             get {
@@ -1849,7 +1849,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Nombre del esquema a crear.
+        ///   Busca una cadena traducida similar a Name of the schema to create.
         /// </summary>
         internal static string recursive_remover_schema {
             get {
@@ -1885,7 +1885,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Usar expresiones regulares.
+        ///   Busca una cadena traducida similar a Use regular expressions.
         /// </summary>
         internal static string regex {
             get {
@@ -1975,7 +1975,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Reemplazar todos.
+        ///   Busca una cadena traducida similar a Replace all.
         /// </summary>
         internal static string replace_all {
             get {
@@ -1984,7 +1984,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Reemplazar actual.
+        ///   Busca una cadena traducida similar a Replace current.
         /// </summary>
         internal static string replace_current {
             get {
@@ -2002,7 +2002,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Texto con el que reemplazar.
+        ///   Busca una cadena traducida similar a Replacement text.
         /// </summary>
         internal static string replace_text {
             get {
@@ -2119,7 +2119,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Ejecutar y copiar resultados en una tabla.
+        ///   Busca una cadena traducida similar a Run and copy results to a table.
         /// </summary>
         internal static string run_and_copy_to_table {
             get {
@@ -2173,7 +2173,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Guardar en un fichero en binario.
+        ///   Busca una cadena traducida similar a Save to a binary file.
         /// </summary>
         internal static string save_binary_file {
             get {
@@ -2200,7 +2200,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Guardando filas en el fichero CSV &apos;{0}&apos;.
+        ///   Busca una cadena traducida similar a Saving rows to CSV file &apos;{0}&apos;.
         /// </summary>
         internal static string saving_rows_on_file {
             get {
@@ -2236,7 +2236,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Buscar.
+        ///   Busca una cadena traducida similar a Search.
         /// </summary>
         internal static string search {
             get {
@@ -2245,7 +2245,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Buscar y reemplazar.
+        ///   Busca una cadena traducida similar a Search and replace.
         /// </summary>
         internal static string search_for_and_replace {
             get {
@@ -2254,7 +2254,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Buscar solo dentro del texto seleccionado.
+        ///   Busca una cadena traducida similar a Search only within selected text.
         /// </summary>
         internal static string search_only_within_selected_text {
             get {
@@ -2263,7 +2263,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Texto a buscar.
+        ///   Busca una cadena traducida similar a Search text.
         /// </summary>
         internal static string search_text {
             get {
@@ -2272,7 +2272,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Buscando solo dentro del texto seleccionado.
+        ///   Busca una cadena traducida similar a Searching only within selected text.
         /// </summary>
         internal static string searching_only_within_selected_text {
             get {
@@ -2281,7 +2281,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Buscando en todo el texto.
+        ///   Busca una cadena traducida similar a Searching the entire text.
         /// </summary>
         internal static string searching_the_entire_text {
             get {
@@ -2299,7 +2299,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Seleccione tabla destino.
+        ///   Busca una cadena traducida similar a Select destination table.
         /// </summary>
         internal static string select_destination_table {
             get {
@@ -2398,7 +2398,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Columna origen.
+        ///   Busca una cadena traducida similar a Source column.
         /// </summary>
         internal static string source_column {
             get {
@@ -2407,7 +2407,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a CONEXIÓN ORIGEN ABIERTA A {0}.
+        ///   Busca una cadena traducida similar a SOURCE CONNECTION OPENED TO {0}.
         /// </summary>
         internal static string source_connection_opened_to {
             get {
@@ -2497,7 +2497,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Tarea cancelada por el usuario.
+        ///   Busca una cadena traducida similar a Task canceled by user.
         /// </summary>
         internal static string task_canceled_by_user {
             get {
@@ -2569,7 +2569,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a El contenido de la celda seleccionada es demasiado grande como para visualizarlo en texto plano.
+        ///   Busca una cadena traducida similar a The content of the selected cell is too large to display as plain text.
         /// </summary>
         internal static string text_too_long {
             get {
@@ -2578,7 +2578,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Ajuste de línea.
+        ///   Busca una cadena traducida similar a Word wrap.
         /// </summary>
         internal static string text_wrap {
             get {
@@ -2722,7 +2722,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Actualizar texto seleccionado.
+        ///   Busca una cadena traducida similar a Update selected text.
         /// </summary>
         internal static string update_selected_text {
             get {
@@ -2749,7 +2749,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Esperando selección de tabla destino y asignación de columnas.
+        ///   Busca una cadena traducida similar a Waiting for destination table selection and column mapping.
         /// </summary>
         internal static string waiting_for_destination_table {
             get {
@@ -2821,7 +2821,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Debe escribir el nombre de la columna.
+        ///   Busca una cadena traducida similar a You must enter the column name.
         /// </summary>
         internal static string warning_empty_column_name {
             get {
@@ -2839,7 +2839,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a El filtro de tuplas a eliminar no puede estar vacío.
+        ///   Busca una cadena traducida similar a The filter for tuples to delete cannot be empty.
         /// </summary>
         internal static string warning_empty_delete_filter {
             get {
@@ -2866,7 +2866,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a El filtro de tuplas a preservar no puede estar vacío.
+        ///   Busca una cadena traducida similar a The filter for tuples to preserve cannot be empty.
         /// </summary>
         internal static string warning_empty_preserve_filter {
             get {
@@ -2884,7 +2884,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Debe escribir el nombre del esquema.
+        ///   Busca una cadena traducida similar a You must enter the schema name.
         /// </summary>
         internal static string warning_empty_schema {
             get {
@@ -2902,7 +2902,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Debe escribir un nombre para la tabla.
+        ///   Busca una cadena traducida similar a You must enter a name for the table.
         /// </summary>
         internal static string warning_empty_table_name {
             get {
@@ -2911,7 +2911,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Debe introducir una abreviatura para el tipo de la columna.
+        ///   Busca una cadena traducida similar a You must enter an abbreviation for the column type.
         /// </summary>
         internal static string warning_empty_type_initials {
             get {
@@ -2920,7 +2920,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Debe introducir el tipo de la columna.
+        ///   Busca una cadena traducida similar a You must enter the column type.
         /// </summary>
         internal static string warning_empty_type_name {
             get {
@@ -2983,7 +2983,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a You must select at least one database on which to execute the SQL query.
+        ///   Busca una cadena traducida similar a You must select at least one database.
         /// </summary>
         internal static string warning_no_selected_dbs {
             get {
@@ -3028,7 +3028,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Si acepta los cambios realizados, se eliminarán las siguientes relaciones de esta tabla: {0}.
+        ///   Busca una cadena traducida similar a If you accept the changes, the following relations will be removed from this table: {0}.
         /// </summary>
         internal static string warning_relations_to_remove {
             get {
@@ -3055,7 +3055,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a La tabla indicada ya existe en el diagrama.
+        ///   Busca una cadena traducida similar a The indicated table already exists in the diagram.
         /// </summary>
         internal static string warning_table_already_exists {
             get {

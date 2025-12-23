@@ -27,7 +27,7 @@ namespace PgMulti
 
         private void btnReset_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(Properties.Text.reset_confirm_message, Properties.Text.reset_confirm_title, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
+            if (MessageBox.Show(this, Properties.Text.reset_confirm_message, Properties.Text.reset_confirm_title, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
             {
                 return;
             }
@@ -46,14 +46,14 @@ namespace PgMulti
         {
             if (string.IsNullOrWhiteSpace(txtPassword.Text))
             {
-                MessageBox.Show(Properties.Text.warning_empty_password, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, Properties.Text.warning_empty_password, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 txtPassword.Focus();
                 return;
             }
 
             if (!Data.ValidateCurrentPassword(txtPassword.Text))
             {
-                MessageBox.Show(Properties.Text.warning_invalid_password, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, Properties.Text.warning_invalid_password, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 txtPassword.Focus();
                 txtPassword.SelectAll();
                 return;

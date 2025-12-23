@@ -164,12 +164,12 @@ namespace PgMulti.Forms
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show(Properties.Text.warning_invalid_password, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show(this, Properties.Text.warning_invalid_password, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
                 }
 
-                if (ecf.HasDbAliasConflicts(_Data!) && MessageBox.Show(Properties.Text.warning_dbalias_import_conflict, Properties.Text.warning, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                if (ecf.HasDbAliasConflicts(_Data!) && MessageBox.Show(this, Properties.Text.warning_dbalias_import_conflict, Properties.Text.warning, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
                 {
                     return;
                 }
@@ -182,14 +182,14 @@ namespace PgMulti.Forms
                 {
                     if (string.IsNullOrWhiteSpace(txtPassword1.Text))
                     {
-                        MessageBox.Show(Properties.Text.warning_empty_password, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        MessageBox.Show(this, Properties.Text.warning_empty_password, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         txtPassword1.Focus();
                         return;
                     }
 
                     if (txtPassword1.Text != txtPassword2.Text)
                     {
-                        MessageBox.Show(Properties.Text.warning_password_mismatch, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        MessageBox.Show(this, Properties.Text.warning_password_mismatch, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         txtPassword1.Focus();
                         return;
                     }
@@ -206,7 +206,7 @@ namespace PgMulti.Forms
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(Properties.Text.error_saving_file + $":\r\n{sfdExportConfig.FileName}\r\n\r\n{ex.Message}", Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, Properties.Text.error_saving_file + $":\r\n{sfdExportConfig.FileName}\r\n\r\n{ex.Message}", Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 

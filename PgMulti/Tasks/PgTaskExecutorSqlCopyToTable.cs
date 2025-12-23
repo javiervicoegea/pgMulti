@@ -12,7 +12,8 @@ namespace PgMulti.Tasks
 {
     public class PgTaskExecutorSqlCopyToTable : PgTaskExecutorSql
     {
-        private List<DB> _DBs;
+        private List<DB> _SourceDBs;
+        private List<DB> _DestinationDBs;
         private int _CurrentDBIndex = -1;
         private ReadOnlyCollection<NpgsqlDbColumn>? _SourceColumns = null;
         private Table? _DestinationTable = null;
@@ -21,20 +22,20 @@ namespace PgMulti.Tasks
         private string? _DestinationNewTableName = null;
 
         public PgTaskExecutorSqlCopyToTable(
-            Data d, List<DB> dbs, OnUpdate onUpdate, OnComplete? onComplete, string sql,
+            Data d, List<DB> sourceDBs, OnUpdate onUpdate, OnComplete? onComplete, string sql,
             Config.TransactionModeEnum modoTransacciones, Config.TransactionLevelEnum nivelTransacciones,
             LanguageData sld
         ) : base(d, onUpdate, onComplete, sql, modoTransacciones, nivelTransacciones, sld)
         {
-            _DBs = dbs;
+            _SourceDBs = sourceDBs;
         }
 
 
-        public List<DB> DBs
+        public List<DB> SourceDBs
         {
             get
             {
-                return _DBs;
+                return _SourceDBs;
             }
         }
 
@@ -54,24 +55,27 @@ namespace PgMulti.Tasks
             }
         }
 
-        public void SetDestinationTableAndMapping(Table destinationTable, Dictionary<int, int> columnMapping)
+        public void SetDestinationTableAndMapping(List<DB> destinationDBs, Table destinationTable, Dictionary<int, int> columnMapping)
         {
             if (columnMapping.Any(p => !destinationTable.Columns.Any(c => c.Position == p.Key) || !_SourceColumns!.Any(sc => sc.ColumnOrdinal!.Value == p.Value))) throw new ArgumentException();
 
+            _DestinationDBs = destinationDBs;
             _DestinationTable = destinationTable;
             _ColumnMapping = columnMapping;
         }
 
-        public void SetNewTable(Schema destinationNewTableSchema, string destinationNewTableName)
+        public void SetNewTable(List<DB> destinationDBs, Schema destinationNewTableSchema, string destinationNewTableName)
         {
+            _DestinationDBs = destinationDBs;
             _DestinationNewTableSchema = destinationNewTableSchema;
             _DestinationNewTableName = destinationNewTableName;
         }
 
         protected override void Run()
         {
-            NpgsqlConnection? destinationConnection = null;
-            NpgsqlTransaction? destinationTransaction = null;
+            NpgsqlConnection[]? destinationConnections = null;
+            NpgsqlTransaction[]? destinationTransactions = null;
+
             try
             {
                 List<Tuple<int, string, string>> statements;
@@ -102,9 +106,9 @@ namespace PgMulti.Tasks
                     }
                 }
 
-                foreach (DB db in DBs)
+                foreach (DB sourceDB in SourceDBs)
                 {
-                    NpgsqlConnection c = db.Connection;
+                    NpgsqlConnection c = sourceDB.Connection;
                     c.Notice += Connection_Notice;
                     using (c)
                     {
@@ -112,7 +116,7 @@ namespace PgMulti.Tasks
                         _NpgsqlCommand = c.CreateCommand();
 
                         c.Open();
-                        StringBuilderAppendIndentedLine(string.Format(Properties.Text.connection_opened_to, db.Alias), true);
+                        StringBuilderAppendIndentedLine(string.Format(Properties.Text.connection_opened_to, sourceDB.Alias), true);
 
                         if (_TransactionMode != Config.TransactionModeEnum.Manual)
                         {
@@ -135,7 +139,6 @@ namespace PgMulti.Tasks
 
                             _NpgsqlCommand.CommandText = "BEGIN ISOLATION LEVEL " + nivel;
                             _NpgsqlCommand.ExecuteNonQuery();
-                            StringBuilderAppendIndentedLine(string.Format(Properties.Text.automatic_begin_transaction, nivel), false);
                         }
 
                         try
@@ -203,41 +206,40 @@ namespace PgMulti.Tasks
                                             }
 
                                             NpgsqlCommand insertCommand = new NpgsqlCommand();
-                                            if (destinationConnection == null)
+                                            if (destinationConnections == null || destinationTransactions == null)
                                             {
-                                                DB destinationDB;
-                                                if (_DestinationNewTableSchema == null)
-                                                {
-                                                    destinationDB = _DestinationTable!.Schema!.DB;
-                                                }
-                                                else
-                                                {
-                                                    destinationDB = _DestinationNewTableSchema.DB;
-                                                }
+                                                destinationConnections = new NpgsqlConnection[_DestinationDBs.Count];
+                                                destinationTransactions = new NpgsqlTransaction[_DestinationDBs.Count];
 
-                                                destinationConnection = destinationDB.Connection;
-                                                destinationConnection.Open();
-                                                StringBuilderAppendEmptyLine();
-                                                StringBuilderAppendIndentedLine(string.Format(Properties.Text.dest_connection_opened_to, destinationDB.Alias), true, LogStyle.TaskIsRunning);
-                                                destinationTransaction = destinationConnection.BeginTransaction(System.Data.IsolationLevel.ReadCommitted);
-                                                StringBuilderAppendIndentedLine(Properties.Text.dest_transaction_started, false);
-
-                                                if (_DestinationNewTableSchema != null && _DestinationNewTableName != null)
+                                                for (int i = 0; i < _DestinationDBs.Count; i++)
                                                 {
-                                                    _DestinationTable = new Table(_DestinationNewTableSchema, _DestinationNewTableName);
-                                                    _DestinationNewTableSchema.Tables.Add(_DestinationTable);
-                                                    _ColumnMapping = new Dictionary<int, int>();
+                                                    DB destinationDB = _DestinationDBs[i];
 
-                                                    foreach (NpgsqlDbColumn sc in _SourceColumns)
+                                                    destinationConnections[i] = destinationDB.Connection;
+                                                    destinationConnections[i].Open();
+                                                    StringBuilderAppendEmptyLine();
+                                                    StringBuilderAppendIndentedLine(string.Format(Properties.Text.dest_connection_opened_to, destinationDB.Alias), true, LogStyle.TaskIsRunning);
+                                                    destinationTransactions[i] = destinationConnections[i].BeginTransaction(System.Data.IsolationLevel.ReadCommitted);
+                                                    StringBuilderAppendIndentedLine(Properties.Text.dest_transaction_started, false);
+
+                                                    if (_DestinationNewTableSchema != null && _DestinationNewTableName != null)
                                                     {
-                                                        _DestinationTable.Columns.Add(new Column(_DestinationTable, sc));
-                                                        _ColumnMapping[sc.ColumnOrdinal!.Value] = sc.ColumnOrdinal!.Value;
-                                                    }
+                                                        _DestinationTable = new Table(_DestinationNewTableSchema, _DestinationNewTableName);
+                                                        _DestinationNewTableSchema.Tables.Add(_DestinationTable);
+                                                        _ColumnMapping = new Dictionary<int, int>();
 
-                                                    _DestinationTable.CreateInDB(destinationConnection, destinationTransaction);
+                                                        foreach (NpgsqlDbColumn sc in _SourceColumns)
+                                                        {
+                                                            _DestinationTable.Columns.Add(new Column(_DestinationTable, sc));
+                                                            _ColumnMapping[sc.ColumnOrdinal!.Value] = sc.ColumnOrdinal!.Value;
+                                                        }
+
+                                                        _DestinationTable.CreateInDB(destinationConnections[i], destinationTransactions[i]);
+                                                    }
                                                 }
 
-                                                StringBuilderAppendIndentedLine(string.Format(Properties.Text.inserting_rows_on, _DestinationTable!.Schema!.Id + "." + _DestinationTable!.Id), false, LogStyle.TaskIsRunning);
+                                                StringBuilderAppendEmptyLine();
+                                                StringBuilderAppendIndentedLine(string.Format(Properties.Text.inserting_rows_on, _DestinationTable!.Schema!.Id + "." + _DestinationTable!.Id), true, LogStyle.TaskIsRunning);
                                                 StringBuilderAppendEmptyLine();
                                             }
 
@@ -255,14 +257,12 @@ namespace PgMulti.Tasks
                                             }
 
                                             insertCommand.CommandText = $"INSERT INTO {_DestinationTable!.IdSchema}.{_DestinationTable!.Id} ({string.Join(",", parameters.Select(t => t.Item4.Id))}) VALUES ({string.Join(",", parameters.Select(t => t.Item4.GetSqlParameterExpression(t.Item5.ParameterName)))})";
-                                            insertCommand.Connection = destinationConnection;
-                                            insertCommand.Transaction = destinationTransaction;
 
                                             CultureInfo? monetaryCultureInfo = null;
                                             if (parameters.Any(t => t.Item3.PostgresType.Name == "money"))
                                             {
                                                 string lcMonetary;
-                                                monetaryCultureInfo = QueryExecutorSql.GetMonetaryCultureInfo(db, out lcMonetary);
+                                                monetaryCultureInfo = QueryExecutorSql.GetMonetaryCultureInfo(sourceDB, out lcMonetary);
                                                 StringBuilderAppendIndentedLine(string.Format(string.Format(Properties.Text.money_culture_used, monetaryCultureInfo.Name, lcMonetary)), false);
                                             }
 
@@ -283,8 +283,14 @@ namespace PgMulti.Tasks
                                                     insertCommand.Parameters["_" + item.Item1].Value = o;
                                                 }
 
-                                                int n = insertCommand.ExecuteNonQuery();
-                                                if (n != 1) throw new Exception();
+                                                for (int i = 0; i < destinationConnections.Length; i++)
+                                                {
+                                                    insertCommand.Connection = destinationConnections[i];
+                                                    insertCommand.Transaction = destinationTransactions[i];
+
+                                                    int n = insertCommand.ExecuteNonQuery();
+                                                    if (n != 1) throw new Exception();
+                                                }
 
                                                 savedRows++;
                                             }
@@ -309,13 +315,6 @@ namespace PgMulti.Tasks
                                 }
                             }
 
-                            if (destinationTransaction != null)
-                            {
-                                destinationTransaction.Commit();
-                                StringBuilderAppendEmptyLine();
-                                StringBuilderAppendIndentedLine(Properties.Text.dest_transaction_commited, true);
-                            }
-
                             switch (_TransactionMode)
                             {
                                 case Config.TransactionModeEnum.Manual:
@@ -324,9 +323,6 @@ namespace PgMulti.Tasks
                                 case Config.TransactionModeEnum.AutoCoordinated:
                                     _NpgsqlCommand.CommandText = "COMMIT";
                                     _NpgsqlCommand.ExecuteNonQuery();
-
-                                    StringBuilderAppendEmptyLine();
-                                    StringBuilderAppendIndentedLine(Properties.Text.commited_single_auto_transaction, true);
                                     break;
                                 default:
                                     throw new NotSupportedException();
@@ -378,6 +374,17 @@ namespace PgMulti.Tasks
 
                     if (_Canceled) throw new Exception(Properties.Text.task_canceled_by_user);
                 }
+
+                if (destinationTransactions != null)
+                {
+                    StringBuilderAppendEmptyLine();
+
+                    for (int i = 0; i < destinationTransactions.Length; i++)
+                    {
+                        destinationTransactions[i].Commit();
+                        StringBuilderAppendIndentedLine(string.Format(Properties.Text.dest_transaction_commited, _DestinationDBs[i].Alias), true);
+                    }
+                }
             }
             catch (AlreadyLoggedException ex2)
             {
@@ -391,7 +398,12 @@ namespace PgMulti.Tasks
             }
             finally
             {
-                if (destinationConnection != null) destinationConnection.Dispose();
+                if (destinationConnections != null) {
+                    foreach (NpgsqlConnection destinationConnection in destinationConnections)
+                    {
+                        destinationConnection.Dispose();
+                    }
+                }
 
                 _NpgsqlCommand = null;
                 StringBuilderAppendIndentedLine(Properties.Text.closed_connection, true);

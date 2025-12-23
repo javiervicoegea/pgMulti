@@ -46,21 +46,21 @@ namespace PgMulti.Forms
         {
             if (string.IsNullOrWhiteSpace(txtDeleteTuplesWhereClause.Text))
             {
-                MessageBox.Show(Properties.Text.warning_empty_delete_filter, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, Properties.Text.warning_empty_delete_filter, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 txtDeleteTuplesWhereClause.Focus();
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(txtPreserveTuplesWhereClause.Text))
             {
-                MessageBox.Show(Properties.Text.warning_empty_preserve_filter, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, Properties.Text.warning_empty_preserve_filter, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 txtPreserveTuplesWhereClause.Focus();
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(txtSchemaName.Text))
             {
-                MessageBox.Show(Properties.Text.warning_empty_schema, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, Properties.Text.warning_empty_schema, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 txtSchemaName.Focus();
                 return false;
             }

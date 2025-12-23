@@ -3,6 +3,7 @@ using Aga.Controls.Tree.NodeControls;
 using Npgsql.Schema;
 using PgMulti.AppData;
 using PgMulti.DataStructure;
+using PgMulti.Export;
 using PgMulti.Tasks;
 using System.Data;
 using static PgMulti.AppData.InsertIntoTableFormTreeModel;
@@ -20,6 +21,7 @@ namespace PgMulti.Forms
         private Table? _SelectedTable = null;
         private Schema? _NewTableSchema = null;
         private TextBox? txtTableName = null;
+        private Node _NRoot;
 
         public InsertIntoTableForm(Data d, PgTaskExecutorSqlCopyToTable t)
         {
@@ -33,14 +35,100 @@ namespace PgMulti.Forms
 
             tvaTables.Model = _TreeModel;
             ntbTables.DrawText += ntbTables_DrawText;
+            ncbTables.CheckStateChanged += ncbTables_CheckStateChanged;
+            ncbTables.IsVisibleValueNeeded += ncbTables_IsVisibleValueNeeded;
             DialogResult = DialogResult.Cancel;
+        }
+
+        private int UpdateNodeCounter(Node tn, List<DB> dbs)
+        {
+            if (tn == null || !(tn.Tag is Group || tn == _NRoot)) throw new ArgumentException();
+
+            int n = 0;
+            foreach (Node tni in tn.Nodes)
+            {
+                if (tni.Tag is DB)
+                {
+                    if (tni.IsChecked)
+                    {
+                        n++;
+                        dbs.Add((DB)tni.Tag);
+                    }
+                }
+                else
+                {
+                    n += UpdateNodeCounter(tni, dbs);
+                }
+            }
+
+            string nombre = (tn.Tag is Group ? ((Group)tn.Tag).Name! : Properties.Text.all_databases);
+            if (n > 0)
+            {
+                tn.Text = nombre + " (" + n + ")";
+            }
+            else
+            {
+                tn.Text = nombre;
+            }
+
+            return n;
+        }
+
+        private void UpdateNodeCheck(Node nEditedNode)
+        {
+            if (nEditedNode == null) throw new ArgumentException();
+
+            bool v = nEditedNode.IsChecked;
+
+            Stack<Node> pila = new Stack<Node>();
+
+            foreach (Node tni in nEditedNode.Nodes) pila.Push(tni);
+
+            while (pila.Count > 0)
+            {
+                Node tni = pila.Pop();
+
+                tni.IsChecked = v;
+
+                foreach (Node tnj in tni.Nodes) pila.Push(tnj);
+            }
+
+            Node tn = nEditedNode.Parent;
+            while (tn != null)
+            {
+                CheckState? cs = null;
+                foreach (Node tni in tn.Nodes)
+                {
+                    if (!cs.HasValue)
+                    {
+                        cs = tni.CheckState;
+                    }
+                    else if (cs.Value != tni.CheckState)
+                    {
+                        cs = CheckState.Indeterminate;
+                        break;
+                    }
+                }
+
+                tn.CheckState = cs!.Value;
+
+                tn = tn.Parent;
+            }
+
+            List<DB> dbs = new List<DB>();
+            UpdateNodeCounter(_NRoot, dbs);
         }
 
         private void InsertIntoTableForm_Load(object sender, EventArgs e)
         {
             tvaTables.BeginUpdate();
+            _NRoot = new Node(Properties.Text.all_databases);
+            _NRoot.Image = Properties.Resources.tva_grupo;
+            _TreeModel.Nodes.Add(_NRoot);
+
+
             Queue<Tuple<Node, Group>> queue = new Queue<Tuple<Node, Group>>();
-            queue.Enqueue(new Tuple<Node, Group>(_TreeModel.Root, _Data!.RootGroup));
+            queue.Enqueue(new Tuple<Node, Group>(_NRoot, _Data!.RootGroup));
 
             while (queue.Count > 0)
             {
@@ -349,11 +437,59 @@ namespace PgMulti.Forms
             }
         }
 
+        private void ncbTables_CheckStateChanged(object? sender, TreePathEventArgs e)
+        {
+            Node n = _TreeModel.FindNode(e.Path)!;
+            UpdateNodeCheck(n);
+        }
+
+        private void ncbTables_IsVisibleValueNeeded(object? sender, NodeControlValueEventArgs e)
+        {
+            Node n = (Node)e.Node.Tag;
+            if (n == _NRoot || n.Tag is Group || n.Tag is DB)
+            {
+                e.Value = true;
+            }
+            else
+            {
+                e.Value = false;
+            }
+        }
+
         private void btnOk_Click(object sender, EventArgs e)
         {
             if (_NewTableSchema == null && (_SelectedTable == null || _ComboBoxes == null || _ComboBoxes.Any(cb => cb.SelectedItem == null)))
             {
                 MessageBox.Show(this, Properties.Text.warning_no_table_selected, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            List<DB> dbs = new List<DB>();
+            Queue<Node> queue = new Queue<Node>();
+            queue.Enqueue(_NRoot);
+
+            while (queue.Count > 0)
+            {
+                Node n = queue.Dequeue();
+
+                if (n.CheckState == CheckState.Unchecked) continue;
+
+                if (n.Tag is DB)
+                {
+                    dbs.Add((DB)n.Tag);
+                }
+                else
+                {
+                    foreach (Node childNode in n.Nodes)
+                    {
+                        queue.Enqueue(childNode);
+                    }
+                }
+            }
+
+            if (dbs.Count==0)
+            {
+                MessageBox.Show(this, Properties.Text.warning_no_selected_dbs, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
@@ -373,7 +509,7 @@ namespace PgMulti.Forms
                     }
                 }
 
-                _Task.SetDestinationTableAndMapping(_SelectedTable!, cm); 
+                _Task.SetDestinationTableAndMapping(dbs, _SelectedTable!, cm); 
             }
             else
             {
@@ -383,7 +519,7 @@ namespace PgMulti.Forms
                     return;
                 }
 
-                _Task.SetNewTable(_NewTableSchema, txtTableName!.Text);
+                _Task.SetNewTable(dbs, _NewTableSchema, txtTableName!.Text);
             }
 
             DialogResult = DialogResult.OK;

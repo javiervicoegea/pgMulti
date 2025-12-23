@@ -25,14 +25,14 @@ namespace PgMulti
         {
             if (string.IsNullOrWhiteSpace(txtPassword1.Text))
             {
-                MessageBox.Show(Properties.Text.warning_empty_password, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, Properties.Text.warning_empty_password, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 txtPassword1.Focus();
                 return;
             }
 
             if (txtPassword1.Text != txtPassword2.Text)
             {
-                MessageBox.Show(Properties.Text.warning_password_mismatch, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, Properties.Text.warning_password_mismatch, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 txtPassword1.Focus();
                 return;
             }

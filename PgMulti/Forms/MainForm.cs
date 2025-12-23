@@ -251,7 +251,7 @@ namespace PgMulti
             {
                 if (t.State != PgTask.StateEnum.Finished)
                 {
-                    MessageBox.Show(Properties.Text.warning_runnig_tasks, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show(this, Properties.Text.warning_runnig_tasks, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     e.Cancel = true;
                     return;
                 }
@@ -263,7 +263,7 @@ namespace PgMulti
             }
             catch (Exception ex)
             {
-                if (MessageBox.Show(Properties.Text.error_saving + "\r\n" + ex.Message, Properties.Text.warning, MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) != DialogResult.OK)
+                if (MessageBox.Show(this, Properties.Text.error_saving + "\r\n" + ex.Message, Properties.Text.warning, MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) != DialogResult.OK)
                 {
                     e.Cancel = true;
                     return;
@@ -310,12 +310,12 @@ namespace PgMulti
             }
             catch (Export.BadFormatException)
             {
-                MessageBox.Show(Properties.Text.warning_bad_format_export_file, Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, Properties.Text.warning_bad_format_export_file, Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             catch (Exception ex)
             {
-                MessageBox.Show(Properties.Text.error_opening_file + $":\r\n{ofdImportConfig.FileName}\r\n\r\n{ex.Message}", Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, Properties.Text.error_opening_file + $":\r\n{ofdImportConfig.FileName}\r\n\r\n{ex.Message}", Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -351,12 +351,12 @@ namespace PgMulti
             }
             catch (Diagrams.BadFormatException)
             {
-                MessageBox.Show(Properties.Text.warning_bad_format_diagram_file, Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, Properties.Text.warning_bad_format_diagram_file, Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             catch (Exception ex)
             {
-                MessageBox.Show(Properties.Text.error_opening_file + $":\r\n{ofdOpenDiagram.FileName}\r\n\r\n{ex.Message}", Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, Properties.Text.error_opening_file + $":\r\n{ofdOpenDiagram.FileName}\r\n\r\n{ex.Message}", Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -376,7 +376,7 @@ namespace PgMulti
             }
             catch (Exception ex)
             {
-                MessageBox.Show(Properties.Text.error_saving_file + $":\r\n{sfdSaveDiagram.FileName}\r\n\r\n{ex.Message}", Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, Properties.Text.error_saving_file + $":\r\n{sfdSaveDiagram.FileName}\r\n\r\n{ex.Message}", Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
 
@@ -1774,7 +1774,7 @@ namespace PgMulti
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(Properties.Text.error_saving_file + $":\r\n{rutaLocal}\r\n\r\n{ex.Message}", Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, Properties.Text.error_saving_file + $":\r\n{rutaLocal}\r\n\r\n{ex.Message}", Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
             }
@@ -1802,7 +1802,7 @@ namespace PgMulti
             }
             catch (Exception ex)
             {
-                MessageBox.Show(Properties.Text.error_saving_file + $":\r\n{sfdSql.FileName}\r\n\r\n{ex.Message}", Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, Properties.Text.error_saving_file + $":\r\n{sfdSql.FileName}\r\n\r\n{ex.Message}", Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
         }
@@ -2127,7 +2127,7 @@ namespace PgMulti
 
             if (string.IsNullOrWhiteSpace(sql))
             {
-                MessageBox.Show(Properties.Text.warning_empty_query, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, Properties.Text.warning_empty_query, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
@@ -2135,7 +2135,7 @@ namespace PgMulti
 
             if (dbs.Count == 0)
             {
-                MessageBox.Show(Properties.Text.warning_no_selected_dbs, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, Properties.Text.warning_no_selected_dbs, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
@@ -2249,7 +2249,7 @@ namespace PgMulti
             }
             catch (Exception ex)
             {
-                MessageBox.Show(Properties.Text.error_saving + "\r\n" + ex.Message, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, Properties.Text.error_saving + "\r\n" + ex.Message, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
 
@@ -2466,7 +2466,7 @@ namespace PgMulti
             }
             catch (Exception ex)
             {
-                MessageBox.Show(Properties.Text.error_opening_file + $":\r\n{ofdSql.FileName}\r\n\r\n{ex.Message}", Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, Properties.Text.error_opening_file + $":\r\n{ofdSql.FileName}\r\n\r\n{ex.Message}", Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
         }
@@ -2622,7 +2622,7 @@ namespace PgMulti
 
             if (string.IsNullOrWhiteSpace(sql))
             {
-                MessageBox.Show(Properties.Text.warning_empty_query, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, Properties.Text.warning_empty_query, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
@@ -2630,7 +2630,7 @@ namespace PgMulti
 
             if (dbs.Count == 0)
             {
-                MessageBox.Show(Properties.Text.warning_no_selected_dbs, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, Properties.Text.warning_no_selected_dbs, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
@@ -2692,7 +2692,7 @@ namespace PgMulti
 
             if (string.IsNullOrWhiteSpace(sql))
             {
-                MessageBox.Show(Properties.Text.warning_empty_query, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, Properties.Text.warning_empty_query, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
@@ -2700,7 +2700,7 @@ namespace PgMulti
 
             if (dbs.Count == 0)
             {
-                MessageBox.Show(Properties.Text.warning_no_selected_dbs, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, Properties.Text.warning_no_selected_dbs, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
@@ -3161,7 +3161,7 @@ namespace PgMulti
 
         private void tsbStopSelected_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(Properties.Text.confirm_stop_selected, Properties.Text.error, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
+            if (MessageBox.Show(this, Properties.Text.confirm_stop_selected, Properties.Text.error, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
             {
                 return;
             }
@@ -3171,7 +3171,7 @@ namespace PgMulti
 
         private void tsbDetenerTodos_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(Properties.Text.confirm_stop_all, Properties.Text.error, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
+            if (MessageBox.Show(this, Properties.Text.confirm_stop_all, Properties.Text.error, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
             {
                 return;
             }
@@ -3456,7 +3456,7 @@ namespace PgMulti
         {
             if (gvTable.SelectedRows.Count == 0)
             {
-                MessageBox.Show(Properties.Text.no_selected_rows, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(this, Properties.Text.no_selected_rows, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -3581,7 +3581,7 @@ namespace PgMulti
                     case "bytea":
                         if (s.Length < 4 || !s.StartsWith(@"\x") || s.Length % 2 != 0)
                         {
-                            MessageBox.Show(Properties.Text.invalid_hex_value, Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show(this, Properties.Text.invalid_hex_value, Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
 
@@ -3595,7 +3595,7 @@ namespace PgMulti
                     case "varbit":
                         if (s.Length < 8 || s.Length % 8 != 0)
                         {
-                            MessageBox.Show(Properties.Text.invalid_hex_value, Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show(this, Properties.Text.invalid_hex_value, Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
 
@@ -3610,7 +3610,7 @@ namespace PgMulti
             }
             catch (Exception)
             {
-                MessageBox.Show(Properties.Text.invalid_hex_value, Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, Properties.Text.invalid_hex_value, Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -3623,7 +3623,7 @@ namespace PgMulti
             }
             catch (Exception ex)
             {
-                MessageBox.Show(Properties.Text.error_saving_file + $":\r\n{sfdBinaryCell.FileName}\r\n\r\n{ex.Message}", Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, Properties.Text.error_saving_file + $":\r\n{sfdBinaryCell.FileName}\r\n\r\n{ex.Message}", Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -3640,7 +3640,7 @@ namespace PgMulti
             /* Changed TextBox for FastColoredTextBox, which supports larger texts
             if (txt != null && txt.Length > 1024 * 1024)
             {
-                MessageBox.Show(Properties.Text.text_too_long, Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, Properties.Text.text_too_long, Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             */

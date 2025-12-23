@@ -54,7 +54,7 @@
             // 
             this.ncb.DataPropertyName = "CheckState";
             this.ncb.EditEnabled = true;
-            this.ncb.ImageSize = 15;
+            this.ncb.ImageSize = 20;
             this.ncb.LeftMargin = 5;
             this.ncb.ParentColumn = null;
             // 

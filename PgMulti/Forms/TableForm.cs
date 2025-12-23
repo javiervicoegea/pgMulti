@@ -232,14 +232,14 @@ namespace PgMulti.Forms
         {
             if (string.IsNullOrWhiteSpace(txtTableName.Text))
             {
-                MessageBox.Show(Properties.Text.warning_empty_table_name, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, Properties.Text.warning_empty_table_name, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 tc.SelectedTab = tcGeneral;
                 txtTableName.Focus();
                 return false;
             }
             if (string.IsNullOrWhiteSpace(txtSchemaName.Text))
             {
-                MessageBox.Show(Properties.Text.warning_empty_schema, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, Properties.Text.warning_empty_schema, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 tc.SelectedTab = tcGeneral;
                 txtTableName.Focus();
                 return false;
@@ -250,7 +250,7 @@ namespace PgMulti.Forms
 
                 if (string.IsNullOrWhiteSpace((string)dr["name"]))
                 {
-                    MessageBox.Show(Properties.Text.warning_empty_column_name, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show(this, Properties.Text.warning_empty_column_name, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     tc.SelectedTab = tcColumns;
                     gvColumns.Rows[i].Selected = true;
                     txtColumnName.Focus();
@@ -258,7 +258,7 @@ namespace PgMulti.Forms
                 }
                 if (string.IsNullOrWhiteSpace((string)dr["type_name"]))
                 {
-                    MessageBox.Show(Properties.Text.warning_empty_type_name, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show(this, Properties.Text.warning_empty_type_name, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     tc.SelectedTab = tcColumns;
                     gvColumns.Rows[i].Selected = true;
                     cbColumnType.Focus();
@@ -266,7 +266,7 @@ namespace PgMulti.Forms
                 }
                 if (string.IsNullOrWhiteSpace((string)dr["type_initials"]))
                 {
-                    MessageBox.Show(Properties.Text.warning_empty_type_initials, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show(this, Properties.Text.warning_empty_type_initials, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     tc.SelectedTab = tcColumns;
                     gvColumns.Rows[i].Selected = true;
                     txtColumnTypeInitials.Focus();
@@ -286,7 +286,7 @@ namespace PgMulti.Forms
             {
                 if (dti != _DiagramTable && dti.TableName.ToUpper().Trim() == _DiagramTable.TableName.ToUpper().Trim() && dti.SchemaName.ToUpper().Trim() == _DiagramTable.SchemaName.ToUpper().Trim())
                 {
-                    MessageBox.Show(Properties.Text.warning_table_already_exists, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show(this, Properties.Text.warning_table_already_exists, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     tc.SelectedTab = tcGeneral;
                     txtTableName.Focus();
                     return;

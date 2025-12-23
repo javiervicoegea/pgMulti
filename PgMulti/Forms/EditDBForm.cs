@@ -27,35 +27,35 @@ namespace PgMulti
         {
             if (string.IsNullOrWhiteSpace(txtDBAlias.Text))
             {
-                MessageBox.Show(Properties.Text.warning_empty_alias, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, Properties.Text.warning_empty_alias, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 txtDBAlias.Focus();
                 return false;
             }
 
             if (_Data.AllDBs.Any(db => db.Alias.ToLower() == txtDBAlias.Text.ToLower() && !db.Equals(_DB)))
             {
-                MessageBox.Show(Properties.Text.warning_duplicate_alias, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, Properties.Text.warning_duplicate_alias, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 txtDBAlias.Focus();
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(txtServer.Text))
             {
-                MessageBox.Show(Properties.Text.warning_empty_server, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, Properties.Text.warning_empty_server, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 txtServer.Focus();
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(txtDBName.Text))
             {
-                MessageBox.Show(Properties.Text.warning_empty_db, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, Properties.Text.warning_empty_db, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 txtDBName.Focus();
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(txtPort.Text))
             {
-                MessageBox.Show(Properties.Text.warning_empty_port, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, Properties.Text.warning_empty_port, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 txtPort.Focus();
                 return false;
             }
@@ -64,21 +64,21 @@ namespace PgMulti
 
             if (!ushort.TryParse(txtPort.Text, out port) || port < 1 || port > 65535)
             {
-                MessageBox.Show(Properties.Text.warning_invalid_port, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, Properties.Text.warning_invalid_port, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 txtPort.Focus();
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(txtUser.Text))
             {
-                MessageBox.Show(Properties.Text.warning_empty_user, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, Properties.Text.warning_empty_user, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 txtUser.Focus();
                 return false;
             }
 
             if (_DB == null && string.IsNullOrWhiteSpace(txtPassword.Text))
             {
-                MessageBox.Show(Properties.Text.warning_empty_password, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, Properties.Text.warning_empty_password, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 txtPassword.Focus();
                 return false;
             }
@@ -108,7 +108,7 @@ namespace PgMulti
             string? msg;
             if (_DB!.Test(out msg))
             {
-                MessageBox.Show(Properties.Text.test_successful_message, Properties.Text.test_successful_title, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(this, Properties.Text.test_successful_message, Properties.Text.test_successful_title, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {

@@ -29,7 +29,7 @@ namespace PgMulti.AppData
             _Data = d;
 
             Id = -1;
-            Alias = Properties.Text.new_group;
+            Alias = "";
             Server = "";
             Port = 5432;
             DBName = "";

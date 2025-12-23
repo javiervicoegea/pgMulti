@@ -34,6 +34,7 @@
             btnOk = new Button();
             splitContainer1 = new SplitContainer();
             tvaTables = new Aga.Controls.Tree.TreeViewAdv();
+            ncbTables = new Aga.Controls.Tree.NodeControls.NodeCheckBox();
             nsiTables = new Aga.Controls.Tree.NodeControls.NodeStateIcon();
             ntbTables = new Aga.Controls.Tree.NodeControls.NodeTextBox();
             flp.SuspendLayout();
@@ -106,6 +107,7 @@
             tvaTables.Margin = new Padding(10);
             tvaTables.Model = null;
             tvaTables.Name = "tvaTables";
+            tvaTables.NodeControls.Add(ncbTables);
             tvaTables.NodeControls.Add(nsiTables);
             tvaTables.NodeControls.Add(ntbTables);
             tvaTables.RowHeight = 25;
@@ -113,6 +115,14 @@
             tvaTables.Size = new Size(502, 612);
             tvaTables.TabIndex = 1;
             tvaTables.SelectionChanged += tvaTables_SelectionChanged;
+            // 
+            // ncbTables
+            // 
+            this.ncbTables.DataPropertyName = "CheckState";
+            this.ncbTables.EditEnabled = true;
+            this.ncbTables.ImageSize = 20;
+            this.ncbTables.LeftMargin = 5;
+            this.ncbTables.ParentColumn = null;
             // 
             // nsiTables
             // 
@@ -137,6 +147,7 @@
             Controls.Add(flp);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "InsertIntoTableForm";
+            WindowState = System.Windows.Forms.FormWindowState.Maximized;
             StartPosition = FormStartPosition.CenterParent;
             FormClosed += InsertIntoTableForm_FormClosed;
             Load += InsertIntoTableForm_Load;
@@ -155,6 +166,7 @@
         private Button btnOk;
         private SplitContainer splitContainer1;
         private Aga.Controls.Tree.TreeViewAdv tvaTables;
+        private Aga.Controls.Tree.NodeControls.NodeCheckBox ncbTables;
         private Aga.Controls.Tree.NodeControls.NodeStateIcon nsiTables;
         private Aga.Controls.Tree.NodeControls.NodeTextBox ntbTables;
     }

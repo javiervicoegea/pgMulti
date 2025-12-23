@@ -48,7 +48,7 @@ namespace PgMulti
             {
                 if (!int.TryParse(txtAutocompleteDelay.Text, out delay) || delay < 0)
                 {
-                    MessageBox.Show(Properties.Text.warning_invalid_autocomplete_delay, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(this, Properties.Text.warning_invalid_autocomplete_delay, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
@@ -62,7 +62,7 @@ namespace PgMulti
             int maxRows;
             if (!int.TryParse(txtMaxRows.Text, out maxRows) || maxRows <= 0)
             {
-                MessageBox.Show(Properties.Text.warning_invalid_max_rows, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(this, Properties.Text.warning_invalid_max_rows, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 

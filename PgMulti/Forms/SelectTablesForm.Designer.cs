@@ -116,7 +116,7 @@
             // 
             this.ncbTables.DataPropertyName = "CheckState";
             this.ncbTables.EditEnabled = true;
-            this.ncbTables.ImageSize = 15;
+            this.ncbTables.ImageSize = 20;
             this.ncbTables.LeftMargin = 5;
             this.ncbTables.ParentColumn = null;
             // 

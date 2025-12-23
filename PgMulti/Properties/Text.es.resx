@@ -698,7 +698,7 @@ ATENCIÓN: Se eliminarán también las bases de datos dentro del grupo.</value>
     <value>El campo puerto debe ser un número de puerto válido</value>
   </data>
   <data name="warning_no_selected_dbs" xml:space="preserve">
-    <value>Hay que seleccionar al menos una base de datos en la que ejecutar la consulta SQL</value>
+    <value>Hay que seleccionar al menos una base de datos</value>
   </data>
   <data name="warning_password_mismatch" xml:space="preserve">
     <value>Las contraseñas no coinciden</value>
@@ -893,5 +893,194 @@ A diferencia de otras herramientas, esta aplicación no reutiliza la conexión e
   </data>
   <data name="column_default" xml:space="preserve">
     <value>Valor predeterminado</value>
+  </data>
+  <data name="warning_empty_table_name" xml:space="preserve">
+    <value>Debe escribir un nombre para la tabla</value>
+  </data>
+  <data name="warning_empty_schema" xml:space="preserve">
+    <value>Debe escribir el nombre del esquema</value>
+  </data>
+  <data name="warning_empty_column_name" xml:space="preserve">
+    <value>Debe escribir el nombre de la columna</value>
+  </data>
+  <data name="warning_empty_type_name" xml:space="preserve">
+    <value>Debe introducir el tipo de la columna</value>
+  </data>
+  <data name="warning_empty_type_initials" xml:space="preserve">
+    <value>Debe introducir una abreviatura para el tipo de la columna</value>
+  </data>
+  <data name="warning_table_already_exists" xml:space="preserve">
+    <value>La tabla indicada ya existe en el diagrama</value>
+  </data>
+  <data name="warning_relations_to_remove" xml:space="preserve">
+    <value>Si acepta los cambios realizados, se eliminarán las siguientes relaciones de esta tabla: {0}</value>
+  </data>
+  <data name="add_relation" xml:space="preserve">
+    <value>Añadir relación</value>
+  </data>
+  <data name="add_table" xml:space="preserve">
+    <value>Añadir tabla</value>
+  </data>
+  <data name="confirm_table_deletion" xml:space="preserve">
+    <value>¿Está seguro de que quiere eliminar la tabla {0}?</value>
+  </data>
+  <data name="confirm_relation_deletion" xml:space="preserve">
+    <value>¿Está seguro de que quiere eliminar la relación {0}?</value>
+  </data>
+  <data name="recursive_remove" xml:space="preserve">
+    <value>Eliminar en cascada algunas tuplas</value>
+  </data>
+  <data name="delete_tuples_where_clause" xml:space="preserve">
+    <value>Filtro de las tuplas a eliminar</value>
+  </data>
+  <data name="preserve_tuples_where_clause" xml:space="preserve">
+    <value>Filtro de las tuplas a preservar</value>
+  </data>
+  <data name="recursive_remover_schema" xml:space="preserve">
+    <value>Nombre del esquema a crear</value>
+  </data>
+  <data name="warning_empty_delete_filter" xml:space="preserve">
+    <value>El filtro de tuplas a eliminar no puede estar vacío</value>
+  </data>
+  <data name="warning_empty_preserve_filter" xml:space="preserve">
+    <value>El filtro de tuplas a preservar no puede estar vacío</value>
+  </data>
+  <data name="collect_tuples_script_name" xml:space="preserve">
+    <value>Determinar tuplas afectadas</value>
+  </data>
+  <data name="delete_tuples_script_name" xml:space="preserve">
+    <value>Eliminar tuplas</value>
+  </data>
+  <data name="db_list" xml:space="preserve">
+    <value>Lista de bases de datos</value>
+  </data>
+  <data name="search_for_and_replace" xml:space="preserve">
+    <value>Buscar y reemplazar</value>
+  </data>
+  <data name="search_text" xml:space="preserve">
+    <value>Texto a buscar</value>
+  </data>
+  <data name="replace_text" xml:space="preserve">
+    <value>Texto con el que reemplazar</value>
+  </data>
+  <data name="match_case" xml:space="preserve">
+    <value>Coincidir mayúsculas y minúsculas</value>
+  </data>
+  <data name="match_whole_words" xml:space="preserve">
+    <value>Solo palabras completas</value>
+  </data>
+  <data name="regex" xml:space="preserve">
+    <value>Usar expresiones regulares</value>
+  </data>
+  <data name="search" xml:space="preserve">
+    <value>Buscar</value>
+  </data>
+  <data name="go_next" xml:space="preserve">
+    <value>Ir al siguiente resultado</value>
+  </data>
+  <data name="replace_current" xml:space="preserve">
+    <value>Reemplazar actual</value>
+  </data>
+  <data name="replace_all" xml:space="preserve">
+    <value>Reemplazar todos</value>
+  </data>
+  <data name="number_of_search_results_found" xml:space="preserve">
+    <value>{0} resultados encontrados</value>
+  </data>
+  <data name="searching_the_entire_text" xml:space="preserve">
+    <value>Buscando en todo el texto</value>
+  </data>
+  <data name="search_only_within_selected_text" xml:space="preserve">
+    <value>Buscar solo dentro del texto seleccionado</value>
+  </data>
+  <data name="update_selected_text" xml:space="preserve">
+    <value>Actualizar texto seleccionado</value>
+  </data>
+  <data name="searching_only_within_selected_text" xml:space="preserve">
+    <value>Buscando solo dentro del texto seleccionado</value>
+  </data>
+  <data name="copy_path" xml:space="preserve">
+    <value>Copiar ruta de acceso</value>
+  </data>
+  <data name="open_folder" xml:space="preserve">
+    <value>Abrir carpeta contenedora</value>
+  </data>
+  <data name="money_cannot_be_parsed" xml:space="preserve">
+    <value>Los campos de tipo money no se puede procesar porque el valor LC_MONETARY '{0}' no se puede mapear a una configuración regional de Windows</value>
+  </data>
+  <data name="money_culture_used" xml:space="preserve">
+    <value>Los campos de tipo money usarán la configuración regional '{0}' correspondiente al valor LC_MONETARY '{1}'</value>
+  </data>
+  <data name="invalid_hex_value" xml:space="preserve">
+    <value>La cadena de texto de la celda no corresponde a una secuencia válida de dígitos hexadecimales. Recuerde que esta secuencia debe tener un número par de dígitos y debe ir precedida por \x. Por ejemplo: \xf9e3.</value>
+  </data>
+  <data name="invalid_bin_value" xml:space="preserve">
+    <value>La cadena de texto de la celda no corresponde a una secuencia válida de bytes en dígitos binarios. Recuerde que esta secuencia debe tener un número múltiplo de 8 dígitos.</value>
+  </data>
+  <data name="all_file_filter" xml:space="preserve">
+    <value>Todos los ficheros|*.*</value>
+  </data>
+  <data name="txt_file_filter" xml:space="preserve">
+    <value>TXT files (*.txt)|*.txt|All files|*.*</value>
+  </data>
+  <data name="load_binary_file" xml:space="preserve">
+    <value>Cargar de un fichero en binario</value>
+  </data>
+  <data name="save_binary_file" xml:space="preserve">
+    <value>Guardar en un fichero en binario</value>
+  </data>
+  <data name="text_too_long" xml:space="preserve">
+    <value>El contenido de la celda seleccionada es demasiado grande como para visualizarlo en texto plano</value>
+  </data>
+  <data name="text_wrap" xml:space="preserve">
+    <value>Ajuste de línea</value>
+  </data>
+  <data name="run_and_copy_to_table" xml:space="preserve">
+    <value>Ejecutar y copiar resultados en una tabla</value>
+  </data>
+  <data name="ignoring_incompatible_query" xml:space="preserve">
+    <value>Se ignora la consulta por devolver un resultado incompatible con la primera consulta</value>
+  </data>
+  <data name="waiting_for_destination_table" xml:space="preserve">
+    <value>Esperando selección de tabla destino y asignación de columnas</value>
+  </data>
+  <data name="inserting_rows_on" xml:space="preserve">
+    <value>Insertando filas en la tabla {0}</value>
+  </data>
+  <data name="saving_rows_on_file" xml:space="preserve">
+    <value>Guardando filas en el fichero CSV '{0}'</value>
+  </data>
+  <data name="copy_to_table_task" xml:space="preserve">
+    <value>Tarea de ejecución y copia en tabla</value>
+  </data>
+  <data name="select_destination_table" xml:space="preserve">
+    <value>Seleccione tabla destino</value>
+  </data>
+  <data name="task_canceled_by_user" xml:space="preserve">
+    <value>Tarea cancelada por el usuario</value>
+  </data>
+  <data name="leave_unassigned" xml:space="preserve">
+    <value>Dejar sin asignar</value>
+  </data>
+  <data name="source_connection_opened_to" xml:space="preserve">
+    <value>CONEXIÓN ORIGEN ABIERTA A {0}</value>
+  </data>
+  <data name="dest_connection_opened_to" xml:space="preserve">
+    <value>CONEXIÓN DESTINO ABIERTA A {0}</value>
+  </data>
+  <data name="dest_transaction_started" xml:space="preserve">
+    <value>Transacción read commited iniciada en destino</value>
+  </data>
+  <data name="dest_transaction_commited" xml:space="preserve">
+    <value>Transacción confirmada en destino {0}</value>
+  </data>
+  <data name="dest_column" xml:space="preserve">
+    <value>Columna destino</value>
+  </data>
+  <data name="dest_type" xml:space="preserve">
+    <value>Tipo destino</value>
+  </data>
+  <data name="source_column" xml:space="preserve">
+    <value>Columna origen</value>
   </data>
 </root>

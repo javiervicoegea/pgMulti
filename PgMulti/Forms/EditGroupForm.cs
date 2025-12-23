@@ -27,7 +27,7 @@ namespace PgMulti
         {
             if (string.IsNullOrWhiteSpace(txtName.Text))
             {
-                MessageBox.Show(Properties.Text.warning_empty_alias, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, Properties.Text.warning_empty_alias, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 txtName.Focus();
                 return;
             }
