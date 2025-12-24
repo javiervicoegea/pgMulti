@@ -2144,7 +2144,7 @@ namespace PgMulti
             // 
             // sfdSaveDiagram
             // 
-            sfdSaveDiagram.DefaultExt = "csv";
+            sfdSaveDiagram.DefaultExt = "pgdx";
             sfdSaveDiagram.FilterIndex = 0;
             // 
             // tmrReenableRunButton

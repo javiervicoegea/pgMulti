@@ -2636,7 +2636,15 @@ namespace PgMulti
 
             sfdCsv.FileName = tcSql.SelectedTab.Text;
             if (sfdCsv.FileName.EndsWith(" *")) sfdCsv.FileName = sfdCsv.FileName.Substring(0, sfdCsv.FileName.Length - 2);
-            if (!sfdCsv.FileName.Contains(".")) sfdCsv.FileName += ".csv";
+
+            if (sfdCsv.FileName.Contains("."))
+            {
+                sfdCsv.FileName = System.Text.RegularExpressions.Regex.Replace(sfdCsv.FileName, @"\.[^\.]*$", ".csv");
+            }
+            else
+            {
+                sfdCsv.FileName += ".csv";
+            }
 
             if (sfdCsv.ShowDialog(this) != DialogResult.OK) return;
 
