@@ -32,6 +32,7 @@
     <PackageReference Include="Npgsql" Version="9.0.4" />
     <PackageReference Include="SqlitePCLRaw.bundle_e_sqlcipher" Version="2.1.11" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="7.0.0" />
+    <PackageReference Include="WinForms.DataVisualization" Version="1.10.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -43,6 +44,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Forms\ChartForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Properties\AppSettings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>

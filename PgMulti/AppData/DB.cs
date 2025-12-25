@@ -281,6 +281,50 @@ namespace PgMulti.AppData
             _Schemas = null;
         }
 
+        public CultureInfo GetMonetaryCultureInfo(out string lcMonetary)
+        {
+            CultureInfo? monetaryCultureInfo;
+
+            using (NpgsqlConnection c = Connection)
+            {
+                c.Open();
+                NpgsqlCommand cmd = c.CreateCommand();
+                cmd.CommandText = "SHOW LC_MONETARY";
+                lcMonetary = (string)cmd.ExecuteScalar()!;
+            }
+
+            if (lcMonetary == null)
+            {
+                throw new NotSupportedException(string.Format(Properties.Text.money_cannot_be_parsed, "null"));
+            }
+            else
+            {
+                string pgId = lcMonetary.Split('.')[0];
+                string pgId2 = pgId.Replace("_", "-");
+
+                monetaryCultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(cii => cii.Name == pgId || cii.Name == pgId2);
+                if (monetaryCultureInfo == null)
+                {
+
+                    string[] pgIdParts = pgId.Split('_');
+                    string pgId3 = pgIdParts[0];
+
+                    if (pgIdParts.Length > 1)
+                    {
+                        pgId3 += " (" + pgIdParts[1] + ")";
+                    }
+
+                    monetaryCultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(ci => ci.EnglishName == pgId3);
+                    if (monetaryCultureInfo == null)
+                    {
+                        throw new NotSupportedException(string.Format(Properties.Text.money_cannot_be_parsed, lcMonetary));
+                    }
+                }
+            }
+
+            return monetaryCultureInfo;
+        }
+
         public override bool Equals(object? obj)
         {
             return obj != null && obj is DB && ((DB)obj).Id == Id;

@@ -154,6 +154,8 @@ namespace PgMulti
             tsddbInsertRow = new ToolStripDropDownButton();
             tsbDeleteRows = new ToolStripButton();
             tsbApplyTableChanges = new ToolStripButton();
+            tsbExportCsvCurrentData = new ToolStripButton();
+            tsbCreateChart = new ToolStripButton();
             tpExecutedSql = new TabPage();
             toolStripContainer4 = new ToolStripContainer();
             fctbExecutedSql = new CustomFctb();
@@ -1525,7 +1527,7 @@ namespace PgMulti
             // 
             toolStrip5.Dock = DockStyle.None;
             toolStrip5.ImageScalingSize = new Size(20, 20);
-            toolStrip5.Items.AddRange(new ToolStripItem[] { tsddbTables, tsddbInsertRow, tsbDeleteRows, tsbApplyTableChanges });
+            toolStrip5.Items.AddRange(new ToolStripItem[] { tsddbTables, tsddbInsertRow, tsbDeleteRows, tsbApplyTableChanges, tsbExportCsvCurrentData, tsbCreateChart });
             toolStrip5.Location = new Point(4, 0);
             toolStrip5.Name = "toolStrip5";
             toolStrip5.Size = new Size(139, 27);
@@ -1565,6 +1567,24 @@ namespace PgMulti
             tsbApplyTableChanges.Name = "tsbApplyTableChanges";
             tsbApplyTableChanges.Size = new Size(29, 24);
             tsbApplyTableChanges.Click += tsbApplyTableChanges_Click;
+            // 
+            // tsbExportCsvCurrentData
+            // 
+            tsbExportCsvCurrentData.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbExportCsvCurrentData.Image = Properties.Resources.download;
+            tsbExportCsvCurrentData.ImageTransparentColor = Color.Magenta;
+            tsbExportCsvCurrentData.Name = "tsbExportCsv";
+            tsbExportCsvCurrentData.Size = new Size(29, 24);
+            tsbExportCsvCurrentData.Click += tsbExportCsvCurrentData_Click;
+            // 
+            // tsbCreateChart
+            // 
+            tsbCreateChart.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbCreateChart.Image = Properties.Resources.chart;
+            tsbCreateChart.ImageTransparentColor = Color.Magenta;
+            tsbCreateChart.Name = "tsbCreateChart";
+            tsbCreateChart.Size = new Size(29, 24);
+            tsbCreateChart.Click += tsbCreateChart_Click;
             // 
             // tpExecutedSql
             // 
@@ -2347,6 +2367,8 @@ namespace PgMulti
         private ToolStripSeparator toolStripSeparator1;
         private ContextMenuStrip cmsFctb;
         private ToolStripButton tsbApplyTableChanges;
+        private ToolStripButton tsbExportCsvCurrentData;
+        private ToolStripButton tsbCreateChart;
         private ContextMenuStrip cmsTable;
         private ToolStripMenuItem tsbCopyCellText;
         private ToolStripMenuItem tsbLoadCellBinaryValueFromFile;

@@ -1,8 +1,10 @@
 using Aga.Controls.Tree;
 using Aga.Controls.Tree.NodeControls;
+using CsvHelper;
 using FastColoredTextBoxNS;
 using Irony.Parsing;
 using Newtonsoft.Json;
+using Npgsql.Schema;
 using PgMulti.AppData;
 using PgMulti.DataStructure;
 using PgMulti.Diagrams;
@@ -3347,7 +3349,7 @@ namespace PgMulti
             if (ignoreHighlightRow) return;
 
             DeHighlightRows();
-            
+
             foreach (DataGridViewCell cell in gvTable.SelectedCells)
             {
                 if (highLightedRows.Contains(cell.RowIndex)) continue;
@@ -3361,7 +3363,8 @@ namespace PgMulti
 
         private void DeHighlightRows()
         {
-            foreach (int highLightedRow in highLightedRows) {
+            foreach (int highLightedRow in highLightedRows)
+            {
                 var row = gvTable.Rows[highLightedRow];
 
                 row.DefaultCellStyle.BackColor = gvTable.DefaultCellStyle.BackColor;
@@ -3525,6 +3528,104 @@ namespace PgMulti
             }
         }
 
+        private void tsbExportCsvCurrentData_Click(object sender, EventArgs e)
+        {
+            sfdCsv.FileName = tcSql.SelectedTab.Text;
+            if (sfdCsv.FileName.EndsWith(" *")) sfdCsv.FileName = sfdCsv.FileName.Substring(0, sfdCsv.FileName.Length - 2);
+
+            if (sfdCsv.FileName.Contains("."))
+            {
+                sfdCsv.FileName = System.Text.RegularExpressions.Regex.Replace(sfdCsv.FileName, @"\.[^\.]*$", ".csv");
+            }
+            else
+            {
+                sfdCsv.FileName += ".csv";
+            }
+
+            if (sfdCsv.ShowDialog(this) != DialogResult.OK) return;
+
+            Query q = (Query)gvTable.Tag!;
+
+            CsvHelper.Configuration.CsvConfiguration conf = new CsvHelper.Configuration.CsvConfiguration(System.Globalization.CultureInfo.CurrentCulture);
+            conf.Delimiter = ";";
+
+            using (Stream s = File.Open(sfdCsv.FileName, FileMode.Create, FileAccess.Write, FileShare.None))
+            using (StreamWriter sw = new StreamWriter(s, Encoding.GetEncoding(1252)))
+            using (CsvWriter cw = new CsvWriter(sw, conf))
+            {
+                foreach (Query.QueryColumn c in q.Columns)
+                {
+                    cw.WriteField(c.Title);
+                }
+
+                cw.NextRecord();
+
+                foreach (DataRow dr in q.DataTable.Rows)
+                {
+                    foreach (Query.QueryColumn c in q.Columns)
+                    {
+                        object v = dr[c.Index];
+
+                        if (v == DBNull.Value)
+                        {
+                            cw.WriteField(null);
+                        }
+                        else
+                        {
+                            cw.WriteField(string.Format(CultureInfo.CurrentCulture, "{0}", v));
+                        }
+                    }
+
+                    cw.NextRecord();
+                }
+
+            }
+
+            MessageBox.Show(this, Properties.Text.export_completed, Properties.Text.completed, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        private void tsbCreateChart_Click(object sender, EventArgs e)
+        {
+            List<DataGridViewColumn> cols;
+
+
+            if (gvTable.SelectedColumns.Count == 0)
+            {
+                if (gvTable.Columns.Count < 2)
+                {
+                    MessageBox.Show(this, Properties.Text.no_enough_columns, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                cols = gvTable.Columns.Cast<DataGridViewColumn>().ToList();
+            }
+            else
+            {
+                if (gvTable.SelectedColumns.Count < 2)
+                {
+                    MessageBox.Show(this, Properties.Text.no_enough_selected_columns, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                cols = gvTable.SelectedColumns.Cast<DataGridViewColumn>().ToList();
+            }
+
+            Query q = (Query)gvTable.Tag!;
+            List<Query.QueryColumn> qCols = cols.Select(i => (Query.QueryColumn)i.Tag!).ToList();
+
+            foreach (Query.QueryColumn qCol in qCols.Skip(1))
+            {
+                if (!Column.NumericDotNetTypes.Contains(q.DataTable.Columns[qCol.Index].DataType))
+                {
+                    MessageBox.Show(this, string.Format(Properties.Text.not_numeric_column, qCol.Title), Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+            }
+
+            ChartForm f = new ChartForm(q, qCols);
+            f.Show(this);
+        }
+
         private string? GetSelectedCellValue(out DataGridViewCell? cell, out Query? q, out Query.QueryColumn? col, out DataRow? drCurrent)
         {
             cell = null;
@@ -3589,7 +3690,7 @@ namespace PgMulti
                     switch (col.Column!.Type)
                     {
                         case "bytea":
-                            drCurrent[cell.ColumnIndex] = QueryExecutorSql.ConvertValue(ba, typeof(string), col.Column!.Type, null);
+                            drCurrent[cell.ColumnIndex] = Column.ConvertValue(ba, typeof(string), col.Column!.Type, null);
                             q.SetEditedCell(drCurrent, cell.ColumnIndex);
                             break;
                         default:
@@ -4168,6 +4269,7 @@ namespace PgMulti
             this.tsddbInsertRow.Text = Properties.Text.insert_row;
             this.tsbDeleteRows.Text = Properties.Text.delete_rows;
             this.tsbApplyTableChanges.Text = Properties.Text.apply_changes;
+            this.tsbCreateChart.Text = Properties.Text.create_chart;
             this.tpExecutedSql.Text = Properties.Text.executed_query;
             this.tsbEditExecutedSql.Text = Properties.Text.edit;
             this.tsmiCloseTab.Text = Properties.Text.close_this_tab;

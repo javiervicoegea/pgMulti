@@ -1080,4 +1080,37 @@ A diferencia de otras herramientas, esta aplicación no reutiliza la conexión e
   <data name="source_column" xml:space="preserve">
     <value>Columna origen</value>
   </data>
+  <data name="create_chart" xml:space="preserve">
+    <value>Crear gráfico</value>
+  </data>
+  <data name="chart" xml:space="preserve">
+    <value>Gráfica</value>
+  </data>
+  <data name="columns" xml:space="preserve">
+    <value>Columnas</value>
+  </data>
+  <data name="bars" xml:space="preserve">
+    <value>Barras</value>
+  </data>
+  <data name="lines" xml:space="preserve">
+    <value>Líneas</value>
+  </data>
+  <data name="points" xml:space="preserve">
+    <value>Puntos</value>
+  </data>
+  <data name="completed" xml:space="preserve">
+    <value>Completado</value>
+  </data>
+  <data name="export_completed" xml:space="preserve">
+    <value>Exportación completada</value>
+  </data>
+  <data name="no_enough_columns" xml:space="preserve">
+    <value>La tabla no tiene suficientes columnas para crear una gráfica</value>
+  </data>
+  <data name="no_enough_selected_columns" xml:space="preserve">
+    <value>No ha seleccionado suficientes columnas de la tabla para crear una gráfica</value>
+  </data>
+  <data name="not_numeric_column" xml:space="preserve">
+    <value>La columna {0} no es de tipo numérico y no se puede representar como serie en una gráfica</value>
+  </data>
 </root>

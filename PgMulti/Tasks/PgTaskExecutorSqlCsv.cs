@@ -1,10 +1,14 @@
 ﻿using CsvHelper;
 using Irony.Parsing;
+using Microsoft.VisualBasic.Logging;
 using Npgsql;
 using Npgsql.Schema;
 using PgMulti.AppData;
+using PgMulti.DataStructure;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Text;
+using static Npgsql.Replication.PgOutput.Messages.RelationMessage;
 
 namespace PgMulti.Tasks
 {
@@ -136,7 +140,7 @@ namespace PgMulti.Tasks
                                     int affectedRows;
                                     DateTime start = DateTime.Now;
 
-                                    _NpgsqlCommand.AllResultTypesAreUnknown = true;
+                                    //_NpgsqlCommand.AllResultTypesAreUnknown = true;
 
                                     using (NpgsqlDataReader drd = _NpgsqlCommand.ExecuteReader())
                                     {
@@ -198,6 +202,14 @@ namespace PgMulti.Tasks
                                                     }
                                                 }
 
+                                                CultureInfo? monetaryCultureInfo = null;
+                                                if (colsDrd.Any(dc => dc.PostgresType.Name == "money"))
+                                                {
+                                                    string lcMonetary;
+                                                    monetaryCultureInfo = db.GetMonetaryCultureInfo(out lcMonetary);
+                                                    StringBuilderAppendIndentedLine(string.Format(string.Format(Properties.Text.money_culture_used, monetaryCultureInfo.Name, lcMonetary)), false);
+                                                }
+
                                                 int savedRows = 0;
                                                 while (drd.Read() && !_Canceled)
                                                 {
@@ -216,7 +228,8 @@ namespace PgMulti.Tasks
                                                         }
                                                         else
                                                         {
-                                                            cw.WriteField(drd.GetString(mapping[i]));
+                                                            object o = DataStructure.Column.ConvertValue(drd, mapping[i], DataStructure.Column.GetDataTableTypeMapping(dc.DataType), dc.PostgresType.Name, monetaryCultureInfo);
+                                                            cw.WriteField(string.Format(CultureInfo.CurrentCulture, "{0}", o));
                                                         }
                                                     }
 
@@ -332,7 +345,7 @@ namespace PgMulti.Tasks
 
                 _TotalDuration = DateTime.Now.Subtract(_StartTimestamp!.Value);
                 StringBuilderAppendEmptyLine();
-                StringBuilderAppendSummaryLine($"{Properties.Text.total_duration}: {EllapsedTimeDescription(_TotalDuration!.Value, true)}", _Exception == null ? LogStyle.TaskSuccessfullyCompleted: LogStyle.TaskFailed);
+                StringBuilderAppendSummaryLine($"{Properties.Text.total_duration}: {EllapsedTimeDescription(_TotalDuration!.Value, true)}", _Exception == null ? LogStyle.TaskSuccessfullyCompleted : LogStyle.TaskFailed);
 
                 _State = StateEnum.Finished;
 

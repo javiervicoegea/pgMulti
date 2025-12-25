@@ -274,6 +274,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Bars.
+        /// </summary>
+        internal static string bars {
+            get {
+                return ResourceManager.GetString("bars", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a The script cannot be executed because the parser is not able to individualize the commands that comprise it..
         /// </summary>
         internal static string basic_parse_error {
@@ -342,6 +351,15 @@ namespace PgMulti.Properties {
         internal static string change_pass {
             get {
                 return ResourceManager.GetString("change_pass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Chart.
+        /// </summary>
+        internal static string chart {
+            get {
+                return ResourceManager.GetString("chart", resourceCulture);
             }
         }
         
@@ -508,6 +526,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Completed.
+        /// </summary>
+        internal static string completed {
+            get {
+                return ResourceManager.GetString("completed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Completed in {0}.
         /// </summary>
         internal static string completed_in {
@@ -667,6 +694,15 @@ namespace PgMulti.Properties {
         internal static string copy_to_table_task {
             get {
                 return ResourceManager.GetString("copy_to_table_task", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Create chart.
+        /// </summary>
+        internal static string create_chart {
+            get {
+                return ResourceManager.GetString("create_chart", resourceCulture);
             }
         }
         
@@ -1079,6 +1115,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Export completed.
+        /// </summary>
+        internal static string export_completed {
+            get {
+                return ResourceManager.GetString("export_completed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Run query and export results in CSV file.
         /// </summary>
         internal static string export_csv {
@@ -1413,6 +1458,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Lines.
+        /// </summary>
+        internal static string lines {
+            get {
+                return ResourceManager.GetString("lines", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Load from a binary file.
         /// </summary>
         internal static string load_binary_file {
@@ -1633,6 +1687,24 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a The table does not have enough columns to create a chart.
+        /// </summary>
+        internal static string no_enough_columns {
+            get {
+                return ResourceManager.GetString("no_enough_columns", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a You have not selected enough columns from the table to create a chart.
+        /// </summary>
+        internal static string no_enough_selected_columns {
+            get {
+                return ResourceManager.GetString("no_enough_selected_columns", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a No errors.
         /// </summary>
         internal static string no_errors {
@@ -1665,6 +1737,15 @@ namespace PgMulti.Properties {
         internal static string not_null {
             get {
                 return ResourceManager.GetString("not_null", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a The {0} column is not of numeric type and cannot be represented as a series in a graph.
+        /// </summary>
+        internal static string not_numeric_column {
+            get {
+                return ResourceManager.GetString("not_numeric_column", resourceCulture);
             }
         }
         
@@ -1791,6 +1872,15 @@ namespace PgMulti.Properties {
         internal static string pk {
             get {
                 return ResourceManager.GetString("pk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Points.
+        /// </summary>
+        internal static string points {
+            get {
+                return ResourceManager.GetString("points", resourceCulture);
             }
         }
         

@@ -1,6 +1,8 @@
 ﻿using Npgsql;
 using Npgsql.Schema;
+using NpgsqlTypes;
 using System;
+using System.Collections;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -51,16 +53,17 @@ namespace PgMulti.DataStructure
         private int? _Scale = null;
         private int? _Size = null;
 
-        private static string[] BooleanTypes = { "bool", "boolean" };
-        private static string[] ShortTypes = { "smallint", "int2", "serial2" };
-        private static string[] IntTypes = { "int", "integer", "int4", "serial4", "serial" };
-        private static string[] LongTypes = { "bigint", "int8", "serial8", "bigserial" };
-        private static string[] FloatTypes = { "real", "float4" };
-        private static string[] DoubleTypes = { "double precision", "float8" };
-        private static string[] DecimalTypes = { "money", "numeric", "decimal" };
-        private static string[] DateTypes = { "date" };
-        private static string[] DateTimeTypes = { "datetime", "timestamp", "timestamp with time zone", "timestamp without time zone" };
-        private static string[] NumericTypes = { "numeric", "decimal" };
+        public static string[] BooleanTypes = { "bool", "boolean" };
+        public static string[] ShortTypes = { "smallint", "int2", "serial2" };
+        public static string[] IntTypes = { "int", "integer", "int4", "serial4", "serial" };
+        public static string[] LongTypes = { "bigint", "int8", "serial8", "bigserial" };
+        public static string[] FloatTypes = { "real", "float4" };
+        public static string[] DoubleTypes = { "double precision", "float8" };
+        public static string[] DecimalTypes = { "money", "numeric", "decimal" };
+        public static string[] DateTypes = { "date" };
+        public static string[] DateTimeTypes = { "datetime", "timestamp", "timestamp with time zone", "timestamp without time zone" };
+        public static string[] NumericTypes = { "numeric", "decimal" };
+        public static Type[] NumericDotNetTypes = new Type[] { typeof(short), typeof(int), typeof(long), typeof(float), typeof(double), typeof(Decimal) };
 
         internal Column(NpgsqlDataReader drd)
         {
@@ -271,6 +274,162 @@ namespace PgMulti.DataStructure
             {
                 return Type.ToLower() + (TypeParams == null ? "" : TypeParams) + " " + (NotNull ? "not null" : "null") + " " + DefaultValue;
             }
+        }
+
+        public static Type GetDataTableTypeMapping(Type? type)
+        {
+            if (type != null && NumericDotNetTypes.Contains(type))
+            {
+                return type;
+            }
+            else
+            {
+                return typeof(string);
+            }
+        }
+
+        public static object ConvertValue(NpgsqlDataReader drd, int index, Type dotNetType, string postgreSqlTypeName, CultureInfo? monetaryCultureInfo)
+        {
+            object? sourceObject;
+
+            if (drd[index] == DBNull.Value) return DBNull.Value;
+
+            switch (postgreSqlTypeName)
+            {
+                case "inet":
+                    sourceObject = drd.GetFieldValue<NpgsqlInet?>(index);
+                    break;
+                case "bit":
+                    sourceObject = drd.GetFieldValue<BitArray?>(index);
+                    break;
+                default:
+                    sourceObject = drd[index];
+                    break;
+            }
+
+            if (sourceObject == null) return DBNull.Value;
+
+            return ConvertValue(sourceObject, dotNetType, postgreSqlTypeName, monetaryCultureInfo);
+        }
+
+        public static object ConvertValue(object sourceObject, Type dotNetType, string npgsqlTypeName, CultureInfo? monetaryCultureInfo)
+        {
+            object destinationObject;
+
+            if (sourceObject == DBNull.Value)
+            {
+                destinationObject = sourceObject;
+            }
+            else if (!Column.IsSupportedType(npgsqlTypeName))
+            {
+                return "?";
+            }
+            else if (sourceObject is string)
+            {
+                string s = (string)sourceObject;
+
+                if (dotNetType == typeof(bool))
+                {
+                    if (s == "t")
+                    {
+                        destinationObject = true;
+                    }
+                    else if (s == "f")
+                    {
+                        destinationObject = false;
+                    }
+                    else
+                    {
+                        throw new NotSupportedException();
+                    }
+                }
+                else if (dotNetType == typeof(short))
+                {
+                    destinationObject = short.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
+                }
+                else if (dotNetType == typeof(int))
+                {
+                    destinationObject = int.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
+                }
+                else if (dotNetType == typeof(long))
+                {
+                    destinationObject = long.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
+                }
+                else if (dotNetType == typeof(float))
+                {
+                    destinationObject = float.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
+                }
+                else if (dotNetType == typeof(double))
+                {
+                    destinationObject = double.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
+                }
+                else if (dotNetType == typeof(decimal))
+                {
+                    if (npgsqlTypeName == "money")
+                    {
+                        if (monetaryCultureInfo == null) throw new ArgumentException("Missing monetaryCultureInfo");
+                        destinationObject = decimal.Parse(s, System.Globalization.NumberStyles.Currency, monetaryCultureInfo!);
+                    }
+                    else
+                    {
+                        destinationObject = decimal.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
+                    }
+                }
+                else
+                {
+                    destinationObject = sourceObject;
+                }
+            }
+            else if (sourceObject is NpgsqlInet && dotNetType == typeof(string))
+            {
+                NpgsqlInet ip = (NpgsqlInet)sourceObject;
+
+                destinationObject = ip.Address.ToString() + "/" + ip.Netmask.ToString();
+            }
+            else if (dotNetType == typeof(string))
+            {
+                if (sourceObject is DateTime)
+                {
+                    DateTime dt = (DateTime)sourceObject;
+                    if (dt.Date == dt)
+                    {
+                        destinationObject = dt.ToString("yyyy-MM-dd");
+                    }
+                    else
+                    {
+                        if (dt.TimeOfDay.Seconds == 0 && dt.TimeOfDay.Milliseconds == 0)
+                        {
+                            destinationObject = dt.ToString("yyyy-MM-dd HH:mm");
+                        }
+                        else
+                        {
+                            destinationObject = dt.ToString("yyyy-MM-dd HH:mm:ss.FFF");
+                        }
+                    }
+                }
+                else if (sourceObject is byte[])
+                {
+                    destinationObject = Convert.ToBase64String((byte[])sourceObject);
+                }
+                else if (sourceObject is BitArray)
+                {
+                    destinationObject = string.Join("", ((BitArray)sourceObject).Cast<bool>().Select(b => b ? "1" : "0"));
+                }
+                else if (sourceObject is bool)
+                {
+                    destinationObject = ((bool)sourceObject).ToString().ToLowerInvariant();
+                }
+                else
+                {
+                    destinationObject = sourceObject;
+                }
+            }
+            else
+            {
+                destinationObject = sourceObject;
+            }
+
+            return destinationObject;
         }
 
         public static bool IsSupportedType(string? type)

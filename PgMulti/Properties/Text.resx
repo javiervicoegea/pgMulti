@@ -1129,4 +1129,37 @@ Unlike other tools, this application does not reuse the connection between diffe
   <data name="source_column" xml:space="preserve">
     <value>Source column</value>
   </data>
+  <data name="create_chart" xml:space="preserve">
+    <value>Create chart</value>
+  </data>
+  <data name="chart" xml:space="preserve">
+    <value>Chart</value>
+  </data>
+  <data name="columns" xml:space="preserve">
+    <value>Columns</value>
+  </data>
+  <data name="bars" xml:space="preserve">
+    <value>Bars</value>
+  </data>
+  <data name="lines" xml:space="preserve">
+    <value>Lines</value>
+  </data>
+  <data name="points" xml:space="preserve">
+    <value>Points</value>
+  </data>
+  <data name="completed" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="export_completed" xml:space="preserve">
+    <value>Export completed</value>
+  </data>
+  <data name="no_enough_columns" xml:space="preserve">
+    <value>The table does not have enough columns to create a chart</value>
+  </data>
+  <data name="no_enough_selected_columns" xml:space="preserve">
+    <value>You have not selected enough columns from the table to create a chart</value>
+  </data>
+  <data name="not_numeric_column" xml:space="preserve">
+    <value>The {0} column is not of numeric type and cannot be represented as a series in a graph</value>
+  </data>
 </root>

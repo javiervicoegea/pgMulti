@@ -17,8 +17,6 @@ namespace PgMulti.Tasks
 {
     public class QueryExecutorSql : Query
     {
-        private static Type[] NumericTypes = new Type[] { typeof(short), typeof(int), typeof(long), typeof(float), typeof(double), typeof(Decimal) };
-
         private PgTaskExecutorSqlTables _TaskExecutor;
         internal QueryIntegrator? _QueryIntegrator = null;
 
@@ -48,14 +46,7 @@ namespace PgMulti.Tasks
                 Columns.Add(new QueryColumn(i, dc.ColumnName));
                 DataColumn dtc = new DataColumn("_" + i, dc.DataType!);
 
-                if (NumericTypes.Contains(dc.DataType!))
-                {
-                    dtc.DataType = dc.DataType;
-                }
-                else
-                {
-                    dtc.DataType = typeof(string);
-                }
+                dtc.DataType=Column.GetDataTableTypeMapping(dc.DataType);
 
                 DataTable.Columns.Add(dtc);
             }
@@ -114,7 +105,7 @@ namespace PgMulti.Tasks
             if (Columns.Any(qc => qc.PostgreSqlTypeName == "money"))
             {
                 string lcMonetary;
-                monetaryCultureInfo = GetMonetaryCultureInfo(DB, out lcMonetary);
+                monetaryCultureInfo = DB.GetMonetaryCultureInfo(out lcMonetary);
                 log = string.Format(string.Format(Properties.Text.money_culture_used, monetaryCultureInfo.Name, lcMonetary));
             }
 
@@ -125,7 +116,7 @@ namespace PgMulti.Tasks
                 foreach (QueryColumn qc in Columns)
                 {
                     DataColumn dc = DataTable.Columns["_" + qc.Index]!;
-                    object o = ConvertValue(drd, qc.Index, dc.DataType, qc.PostgreSqlTypeName!, monetaryCultureInfo);
+                    object o = Column.ConvertValue(drd, qc.Index, dc.DataType, qc.PostgreSqlTypeName!, monetaryCultureInfo);
 
                     dr[qc.Index] = o;
                 }
@@ -136,194 +127,6 @@ namespace PgMulti.Tasks
             DataTable.AcceptChanges();
 
             return log;
-        }
-
-        internal static object ConvertValue(NpgsqlDataReader drd, int index, Type dotNetType, string postgreSqlTypeName, CultureInfo? monetaryCultureInfo)
-        {
-            object? sourceObject;
-
-            if (drd[index] == DBNull.Value) return DBNull.Value;
-
-            switch (postgreSqlTypeName)
-            {
-                case "inet":
-                    sourceObject = drd.GetFieldValue<NpgsqlInet?>(index);
-                    break;
-                case "bit":
-                    sourceObject = drd.GetFieldValue<BitArray?>(index);
-                    break;
-                default:
-                    sourceObject = drd[index];
-                    break;
-            }
-
-            if (sourceObject == null) return DBNull.Value;
-
-            return ConvertValue(sourceObject, dotNetType, postgreSqlTypeName, monetaryCultureInfo);
-        }
-
-        internal static object ConvertValue(object sourceObject, Type dotNetType, string npgsqlTypeName, CultureInfo? monetaryCultureInfo)
-        {
-            object destinationObject;
-
-            if (sourceObject == DBNull.Value)
-            {
-                destinationObject = sourceObject;
-            }
-            else if (!Column.IsSupportedType(npgsqlTypeName))
-            {
-                return "?";
-            }
-            else if (sourceObject is string)
-            {
-                string s = (string)sourceObject;
-
-                if (dotNetType == typeof(bool))
-                {
-                    if (s == "t")
-                    {
-                        destinationObject = true;
-                    }
-                    else if (s == "f")
-                    {
-                        destinationObject = false;
-                    }
-                    else
-                    {
-                        throw new NotSupportedException();
-                    }
-                }
-                else if (dotNetType == typeof(short))
-                {
-                    destinationObject = short.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
-                }
-                else if (dotNetType == typeof(int))
-                {
-                    destinationObject = int.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
-                }
-                else if (dotNetType == typeof(long))
-                {
-                    destinationObject = long.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
-                }
-                else if (dotNetType == typeof(float))
-                {
-                    destinationObject = float.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
-                }
-                else if (dotNetType == typeof(double))
-                {
-                    destinationObject = double.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
-                }
-                else if (dotNetType == typeof(decimal))
-                {
-                    if (npgsqlTypeName == "money")
-                    {
-                        if (monetaryCultureInfo == null) throw new ArgumentException("Missing monetaryCultureInfo");
-                        destinationObject = decimal.Parse(s, System.Globalization.NumberStyles.Currency, monetaryCultureInfo!);
-                    }
-                    else
-                    {
-                        destinationObject = decimal.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
-                    }
-                }
-                else
-                {
-                    destinationObject = sourceObject;
-                }
-            }
-            else if (sourceObject is NpgsqlInet && dotNetType == typeof(string))
-            {
-                NpgsqlInet ip = (NpgsqlInet)sourceObject;
-
-                destinationObject = ip.Address.ToString() + "/" + ip.Netmask.ToString();
-            }
-            else if (dotNetType == typeof(string))
-            {
-                if (sourceObject is DateTime)
-                {
-                    DateTime dt = (DateTime)sourceObject;
-                    if (dt.Date == dt)
-                    {
-                        destinationObject = dt.ToString("yyyy-MM-dd");
-                    }
-                    else
-                    {
-                        if (dt.TimeOfDay.Seconds == 0 && dt.TimeOfDay.Milliseconds == 0)
-                        {
-                            destinationObject = dt.ToString("yyyy-MM-dd HH:mm");
-                        }
-                        else
-                        {
-                            destinationObject = dt.ToString("yyyy-MM-dd HH:mm:ss.FFF");
-                        }
-                    }
-                }
-                else if (sourceObject is byte[])
-                {
-                    destinationObject = Convert.ToBase64String((byte[])sourceObject);
-                }
-                else if (sourceObject is BitArray)
-                {
-                    destinationObject = string.Join("", ((BitArray)sourceObject).Cast<bool>().Select(b => b ? "1" : "0"));
-                }
-                else if (sourceObject is bool)
-                {
-                    destinationObject = ((bool)sourceObject).ToString().ToLowerInvariant();
-                }
-                else
-                {
-                    destinationObject = sourceObject;
-                }
-            }
-            else
-            {
-                destinationObject = sourceObject;
-            }
-
-            return destinationObject;
-        }
-
-        internal static CultureInfo GetMonetaryCultureInfo(DB db, out string lcMonetary)
-        {
-            CultureInfo? monetaryCultureInfo;
-
-            using (NpgsqlConnection c = db.Connection)
-            {
-                c.Open();
-                NpgsqlCommand cmd = c.CreateCommand();
-                cmd.CommandText = "SHOW LC_MONETARY";
-                lcMonetary = (string)cmd.ExecuteScalar()!;
-            }
-
-            if (lcMonetary == null)
-            {
-                throw new NotSupportedException(string.Format(Properties.Text.money_cannot_be_parsed, "null"));
-            }
-            else
-            {
-                string pgId = lcMonetary.Split('.')[0];
-                string pgId2 = pgId.Replace("_", "-");
-
-                monetaryCultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(cii => cii.Name == pgId || cii.Name == pgId2);
-                if (monetaryCultureInfo == null)
-                {
-
-                    string[] pgIdParts = pgId.Split('_');
-                    string pgId3 = pgIdParts[0];
-
-                    if (pgIdParts.Length > 1)
-                    {
-                        pgId3 += " (" + pgIdParts[1] + ")";
-                    }
-
-                    monetaryCultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(ci => ci.EnglishName == pgId3);
-                    if (monetaryCultureInfo == null)
-                    {
-                        throw new NotSupportedException(string.Format(Properties.Text.money_cannot_be_parsed, lcMonetary));
-                    }
-                }
-            }
-
-            return monetaryCultureInfo;
         }
 
         private static Type[] numericTypesHierarchy = new Type[] { typeof(string), typeof(double), typeof(decimal), typeof(long), typeof(int), typeof(short) };

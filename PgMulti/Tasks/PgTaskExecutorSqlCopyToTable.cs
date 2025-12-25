@@ -1,10 +1,8 @@
 ﻿using Irony.Parsing;
-using Microsoft.VisualBasic.Logging;
 using Npgsql;
 using Npgsql.Schema;
 using PgMulti.AppData;
 using PgMulti.DataStructure;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 
@@ -13,7 +11,7 @@ namespace PgMulti.Tasks
     public class PgTaskExecutorSqlCopyToTable : PgTaskExecutorSql
     {
         private List<DB> _SourceDBs;
-        private List<DB> _DestinationDBs;
+        private List<DB>? _DestinationDBs;
         private int _CurrentDBIndex = -1;
         private ReadOnlyCollection<NpgsqlDbColumn>? _SourceColumns = null;
         private Table? _DestinationTable = null;
@@ -208,7 +206,7 @@ namespace PgMulti.Tasks
                                             NpgsqlCommand insertCommand = new NpgsqlCommand();
                                             if (destinationConnections == null || destinationTransactions == null)
                                             {
-                                                destinationConnections = new NpgsqlConnection[_DestinationDBs.Count];
+                                                destinationConnections = new NpgsqlConnection[_DestinationDBs!.Count];
                                                 destinationTransactions = new NpgsqlTransaction[_DestinationDBs.Count];
 
                                                 for (int i = 0; i < _DestinationDBs.Count; i++)
@@ -262,7 +260,7 @@ namespace PgMulti.Tasks
                                             if (parameters.Any(t => t.Item3.PostgresType.Name == "money"))
                                             {
                                                 string lcMonetary;
-                                                monetaryCultureInfo = QueryExecutorSql.GetMonetaryCultureInfo(sourceDB, out lcMonetary);
+                                                monetaryCultureInfo = sourceDB.GetMonetaryCultureInfo(out lcMonetary);
                                                 StringBuilderAppendIndentedLine(string.Format(string.Format(Properties.Text.money_culture_used, monetaryCultureInfo.Name, lcMonetary)), false);
                                             }
 
@@ -278,7 +276,7 @@ namespace PgMulti.Tasks
                                                 {
                                                     object o;
 
-                                                    o = QueryExecutorSql.ConvertValue(drd[item.Item2], item.Item6, item.Item3.PostgresType.Name, monetaryCultureInfo);
+                                                    o = Column.ConvertValue(drd[item.Item2], item.Item6, item.Item3.PostgresType.Name, monetaryCultureInfo);
 
                                                     insertCommand.Parameters["_" + item.Item1].Value = o;
                                                 }
@@ -382,7 +380,7 @@ namespace PgMulti.Tasks
                     for (int i = 0; i < destinationTransactions.Length; i++)
                     {
                         destinationTransactions[i].Commit();
-                        StringBuilderAppendIndentedLine(string.Format(Properties.Text.dest_transaction_commited, _DestinationDBs[i].Alias), true);
+                        StringBuilderAppendIndentedLine(string.Format(Properties.Text.dest_transaction_commited, _DestinationDBs![i].Alias), true);
                     }
                 }
             }
