@@ -828,6 +828,7 @@ namespace PgMulti.QueryEditor
                     case "id_simple":
                     case "string":
                     case "escaped_string":
+                    case "bit_string":
                     case "number":
                     case "(":
                     case ")":

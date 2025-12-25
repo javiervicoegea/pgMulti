@@ -273,6 +273,12 @@ namespace PgMulti.DataStructure
             }
         }
 
+        public static bool IsSupportedType(string? type)
+        {
+            // ToDo: A comprehensive enumeration of the types actually admitted is required
+            return type != null && type != "ARRAY" && !type.Contains("[");
+        }
+
         public string GetSqlLiteralValue(object v)
         {
             if (v == null || v == DBNull.Value) return "null";
@@ -331,6 +337,12 @@ namespace PgMulti.DataStructure
                         {
                             return "'" + s + "'";
                         }
+                    case "bit varying":
+                    case "bit":
+                    case "varbit":
+                        return "B'" + (string)v + "'::" + Type + (TypeParams == null ? "" : TypeParams);
+                    case "bytea":
+                        return "decode('" + (string)v + "', 'base64')::" + Type;
                     default:
                         return "'" + v.ToString() + "'::" + Type;
                 }

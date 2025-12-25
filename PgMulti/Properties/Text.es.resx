@@ -1011,11 +1011,8 @@ A diferencia de otras herramientas, esta aplicación no reutiliza la conexión e
   <data name="money_culture_used" xml:space="preserve">
     <value>Los campos de tipo money usarán la configuración regional '{0}' correspondiente al valor LC_MONETARY '{1}'</value>
   </data>
-  <data name="invalid_hex_value" xml:space="preserve">
-    <value>La cadena de texto de la celda no corresponde a una secuencia válida de dígitos hexadecimales. Recuerde que esta secuencia debe tener un número par de dígitos y debe ir precedida por \x. Por ejemplo: \xf9e3.</value>
-  </data>
-  <data name="invalid_bin_value" xml:space="preserve">
-    <value>La cadena de texto de la celda no corresponde a una secuencia válida de bytes en dígitos binarios. Recuerde que esta secuencia debe tener un número múltiplo de 8 dígitos.</value>
+  <data name="invalid_b64_value" xml:space="preserve">
+    <value>La cadena de texto de la celda no corresponde a un código válido en Base64.</value>
   </data>
   <data name="all_file_filter" xml:space="preserve">
     <value>Todos los ficheros|*.*</value>

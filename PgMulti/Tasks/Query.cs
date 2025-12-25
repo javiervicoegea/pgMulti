@@ -113,6 +113,7 @@ namespace PgMulti.Tasks
                 QueryColumn qc = Columns[i];
                 DataGridViewColumn dgvc = gv.Columns[i];
                 dgvc.HeaderText = qc.Title;
+                dgvc.HeaderCell.ToolTipText = qc.PostgreSqlTypeName;
                 dgvc.Tag = qc;
                 dgvc.Resizable = DataGridViewTriState.True;
                 dgvc.DefaultCellStyle.FormatProvider = CultureInfo.InvariantCulture;
@@ -136,11 +137,11 @@ namespace PgMulti.Tasks
 
                 for (int i = 0; i < Columns.Count; i++)
                 {
-                    if (Columns[i].EditableOnEdit)
+                    if (Columns[i].IsEditableOnEdit)
                     {
                         gv.Columns[i].ReadOnly = false;
                     }
-                    else if (Columns[i].Column != null && Columns[i].EditableOnInsert)
+                    else if (Columns[i].Column != null && Columns[i].IsEditableOnInsert)
                     {
                         gv.Columns[i].ReadOnly = false;
                         for (int j = 0; j < gv.RowCount; j++)
@@ -226,7 +227,7 @@ namespace PgMulti.Tasks
                         {
                             if (dc.ColumnName == "__") continue;
                             QueryColumn c = Columns[int.Parse(dc.ColumnName.Substring(1))];
-                            if (c.EditableOnInsert && dr[c.Index] != null && dr[c.Index] != DBNull.Value)
+                            if (c.IsEditableOnInsert && dr[c.Index] != null && dr[c.Index] != DBNull.Value)
                             {
                                 cols.Add(SqlSyntax.PostgreSqlGrammar.IdToString(c.Column!.Id));
                                 vals.Add(c.Column.GetSqlLiteralValue(dr[c.Index]));
@@ -356,21 +357,29 @@ namespace PgMulti.Tasks
         {
             public string Title;
             public int Index;
-            public string? Type;
+            public string? PostgreSqlTypeName;
 
-            public bool EditableOnEdit
+            public bool IsEditableOnEdit
             {
                 get
                 {
-                    return Column != null && !Column.PK;
+                    return Column != null && !Column.PK && IsSupportedType;
                 }
             }
 
-            public bool EditableOnInsert
+            public bool IsEditableOnInsert
             {
                 get
                 {
-                    return Column != null && !Column.IsGeneratedAlways;
+                    return Column != null && !Column.IsGeneratedAlways && IsSupportedType;
+                }
+            }
+
+            public bool IsSupportedType
+            {
+                get
+                {
+                    return Column.IsSupportedType(PostgreSqlTypeName);
                 }
             }
 
@@ -381,14 +390,6 @@ namespace PgMulti.Tasks
                 set
                 {
                     _Column = value;
-                    if (value == null)
-                    {
-                        Type = null;
-                    }
-                    else
-                    {
-                        Type = value.Type;
-                    }
                 }
             }
 

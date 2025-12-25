@@ -16,6 +16,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;
+using System.Windows.Forms;
 using static PgMulti.Tasks.PgTask;
 
 namespace PgMulti
@@ -2831,6 +2832,7 @@ namespace PgMulti
                     _IgnoreLbResult_SelectedIndexChanged = false;
                     fctbResult.Clear();
                     gvTable.Tag = null;
+                    DeHighlightRows();
                     gvTable.DataSource = null;
                     tsddbTables.Text = Properties.Text.no_results;
                     tsddbTables.DropDownItems.Clear();
@@ -2884,6 +2886,7 @@ namespace PgMulti
             lbResult.Refresh();
             fctbResult.Clear();
             gvTable.Tag = null;
+            DeHighlightRows();
             gvTable.DataSource = null;
             tsddbTables.Text = Properties.Text.no_results;
             tsddbTables.DropDownItems.Clear();
@@ -2911,6 +2914,7 @@ namespace PgMulti
                 if (lbResult.SelectedIndices.Count != 1)
                 {
                     gvTable.Tag = null;
+                    DeHighlightRows();
                     gvTable.DataSource = null;
                     fctbResult.Clear();
                     fctbExecutedSql.Text = "";
@@ -2972,7 +2976,11 @@ namespace PgMulti
                     if (tsddbTablesPrevEmpty && tsddbTables.DropDown.Items.Count > 0)
                     {
                         tsddbTables.Text = Data.AutoEllipsis(t.Queries[0].Description, 150);
+                        DeHighlightRows();
+                        ignoreHighlightRow = true;
                         t.Queries[0].ShowInGridView(gvTable, tsbDeleteRows, tsddbInsertRow);
+                        ignoreHighlightRow = false;
+                        HighlightSelectedCellsRows();
                     }
 
                     fctbExecutedSql.Text = t.Sql;
@@ -3297,7 +3305,7 @@ namespace PgMulti
 
         private void gvTable_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
-            if (e.ColumnIndex != -1 && gvTable.Columns[e.ColumnIndex].Tag != null && ((Query.QueryColumn)gvTable.Columns[e.ColumnIndex].Tag!).EditableOnEdit && e.RowIndex == -1)
+            if (e.ColumnIndex != -1 && gvTable.Columns[e.ColumnIndex].Tag != null && ((Query.QueryColumn)gvTable.Columns[e.ColumnIndex].Tag!).IsEditableOnEdit && e.RowIndex == -1)
             {
                 e.PaintBackground(e.ClipBounds, false);
                 e.PaintContent(e.ClipBounds);
@@ -3324,6 +3332,43 @@ namespace PgMulti
             {
                 gvTable.SelectionMode = DataGridViewSelectionMode.CellSelect;
             }
+        }
+
+        private List<int> highLightedRows = new List<int>();
+        private bool ignoreHighlightRow = false;
+
+        private void gvTable_CellEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            HighlightSelectedCellsRows();
+        }
+
+        private void HighlightSelectedCellsRows()
+        {
+            if (ignoreHighlightRow) return;
+
+            DeHighlightRows();
+            
+            foreach (DataGridViewCell cell in gvTable.SelectedCells)
+            {
+                if (highLightedRows.Contains(cell.RowIndex)) continue;
+
+                cell.OwningRow.DefaultCellStyle.BackColor = Color.LightSteelBlue;
+                cell.OwningRow.DefaultCellStyle.ForeColor = Color.Black;
+
+                highLightedRows.Add(cell.RowIndex);
+            }
+        }
+
+        private void DeHighlightRows()
+        {
+            foreach (int highLightedRow in highLightedRows) {
+                var row = gvTable.Rows[highLightedRow];
+
+                row.DefaultCellStyle.BackColor = gvTable.DefaultCellStyle.BackColor;
+                row.DefaultCellStyle.ForeColor = gvTable.DefaultCellStyle.ForeColor;
+            }
+
+            highLightedRows.Clear();
         }
 
         private void tsddbInsertRow_Click(object sender, EventArgs e)
@@ -3538,37 +3583,17 @@ namespace PgMulti
                 if (gvTable.RowCount <= cell.RowIndex) continue;
                 Query.QueryColumn col = q.Columns[cell.ColumnIndex];
 
-                if (q.Editable && col.EditableOnEdit)
+                if (q.Editable && col.IsEditableOnEdit)
                 {
                     DataRow drCurrent = ((DataRowView)gvTable.Rows[cell.RowIndex].DataBoundItem).Row;
-                    switch (col.Type)
+                    switch (col.Column!.Type)
                     {
                         case "bytea":
-                            {
-                                StringBuilder sb = new StringBuilder(ba.Length * 2);
-                                foreach (byte b in ba)
-                                {
-                                    sb.AppendFormat("{0:x2}", b);
-                                }
-
-                                drCurrent[cell.ColumnIndex] = @"\x" + sb.ToString();
-                                q.SetEditedCell(drCurrent, cell.ColumnIndex);
-                            }
+                            drCurrent[cell.ColumnIndex] = QueryExecutorSql.ConvertValue(ba, typeof(string), col.Column!.Type, null);
+                            q.SetEditedCell(drCurrent, cell.ColumnIndex);
                             break;
-                        case "bit varying":
-                        case "bit":
-                        case "varbit":
-                            {
-                                StringBuilder sb = new StringBuilder(ba.Length * 8);
-                                foreach (byte b in ba)
-                                {
-                                    sb.Append(Convert.ToString(b, 2).PadLeft(8, '0'));
-                                }
-
-                                drCurrent[cell.ColumnIndex] = @"\x" + sb.ToString();
-                                q.SetEditedCell(drCurrent, cell.ColumnIndex);
-                            }
-                            break;
+                        default:
+                            throw new NotSupportedException();
                     }
                 }
             }
@@ -3582,44 +3607,21 @@ namespace PgMulti
 
             byte[] b;
 
-            try
+            switch (col.PostgreSqlTypeName)
             {
-                switch (col.Type)
-                {
-                    case "bytea":
-                        if (s.Length < 4 || !s.StartsWith(@"\x") || s.Length % 2 != 0)
-                        {
-                            MessageBox.Show(this, Properties.Text.invalid_hex_value, Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            return;
-                        }
-
-                        b = Enumerable.Range(0, s.Length - 4)
-                                 .Where(x => x % 2 == 0)
-                                 .Select(x => Convert.ToByte(s.Substring(x + 2, 2), 16))
-                                 .ToArray();
-                        break;
-                    case "bit varying":
-                    case "bit":
-                    case "varbit":
-                        if (s.Length < 8 || s.Length % 8 != 0)
-                        {
-                            MessageBox.Show(this, Properties.Text.invalid_hex_value, Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            return;
-                        }
-
-                        b = Enumerable.Range(0, s.Length - 8)
-                                 .Where(x => x % 8 == 0)
-                                 .Select(x => Convert.ToByte(s.Substring(x, 8), 2))
-                                 .ToArray();
-                        break;
-                    default:
+                case "bytea":
+                    try
+                    {
+                        b = Convert.FromBase64String(s);
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show(this, Properties.Text.invalid_b64_value, Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
-                }
-            }
-            catch (Exception)
-            {
-                MessageBox.Show(this, Properties.Text.invalid_hex_value, Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                    }
+                    break;
+                default:
+                    throw new NotSupportedException();
             }
 
             sfdBinaryCell.FileName = "";
@@ -3653,7 +3655,7 @@ namespace PgMulti
             }
             */
 
-            TextBoxForm f = new TextBoxForm(txt, q.Editable && col.EditableOnEdit);
+            TextBoxForm f = new TextBoxForm(txt, q.Editable && col.IsEditableOnEdit);
             f.ShowDialog(this);
 
             if (f.DialogResult == DialogResult.OK)
@@ -3680,7 +3682,7 @@ namespace PgMulti
                 if (gvTable.RowCount <= cell.RowIndex) continue;
 
                 Query.QueryColumn col = q.Columns[cell.ColumnIndex];
-                if (q.Editable && col.EditableOnEdit && !col.Column!.NotNull)
+                if (q.Editable && col.IsEditableOnEdit && !col.Column!.NotNull)
                 {
                     DataRow drCurrent = ((DataRowView)gvTable.Rows[cell.RowIndex].DataBoundItem).Row;
                     drCurrent[cell.ColumnIndex] = DBNull.Value;
@@ -3709,27 +3711,30 @@ namespace PgMulti
             {
                 Query.QueryColumn col = q.Columns[cell.ColumnIndex];
 
-                if (cell.Value != DBNull.Value)
+                if (col.IsSupportedType)
                 {
-                    tsbCopyCellText.Enabled = true;
-
-                    if (col.Type == "bytea" || col.Type == "varbit" || col.Type == "bit" || col.Type == "bit varying")
+                    if (cell.Value != DBNull.Value)
                     {
-                        tsbSaveCellBinaryValueInFile.Visible = true;
+                        tsbCopyCellText.Enabled = true;
+
+                        if (col.PostgreSqlTypeName == "bytea")
+                        {
+                            tsbSaveCellBinaryValueInFile.Visible = true;
+                        }
+
+                        if (q.Editable && col.IsEditableOnEdit && !col.Column!.NotNull)
+                        {
+                            tsbSetNull.Enabled = true;
+                        }
                     }
 
-                    if (q.Editable && col.EditableOnEdit && !col.Column!.NotNull)
+                    if (q.Editable && col.IsEditableOnEdit && col.Column!.Type == "bytea")
                     {
-                        tsbSetNull.Enabled = true;
+                        tsbLoadCellBinaryValueFromFile.Visible = true;
                     }
-                }
 
-                if (col.Type == "bytea" || col.Type == "varbit" || col.Type == "bit" || col.Type == "bit varying" && q.Editable && col.EditableOnEdit)
-                {
-                    tsbLoadCellBinaryValueFromFile.Visible = true;
+                    tsbTextEditor.Enabled = true;
                 }
-
-                tsbTextEditor.Enabled = true;
             }
         }
 

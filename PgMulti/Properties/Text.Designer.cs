@@ -1341,20 +1341,11 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a The text string in the cell does not correspond to a valid byte sequence of binary digits. Remember that this sequence must have a multiple of 8 digits..
+        ///   Busca una cadena traducida similar a The text string in the cell does not correspond to a valid code in Base64..
         /// </summary>
-        internal static string invalid_bin_value {
+        internal static string invalid_b64_value {
             get {
-                return ResourceManager.GetString("invalid_bin_value", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a The text string in the cell does not correspond to a valid sequence of hexadecimal digits. Remember that this sequence must have an even number of digits and must be preceded by \x. For example: \xf9e3..
-        /// </summary>
-        internal static string invalid_hex_value {
-            get {
-                return ResourceManager.GetString("invalid_hex_value", resourceCulture);
+                return ResourceManager.GetString("invalid_b64_value", resourceCulture);
             }
         }
         

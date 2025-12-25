@@ -278,7 +278,7 @@ namespace PgMulti.Tasks
                                                 {
                                                     object o;
 
-                                                    o = QueryExecutorSql.ParseValue(drd[item.Item2], item.Item6, item.Item3.PostgresType.Name, monetaryCultureInfo);
+                                                    o = QueryExecutorSql.ConvertValue(drd[item.Item2], item.Item6, item.Item3.PostgresType.Name, monetaryCultureInfo);
 
                                                     insertCommand.Parameters["_" + item.Item1].Value = o;
                                                 }

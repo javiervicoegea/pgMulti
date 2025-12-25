@@ -334,6 +334,7 @@ namespace PgMulti.QueryEditor
                             break;
                         case "string":
                         case "escaped_string":
+                        case "bit_string":
                             tr.SetStyle(StringTextStyle);
                             break;
                         case "comment":

@@ -1060,11 +1060,8 @@ Unlike other tools, this application does not reuse the connection between diffe
   <data name="money_culture_used" xml:space="preserve">
     <value>Money type fields will use the locale '{0}' corresponding to the LC_MONETARY value '{1}'</value>
   </data>
-  <data name="invalid_hex_value" xml:space="preserve">
-    <value>The text string in the cell does not correspond to a valid sequence of hexadecimal digits. Remember that this sequence must have an even number of digits and must be preceded by \x. For example: \xf9e3.</value>
-  </data>
-  <data name="invalid_bin_value" xml:space="preserve">
-    <value>The text string in the cell does not correspond to a valid byte sequence of binary digits. Remember that this sequence must have a multiple of 8 digits.</value>
+  <data name="invalid_b64_value" xml:space="preserve">
+    <value>The text string in the cell does not correspond to a valid code in Base64.</value>
   </data>
   <data name="all_file_filter" xml:space="preserve">
     <value>All files|*.*</value>

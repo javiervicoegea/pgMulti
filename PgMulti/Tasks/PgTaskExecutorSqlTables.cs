@@ -141,7 +141,7 @@ namespace PgMulti.Tasks
                             DataTable? dt = null;
                             DateTime start = DateTime.Now;
 
-                            _NpgsqlCommand.AllResultTypesAreUnknown = true;
+                            //_NpgsqlCommand.AllResultTypesAreUnknown = true;
 
                             using (NpgsqlDataReader drd = _NpgsqlCommand.ExecuteReader())
                             {

@@ -10,11 +10,14 @@ using System.Text.RegularExpressions;
 using System.Globalization;
 using PgMulti.DataAccess;
 using Microsoft.VisualBasic.Logging;
+using NpgsqlTypes;
+using System.Collections;
 
 namespace PgMulti.Tasks
 {
     public class QueryExecutorSql : Query
     {
+        private static Type[] NumericTypes = new Type[] { typeof(short), typeof(int), typeof(long), typeof(float), typeof(double), typeof(Decimal) };
 
         private PgTaskExecutorSqlTables _TaskExecutor;
         internal QueryIntegrator? _QueryIntegrator = null;
@@ -33,6 +36,7 @@ namespace PgMulti.Tasks
             }
         }
 
+
         public string? Load(NpgsqlDataReader drd)
         {
             string? log = null;
@@ -42,7 +46,18 @@ namespace PgMulti.Tasks
             {
                 NpgsqlDbColumn dc = cols[i];
                 Columns.Add(new QueryColumn(i, dc.ColumnName));
-                DataTable.Columns.Add("_" + i);
+                DataColumn dtc = new DataColumn("_" + i, dc.DataType!);
+
+                if (NumericTypes.Contains(dc.DataType!))
+                {
+                    dtc.DataType = dc.DataType;
+                }
+                else
+                {
+                    dtc.DataType = typeof(string);
+                }
+
+                DataTable.Columns.Add(dtc);
             }
 
             CalculateEditable();
@@ -91,16 +106,12 @@ namespace PgMulti.Tasks
                         dc.AllowDBNull = true;
                     }
                 }
-                else
-                {
-                    string pgType = drd.GetPostgresType(qc.Index).Name;
-                    Type t = Column.GetDotNetType(pgType);
-                    qc.Type = pgType;
-                }
+
+                qc.PostgreSqlTypeName = drd.GetPostgresType(qc.Index).Name;
             }
 
             CultureInfo? monetaryCultureInfo = null;
-            if (Columns.Any(qc => qc.Type == "money"))
+            if (Columns.Any(qc => qc.PostgreSqlTypeName == "money"))
             {
                 string lcMonetary;
                 monetaryCultureInfo = GetMonetaryCultureInfo(DB, out lcMonetary);
@@ -114,7 +125,7 @@ namespace PgMulti.Tasks
                 foreach (QueryColumn qc in Columns)
                 {
                     DataColumn dc = DataTable.Columns["_" + qc.Index]!;
-                    object o = ParseValue(drd[qc.Index], dc.DataType, qc.Type!, monetaryCultureInfo);
+                    object o = ConvertValue(drd, qc.Index, dc.DataType, qc.PostgreSqlTypeName!, monetaryCultureInfo);
 
                     dr[qc.Index] = o;
                 }
@@ -127,15 +138,43 @@ namespace PgMulti.Tasks
             return log;
         }
 
-        internal static object ParseValue(object sourceObject, Type dotNetType, string npgsqlTypeName, CultureInfo? monetaryCultureInfo)
+        internal static object ConvertValue(NpgsqlDataReader drd, int index, Type dotNetType, string postgreSqlTypeName, CultureInfo? monetaryCultureInfo)
+        {
+            object? sourceObject;
+
+            if (drd[index] == DBNull.Value) return DBNull.Value;
+
+            switch (postgreSqlTypeName)
+            {
+                case "inet":
+                    sourceObject = drd.GetFieldValue<NpgsqlInet?>(index);
+                    break;
+                case "bit":
+                    sourceObject = drd.GetFieldValue<BitArray?>(index);
+                    break;
+                default:
+                    sourceObject = drd[index];
+                    break;
+            }
+
+            if (sourceObject == null) return DBNull.Value;
+
+            return ConvertValue(sourceObject, dotNetType, postgreSqlTypeName, monetaryCultureInfo);
+        }
+
+        internal static object ConvertValue(object sourceObject, Type dotNetType, string npgsqlTypeName, CultureInfo? monetaryCultureInfo)
         {
             object destinationObject;
 
             if (sourceObject == DBNull.Value)
             {
-                destinationObject = DBNull.Value;
+                destinationObject = sourceObject;
             }
-            else
+            else if (!Column.IsSupportedType(npgsqlTypeName))
+            {
+                return "?";
+            }
+            else if (sourceObject is string)
             {
                 string s = (string)sourceObject;
 
@@ -188,8 +227,56 @@ namespace PgMulti.Tasks
                 }
                 else
                 {
-                    destinationObject = s;
+                    destinationObject = sourceObject;
                 }
+            }
+            else if (sourceObject is NpgsqlInet && dotNetType == typeof(string))
+            {
+                NpgsqlInet ip = (NpgsqlInet)sourceObject;
+
+                destinationObject = ip.Address.ToString() + "/" + ip.Netmask.ToString();
+            }
+            else if (dotNetType == typeof(string))
+            {
+                if (sourceObject is DateTime)
+                {
+                    DateTime dt = (DateTime)sourceObject;
+                    if (dt.Date == dt)
+                    {
+                        destinationObject = dt.ToString("yyyy-MM-dd");
+                    }
+                    else
+                    {
+                        if (dt.TimeOfDay.Seconds == 0 && dt.TimeOfDay.Milliseconds == 0)
+                        {
+                            destinationObject = dt.ToString("yyyy-MM-dd HH:mm");
+                        }
+                        else
+                        {
+                            destinationObject = dt.ToString("yyyy-MM-dd HH:mm:ss.FFF");
+                        }
+                    }
+                }
+                else if (sourceObject is byte[])
+                {
+                    destinationObject = Convert.ToBase64String((byte[])sourceObject);
+                }
+                else if (sourceObject is BitArray)
+                {
+                    destinationObject = string.Join("", ((BitArray)sourceObject).Cast<bool>().Select(b => b ? "1" : "0"));
+                }
+                else if (sourceObject is bool)
+                {
+                    destinationObject = ((bool)sourceObject).ToString().ToLowerInvariant();
+                }
+                else
+                {
+                    destinationObject = sourceObject;
+                }
+            }
+            else
+            {
+                destinationObject = sourceObject;
             }
 
             return destinationObject;

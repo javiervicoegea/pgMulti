@@ -44,6 +44,7 @@ namespace PgMulti.SqlSyntax
 
             var string_literal = new StringLiteral("string", "'", StringOptions.AllowsDoubledQuote | StringOptions.NoEscapes | StringOptions.AllowsLineBreak);
             var escaped_string_literal = new StringLiteral("escaped_string", "E'", "'", StringOptions.AllowsDoubledQuote | StringOptions.AllowsAllEscapes | StringOptions.AllowsLineBreak);
+            var bit_string_literal = new StringLiteral("bit_string", "B'", "'", StringOptions.NoEscapes);
             var dollar_string_tag = new StringLiteral("dollar_string_tag", "$");
 
             var dollar_variable = new IdentifierTerminal("dollar_variable");
@@ -164,6 +165,7 @@ namespace PgMulti.SqlSyntax
             var typeNameAndParams = new NonTerminal("typeNameAndParams");
             var typeName = new NonTerminal("typeName");
             var typeParamsOpt = new NonTerminal("typeParamsOpt");
+            var typeArrayOpt = new NonTerminal("typeArrayOpt");
             var tableConstraintDef = new NonTerminal("tableConstraintDef");
             var tableConstraintDefClause = new NonTerminal("tableConstraintDefClause");
             var constraintId = new NonTerminal("constraintId");
@@ -502,7 +504,7 @@ namespace PgMulti.SqlSyntax
                 );
             nullColumnConstraint.Rule = NULL | notNull;
             fkColumnConstraint.Rule = constraintId + fkConstraint;
-            typeNameAndParams.Rule = typeName + typeParamsOpt;
+            typeNameAndParams.Rule = typeName + typeParamsOpt + typeArrayOpt;
             typeName.Rule = ToTerm("BIT") + (Empty | "VARYING") | "VARBIT" | "DATE"
                 | "TIME" + (Empty | (WITHOUT | WITH) + "TIME" + ToTerm("ZONE"))
                 | "TIMESTAMP"
@@ -516,6 +518,8 @@ namespace PgMulti.SqlSyntax
 
             typeParamsOpt.Rule = (Empty | "(" + number + ")") + (Empty | (WITHOUT | WITH) + "TIME" + ToTerm("ZONE"))
                 | "(" + number + comma + number + ")";
+
+            typeArrayOpt.Rule = MakeStarRule(typeArrayOpt, "[" + expression + "]");
 
             tableConstraintDef.Rule = constraintId + tableConstraintDefClause;
             tableConstraintDefClause.Rule = PRIMARY + KEY + idlistPar
@@ -679,7 +683,7 @@ namespace PgMulti.SqlSyntax
                 | term + "[" + expression + "]" | extractExpr | castExpr
                 | SUBSTRING + "(" + expression + (FROM + expression + "FOR" | comma + expression + comma) + expression + ")"
                 | POSITION + "(" + expression + IN + expression + ")"
-                | dollar_variable;
+                | dollar_variable | bit_string_literal;
             funCall.Rule = "(" + funArgs + ")" + winFunOpt;
             winFunOpt.Rule = Empty | ToTerm("OVER") + "(" + (Empty | ToTerm("PARTITION") + BY + exprList) + orderClauseOpt + ")";
             tuple.Rule = "(" + exprList + ")";
