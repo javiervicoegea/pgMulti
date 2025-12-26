@@ -86,7 +86,8 @@ namespace PgMulti
                     ChartType = chartType,
                     XValueMember = Query.DataTable.Columns[Columns[0].Index].ColumnName,
                     YValueMembers = Query.DataTable.Columns[Columns[i].Index].ColumnName,
-                    IsValueShownAsLabel = true
+                    IsValueShownAsLabel = true,
+                    LabelBackColor = Color.FromArgb(200, 255, 255, 255)
                 };
 
                 if (xAxisAsCategories)

@@ -207,6 +207,7 @@ namespace PgMulti
                         default:
                             throw new NotSupportedException();
                     }
+                    tsddbTransactions.BackColor = Color.FromArgb(100, 167, 235, 155);
                     break;
                 case Config.TransactionModeEnum.AutoSingle:
                     switch (_Data!.Config.TransactionLevel)
@@ -223,6 +224,7 @@ namespace PgMulti
                         default:
                             throw new NotSupportedException();
                     }
+                    tsddbTransactions.BackColor = SystemColors.Control;
                     break;
                 case Config.TransactionModeEnum.AutoCoordinated:
                     switch (_Data!.Config.TransactionLevel)
@@ -239,6 +241,7 @@ namespace PgMulti
                         default:
                             throw new NotSupportedException();
                     }
+                    tsddbTransactions.BackColor = Color.FromArgb(100, 155, 199, 235);
                     break;
                 default:
                     throw new NotSupportedException();
@@ -4246,6 +4249,7 @@ namespace PgMulti
             this.tsmiRunMenu.Text = Properties.Text.run;
             this.tsbExportCsv.Text = Properties.Text.export_csv;
             this.tsmiExportCsv.Text = Properties.Text.export_csv;
+            this.tsbExportCsvCurrentData.Text = Properties.Text.export_csv_current_data;
             this.tsddbErrors.Text = Properties.Text.no_errors;
             this.tsbHistory.Text = Properties.Text.history;
             this.tsmiHistory.Text = Properties.Text.history;

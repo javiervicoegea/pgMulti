@@ -1133,6 +1133,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Export results table data to CSV.
+        /// </summary>
+        internal static string export_csv_current_data {
+            get {
+                return ResourceManager.GetString("export_csv_current_data", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Export database list.
         /// </summary>
         internal static string export_databases {
@@ -1175,15 +1184,6 @@ namespace PgMulti.Properties {
         internal static string file {
             get {
                 return ResourceManager.GetString("file", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a Find (ctrl + f).
-        /// </summary>
-        internal static string find_sc {
-            get {
-                return ResourceManager.GetString("find_sc", resourceCulture);
             }
         }
         
@@ -2326,7 +2326,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Search and replace.
+        ///   Busca una cadena traducida similar a Search and replace (ctrl + f).
         /// </summary>
         internal static string search_for_and_replace {
             get {

@@ -331,9 +331,6 @@ ATENCIÓN: Se eliminarán también las bases de datos dentro del grupo.</value>
   <data name="file" xml:space="preserve">
     <value>Archivo</value>
   </data>
-  <data name="find_sc" xml:space="preserve">
-    <value>Buscar (ctrl + f)</value>
-  </data>
   <data name="finished_error" xml:space="preserve">
     <value>terminado con ERROR</value>
   </data>
@@ -955,7 +952,7 @@ A diferencia de otras herramientas, esta aplicación no reutiliza la conexión e
     <value>Lista de bases de datos</value>
   </data>
   <data name="search_for_and_replace" xml:space="preserve">
-    <value>Buscar y reemplazar</value>
+    <value>Buscar y reemplazar (ctrl + f)</value>
   </data>
   <data name="search_text" xml:space="preserve">
     <value>Texto a buscar</value>
@@ -1100,6 +1097,9 @@ A diferencia de otras herramientas, esta aplicación no reutiliza la conexión e
   </data>
   <data name="completed" xml:space="preserve">
     <value>Completado</value>
+  </data>
+  <data name="export_csv_current_data" xml:space="preserve">
+    <value>Exportar datos de la tabla de resultados a CSV</value>
   </data>
   <data name="export_completed" xml:space="preserve">
     <value>Exportación completada</value>

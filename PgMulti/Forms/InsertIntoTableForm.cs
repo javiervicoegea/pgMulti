@@ -40,6 +40,18 @@ namespace PgMulti.Forms
             DialogResult = DialogResult.Cancel;
         }
 
+        private void ExpandServersTree()
+        {
+            tvaTables.Root.Children[0].Expand(true);
+            foreach (TreeNodeAdv tna in tvaTables.Root.Children[0].Children)
+            {
+                if (((Node)tna.Tag).Tag is Group)
+                {
+                    tna.Expand(true);
+                }
+            }
+        }
+
         private int UpdateNodeCounter(Node tn, List<DB> dbs)
         {
             if (tn == null || !(tn.Tag is Group || tn == _NRoot)) throw new ArgumentException();
@@ -182,6 +194,8 @@ namespace PgMulti.Forms
             _TreeModel.OnStructureChanged(new TreePathEventArgs(TreePath.Empty));
 
             tvaTables.EndUpdate();
+
+            ExpandServersTree();
 
             while (_Task.SourceColumns == null || _Task.Canceled)
             {

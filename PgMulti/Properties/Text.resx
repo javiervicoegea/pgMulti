@@ -331,9 +331,6 @@ ATTENTION: Databases within the group will also be deleted.</value>
 	<data name="file" xml:space="preserve">
     <value>File</value>
   </data>
-	<data name="find_sc" xml:space="preserve">
-    <value>Find (ctrl + f)</value>
-  </data>
 	<data name="finished_error" xml:space="preserve">
     <value>finished with ERROR</value>
   </data>
@@ -1004,7 +1001,7 @@ Unlike other tools, this application does not reuse the connection between diffe
     <value>Database list</value>
   </data>
   <data name="search_for_and_replace" xml:space="preserve">
-    <value>Search and replace</value>
+    <value>Search and replace (ctrl + f)</value>
   </data>
   <data name="search_text" xml:space="preserve">
     <value>Search text</value>
@@ -1149,6 +1146,9 @@ Unlike other tools, this application does not reuse the connection between diffe
   </data>
   <data name="completed" xml:space="preserve">
     <value>Completed</value>
+  </data>
+  <data name="export_csv_current_data" xml:space="preserve">
+    <value>Export results table data to CSV</value>
   </data>
   <data name="export_completed" xml:space="preserve">
     <value>Export completed</value>
