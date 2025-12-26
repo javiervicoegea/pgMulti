@@ -44,6 +44,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Forms\InputTableAliasForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Forms\ChartForm.cs">
       <SubType>Form</SubType>
     </Compile>

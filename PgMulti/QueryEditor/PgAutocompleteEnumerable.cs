@@ -93,8 +93,8 @@ namespace PgMulti.QueryEditor
             int insertedChars = 0;
             if (currentFragment == "" || currentFragment.EndsWith("."))
             {
-                beforeCurrentSql += "x";
-                insertedChars = 1;
+                beforeCurrentSql += "___x";
+                insertedChars = 4;
             }
 
             string currentSql = beforeCurrentSql + afterCurrentSql;
@@ -271,8 +271,8 @@ namespace PgMulti.QueryEditor
                         && !Regex.Match(afterCurrentSql, @"^\s+ON\s+", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
                     )
                 {
-                    afterCurrentSql = " ON x" + afterCurrentSql;
-                    insertedChars += 5;
+                    afterCurrentSql = " ON ___x" + afterCurrentSql;
+                    insertedChars += 8;
 
                     currentSql = beforeCurrentSql + afterCurrentSql;
 
@@ -283,8 +283,8 @@ namespace PgMulti.QueryEditor
                         && !Regex.Match(afterCurrentSql, @"^\s+SET\s+[\w\""]+\s*\=", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
                     )
                 {
-                    afterCurrentSql = " SET x=x" + afterCurrentSql;
-                    insertedChars += 8;
+                    afterCurrentSql = " SET ___x=___x" + afterCurrentSql;
+                    insertedChars += 14;
 
                     currentSql = beforeCurrentSql + afterCurrentSql;
 
@@ -300,8 +300,8 @@ namespace PgMulti.QueryEditor
                         && !Regex.Match(afterCurrentSql, @"^\s*\=", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
                     )
                 {
-                    afterCurrentSql = "=x" + afterCurrentSql;
-                    insertedChars += 2;
+                    afterCurrentSql = "=___x" + afterCurrentSql;
+                    insertedChars += 5;
 
                     currentSql = beforeCurrentSql + afterCurrentSql;
 
@@ -312,8 +312,8 @@ namespace PgMulti.QueryEditor
                         && !Regex.Match(afterCurrentSql, @"^\s*\([\w\""]+(\s*\,\s*[\w\""]+)*\)\s*VALUES\s*\(", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
                     )
                 {
-                    afterCurrentSql = " (x) VALUES (x)" + afterCurrentSql;
-                    insertedChars += 15;
+                    afterCurrentSql = " (___x) VALUES (___x)" + afterCurrentSql;
+                    insertedChars += 21;
 
                     currentSql = beforeCurrentSql + afterCurrentSql;
 
@@ -324,8 +324,8 @@ namespace PgMulti.QueryEditor
                         && !Regex.Match(afterCurrentSql, @"^(\s*\,\s*[\w\""]+)*\)\s*VALUES\s*\(", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
                     )
                 {
-                    afterCurrentSql = ") VALUES (x" + afterCurrentSql;
-                    insertedChars += 11;
+                    afterCurrentSql = ") VALUES (___x" + afterCurrentSql;
+                    insertedChars += 14;
 
                     currentSql = beforeCurrentSql + afterCurrentSql;
 
@@ -347,7 +347,7 @@ namespace PgMulti.QueryEditor
                         && !Regex.Match(afterCurrentSql, @"^\s*\(", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
                     )
                 {
-                    afterCurrentSql = "(x)";
+                    afterCurrentSql = "(___x)";
 
                     currentSql = beforeCurrentSql + afterCurrentSql;
 
@@ -358,7 +358,7 @@ namespace PgMulti.QueryEditor
                         && !Regex.Match(afterCurrentSql, @"^\s+FOR\s+.*\s+EXECUTE", RegexOptions.IgnoreCase | RegexOptions.Singleline).Success
                     )
                 {
-                    afterCurrentSql = " FOR EACH ROW EXECUTE FUNCTION x()";
+                    afterCurrentSql = " FOR EACH ROW EXECUTE FUNCTION ___x()";
 
                     currentSql = beforeCurrentSql + afterCurrentSql;
 
@@ -560,18 +560,19 @@ namespace PgMulti.QueryEditor
                                 }
 
                                 string aliasRel = _CreateTableAlias(allTables.Keys, relatedTable.Id);
-                                string condRel = PostgreSqlGrammar.IdToString(kvpTabla.Key) + "." + PostgreSqlGrammar.IdToString(curTableColumns[0]) + "=" + PostgreSqlGrammar.IdToString(aliasRel) + "." + PostgreSqlGrammar.IdToString(relatedTableColumns[0]);
+                                string condRel = PostgreSqlGrammar.IdToString(kvpTabla.Key) + "." + PostgreSqlGrammar.IdToString(curTableColumns[0]) + "={0}." + PostgreSqlGrammar.IdToString(relatedTableColumns[0]);
 
                                 for (int i = 1; i < curTableColumns.Length; i++)
                                 {
                                     condRel += " AND " + PostgreSqlGrammar.IdToString(kvpTabla.Key) + "." + PostgreSqlGrammar.IdToString(curTableColumns[i])
-                                        + "=" + PostgreSqlGrammar.IdToString(aliasRel) + "." + PostgreSqlGrammar.IdToString(relatedTableColumns[i]);
+                                        + "={0}." + PostgreSqlGrammar.IdToString(relatedTableColumns[i]);
                                 }
 
-                                string fqTablaRel = relatedTable.IdSchema + "." + relatedTable.Id;
-                                string fromText = PostgreSqlGrammar.IdToString(relatedTable.IdSchema) + "." + PostgreSqlGrammar.IdToString(relatedTable.Id) + " " + aliasRel;
+                                string fqTableRel = relatedTable.IdSchema + "." + relatedTable.Id;
+                                string fromTextFqTable = PostgreSqlGrammar.IdToString(relatedTable.IdSchema) + "." + PostgreSqlGrammar.IdToString(relatedTable.Id);
+                                string fromText = fromTextFqTable + " {0}";
 
-                                yield return new AutocompleteItemRelation(currentNode, kvpTabla.Key, fqTablaRel, fromText, condRel, crossJoinOrFirstTable || kvpTabla.Value.Item2, n1, _IdParser);
+                                yield return new AutocompleteItemRelation(currentNode, kvpTabla.Key, fqTableRel, fromText, aliasRel, condRel, crossJoinOrFirstTable || kvpTabla.Value.Item2, n1, _IdParser);
                             }
                         }
                     }
@@ -626,7 +627,7 @@ namespace PgMulti.QueryEditor
 
         private string _CreateTableAlias(IEnumerable<string> prevAlias, string tableName)
         {
-            string alias = tableName.Substring(0, 2);
+            string alias = tableName.Substring(0, Math.Min(2, tableName.Length));
             if (prevAlias.Contains(alias) || _PGLanguageData.Grammar.KeyTerms.ContainsKey(alias))
             {
                 int i = 2;
@@ -704,7 +705,6 @@ namespace PgMulti.QueryEditor
         private Dictionary<string, Tuple<string, bool>> _ListFromClauseTables(AstNode currentNode, bool upwards, bool excludeMain)
         {
             Dictionary<string, Tuple<string, bool>> tables = new Dictionary<string, Tuple<string, bool>>();
-
 
             // Search for tables
 

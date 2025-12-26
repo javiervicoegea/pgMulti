@@ -21,7 +21,7 @@ namespace PgMulti.Forms
         private Table? _SelectedTable = null;
         private Schema? _NewTableSchema = null;
         private TextBox? txtTableName = null;
-        private Node _NRoot;
+        private Node? _NRoot;
 
         public InsertIntoTableForm(Data d, PgTaskExecutorSqlCopyToTable t)
         {
@@ -128,7 +128,7 @@ namespace PgMulti.Forms
             }
 
             List<DB> dbs = new List<DB>();
-            UpdateNodeCounter(_NRoot, dbs);
+            UpdateNodeCounter(_NRoot!, dbs);
         }
 
         private void InsertIntoTableForm_Load(object sender, EventArgs e)
@@ -480,7 +480,7 @@ namespace PgMulti.Forms
 
             List<DB> dbs = new List<DB>();
             Queue<Node> queue = new Queue<Node>();
-            queue.Enqueue(_NRoot);
+            queue.Enqueue(_NRoot!);
 
             while (queue.Count > 0)
             {

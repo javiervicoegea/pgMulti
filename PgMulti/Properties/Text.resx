@@ -1132,9 +1132,6 @@ Unlike other tools, this application does not reuse the connection between diffe
   <data name="chart" xml:space="preserve">
     <value>Chart</value>
   </data>
-  <data name="columns" xml:space="preserve">
-    <value>Columns</value>
-  </data>
   <data name="bars" xml:space="preserve">
     <value>Bars</value>
   </data>
@@ -1161,5 +1158,8 @@ Unlike other tools, this application does not reuse the connection between diffe
   </data>
   <data name="not_numeric_column" xml:space="preserve">
     <value>The {0} column is not of numeric type and cannot be represented as a series in a graph</value>
+  </data>
+  <data name="input_alias" xml:space="preserve">
+    <value>Enter an alias for table {0}</value>
   </data>
 </root>

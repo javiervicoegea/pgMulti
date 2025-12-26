@@ -1359,6 +1359,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Enter an alias for table {0}.
+        /// </summary>
+        internal static string input_alias {
+            get {
+                return ResourceManager.GetString("input_alias", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Insert in {0}.
         /// </summary>
         internal static string insert_in {

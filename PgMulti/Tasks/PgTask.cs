@@ -20,7 +20,7 @@ namespace PgMulti.Tasks
         protected TimeSpan? _TotalDuration;
         protected StateEnum _State = StateEnum.Init;
         protected OnUpdate _OnUpdate;
-        protected OnComplete _OnComplete;
+        protected OnComplete? _OnComplete;
         protected List<Query> _Queries;
         protected int _StatementCount = -1;
         protected int _CurrentStatementIndex = -1;

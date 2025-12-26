@@ -1083,9 +1083,6 @@ A diferencia de otras herramientas, esta aplicación no reutiliza la conexión e
   <data name="chart" xml:space="preserve">
     <value>Gráfica</value>
   </data>
-  <data name="columns" xml:space="preserve">
-    <value>Columnas</value>
-  </data>
   <data name="bars" xml:space="preserve">
     <value>Barras</value>
   </data>
@@ -1112,5 +1109,8 @@ A diferencia de otras herramientas, esta aplicación no reutiliza la conexión e
   </data>
   <data name="not_numeric_column" xml:space="preserve">
     <value>La columna {0} no es de tipo numérico y no se puede representar como serie en una gráfica</value>
+  </data>
+  <data name="input_alias" xml:space="preserve">
+    <value>Introduzca un alias para la tabla {0}</value>
   </data>
 </root>

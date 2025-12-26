@@ -7,19 +7,27 @@ namespace PgMulti.QueryEditor
     {
         private AstNode _AstNode;
         private string _ConditionText;
-        private bool _CondicionEnWhere;
+        private bool _IsConditionInWhere;
         private PostgreSqlIdParser _IdParser;
 
-        public AutocompleteItemRelation(AstNode n, string currentTableAlias, string fqForeignTable, string fromText, string conditionText, bool conditionInWhere, bool isManyToOneRelation, PostgreSqlIdParser idParser)
+        private string _AutoCompleteTextPattern;
+        private string _DefaultTableAlias;
+        private string _FqForeignTable;
+
+        public AutocompleteItemRelation(AstNode n, string currentTableAlias, string fqForeignTable, string autoCompleteTextPattern, string defaultTableAlias, string conditionText, bool isConditionInWhere, bool isManyToOneRelation, PostgreSqlIdParser idParser)
             : base(
-                  fromText, isManyToOneRelation ? 3 : 2, fqForeignTable + " [" + currentTableAlias + "]",
+                  string.Format(autoCompleteTextPattern, PostgreSqlGrammar.IdToString(defaultTableAlias)), isManyToOneRelation ? 3 : 2, fqForeignTable + " [" + currentTableAlias + "]",
                   string.Format(Properties.Text.relation_type, isManyToOneRelation ? "n:1" : "1:n"),
-                  fromText + (conditionInWhere ? " WHERE " : " ON ") + conditionText)
+                  string.Format(autoCompleteTextPattern, PostgreSqlGrammar.IdToString(defaultTableAlias)) + (isConditionInWhere ? " WHERE " : " ON ") + string.Format(conditionText, PostgreSqlGrammar.IdToString(defaultTableAlias)))
         {
             _AstNode = n;
             _ConditionText = conditionText;
-            _CondicionEnWhere = conditionInWhere;
+            _IsConditionInWhere = isConditionInWhere;
             _IdParser = idParser;
+
+            _AutoCompleteTextPattern = autoCompleteTextPattern;
+            _DefaultTableAlias = defaultTableAlias;
+            _FqForeignTable = fqForeignTable;
         }
 
         public override CompareResult Compare(string fragmentText)
@@ -43,65 +51,76 @@ namespace PgMulti.QueryEditor
             AstNode nFromItem = _AstNode.Parent!.Parent!.Parent!;
             AstNode nFromItemList = nFromItem.Parent!;
 
-            Place pIniFrom;
-            Place pFinFrom;
+            Place pStartFrom;
+            Place pEndFrom;
 
             if (nFromItemList.Name == "join")
             {
-                pIniFrom = new Place(nFromItem.StartColumn, nFromItem.StartLine);
-                pFinFrom = new Place(nFromItemList.EndColumn, nFromItemList.EndLine);
+                pStartFrom = new Place(nFromItem.StartColumn, nFromItem.StartLine);
+                pEndFrom = new Place(nFromItemList.EndColumn, nFromItemList.EndLine);
                 nFromItemList = nFromItemList.Parent!.Parent!;
             }
             else
             {
-                pIniFrom = new Place(nFromItem.StartColumn, nFromItem.StartLine);
-                pFinFrom = new Place(nFromItem.EndColumn, nFromItem.EndLine);
+                pStartFrom = new Place(nFromItem.StartColumn, nFromItem.StartLine);
+                pEndFrom = new Place(nFromItem.EndColumn, nFromItem.EndLine);
             }
 
             if (nFromItemList.Name != "fromItemList") throw new Exception();
 
-            string textoFrom = Text;
-            string? textoWhere = null;
-            Place? pCondicionWhere = null;
+            string fromText = _AutoCompleteTextPattern;
+            string? whereText = null;
+            Place? pWhereCondition = null;
 
-            if (_CondicionEnWhere)
+            if (_IsConditionInWhere)
             {
                 AstNode fromOrUsingClauseOpt = nFromItemList.Parent!;
                 AstNode? whereClauseOpt = fromOrUsingClauseOpt.Parent!["whereClauseOpt"];
 
                 if (whereClauseOpt == null)
                 {
-                    pCondicionWhere = new Place(fromOrUsingClauseOpt.Parent.EndColumn, fromOrUsingClauseOpt.Parent.EndLine);
-                    textoWhere = " WHERE " + _ConditionText + " ";
+                    pWhereCondition = new Place(fromOrUsingClauseOpt.Parent.EndColumn, fromOrUsingClauseOpt.Parent.EndLine);
+                    whereText = " WHERE " + _ConditionText + " ";
                 }
                 else
                 {
                     AstNode nWhere = whereClauseOpt["WHERE"]!;
-                    pCondicionWhere = new Place(nWhere.EndColumn, nWhere.EndLine);
-                    textoWhere = " " + _ConditionText + " AND";
+                    pWhereCondition = new Place(nWhere.EndColumn, nWhere.EndLine);
+                    whereText = " " + _ConditionText + " AND";
                 }
             }
             else
             {
-                textoFrom += " ON " + _ConditionText;
+                fromText += " ON " + _ConditionText;
             }
+
+            Parent.Close();
+            InputTableAliasForm f = new InputTableAliasForm(_FqForeignTable, _DefaultTableAlias, new Point(Parent.Left, Parent.Top));
+            f.ShowDialog(Parent.FastColoredTextBox.ParentForm);
+
+            if (f.DialogResult != DialogResult.OK) return;
+
+            string tableAlias = f.TableAlias;
+
+            whereText = whereText == null ? null : string.Format(whereText, PostgreSqlGrammar.IdToString(tableAlias));
+            fromText = string.Format(fromText, PostgreSqlGrammar.IdToString(tableAlias));
 
             var tb = fragment.tb;
 
             tb.BeginAutoUndo();
             tb.TextSource.Manager.ExecuteCommand(new SelectCommand(tb.TextSource));
 
-            if (textoWhere != null && pCondicionWhere != null)
+            if (whereText != null && pWhereCondition != null)
             {
-                tb.Selection.Start = pCondicionWhere.Value;
-                tb.Selection.End = pCondicionWhere.Value;
-                tb.InsertText(textoWhere);
+                tb.Selection.Start = pWhereCondition.Value;
+                tb.Selection.End = pWhereCondition.Value;
+                tb.InsertText(whereText);
                 tb.TextSource.Manager.ExecuteCommand(new SelectCommand(tb.TextSource));
             }
 
-            tb.Selection.Start = pIniFrom;
-            tb.Selection.End = pFinFrom;
-            tb.InsertText(textoFrom);
+            tb.Selection.Start = pStartFrom;
+            tb.Selection.End = pEndFrom;
+            tb.InsertText(fromText);
             tb.TextSource.Manager.ExecuteCommand(new SelectCommand(tb.TextSource));
 
             tb.EndAutoUndo();
