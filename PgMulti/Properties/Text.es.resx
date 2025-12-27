@@ -798,8 +798,8 @@ A diferencia de otras herramientas, esta aplicación no reutiliza la conexión e
 	<data name="warning_bad_format_export_file" xml:space="preserve">
     <value>El fichero a importar no es válido</value>
   </data>
-	<data name="current_tab_last_task" xml:space="preserve">
-    <value>Seleccionar última tarea de la solapa activa</value>
+	<data name="filter_current_tab_tasks" xml:space="preserve">
+    <value>Mostrar solo las tareas de la solapa activa</value>
   </data>
 	<data name="basic_parse_error" xml:space="preserve">
     <value>La secuencia de comandos no se puede ejecutar porque el analizador sintáctico no es capaz de individualizar los comandos que la componen.</value>

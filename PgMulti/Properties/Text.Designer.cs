@@ -734,15 +734,6 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Select last task of the active tab.
-        /// </summary>
-        internal static string current_tab_last_task {
-            get {
-                return ResourceManager.GetString("current_tab_last_task", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Busca una cadena traducida similar a Cut (ctrl + x).
         /// </summary>
         internal static string cut_sc {
@@ -1184,6 +1175,15 @@ namespace PgMulti.Properties {
         internal static string file {
             get {
                 return ResourceManager.GetString("file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Show only the tasks in the active tab.
+        /// </summary>
+        internal static string filter_current_tab_tasks {
+            get {
+                return ResourceManager.GetString("filter_current_tab_tasks", resourceCulture);
             }
         }
         

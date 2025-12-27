@@ -14,7 +14,6 @@ namespace PgMulti.QueryEditor
     {
         public bool PendingSaveDB = true;
         public string? LocalPath;
-        public PgTask? LastTask = null;
 
         private const string _AutoSelectSymbols = "()=/&%$!*;:><[]{}@ .,-+";
 

@@ -124,15 +124,15 @@ namespace PgMulti
             tslPosition = new ToolStripLabel();
             splitContainer3 = new SplitContainer();
             toolStripContainer3 = new ToolStripContainer();
-            lbResult = new ListBox();
+            lbTaskList = new ListBox();
             toolStrip3 = new ToolStrip();
-            tsbCurrentTabLastTask = new ToolStripButton();
+            tsbFilterCurrentEditorTabTasks = new ToolStripButton();
             tssResult = new ToolStripSeparator();
-            tsbRemoveSelected = new ToolStripButton();
-            tsbRemoveAll = new ToolStripButton();
-            tsbStopSelected = new ToolStripButton();
-            tsbStopAll = new ToolStripButton();
-            tcResult = new TabControl();
+            tsbRemoveSelectedCompletedTasks = new ToolStripButton();
+            tsbRemoveAllCompletedTasks = new ToolStripButton();
+            tsbStopSelectedTasks = new ToolStripButton();
+            tsbStopAllTasks = new ToolStripButton();
+            tcTask = new TabControl();
             tpResult = new TabPage();
             toolStripContainer6 = new ToolStripContainer();
             fctbResult = new FastColoredTextBox();
@@ -210,7 +210,7 @@ namespace PgMulti
             sfdBinaryCell = new SaveFileDialog();
             tmrPosition = new System.Windows.Forms.Timer(components);
             tmrSaveTabs = new System.Windows.Forms.Timer(components);
-            tmrResult = new System.Windows.Forms.Timer(components);
+            tmrTaskList = new System.Windows.Forms.Timer(components);
             tmrFitGridColumns = new System.Windows.Forms.Timer(components);
             ilAutocompleteMenu = new ImageList(components);
             cmsFctb = new ContextMenuStrip(components);
@@ -265,7 +265,7 @@ namespace PgMulti
             toolStripContainer3.TopToolStripPanel.SuspendLayout();
             toolStripContainer3.SuspendLayout();
             toolStrip3.SuspendLayout();
-            tcResult.SuspendLayout();
+            tcTask.SuspendLayout();
             tpResult.SuspendLayout();
             toolStripContainer6.ContentPanel.SuspendLayout();
             toolStripContainer6.TopToolStripPanel.SuspendLayout();
@@ -1202,7 +1202,7 @@ namespace PgMulti
             // 
             // splitContainer3.Panel2
             // 
-            splitContainer3.Panel2.Controls.Add(tcResult);
+            splitContainer3.Panel2.Controls.Add(tcTask);
             splitContainer3.Size = new Size(1539, 518);
             splitContainer3.SplitterDistance = 505;
             splitContainer3.TabIndex = 0;
@@ -1212,7 +1212,7 @@ namespace PgMulti
             // 
             // toolStripContainer3.ContentPanel
             // 
-            toolStripContainer3.ContentPanel.Controls.Add(lbResult);
+            toolStripContainer3.ContentPanel.Controls.Add(lbTaskList);
             toolStripContainer3.ContentPanel.Size = new Size(505, 481);
             toolStripContainer3.Dock = DockStyle.Fill;
             toolStripContainer3.Location = new Point(0, 0);
@@ -1227,39 +1227,40 @@ namespace PgMulti
             // 
             // lbResult
             // 
-            lbResult.Dock = DockStyle.Fill;
-            lbResult.DrawMode = DrawMode.OwnerDrawVariable;
-            lbResult.Font = new Font("Segoe UI", 8F, FontStyle.Bold, GraphicsUnit.Point);
-            lbResult.FormattingEnabled = true;
-            lbResult.ItemHeight = 20;
-            lbResult.Location = new Point(0, 0);
-            lbResult.Name = "lbResult";
-            lbResult.SelectionMode = SelectionMode.MultiExtended;
-            lbResult.Size = new Size(505, 481);
-            lbResult.TabIndex = 0;
-            lbResult.DrawItem += lbResult_DrawItem;
-            lbResult.MeasureItem += lbResult_MeasureItem;
-            lbResult.SelectedIndexChanged += lbResult_SelectedIndexChanged;
-            lbResult.Resize += lbResult_Resize;
+            lbTaskList.Dock = DockStyle.Fill;
+            lbTaskList.DrawMode = DrawMode.OwnerDrawVariable;
+            lbTaskList.Font = new Font("Segoe UI", 8F, FontStyle.Bold, GraphicsUnit.Point);
+            lbTaskList.FormattingEnabled = true;
+            lbTaskList.ItemHeight = 20;
+            lbTaskList.Location = new Point(0, 0);
+            lbTaskList.Name = "lbResult";
+            lbTaskList.SelectionMode = SelectionMode.MultiExtended;
+            lbTaskList.Size = new Size(505, 481);
+            lbTaskList.TabIndex = 0;
+            lbTaskList.DrawItem += lbTaskList_DrawItem;
+            lbTaskList.MeasureItem += lbTaskList_MeasureItem;
+            lbTaskList.SelectedIndexChanged += lbTaskList_SelectedIndexChanged;
+            lbTaskList.Resize += lbTaskList_Resize;
             // 
             // toolStrip3
             // 
             toolStrip3.Dock = DockStyle.None;
             toolStrip3.ImageScalingSize = new Size(30, 30);
-            toolStrip3.Items.AddRange(new ToolStripItem[] { tsbCurrentTabLastTask, tssResult, tsbRemoveSelected, tsbRemoveAll, tsbStopSelected, tsbStopAll });
+            toolStrip3.Items.AddRange(new ToolStripItem[] { tsbFilterCurrentEditorTabTasks, tssResult, tsbRemoveSelectedCompletedTasks, tsbRemoveAllCompletedTasks, tsbStopSelectedTasks, tsbStopAllTasks });
             toolStrip3.Location = new Point(4, 0);
             toolStrip3.Name = "toolStrip3";
             toolStrip3.Size = new Size(53, 37);
             toolStrip3.TabIndex = 0;
             // 
-            // tsbCurrentTabLastTask
+            // tsbFilterCurrentEditorTabTasks
             // 
-            tsbCurrentTabLastTask.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            tsbCurrentTabLastTask.Image = Properties.Resources.last;
-            tsbCurrentTabLastTask.ImageTransparentColor = Color.Magenta;
-            tsbCurrentTabLastTask.Name = "tsbCurrentTabLastTask";
-            tsbCurrentTabLastTask.Size = new Size(34, 34);
-            tsbCurrentTabLastTask.Click += tsbCurrentTabLastTask_Click;
+            tsbFilterCurrentEditorTabTasks.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbFilterCurrentEditorTabTasks.Image = Properties.Resources.filter;
+            tsbFilterCurrentEditorTabTasks.ImageTransparentColor = Color.Magenta;
+            tsbFilterCurrentEditorTabTasks.Name = "tsbFilterCurrentEditorTabTasks";
+            tsbFilterCurrentEditorTabTasks.Size = new Size(34, 34);
+            tsbFilterCurrentEditorTabTasks.CheckOnClick = true;
+            tsbFilterCurrentEditorTabTasks.Click += tsbFilterCurrentEditorTabTasks_Click;
             // 
             // tssResult
             // 
@@ -1268,55 +1269,55 @@ namespace PgMulti
             // 
             // tsbRemoveSelected
             // 
-            tsbRemoveSelected.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            tsbRemoveSelected.Image = Properties.Resources.borrar;
-            tsbRemoveSelected.ImageTransparentColor = Color.Magenta;
-            tsbRemoveSelected.Name = "tsbRemoveSelected";
-            tsbRemoveSelected.Size = new Size(34, 34);
-            tsbRemoveSelected.Visible = false;
-            tsbRemoveSelected.Click += tsbRemoveSelected_Click;
+            tsbRemoveSelectedCompletedTasks.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbRemoveSelectedCompletedTasks.Image = Properties.Resources.borrar;
+            tsbRemoveSelectedCompletedTasks.ImageTransparentColor = Color.Magenta;
+            tsbRemoveSelectedCompletedTasks.Name = "tsbRemoveSelected";
+            tsbRemoveSelectedCompletedTasks.Size = new Size(34, 34);
+            tsbRemoveSelectedCompletedTasks.Visible = false;
+            tsbRemoveSelectedCompletedTasks.Click += tsbRemoveSelectedCompletedTasks_Click;
             // 
             // tsbRemoveAll
             // 
-            tsbRemoveAll.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            tsbRemoveAll.Image = Properties.Resources.borrar_todos;
-            tsbRemoveAll.ImageTransparentColor = Color.Magenta;
-            tsbRemoveAll.Name = "tsbRemoveAll";
-            tsbRemoveAll.Size = new Size(34, 34);
-            tsbRemoveAll.Visible = false;
-            tsbRemoveAll.Click += tsbRemoveAll_Click;
+            tsbRemoveAllCompletedTasks.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbRemoveAllCompletedTasks.Image = Properties.Resources.borrar_todos;
+            tsbRemoveAllCompletedTasks.ImageTransparentColor = Color.Magenta;
+            tsbRemoveAllCompletedTasks.Name = "tsbRemoveAll";
+            tsbRemoveAllCompletedTasks.Size = new Size(34, 34);
+            tsbRemoveAllCompletedTasks.Visible = false;
+            tsbRemoveAllCompletedTasks.Click += tsbRemoveAllCompletedTasks_Click;
             // 
             // tsbStopSelected
             // 
-            tsbStopSelected.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            tsbStopSelected.Image = Properties.Resources.detener;
-            tsbStopSelected.ImageTransparentColor = Color.Magenta;
-            tsbStopSelected.Name = "tsbStopSelected";
-            tsbStopSelected.Size = new Size(34, 34);
-            tsbStopSelected.Visible = false;
-            tsbStopSelected.Click += tsbStopSelected_Click;
+            tsbStopSelectedTasks.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbStopSelectedTasks.Image = Properties.Resources.detener;
+            tsbStopSelectedTasks.ImageTransparentColor = Color.Magenta;
+            tsbStopSelectedTasks.Name = "tsbStopSelected";
+            tsbStopSelectedTasks.Size = new Size(34, 34);
+            tsbStopSelectedTasks.Visible = false;
+            tsbStopSelectedTasks.Click += tsbStopSelected_Click;
             // 
             // tsbStopAll
             // 
-            tsbStopAll.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            tsbStopAll.Image = Properties.Resources.detener_todos;
-            tsbStopAll.ImageTransparentColor = Color.Magenta;
-            tsbStopAll.Name = "tsbStopAll";
-            tsbStopAll.Size = new Size(34, 34);
-            tsbStopAll.Visible = false;
-            tsbStopAll.Click += tsbDetenerTodos_Click;
+            tsbStopAllTasks.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbStopAllTasks.Image = Properties.Resources.detener_todos;
+            tsbStopAllTasks.ImageTransparentColor = Color.Magenta;
+            tsbStopAllTasks.Name = "tsbStopAll";
+            tsbStopAllTasks.Size = new Size(34, 34);
+            tsbStopAllTasks.Visible = false;
+            tsbStopAllTasks.Click += tsbDetenerTodos_Click;
             // 
             // tcResult
             // 
-            tcResult.Controls.Add(tpResult);
-            tcResult.Controls.Add(tpTable);
-            tcResult.Controls.Add(tpExecutedSql);
-            tcResult.Dock = DockStyle.Fill;
-            tcResult.Location = new Point(0, 0);
-            tcResult.Name = "tcResult";
-            tcResult.SelectedIndex = 0;
-            tcResult.Size = new Size(1030, 518);
-            tcResult.TabIndex = 0;
+            tcTask.Controls.Add(tpResult);
+            tcTask.Controls.Add(tpTable);
+            tcTask.Controls.Add(tpExecutedSql);
+            tcTask.Dock = DockStyle.Fill;
+            tcTask.Location = new Point(0, 0);
+            tcTask.Name = "tcResult";
+            tcTask.SelectedIndex = 0;
+            tcTask.Size = new Size(1030, 518);
+            tcTask.TabIndex = 0;
             // 
             // tpResult
             // 
@@ -2007,8 +2008,8 @@ namespace PgMulti
             // 
             // tmrResult
             // 
-            tmrResult.Interval = 500;
-            tmrResult.Tick += tmrResult_Tick;
+            tmrTaskList.Interval = 500;
+            tmrTaskList.Tick += tmrTaskList_Tick;
             // 
             // tmrFitGridColumns
             // 
@@ -2234,7 +2235,7 @@ namespace PgMulti
             toolStripContainer3.PerformLayout();
             toolStrip3.ResumeLayout(false);
             toolStrip3.PerformLayout();
-            tcResult.ResumeLayout(false);
+            tcTask.ResumeLayout(false);
             tpResult.ResumeLayout(false);
             toolStripContainer6.ContentPanel.ResumeLayout(false);
             toolStripContainer6.ContentPanel.PerformLayout();
@@ -2283,8 +2284,8 @@ namespace PgMulti
         private ToolStripContainer toolStripContainer1;
         private ImageList ilServers;
         private SplitContainer splitContainer3;
-        private ListBox lbResult;
-        private TabControl tcResult;
+        private ListBox lbTaskList;
+        private TabControl tcTask;
         private TabPage tpResult;
         private TabPage tpTable;
         private ToolStripButton tsbRun;
@@ -2307,13 +2308,13 @@ namespace PgMulti
         private DataGridView gvTable;
         private ToolStripContainer toolStripContainer3;
         private ToolStrip toolStrip3;
-        private ToolStripButton tsbRemoveSelected;
-        private ToolStripButton tsbRemoveAll;
-        private ToolStripButton tsbStopSelected;
-        private ToolStripButton tsbStopAll;
+        private ToolStripButton tsbRemoveSelectedCompletedTasks;
+        private ToolStripButton tsbRemoveAllCompletedTasks;
+        private ToolStripButton tsbStopSelectedTasks;
+        private ToolStripButton tsbStopAllTasks;
         private ToolStripLabel tslPosition;
         private System.Windows.Forms.Timer tmrPosition;
-        private System.Windows.Forms.Timer tmrResult;
+        private System.Windows.Forms.Timer tmrTaskList;
         private System.Windows.Forms.Timer tmrSaveTabs;
         private TabPage tpExecutedSql;
         private CustomFctb fctbExecutedSql;
@@ -2431,7 +2432,7 @@ namespace PgMulti
         private ToolStripMenuItem tsmiExportCsv;
         private ToolStripSeparator toolStripSeparator6;
         private OpenFileDialog ofdImportConfig;
-        private ToolStripButton tsbCurrentTabLastTask;
+        private ToolStripButton tsbFilterCurrentEditorTabTasks;
         private ToolStripSeparator tssResult;
         private ToolStripSeparator toolStripSeparator7;
         private ToolStripButton tsbOpenDiagram;

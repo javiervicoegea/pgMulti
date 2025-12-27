@@ -798,8 +798,8 @@ Unlike other tools, this application does not reuse the connection between diffe
 	<data name="warning_bad_format_export_file" xml:space="preserve">
     <value>The file to import is not valid</value>
   </data>
-	<data name="current_tab_last_task" xml:space="preserve">
-    <value>Select last task of the active tab</value>
+	<data name="filter_current_tab_tasks" xml:space="preserve">
+    <value>Show only the tasks in the active tab</value>
   </data>
 	<data name="basic_parse_error" xml:space="preserve">
     <value>The script cannot be executed because the parser is not able to individualize the commands that comprise it.</value>
