@@ -4,7 +4,6 @@ using CsvHelper;
 using FastColoredTextBoxNS;
 using Irony.Parsing;
 using Newtonsoft.Json;
-using Npgsql.Schema;
 using PgMulti.AppData;
 using PgMulti.DataStructure;
 using PgMulti.Diagrams;
@@ -14,12 +13,10 @@ using PgMulti.Properties;
 using PgMulti.QueryEditor;
 using PgMulti.SqlSyntax;
 using PgMulti.Tasks;
-using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;
-using System.Windows.Forms;
 using static PgMulti.Tasks.PgTask;
 
 namespace PgMulti
@@ -29,7 +26,6 @@ namespace PgMulti
         #region "General"
         private Data? _Data;
         private Node _NRoot;
-        private Mutex _Mutex;
         private bool _AutomaticScroll = true;
         private MainFormTreeModel _TreeModel;
         private List<Form> _SecondaryForms = new List<Form>();
@@ -56,7 +52,6 @@ namespace PgMulti
             _NRoot = new Node(Properties.Text.all_databases);
             _NRoot.Image = Properties.Resources.tva_grupo;
             _TreeModel.Nodes.Add(_NRoot);
-            _Mutex = new Mutex(false);
             ntb.DrawText += ntb_DrawText;
             ncb.CheckStateChanged += ncb_CheckStateChanged;
             ncb.IsVisibleValueNeeded += ncb_IsVisibleValueNeeded;
@@ -1725,7 +1720,7 @@ namespace PgMulti
             }
             else
             {
-                RefreshTaskList();
+                tlcTaskList.Invalidate();
             }
             if (ListVisibleTasks().Any(i => i.State == StateEnum.Running))
             {
@@ -1757,7 +1752,7 @@ namespace PgMulti
             tcSql.TabPages.Remove(tp);
 
             RemoveEditorTabFromAssociations(et);
-            RefreshTaskList();
+            tlcTaskList.Invalidate();
 
             if (tcSql.TabPages.Count == 1)
             {
@@ -2166,6 +2161,7 @@ namespace PgMulti
             if (dbs.Count > 1 && (_Data!.Config.MergeTables || _Data!.Config.TransactionMode == Config.TransactionModeEnum.AutoCoordinated))
             {
                 ti = new PgTaskIntegrator(_Data, new PgTask.OnUpdate(Task_OnUpdate), new PgTask.OnComplete(Task_OnComplete), sql, true);
+                CreateAssociationOfTaskAndEditorTab(ti, et);
             }
 
             Config.TransactionModeEnum transactionMode = _Data!.Config.TransactionMode;
@@ -2178,6 +2174,7 @@ namespace PgMulti
             foreach (DB db in dbs)
             {
                 PgTaskExecutorSqlTables tes = new PgTaskExecutorSqlTables(_Data!, db, new PgTask.OnUpdate(Task_OnUpdate), ti == null ? new PgTask.OnComplete(Task_OnComplete) : null, sql, transactionMode, _Data!.Config.TransactionLevel, _Data!.PGSimpleLanguageData, ti);
+                CreateAssociationOfTaskAndEditorTab(tes, et);
                 tess.Add(tes);
                 h.DBIds.Add(db.Id);
             }
@@ -2186,7 +2183,6 @@ namespace PgMulti
             {
                 foreach (PgTaskExecutorSqlTables tes in tess)
                 {
-                    CreateAssociationOfTaskAndEditorTab(tes, et);
                     tes.Start();
                 }
             }
@@ -2197,7 +2193,6 @@ namespace PgMulti
                     ti.Integrate(tes);
                 }
 
-                CreateAssociationOfTaskAndEditorTab(ti, et);
                 ti.Start();
             }
 
@@ -2852,51 +2847,49 @@ namespace PgMulti
 
         private void FilterTasksByEditorTab(EditorTab? et)
         {
-            _Mutex.WaitOne();
+            tlcTaskList.Mutex.WaitOne();
             try
             {
-                lbTaskList.Items.Clear();
-                lbTaskList.SelectedIndices.Clear();
+                tlcTaskList.ClearTasks();
+                tlcTaskList.SelectedIndices.Clear();
 
                 List<PgTask> l = ListEditorTabTasks(et);
                 if (l.Count > 0)
                 {
                     foreach (PgTask t in l)
                     {
-                        lbTaskList.Items.Add(t);
+                        tlcTaskList.AppendTask(t);
                     }
-                    lbTaskList.SelectedIndices.Add(0);
+                    tlcTaskList.SelectedIndices.Add(0);
                 }
 
                 RefreshSelectedResult();
-                lbTaskList.Refresh();
                 RefreshTaskListButtons();
             }
-            finally { _Mutex.ReleaseMutex(); }
+            finally { tlcTaskList.Mutex.ReleaseMutex(); }
         }
 
         private void UnFilterTasksByEditorTab()
         {
-            _Mutex.WaitOne();
+            tlcTaskList.Mutex.WaitOne();
             try
             {
-                lbTaskList.Items.Clear();
-                lbTaskList.SelectedIndices.Clear();
+                tlcTaskList.ClearTasks();
+                tlcTaskList.SelectedIndices.Clear();
                 List<PgTask> l = ListAllTasks();
                 if (l.Count > 0)
                 {
                     foreach (PgTask t in l)
                     {
-                        lbTaskList.Items.Add(t);
+                        tlcTaskList.AppendTask(t);
                     }
-                    lbTaskList.SelectedIndices.Add(0);
+                    tlcTaskList.SelectedIndices.Add(0);
                 }
 
                 RefreshSelectedResult();
-                lbTaskList.Refresh();
                 RefreshTaskListButtons();
             }
-            finally { _Mutex.ReleaseMutex(); }
+            finally { tlcTaskList.Mutex.ReleaseMutex(); }
         }
 
 
@@ -2915,12 +2908,7 @@ namespace PgMulti
 
         private List<PgTask> ListSelectedTasks()
         {
-            _Mutex.WaitOne();
-            try
-            {
-                return lbTaskList.SelectedItems.Cast<PgTask>().ToList();
-            }
-            finally { _Mutex.ReleaseMutex(); }
+            return tlcTaskList.SelectedTasks;
         }
 
         private List<PgTask> ListAllTasks()
@@ -2957,19 +2945,9 @@ namespace PgMulti
             return new List<PgTask>();
         }
 
-        private void RefreshTaskList()
-        {
-            _Mutex.WaitOne();
-            try
-            {
-                lbTaskList.Refresh();
-            }
-            finally { _Mutex.ReleaseMutex(); }
-        }
-
         void Task_OnUpdate(PgTask t)
         {
-            lbTaskList.Invoke((MethodInvoker)delegate
+            tlcTaskList.Invoke((MethodInvoker)delegate
             {
                 RefreshTaskListItem(t);
                 RefreshTaskListButtons();
@@ -2983,20 +2961,20 @@ namespace PgMulti
 
         private void RefreshTaskListItem(PgTask t)
         {
-            _Mutex.WaitOne();
+            tlcTaskList.Mutex.WaitOne();
             try
             {
-                int pos = lbTaskList.Items.IndexOf(t);
+                int pos = tlcTaskList.IndexOfTask(t);
 
                 if (pos == -1)
                 {
                     if (!tsbFilterCurrentEditorTabTasks.Checked || _TasksEditorTabsDictionary[t].TabPage == tcSql.SelectedTab)
                     {
-                        lbTaskList.Items.Insert(0, t);
+                        tlcTaskList.PrependTask(t);
 
                         _IgnoreLbResult_SelectedIndexChanged = true;
-                        lbTaskList.SelectedIndices.Clear();
-                        lbTaskList.SelectedIndices.Add(0);
+                        tlcTaskList.SelectedIndices.Clear();
+                        tlcTaskList.SelectedIndices.Add(0);
                         _IgnoreLbResult_SelectedIndexChanged = false;
                         fctbResult.Clear();
                         gvTable.Tag = null;
@@ -3007,7 +2985,7 @@ namespace PgMulti
                         RefreshSelectedResult();
                     }
                 }
-                else if (lbTaskList.SelectedIndices.Count == 1 && pos == lbTaskList.SelectedIndex)
+                else if (tlcTaskList.SelectedIndices.Count == 1 && pos == tlcTaskList.SelectedIndices[0])
                 {
                     RefreshSelectedResult();
                 }
@@ -3019,39 +2997,19 @@ namespace PgMulti
 
                 RefreshTaskListButtons();
 
-                lbTaskList.Refresh();
+                tlcTaskList.Invalidate(t);
             }
-            finally { _Mutex.ReleaseMutex(); }
-        }
-
-        private bool _IgnoreLbResult_SelectedIndexChanged = false;
-        private void lbTaskList_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            _Mutex.WaitOne();
-            try
-            {
-                if (_IgnoreLbResult_SelectedIndexChanged) return;
-                lbTaskList.Refresh();
-                fctbResult.Clear();
-                gvTable.Tag = null;
-                DeHighlightRows();
-                gvTable.DataSource = null;
-                tsddbTables.Text = Properties.Text.no_results;
-                tsddbTables.DropDownItems.Clear();
-                RefreshSelectedResult();
-                RefreshTaskListButtons();
-            }
-            finally { _Mutex.ReleaseMutex(); }
+            finally { tlcTaskList.Mutex.ReleaseMutex(); }
         }
 
         private void RefreshSelectedResult()
         {
-            _Mutex.WaitOne();
+            tlcTaskList.Mutex.WaitOne();
             try
             {
                 _GvTable_IgnoreEvents = true;
 
-                if (lbTaskList.SelectedIndices.Count != 1)
+                if (tlcTaskList.SelectedIndices.Count != 1)
                 {
                     gvTable.Tag = null;
                     DeHighlightRows();
@@ -3065,7 +3023,7 @@ namespace PgMulti
                 else
                 {
                     PgTask t;
-                    t = (PgTask)lbTaskList.SelectedItem!;
+                    t = (PgTask)tlcTaskList.SelectedTasks[0];
 
                     int scrollAnt = fctbResult.VerticalScroll.Value;
                     FastColoredTextBoxNS.Range selAnt = fctbResult.Selection.Clone();
@@ -3146,7 +3104,7 @@ namespace PgMulti
                 }
                 _GvTable_IgnoreEvents = false;
             }
-            finally { _Mutex.ReleaseMutex(); }
+            finally { tlcTaskList.Mutex.ReleaseMutex(); }
         }
 
         private void tsddbTables_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -3158,116 +3116,30 @@ namespace PgMulti
             tsddbTables.Text = e.ClickedItem.Text;
         }
 
-        private void lbTaskList_DrawItem(object sender, DrawItemEventArgs e)
+
+        private bool _IgnoreLbResult_SelectedIndexChanged = false;
+        private void lbTaskList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _Mutex.WaitOne();
+            tlcTaskList.Mutex.WaitOne();
             try
             {
-                if (e.Index == -1) return;
-                PgTask t = (PgTask)lbTaskList.Items[e.Index];
-                EditorTab? et = _TasksEditorTabsDictionary.ContainsKey(t) ? _TasksEditorTabsDictionary[t] : null;
-                bool isCurrentTab = et != null && SqlEditorTabControl.SelectedTab == et.TabPage ? true : false;
-
-                e.DrawBackground();
-
-                Color textColor;
-                Color backColor;
-                Color? progressColor = null;
-
-                switch (t.State)
-                {
-                    case PgTask.StateEnum.Init:
-                        textColor = Color.DarkGray;
-                        backColor = Color.White;
-                        break;
-                    case PgTask.StateEnum.Running:
-                        textColor = Color.DarkBlue;
-                        backColor = Color.White;
-                        progressColor = Color.LightGreen;
-                        break;
-                    case PgTask.StateEnum.Finished:
-                        if (t.Exception == null)
-                        {
-                            textColor = Color.DarkGreen;
-                            backColor = Color.White;
-                        }
-                        else
-                        {
-                            textColor = Color.DarkRed;
-                            backColor = Color.White;
-                        }
-                        break;
-                    default:
-                        throw new NotSupportedException();
-                }
-
-                if (lbTaskList.SelectedIndices.Contains(e.Index))
-                {
-                    Color tmp = backColor;
-                    backColor = textColor;
-                    textColor = tmp;
-
-                    if (t.State == PgTask.StateEnum.Running)
-                    {
-                        progressColor = Color.DarkGreen;
-                    }
-                }
-
-                using (var backBrush = new SolidBrush(backColor))
-                using (var foreBrush = new SolidBrush(textColor))
-                {
-                    e.Graphics.FillRectangle(backBrush, e.Bounds);
-
-                    if (t.State == PgTask.StateEnum.Running)
-                    {
-                        using (var progressBrush = new SolidBrush(progressColor!.Value))
-                        {
-                            Rectangle r = e.Bounds;
-                            if (t is PgTaskExecutorSqlCsv)
-                            {
-                                PgTaskExecutorSqlCsv tcsv = (PgTaskExecutorSqlCsv)t;
-                                if (tcsv.DBs.Count > 1)
-                                {
-                                    r.Width = (tcsv.CurrentDBIndex * r.Width) / tcsv.DBs.Count;
-                                }
-                                else
-                                {
-                                    r.Width = (t.CurrentStatementIndex * r.Width) / t.StatementCount;
-                                }
-                            }
-                            else
-                            {
-                                r.Width = (t.CurrentStatementIndex * r.Width) / t.StatementCount;
-                            }
-                            e.Graphics.FillRectangle(progressBrush, r);
-                        }
-                    }
-
-                    SizeF gliphSize = e.Graphics.MeasureString("● ", lbTaskList.Font);
-                    RectangleF gliphRectangle = new RectangleF(e.Bounds.Location, gliphSize);
-                    RectangleF textRectangle = new RectangleF(e.Bounds.X + gliphSize.Width, e.Bounds.Y, e.Bounds.Width - gliphSize.Width, e.Bounds.Height);
-
-                    if (isCurrentTab) e.Graphics.DrawString("●", lbTaskList.Font, foreBrush, gliphRectangle, StringFormat.GenericTypographic);
-                    e.Graphics.DrawString(t.ToString(), lbTaskList.Font, foreBrush, textRectangle, StringFormat.GenericTypographic);
-                }
+                if (_IgnoreLbResult_SelectedIndexChanged) return;
+                fctbResult.Clear();
+                gvTable.Tag = null;
+                DeHighlightRows();
+                gvTable.DataSource = null;
+                tsddbTables.Text = Properties.Text.no_results;
+                tsddbTables.DropDownItems.Clear();
+                RefreshSelectedResult();
+                RefreshTaskListButtons();
             }
-            finally { _Mutex.ReleaseMutex(); }
+            finally { tlcTaskList.Mutex.ReleaseMutex(); }
         }
 
-        private void lbTaskList_MeasureItem(object sender, MeasureItemEventArgs e)
+        private void tlcTaskList_IsSelectedTabTaskNeeded(object sender, TaskListControl.IsSelectedTabTaskNeededEventArgs e)
         {
-            _Mutex.WaitOne();
-            try
-            {
-                if (e.Index == -1) return;
-                e.ItemHeight = lbTaskList.Font.Height;
-            }
-            finally { _Mutex.ReleaseMutex(); }
-        }
-
-        private void lbTaskList_Resize(object sender, EventArgs e)
-        {
-            lbTaskList.Invalidate();
+            EditorTab? et = _TasksEditorTabsDictionary.ContainsKey(e.Task) ? _TasksEditorTabsDictionary[e.Task] : null;
+            e.IsSelectedTabTask = et != null && SqlEditorTabControl.SelectedTab == et.TabPage;
         }
 
         private void gvTable_DataError(object sender, DataGridViewDataErrorEventArgs e)
@@ -3298,20 +3170,20 @@ namespace PgMulti
 
         private void RemoveCompletedTasks(bool selectedOnly)
         {
-            _Mutex.WaitOne();
+            tlcTaskList.Mutex.WaitOne();
             try
             {
                 foreach (PgTask t in ListTasks(true, selectedOnly))
                 {
                     if (t.State != PgTask.StateEnum.Finished) continue;
 
-                    lbTaskList.Items.Remove(t);
+                    tlcTaskList.RemoveTask(t);
                     RemoveTaskFromAssociations(t);
                 }
 
                 RefreshTaskListButtons();
             }
-            finally { _Mutex.ReleaseMutex(); }
+            finally { tlcTaskList.Mutex.ReleaseMutex(); }
         }
 
         private void RefreshTaskListButtons()
@@ -3740,7 +3612,7 @@ namespace PgMulti
 
             foreach (Query.QueryColumn qCol in qCols.Skip(1))
             {
-                if (!Column.NumericDotNetTypes.Contains(q.DataTable.Columns[qCol.Index].DataType))
+                if (qCol==null || !Column.NumericDotNetTypes.Contains(q.DataTable.Columns[qCol.Index].DataType))
                 {
                     MessageBox.Show(this, string.Format(Properties.Text.not_numeric_column, qCol.Title), Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;

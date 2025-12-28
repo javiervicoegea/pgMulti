@@ -27,6 +27,7 @@ namespace PgMulti.Tasks
         protected bool _Canceled = false;
 
         private StringBuilder _StringBuilder;
+        private Mutex _Mutex;
 
         public PgTask(Data d, OnUpdate onUpdate, OnComplete? onComplete, string sql)
         {
@@ -37,6 +38,7 @@ namespace PgMulti.Tasks
             _Sql = sql;
             _Queries = new List<Query>();
             _StringBuilder = new StringBuilder();
+            _Mutex = new Mutex(false);
         }
 
         public int StatementCount
@@ -84,6 +86,14 @@ namespace PgMulti.Tasks
             get
             {
                 return _StartTimestamp;
+            }
+        }
+
+        public Mutex Mutex
+        {
+            get
+            {
+                return _Mutex;
             }
         }
 

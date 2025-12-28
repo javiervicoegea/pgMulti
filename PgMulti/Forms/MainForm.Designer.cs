@@ -1,5 +1,6 @@
 ﻿using FastColoredTextBoxNS;
 using PgMulti.QueryEditor;
+using PgMulti.Tasks;
 using TradeWright.UI.Forms;
 
 namespace PgMulti
@@ -124,7 +125,7 @@ namespace PgMulti
             tslPosition = new ToolStripLabel();
             splitContainer3 = new SplitContainer();
             toolStripContainer3 = new ToolStripContainer();
-            lbTaskList = new ListBox();
+            tlcTaskList = new TaskListControl();
             toolStrip3 = new ToolStrip();
             tsbFilterCurrentEditorTabTasks = new ToolStripButton();
             tssResult = new ToolStripSeparator();
@@ -1212,7 +1213,7 @@ namespace PgMulti
             // 
             // toolStripContainer3.ContentPanel
             // 
-            toolStripContainer3.ContentPanel.Controls.Add(lbTaskList);
+            toolStripContainer3.ContentPanel.Controls.Add(tlcTaskList);
             toolStripContainer3.ContentPanel.Size = new Size(505, 481);
             toolStripContainer3.Dock = DockStyle.Fill;
             toolStripContainer3.Location = new Point(0, 0);
@@ -1225,22 +1226,16 @@ namespace PgMulti
             // 
             toolStripContainer3.TopToolStripPanel.Controls.Add(toolStrip3);
             // 
-            // lbResult
+            // tlcTaskList
             // 
-            lbTaskList.Dock = DockStyle.Fill;
-            lbTaskList.DrawMode = DrawMode.OwnerDrawVariable;
-            lbTaskList.Font = new Font("Segoe UI", 8F, FontStyle.Bold, GraphicsUnit.Point);
-            lbTaskList.FormattingEnabled = true;
-            lbTaskList.ItemHeight = 20;
-            lbTaskList.Location = new Point(0, 0);
-            lbTaskList.Name = "lbResult";
-            lbTaskList.SelectionMode = SelectionMode.MultiExtended;
-            lbTaskList.Size = new Size(505, 481);
-            lbTaskList.TabIndex = 0;
-            lbTaskList.DrawItem += lbTaskList_DrawItem;
-            lbTaskList.MeasureItem += lbTaskList_MeasureItem;
-            lbTaskList.SelectedIndexChanged += lbTaskList_SelectedIndexChanged;
-            lbTaskList.Resize += lbTaskList_Resize;
+            tlcTaskList.Dock = DockStyle.Fill;
+            tlcTaskList.Font = new Font("Segoe UI", 8F, FontStyle.Bold, GraphicsUnit.Point);
+            tlcTaskList.Location = new Point(0, 0);
+            tlcTaskList.Name = "tlcTaskList";
+            tlcTaskList.Size = new Size(505, 481);
+            tlcTaskList.TabIndex = 0;
+            tlcTaskList.SelectedIndexChanged += lbTaskList_SelectedIndexChanged;
+            tlcTaskList.IsSelectedTabTaskNeeded += tlcTaskList_IsSelectedTabTaskNeeded;
             // 
             // toolStrip3
             // 
@@ -2284,7 +2279,7 @@ namespace PgMulti
         private ToolStripContainer toolStripContainer1;
         private ImageList ilServers;
         private SplitContainer splitContainer3;
-        private ListBox lbTaskList;
+        private TaskListControl tlcTaskList;
         private TabControl tcTask;
         private TabPage tpResult;
         private TabPage tpTable;

@@ -209,7 +209,15 @@ namespace PgMulti.Tasks
                 QueryIntegrator? qi = null;
                 foreach (PgTaskExecutorSqlTables tes in _ExecutorTasks)
                 {
-                    QueryExecutorSql? ces = (QueryExecutorSql?)tes.Queries.FirstOrDefault(cii => cii.Index == _CurrentStatementIndex);
+                    QueryExecutorSql? ces;
+
+                    tes.Mutex.WaitOne();
+                    try
+                    {
+                        ces = (QueryExecutorSql?)tes.Queries.FirstOrDefault(cii => cii.Index == _CurrentStatementIndex);
+                    }
+                    finally { tes.Mutex.ReleaseMutex(); }
+
                     if (ces == null) break;
 
                     if (qi == null)
@@ -232,7 +240,12 @@ namespace PgMulti.Tasks
 
                 if (qi != null)
                 {
-                    _Queries.Add(qi);
+                    Mutex.WaitOne();
+                    try
+                    {
+                        _Queries.Add(qi);
+                    }
+                    finally { Mutex.ReleaseMutex(); }
                     StringBuilderAppendIndentedLine($"{string.Format(Properties.Text.total_rows_integrated_in_statement_n, _CurrentStatementIndex + 1)}: " + qi.DataTable.Rows.Count + (qi.MaxRowsReached ? " " + string.Format(Properties.Text.rows_limit_warning, _Data.Config.MaxRows) : ""), true);
                 }
 

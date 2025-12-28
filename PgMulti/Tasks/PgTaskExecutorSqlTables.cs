@@ -4,6 +4,7 @@ using Npgsql;
 using PgMulti.AppData;
 using System.Data;
 using System.Diagnostics;
+using System.Threading;
 
 namespace PgMulti.Tasks
 {
@@ -161,7 +162,12 @@ namespace PgMulti.Tasks
                                     {
                                         StringBuilderAppendIndentedLine($"{Properties.Text.total_rows}: " + dt.Rows.Count + (ces.MaxRowsReached ? " " + string.Format(Properties.Text.rows_limit_warning, _Data.Config.MaxRows) : ""), false);
 
-                                        _Queries.Add(ces);
+                                        Mutex.WaitOne();
+                                        try
+                                        {
+                                            _Queries.Add(ces);
+                                        }
+                                        finally { Mutex.ReleaseMutex(); }
                                     }
                                 }
 
