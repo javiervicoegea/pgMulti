@@ -1092,6 +1092,9 @@ A diferencia de otras herramientas, esta aplicación no reutiliza la conexión e
   <data name="points" xml:space="preserve">
     <value>Puntos</value>
   </data>
+  <data name="pie" xml:space="preserve">
+    <value>Tarta</value>
+  </data>
   <data name="completed" xml:space="preserve">
     <value>Completado</value>
   </data>
@@ -1102,13 +1105,7 @@ A diferencia de otras herramientas, esta aplicación no reutiliza la conexión e
     <value>Exportación completada</value>
   </data>
   <data name="no_enough_columns" xml:space="preserve">
-    <value>La tabla no tiene suficientes columnas para crear una gráfica</value>
-  </data>
-  <data name="no_enough_selected_columns" xml:space="preserve">
-    <value>No ha seleccionado suficientes columnas de la tabla para crear una gráfica</value>
-  </data>
-  <data name="not_numeric_column" xml:space="preserve">
-    <value>La columna {0} no es de tipo numérico y no se puede representar como serie en una gráfica</value>
+    <value>La tabla no tiene suficientes columnas para crear una gráfica. La primera columna puede ser de cualquier tipo, pero el resto (que corresponden a las series) solo se tienen en cuenta si son de tipo numérico.</value>
   </data>
   <data name="input_alias" xml:space="preserve">
     <value>Introduzca un alias para la tabla {0}</value>

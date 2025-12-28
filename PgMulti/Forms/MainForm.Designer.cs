@@ -1,4 +1,5 @@
 ﻿using FastColoredTextBoxNS;
+using PgMulti.DataStructure;
 using PgMulti.QueryEditor;
 using PgMulti.Tasks;
 using TradeWright.UI.Forms;
@@ -1467,6 +1468,7 @@ namespace PgMulti
             gvTable.ShowRowErrors = false;
             gvTable.Size = new Size(1016, 452);
             gvTable.TabIndex = 0;
+            gvTable.AllowUserToOrderColumns = true;
             gvTable.CellMouseDown += gvTable_CellMouseDown;
             gvTable.CellMouseUp += gvTable_CellMouseUp;
             gvTable.CellPainting += gvTable_CellPainting;

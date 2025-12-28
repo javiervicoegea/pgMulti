@@ -3585,41 +3585,17 @@ namespace PgMulti
         {
             List<DataGridViewColumn> cols;
 
-
-            if (gvTable.SelectedColumns.Count == 0)
-            {
-                if (gvTable.Columns.Count < 2)
-                {
-                    MessageBox.Show(this, Properties.Text.no_enough_columns, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                cols = gvTable.Columns.Cast<DataGridViewColumn>().ToList();
-            }
-            else
-            {
-                if (gvTable.SelectedColumns.Count < 2)
-                {
-                    MessageBox.Show(this, Properties.Text.no_enough_selected_columns, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                cols = gvTable.SelectedColumns.Cast<DataGridViewColumn>().ToList();
-            }
-
             Query q = (Query)gvTable.Tag!;
-            List<Query.QueryColumn> qCols = cols.Select(i => (Query.QueryColumn)i.Tag!).ToList();
 
-            foreach (Query.QueryColumn qCol in qCols.Skip(1))
+            cols = gvTable.Columns.Cast<DataGridViewColumn>().Where(i => i.DisplayIndex == 0 || Column.NumericDotNetTypes.Contains(q.DataTable.Columns[i.Index].DataType)).OrderBy(i => i.DisplayIndex).ToList();
+
+            if (cols.Count < 2)
             {
-                if (qCol==null || !Column.NumericDotNetTypes.Contains(q.DataTable.Columns[qCol.Index].DataType))
-                {
-                    MessageBox.Show(this, string.Format(Properties.Text.not_numeric_column, qCol.Title), Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
+                MessageBox.Show(this, Properties.Text.no_enough_columns, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
 
-            ChartForm f = new ChartForm(q, qCols);
+            ChartForm f = new ChartForm(gvTable, q, cols);
             f.Show(this);
         }
 

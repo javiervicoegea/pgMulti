@@ -5,17 +5,20 @@ using System;
 using System.Collections;
 using System.Data;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 
 namespace PgMulti
 {
     public partial class ChartForm : Form
     {
+        public DataGridView DataGridView;
         public Query Query;
-        public List<Query.QueryColumn> Columns;
+        public List<DataGridViewColumn> Columns;
 
-        public ChartForm(Query q, List<Query.QueryColumn> cols)
+        public ChartForm(DataGridView gv, Query q, List<DataGridViewColumn> cols)
         {
+            DataGridView = gv;
             Query = q;
             Columns = cols;
 
@@ -26,14 +29,16 @@ namespace PgMulti
             tscbChartType.Items.Add(new ChartType(Properties.Text.bars, SeriesChartType.Bar));
             tscbChartType.Items.Add(new ChartType(Properties.Text.lines, SeriesChartType.Line));
             tscbChartType.Items.Add(new ChartType(Properties.Text.points, SeriesChartType.Point));
+            tscbChartType.Items.Add(new ChartType(Properties.Text.points, SeriesChartType.Pie));
 
             tscbChartType.SelectedIndex = 0;
         }
 
         private void Plot(SeriesChartType chartType)
         {
-            bool xAxisAsCategories = Query.DataTable.Columns[Columns[0].Index].DataType == typeof(string);
-            bool xAxisIsDateTime = xAxisAsCategories && (Column.DateTypes.Contains(Columns[0].PostgreSqlTypeName) || Column.DateTimeTypes.Contains(Columns[0].PostgreSqlTypeName));
+            Query.QueryColumn? qCol0 = (Query.QueryColumn?)Columns[0].Tag;
+            bool xAxisAsCategories = qCol0 == null || Query.DataTable.Columns[qCol0.Index].DataType == typeof(string);
+            bool xAxisIsDateTime = xAxisAsCategories && qCol0 != null && (Column.DateTypes.Contains(qCol0.PostgreSqlTypeName) || Column.DateTimeTypes.Contains(qCol0.PostgreSqlTypeName));
 
             if (xAxisIsDateTime) xAxisAsCategories = false;
 
@@ -43,7 +48,7 @@ namespace PgMulti
 
             ChartArea area = new ChartArea();
 
-            area.AxisX.Title = Columns[0].Title;
+            area.AxisX.Title = Columns[0].HeaderText;
 
             chChart.ChartAreas.Add(area);
 
@@ -56,9 +61,12 @@ namespace PgMulti
             if (xAxisIsDateTime)
             {
                 Regex re = new Regex(@"^(\d+)\-(\d+)\-(\d+)( (\d+)\:(\d+)(\:(\d+)(\.(\d\d\d))?)?)?$");
-                for (int i = 0; i < Query.DataTable.Rows.Count; i++)
+                for (int i = 0; i < DataGridView.Rows.Count; i++)
                 {
-                    object o = (string)Query.DataTable.Rows[i][0];
+                    DataGridViewRow gvRow = DataGridView.Rows[i];
+                    DataRow row = ((DataRowView)gvRow.DataBoundItem).Row;
+                    
+                    object o = (string)row[0];
 
                     if (o == DBNull.Value)
                     {
@@ -78,14 +86,30 @@ namespace PgMulti
                 }
             }
 
+            Dictionary<string, int> repeatedNames = new Dictionary<string, int>();
+
             for (int i = 1; i < Columns.Count; i++)
             {
+                Query.QueryColumn qColi = (Query.QueryColumn)Columns[i].Tag!;
+
+                string name;
+
+                if (repeatedNames.ContainsKey(qColi.Title))
+                {
+                    int n = repeatedNames[qColi.Title] + 1;
+                    name = qColi.Title + " " + n;
+                    repeatedNames[qColi.Title] = n;
+                }
+                else
+                {
+                    name = qColi.Title;
+                    repeatedNames[qColi.Title] = 1;
+                }
+
                 Series serie = new Series
                 {
-                    Name = Columns[i].Title,
+                    Name = name,
                     ChartType = chartType,
-                    XValueMember = Query.DataTable.Columns[Columns[0].Index].ColumnName,
-                    YValueMembers = Query.DataTable.Columns[Columns[i].Index].ColumnName,
                     IsValueShownAsLabel = true,
                     LabelBackColor = Color.FromArgb(200, 255, 255, 255)
                 };
@@ -93,10 +117,11 @@ namespace PgMulti
                 if (xAxisAsCategories)
                 {
                     Dictionary<string, int> categories = new Dictionary<string, int>();
-                    foreach (DataRow row in Query.DataTable.Rows)
+                    foreach (DataGridViewRow gvRow in DataGridView.Rows)
                     {
+                        DataRow row = ((DataRowView)gvRow.DataBoundItem).Row;
                         string category = row[Columns[0].Index].ToString()!;
-                        double value = Convert.ToDouble(row[Columns[i].Index]);
+                        double value = Convert.ToDouble(row[qColi.Index]);
 
                         int index;
 
@@ -116,19 +141,24 @@ namespace PgMulti
                 }
                 else if (xAxisIsDateTime)
                 {
-                    for (int j = 0; j < Query.DataTable.Rows.Count; j++)
+                    for (int j = 0; j < DataGridView.Rows.Count; j++)
                     {
-                        DataPoint p = serie.Points[serie.Points.AddXY(dateTimes[j], Convert.ToDouble(Query.DataTable.Rows[j][Columns[i].Index]))];
+                        DataGridViewRow gvRow = DataGridView.Rows[j];
+                        DataRow row = ((DataRowView)gvRow.DataBoundItem).Row;
+
+                        serie.Points.AddXY(dateTimes[j], Convert.ToDouble(row[qColi.Index]));
+                    }
+                }
+                else
+                {
+                    foreach (DataGridViewRow gvRow in DataGridView.Rows)
+                    {
+                        DataRow row = ((DataRowView)gvRow.DataBoundItem).Row;
+                        serie.Points.AddXY(Convert.ToDouble(row[Columns[0].Index]), Convert.ToDouble(row[qColi.Index]));
                     }
                 }
 
                 chChart.Series.Add(serie);
-            }
-
-            if (!xAxisAsCategories && !xAxisIsDateTime)
-            {
-                chChart.DataSource = Query.DataTable;
-                chChart.DataBind();
             }
         }
 

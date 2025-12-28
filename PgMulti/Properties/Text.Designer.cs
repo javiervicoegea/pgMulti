@@ -1696,20 +1696,11 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a The table does not have enough columns to create a chart.
+        ///   Busca una cadena traducida similar a The table does not have enough columns to create a graph. The first column can be of any type, but the rest (which correspond to the series) are only considered if they are numeric..
         /// </summary>
         internal static string no_enough_columns {
             get {
                 return ResourceManager.GetString("no_enough_columns", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a You have not selected enough columns from the table to create a chart.
-        /// </summary>
-        internal static string no_enough_selected_columns {
-            get {
-                return ResourceManager.GetString("no_enough_selected_columns", resourceCulture);
             }
         }
         
@@ -1746,15 +1737,6 @@ namespace PgMulti.Properties {
         internal static string not_null {
             get {
                 return ResourceManager.GetString("not_null", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a The {0} column is not of numeric type and cannot be represented as a series in a graph.
-        /// </summary>
-        internal static string not_numeric_column {
-            get {
-                return ResourceManager.GetString("not_numeric_column", resourceCulture);
             }
         }
         
@@ -1872,6 +1854,15 @@ namespace PgMulti.Properties {
         internal static string pgdx_file_filter {
             get {
                 return ResourceManager.GetString("pgdx_file_filter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Pie.
+        /// </summary>
+        internal static string pie {
+            get {
+                return ResourceManager.GetString("pie", resourceCulture);
             }
         }
         

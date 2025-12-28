@@ -1141,6 +1141,9 @@ Unlike other tools, this application does not reuse the connection between diffe
   <data name="points" xml:space="preserve">
     <value>Points</value>
   </data>
+  <data name="pie" xml:space="preserve">
+    <value>Pie</value>
+  </data>
   <data name="completed" xml:space="preserve">
     <value>Completed</value>
   </data>
@@ -1151,13 +1154,7 @@ Unlike other tools, this application does not reuse the connection between diffe
     <value>Export completed</value>
   </data>
   <data name="no_enough_columns" xml:space="preserve">
-    <value>The table does not have enough columns to create a chart</value>
-  </data>
-  <data name="no_enough_selected_columns" xml:space="preserve">
-    <value>You have not selected enough columns from the table to create a chart</value>
-  </data>
-  <data name="not_numeric_column" xml:space="preserve">
-    <value>The {0} column is not of numeric type and cannot be represented as a series in a graph</value>
+    <value>The table does not have enough columns to create a graph. The first column can be of any type, but the rest (which correspond to the series) are only considered if they are numeric.</value>
   </data>
   <data name="input_alias" xml:space="preserve">
     <value>Enter an alias for table {0}</value>
