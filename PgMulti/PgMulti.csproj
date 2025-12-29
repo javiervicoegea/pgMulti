@@ -50,6 +50,9 @@
     <Compile Update="Forms\ChartForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Forms\SeparatedEditorTabForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Properties\AppSettings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>

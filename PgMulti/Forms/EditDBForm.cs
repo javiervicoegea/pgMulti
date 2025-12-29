@@ -130,16 +130,19 @@ namespace PgMulti
             Close();
         }
 
+        public void InitFromDb(DB db, bool includePassword)
+        {
+            txtDBAlias.Text = db.Alias;
+            txtServer.Text = db.Server;
+            txtPort.Text = db.Port.ToString();
+            txtDBName.Text = db.DBName;
+            txtUser.Text = db.User;
+            if (includePassword) txtPassword.Text = db.Password;
+        }
+
         private void frmEditDB_Load(object sender, EventArgs e)
         {
-            if (_DB != null)
-            {
-                txtDBAlias.Text = _DB.Alias;
-                txtServer.Text = _DB.Server;
-                txtPort.Text = _DB.Port.ToString();
-                txtDBName.Text = _DB.DBName;
-                txtUser.Text = _DB.User;
-            }
+            if (_DB != null) InitFromDb(_DB, false);
         }
 
         #region TextI18n

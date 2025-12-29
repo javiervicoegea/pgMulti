@@ -53,6 +53,7 @@ namespace PgMulti
             tscmiRemove = new ToolStripMenuItem();
             tscmiUp = new ToolStripMenuItem();
             tscmiDown = new ToolStripMenuItem();
+            tscmiClone = new ToolStripMenuItem();
             tscmiRefresh = new ToolStripMenuItem();
             tscmiCopyText = new ToolStripMenuItem();
             ncb = new Aga.Controls.Tree.NodeControls.NodeCheckBox();
@@ -99,6 +100,7 @@ namespace PgMulti
             toolStrip1 = new ToolStrip();
             tsbOpen = new ToolStripButton();
             tsbSave = new ToolStripButton();
+            tsbSaveAs = new ToolStripButton();
             tsbSaveAll = new ToolStripButton();
             toolStripSeparator2 = new ToolStripSeparator();
             tsbRun = new ToolStripButton();
@@ -189,25 +191,15 @@ namespace PgMulti
             tsmiMoreOptions = new ToolStripMenuItem();
             cmsTabs = new ContextMenuStrip(components);
             tsmiCloseTab = new ToolStripMenuItem();
+            tsmiOpenEditorInNewWindow = new ToolStripMenuItem();
             tsmiCloseAllTabs = new ToolStripMenuItem();
             tsmiCloseAllTabsExceptThisOne = new ToolStripMenuItem();
             tsmiReopenLastClosedTab = new ToolStripMenuItem();
             tsmiClosedTabsLog = new ToolStripMenuItem();
             tsmiCopyPath = new ToolStripMenuItem();
             tsmiOpenFolder = new ToolStripMenuItem();
-            tscmiBack = new ToolStripMenuItem();
-            tscmiForward = new ToolStripMenuItem();
-            tscmiUndo = new ToolStripMenuItem();
-            tscmiRedo = new ToolStripMenuItem();
-            tscmiCut = new ToolStripMenuItem();
-            tscmiCopy = new ToolStripMenuItem();
-            tscmiPaste = new ToolStripMenuItem();
-            tscmiSearchAndReplace = new ToolStripMenuItem();
-            tscmiGoTo = new ToolStripMenuItem();
-            tscmiFormat = new ToolStripMenuItem();
             ilServers = new ImageList(components);
             ofdSql = new OpenFileDialog();
-            sfdSql = new SaveFileDialog();
             ofdBinaryCell = new OpenFileDialog();
             sfdBinaryCell = new SaveFileDialog();
             tmrPosition = new System.Windows.Forms.Timer(components);
@@ -215,7 +207,6 @@ namespace PgMulti
             tmrTaskList = new System.Windows.Forms.Timer(components);
             tmrFitGridColumns = new System.Windows.Forms.Timer(components);
             ilAutocompleteMenu = new ImageList(components);
-            cmsFctb = new ContextMenuStrip(components);
             sfdCsv = new SaveFileDialog();
             mm = new MenuStrip();
             tsmiFile = new ToolStripMenuItem();
@@ -287,7 +278,6 @@ namespace PgMulti
             ((System.ComponentModel.ISupportInitialize)fctbExecutedSql).BeginInit();
             toolStrip4.SuspendLayout();
             cmsTabs.SuspendLayout();
-            cmsFctb.SuspendLayout();
             mm.SuspendLayout();
             SuspendLayout();
             // 
@@ -403,7 +393,7 @@ namespace PgMulti
             // cmsServers
             // 
             cmsServers.ImageScalingSize = new Size(20, 20);
-            cmsServers.Items.AddRange(new ToolStripItem[] { tscmiNewGroup, tscmiNewDB, tscmiExploreTable, tscmiRecursiveRemove, tscmiCreateTableDiagram, tscmiEdit, tscmiRemove, tscmiUp, tscmiDown, tscmiRefresh, tscmiCopyText });
+            cmsServers.Items.AddRange(new ToolStripItem[] { tscmiNewGroup, tscmiNewDB, tscmiExploreTable, tscmiRecursiveRemove, tscmiCreateTableDiagram, tscmiEdit, tscmiRemove, tscmiUp, tscmiDown, tscmiClone, tscmiRefresh, tscmiCopyText });
             cmsServers.Name = "cmsServers";
             cmsServers.Size = new Size(74, 290);
             // 
@@ -469,6 +459,13 @@ namespace PgMulti
             tscmiDown.Name = "tscmiDown";
             tscmiDown.Size = new Size(73, 26);
             tscmiDown.Click += tscmiDown_Click;
+            // 
+            // tscmiClone
+            // 
+            tscmiClone.Image = Properties.Resources.copiar;
+            tscmiClone.Name = "tscmiClone";
+            tscmiClone.Size = new Size(73, 26);
+            tscmiClone.Click += tscmiClone_Click;
             // 
             // tscmiRefresh
             // 
@@ -654,6 +651,7 @@ namespace PgMulti
             // 
             // tlpSearchAndReplace
             // 
+            tlpSearchAndReplace.AutoScroll = true;
             tlpSearchAndReplace.ColumnCount = 1;
             tlpSearchAndReplace.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tlpSearchAndReplace.Controls.Add(lblSearch, 0, 0);
@@ -699,7 +697,6 @@ namespace PgMulti
             txtSearchText.Size = new Size(390, 27);
             txtSearchText.TabIndex = 0;
             txtSearchText.TextChanged += txtSearchText_TextChanged;
-            txtSearchText.Enter += txtSearchText_Enter;
             txtSearchText.KeyUp += txtSearchText_KeyUp;
             // 
             // flpSearchOptions
@@ -977,7 +974,7 @@ namespace PgMulti
             // 
             toolStrip1.Dock = DockStyle.None;
             toolStrip1.ImageScalingSize = new Size(30, 30);
-            toolStrip1.Items.AddRange(new ToolStripItem[] { tsbOpen, tsbSave, tsbSaveAll, toolStripSeparator2, tsbRun, tsbExportCsv, tsddbTransactions, toolStripSeparator3, tsbSearchAndReplace, tsbGoTo, toolStripSeparator5, tsbFormat, tsbHistory, toolStripSeparator7, tsbOpenDiagram, tsbNewDiagram, toolStripSeparator1, tsddbErrors, toolStripSeparator6, tslPosition });
+            toolStrip1.Items.AddRange(new ToolStripItem[] { tsbOpen, tsbSave, tsbSaveAs, tsbSaveAll, toolStripSeparator2, tsbRun, tsbExportCsv, tsddbTransactions, toolStripSeparator3, tsbSearchAndReplace, tsbGoTo, toolStripSeparator5, tsbFormat, tsbHistory, toolStripSeparator7, tsbOpenDiagram, tsbNewDiagram, toolStripSeparator1, tsddbErrors, toolStripSeparator6, tslPosition });
             toolStrip1.Location = new Point(4, 0);
             toolStrip1.Name = "toolStrip1";
             toolStrip1.Size = new Size(511, 37);
@@ -1003,6 +1000,16 @@ namespace PgMulti
             tsbSave.Size = new Size(34, 34);
             tsbSave.Text = "toolStripButton1";
             tsbSave.Click += tsbSave_Click;
+            // 
+            // tsbSaveAs
+            // 
+            tsbSaveAs.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbSaveAs.Image = Properties.Resources.guardar_como;
+            tsbSaveAs.ImageTransparentColor = Color.Magenta;
+            tsbSaveAs.Name = "tsbSaveAs";
+            tsbSaveAs.Size = new Size(34, 34);
+            tsbSaveAs.Text = "toolStripButton1";
+            tsbSaveAs.Click += tsbSaveAs_Click;
             // 
             // tsbSaveAll
             // 
@@ -1841,7 +1848,7 @@ namespace PgMulti
             // cmsTabs
             // 
             cmsTabs.ImageScalingSize = new Size(20, 20);
-            cmsTabs.Items.AddRange(new ToolStripItem[] { tsmiCloseTab, tsmiCloseAllTabs, tsmiCloseAllTabsExceptThisOne, tsmiReopenLastClosedTab, tsmiClosedTabsLog, tsmiCopyPath, tsmiOpenFolder });
+            cmsTabs.Items.AddRange(new ToolStripItem[] { tsmiCloseTab, tsmiCloseAllTabs, tsmiCloseAllTabsExceptThisOne, tsmiReopenLastClosedTab, tsmiClosedTabsLog, tsmiCopyPath, tsmiOpenFolder, tsmiOpenEditorInNewWindow });
             cmsTabs.Name = "cmsTabs";
             cmsTabs.Size = new Size(74, 186);
             // 
@@ -1851,6 +1858,13 @@ namespace PgMulti
             tsmiCloseTab.Name = "tsmiCloseTab";
             tsmiCloseTab.Size = new Size(73, 26);
             tsmiCloseTab.Click += tsmiCloseTab_Click;
+            // 
+            // tsmiOpenEditorInNewWindow
+            // 
+            tsmiOpenEditorInNewWindow.Image = Properties.Resources.extract;
+            tsmiOpenEditorInNewWindow.Name = "tsmiOpenEditorInNewWindow";
+            tsmiOpenEditorInNewWindow.Size = new Size(73, 26);
+            tsmiOpenEditorInNewWindow.Click += tsmiOpenEditorInNewWindow_Click;
             // 
             // tsmiCloseAllTabs
             // 
@@ -1894,76 +1908,6 @@ namespace PgMulti
             tsmiOpenFolder.Size = new Size(73, 26);
             tsmiOpenFolder.Click += tsmiOpenFolder_Click;
             // 
-            // tscmiBack
-            // 
-            tscmiBack.Image = Properties.Resources.atras;
-            tscmiBack.Name = "tscmiBack";
-            tscmiBack.Size = new Size(73, 26);
-            tscmiBack.Click += tsmiBack_Click;
-            // 
-            // tscmiForward
-            // 
-            tscmiForward.Image = Properties.Resources.adelante;
-            tscmiForward.Name = "tscmiForward";
-            tscmiForward.Size = new Size(73, 26);
-            tscmiForward.Click += tsmiForward_Click;
-            // 
-            // tscmiUndo
-            // 
-            tscmiUndo.Image = Properties.Resources.undo;
-            tscmiUndo.Name = "tscmiUndo";
-            tscmiUndo.Size = new Size(73, 26);
-            tscmiUndo.Click += tsmiUndo_Click;
-            // 
-            // tscmiRedo
-            // 
-            tscmiRedo.Image = Properties.Resources.redo;
-            tscmiRedo.Name = "tscmiRedo";
-            tscmiRedo.Size = new Size(73, 26);
-            tscmiRedo.Click += tsmiRedo_Click;
-            // 
-            // tscmiCut
-            // 
-            tscmiCut.Image = Properties.Resources.cortar;
-            tscmiCut.Name = "tscmiCut";
-            tscmiCut.Size = new Size(73, 26);
-            tscmiCut.Click += tsmiCut_Click;
-            // 
-            // tscmiCopy
-            // 
-            tscmiCopy.Image = Properties.Resources.copiar;
-            tscmiCopy.Name = "tscmiCopy";
-            tscmiCopy.Size = new Size(73, 26);
-            tscmiCopy.Click += tsmiCopy_Click;
-            // 
-            // tscmiPaste
-            // 
-            tscmiPaste.Image = Properties.Resources.pegar;
-            tscmiPaste.Name = "tscmiPaste";
-            tscmiPaste.Size = new Size(73, 26);
-            tscmiPaste.Click += tsmiPaste_Click;
-            // 
-            // tscmiSearchAndReplace
-            // 
-            tscmiSearchAndReplace.Image = Properties.Resources.buscar;
-            tscmiSearchAndReplace.Name = "tscmiSearchAndReplace";
-            tscmiSearchAndReplace.Size = new Size(73, 26);
-            tscmiSearchAndReplace.Click += tsmiSearchAndReplace_Click;
-            // 
-            // tscmiGoTo
-            // 
-            tscmiGoTo.Image = Properties.Resources.linea;
-            tscmiGoTo.Name = "tscmiGoTo";
-            tscmiGoTo.Size = new Size(73, 26);
-            tscmiGoTo.Click += tsmiGoTo_Click;
-            // 
-            // tscmiFormat
-            // 
-            tscmiFormat.Image = Properties.Resources.autoformato;
-            tscmiFormat.Name = "tscmiFormat";
-            tscmiFormat.Size = new Size(73, 26);
-            tscmiFormat.Click += tsmiFormat_Click;
-            // 
             // ilServers
             // 
             ilServers.ColorDepth = ColorDepth.Depth8Bit;
@@ -1977,11 +1921,6 @@ namespace PgMulti
             // 
             ofdSql.FileName = "openFileDialog1";
             ofdSql.FilterIndex = 0;
-            // 
-            // sfdSql
-            // 
-            sfdSql.DefaultExt = "sql";
-            sfdSql.FilterIndex = 0;
             // 
             // ofdBinaryCell
             // 
@@ -2034,13 +1973,6 @@ namespace PgMulti
             ilAutocompleteMenu.Images.SetKeyName(14, "key.png");
             ilAutocompleteMenu.Images.SetKeyName(15, "tva_element.png");
             ilAutocompleteMenu.Images.SetKeyName(16, "current_fragment.png");
-            // 
-            // cmsFctb
-            // 
-            cmsFctb.ImageScalingSize = new Size(20, 20);
-            cmsFctb.Items.AddRange(new ToolStripItem[] { tscmiBack, tscmiForward, tscmiUndo, tscmiRedo, tscmiCut, tscmiCopy, tscmiPaste, tscmiSearchAndReplace, tscmiGoTo, tscmiFormat });
-            cmsFctb.Name = "cmsFctb";
-            cmsFctb.Size = new Size(74, 264);
             // 
             // sfdCsv
             // 
@@ -2262,7 +2194,6 @@ namespace PgMulti
             toolStrip4.ResumeLayout(false);
             toolStrip4.PerformLayout();
             cmsTabs.ResumeLayout(false);
-            cmsFctb.ResumeLayout(false);
             mm.ResumeLayout(false);
             mm.PerformLayout();
             ResumeLayout(false);
@@ -2298,7 +2229,6 @@ namespace PgMulti
         private ToolStripButton tsbUp;
         private ToolStripButton tsbDown;
         private OpenFileDialog ofdSql;
-        private SaveFileDialog sfdSql;
         private OpenFileDialog ofdBinaryCell;
         private SaveFileDialog sfdBinaryCell;
         private TabControlExtra tcSql;
@@ -2350,16 +2280,6 @@ namespace PgMulti
         private ToolStripMenuItem tsmiRedo;
         private ToolStripMenuItem tsmiBack;
         private ToolStripMenuItem tsmiForward;
-        private ToolStripMenuItem tscmiBack;
-        private ToolStripMenuItem tscmiForward;
-        private ToolStripMenuItem tscmiUndo;
-        private ToolStripMenuItem tscmiRedo;
-        private ToolStripMenuItem tscmiCut;
-        private ToolStripMenuItem tscmiCopy;
-        private ToolStripMenuItem tscmiPaste;
-        private ToolStripMenuItem tscmiSearchAndReplace;
-        private ToolStripMenuItem tscmiGoTo;
-        private ToolStripMenuItem tscmiFormat;
         private ToolStripMenuItem tsmiIncreaseFont;
         private ToolStripMenuItem tsmiReduceFont;
         private ToolStripSeparator toolStripSeparator1;
@@ -2383,6 +2303,7 @@ namespace PgMulti
         private ToolStripMenuItem tscmiRemove;
         private ToolStripMenuItem tscmiUp;
         private ToolStripMenuItem tscmiDown;
+        private ToolStripMenuItem tscmiClone;
         private ToolStripMenuItem tscmiRefresh;
         private ToolStripButton tsbCollapseAll;
         private ToolStripMenuItem tsbSetNull;
@@ -2398,6 +2319,7 @@ namespace PgMulti
         private ImageList ilTabControl;
         private ContextMenuStrip cmsTabs;
         private ToolStripMenuItem tsmiCloseTab;
+        private ToolStripMenuItem tsmiOpenEditorInNewWindow;
         private ToolStripMenuItem tsmiCloseAllTabs;
         private ToolStripMenuItem tsmiCloseAllTabsExceptThisOne;
         private ToolStripButton tsbExportCsv;
@@ -2409,6 +2331,7 @@ namespace PgMulti
         private ToolStripSeparator toolStripSeparator2;
         private ToolStripButton tsbOpen;
         private ToolStripButton tsbSave;
+        private ToolStripButton tsbSaveAs;
         private ToolStripButton tsbSaveAll;
         private ToolStripButton tsbSearchAndReplace;
         private ToolStripButton tsbGoTo;

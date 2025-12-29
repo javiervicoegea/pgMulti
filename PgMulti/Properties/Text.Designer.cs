@@ -400,6 +400,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Clone.
+        /// </summary>
+        internal static string clone {
+            get {
+                return ResourceManager.GetString("clone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Close.
         /// </summary>
         internal static string close {
@@ -1777,6 +1786,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Open the text editor in a separate window.
+        /// </summary>
+        internal static string open_editor_in_new_window {
+            get {
+                return ResourceManager.GetString("open_editor_in_new_window", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Open containing folder.
         /// </summary>
         internal static string open_folder {
@@ -2124,6 +2142,15 @@ namespace PgMulti.Properties {
         internal static string result {
             get {
                 return ResourceManager.GetString("result", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Return the text editor here.
+        /// </summary>
+        internal static string return_editor_to_main_form {
+            get {
+                return ResourceManager.GetString("return_editor_to_main_form", resourceCulture);
             }
         }
         

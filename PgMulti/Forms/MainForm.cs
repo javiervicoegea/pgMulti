@@ -21,7 +21,7 @@ using static PgMulti.Tasks.PgTask;
 
 namespace PgMulti
 {
-    public partial class MainForm : Form
+    public partial class MainForm : Form, IEditorTabForm
     {
         #region "General"
         private Data? _Data;
@@ -29,6 +29,7 @@ namespace PgMulti
         private bool _AutomaticScroll = true;
         private MainFormTreeModel _TreeModel;
         private List<Form> _SecondaryForms = new List<Form>();
+        private List<SeparatedEditorTabForm> _SeparatedEditorTabForms = new List<SeparatedEditorTabForm>();
         private Dictionary<LogStyle, FastColoredTextBoxNS.Style> _FctbResultStyles;
 
         private Dictionary<EditorTab, List<PgTask>> _EditorTabsTasksDictionary = new Dictionary<EditorTab, List<PgTask>>();
@@ -93,7 +94,20 @@ namespace PgMulti
         }
 
         internal List<Form> SecondaryForms { get => _SecondaryForms; }
-        internal TradeWright.UI.Forms.TabControlExtra SqlEditorTabControl { get => tcSql; }
+        internal List<SeparatedEditorTabForm> SeparatedEditorTabForms { get => _SeparatedEditorTabForms; }
+       internal TradeWright.UI.Forms.TabControlExtra SqlEditorTabControl { get => tcSql; }
+
+        TextBox IEditorTabForm.txtSearchText => txtSearchText;
+        TextBox IEditorTabForm.txtReplaceText => txtReplaceText;
+        CheckBox IEditorTabForm.chkSearchMatchCase => chkSearchMatchCase;
+        CheckBox IEditorTabForm.chkSearchMatchWholeWords => chkSearchMatchWholeWords;
+        CheckBox IEditorTabForm.chkSearchRegex => chkSearchRegex;
+        CheckBox IEditorTabForm.chkSearchWithinSelectedText => chkSearchWithinSelectedText;
+        Button IEditorTabForm.btnGoNextSearchResult => btnGoNextSearchResult;
+        Button IEditorTabForm.btnReplaceCurrent => btnReplaceCurrent;
+        Button IEditorTabForm.btnReplaceAll => btnReplaceAll;
+        Label IEditorTabForm.lblSearchResultsSummary => lblSearchResultsSummary;
+        ToolStripDropDownButton IEditorTabForm.tsddbErrors => tsddbErrors;
 
         #endregion
 
@@ -287,14 +301,14 @@ namespace PgMulti
         {
             if (WindowState == FormWindowState.Minimized && _LastWindowState != FormWindowState.Minimized)
             {
-                foreach (Form form in _SecondaryForms)
+                foreach (Form form in SecondaryForms)
                 {
                     form.WindowState = FormWindowState.Minimized;
                 }
             }
             else if (_LastWindowState == FormWindowState.Minimized)
             {
-                foreach (Form form in _SecondaryForms)
+                foreach (Form form in SecondaryForms)
                 {
                     form.WindowState = FormWindowState.Normal;
                 }
@@ -668,6 +682,7 @@ namespace PgMulti
             bool tsbRemoveVisible = false;
             bool tsbUpVisible = false;
             bool tsbDownVisible = false;
+            bool tsbCloneVisible = false;
             bool tsbExploreTableVisible = false;
             bool tsbRecursiveRemoveVisible = false;
             bool tsbCreateTableDiagramVisible = false;
@@ -704,6 +719,7 @@ namespace PgMulti
                         tsbRemoveVisible = true;
                         tsbEditVisible = true;
                         tssEditVisible = true;
+                        tsbCloneVisible = true;
                     }
                     else if (tn!.Tag is Function || tn!.Tag is Tuple<Function, string>)
                     {
@@ -755,6 +771,7 @@ namespace PgMulti
             tscmiUp.Visible = tsbUpVisible;
             tsbDown.Visible = tsbDownVisible;
             tscmiDown.Visible = tsbDownVisible;
+            tscmiClone.Visible = tsbCloneVisible;
             tsbUp.Enabled = tsbUpEnabled;
             tscmiUp.Enabled = tsbUpEnabled;
             tsbDown.Enabled = tsbDownEnabled;
@@ -1398,6 +1415,26 @@ namespace PgMulti
             tsbDown_Click(sender, e);
         }
 
+        private void tscmiClone_Click(object sender, EventArgs e)
+        {
+            TreeNodeAdv tnaParent = tvaConnections.SelectedNode;
+            Node nDB = (Node)tnaParent.Tag;
+            DB db = (DB)nDB.Tag;
+
+            EditDBForm f = new EditDBForm(_Data!, db.Group, null);
+            f.InitFromDb(db, true);
+            f.ShowDialog(this);
+
+            if (f.DB == null) return;
+
+            f.DB.Position = (short)nDB.Parent.Nodes.Count;
+
+            f.DB.Save();
+
+            RefreshConnectionsTreeControl();
+            ConnectionTreeControlSelectDB(f.DB.IdGroup, f.DB.Id);
+        }
+
         private void tscmiRefresh_Click(object sender, EventArgs e)
         {
             tsbRefresh_Click(sender, e);
@@ -1590,106 +1627,50 @@ namespace PgMulti
             return et;
         }
 
-        internal void EnableTimerSaveTabs()
+        public bool IsCurrentFctbTab(CustomFctb fctb)
+        {
+            return (tcSql.SelectedTab != null && tcSql.SelectedTab != tpNewTab && ((EditorTab)tcSql.SelectedTab.Tag!).Fctb == fctb);
+        }
+
+        public void EnableTimerSaveTabs()
         {
             tmrSaveTabs.Enabled = true;
         }
 
-        internal void EnableTimerPosition(bool v)
+        public void EnableTimerPosition(bool v)
         {
             tmrPosition.Enabled = v;
         }
 
-        internal void SqlEditorProcessKey(CustomFctb sender, KeyEventArgs e)
+        public void CloseTabComplete(EditorTab et)
         {
-            if (e.KeyCode == Keys.F5 && tsbRun.Enabled)
+            if (tcSql.SelectedTab == et.TabPage) tcSql.SelectedIndex = Math.Max(tcSql.SelectedIndex - 1, 0);
+            tcSql.TabPages.Remove(et.TabPage);
+
+            RemoveEditorTabFromAssociations(et);
+            tlcTaskList.Invalidate();
+
+            if (tcSql.TabPages.Count == 1)
             {
-                tsbRun_Click(sender, e);
-                e.Handled = true;
-            }
-            else if (e.KeyData == (Keys.D | Keys.Control))
-            {
-                tsmiFormat_Click(null, null);
-                e.Handled = true;
-            }
-            else if (e.KeyData == (Keys.L | Keys.Control))
-            {
-                tsbFilterCurrentEditorTabTasks_Click(null, null);
-                e.Handled = true;
-            }
-            else if (e.KeyData == (Keys.Control | Keys.F) || e.KeyData == (Keys.Control | Keys.R))
-            {
-                ShowSearchAndReplace();
-                e.Handled = true;
-            }
-            else if (e.KeyData == Keys.F3)
-            {
-                GoNextSearchResult();
-                e.Handled = true;
-            }
-            else if (e.KeyData == (Keys.Alt | Keys.F) || e.KeyData == (Keys.Control | Keys.H))
-            {
-                e.Handled = true;
-            }
-            else if (e.KeyData == Keys.Escape)
-            {
-                CustomFctb tb = (CustomFctb)sender!;
-                HideSearchAndReplace();
-                e.Handled = true;
+                CreateEditorTab(new EditorTab.CreateEditorTabOptions() { Focus = true, PendingFileSave = false });
             }
         }
 
-        internal void SqlEditorProcessClick(CustomFctb sender, MouseEventArgs e)
+        public void ShowTabAsInSeparatedWindow(bool v)
         {
-            if (e.Button == MouseButtons.XButton1)
-            {
-                tsmiBack_Click(null, null);
-            }
-            else if (e.Button == MouseButtons.XButton2)
-            {
-                tsmiForward_Click(null, null);
-            }
-            else if (e.Button == MouseButtons.Right)
-            {
-                cmsFctb.Show((Control)sender!, e.X, e.Y);
-            }
+            tsbRun.Visible = !v;
+            tsbExportCsv.Visible = !v;
+            tsddbTransactions.Visible = !v;
+            tlpSearchAndReplace.Enabled = !v;
+            tsbSave.Visible = !v;
+            tsbSearchAndReplace.Visible = !v;
+            tsbGoTo.Visible = !v;
+            tsbFormat.Visible = !v;
+            tsddbErrors.Visible = !v;
+            tslPosition.Visible = !v;
+            lblSearchResultsSummary.Visible = !v;
         }
 
-        internal void SqlEditorProcessParseTreeUpdated(CustomFctb sender)
-        {
-            if (tcSql.SelectedTab != null && tcSql.SelectedTab != tpNewTab && tcSql.SelectedTab.Controls[0] == sender)
-            {
-                RefreshErrors(sender);
-            }
-        }
-
-        private void RefreshErrors(CustomFctb fctbSql)
-        {
-            tsddbErrors.DropDownItems.Clear();
-            if (fctbSql.ParseTree != null && fctbSql.ParseTree.Status == ParseTreeStatus.Error)
-            {
-                foreach (Irony.LogMessage msg in fctbSql.ParseTree.ParserMessages)
-                {
-                    ToolStripMenuItem tsmiError = new ToolStripMenuItem();
-
-                    tsmiError.Image = Properties.Resources.error;
-                    tsmiError.Text = string.Format(Properties.Text.line_column, msg.Location.Line + 1, msg.Location.Column + 1) + ": " + msg.Message;
-                    tsmiError.Click += new EventHandler(tsmiError_Click);
-                    tsmiError.Tag = new Tuple<CustomFctb, Irony.LogMessage>(fctbSql, msg);
-                    tsddbErrors.DropDownItems.Add(tsmiError);
-                }
-
-                tsddbErrors.Text = string.Format(Properties.Text.error_count, fctbSql.ParseTree.ParserMessages.Count);
-                tsddbErrors.Image = Properties.Resources.error;
-                tsddbErrors.Enabled = true;
-            }
-            else
-            {
-                tsddbErrors.Text = Properties.Text.no_errors;
-                tsddbErrors.Image = Properties.Resources.ok;
-                tsddbErrors.Enabled = false;
-            }
-        }
 
         private void fctbSql_Leave(object? sender, EventArgs e)
         {
@@ -1702,16 +1683,22 @@ namespace PgMulti
             EditorTab? et = null;
             if (tc.SelectedTab != null && tc.SelectedTab != tpNewTab)
             {
-                et = (EditorTab?)tc.SelectedTab.Tag;
-
-                CustomFctb fctbSql = (CustomFctb)tc.SelectedTab.Controls[0];
-                fctbSql.Focus();
-                if (UpdateSearchResults())
+                et = (EditorTab)tc.SelectedTab.Tag!;
+                et.Fctb.Focus();
+                
+                ShowTabAsInSeparatedWindow(et.ShownInSeparatedWindow);
+                if (!et.ShownInSeparatedWindow)
                 {
-                    UpdateSearchHighlighting();
+                    if (UpdateSearchResults())
+                    {
+                        UpdateSearchHighlighting();
+                    }
+                    else
+                    {
+                        et.UpdateSearchResultsSummary();
+                    }
+                    et.RefreshErrors();
                 }
-                UpdateSearchResultsSummary(fctbSql);
-                RefreshErrors(fctbSql);
             }
 
             if (tsbFilterCurrentEditorTabTasks.Checked)
@@ -1730,90 +1717,31 @@ namespace PgMulti
 
         private void tcSql_TabClosing(object sender, TabControlCancelEventArgs e)
         {
-            e.Cancel = !CloseTab(tcSql.SelectedTab);
+            e.Cancel = !CloseTab(tcSql.SelectedTab, false);
         }
 
-        private bool CloseTab(TabPage tp)
+        private bool CloseTab(TabPage tp, bool force)
         {
             EditorTab et = ((EditorTab)tp.Tag!);
+            return et.Close(force);
+        }
 
-            if (string.IsNullOrWhiteSpace(et.Fctb.Text))
-            {
-                et.Delete();
-            }
-            else
-            {
-                et.Save();
-                et.SetClosed();
-                _Data!.DeleteOldestTabs();
-            }
-
-            if (tcSql.SelectedTab == tp) tcSql.SelectedIndex = Math.Max(tcSql.SelectedIndex - 1, 0);
-            tcSql.TabPages.Remove(tp);
-
-            RemoveEditorTabFromAssociations(et);
-            tlcTaskList.Invalidate();
-
-            if (tcSql.TabPages.Count == 1)
-            {
-                CreateEditorTab(new EditorTab.CreateEditorTabOptions() { Focus = true, PendingFileSave = false });
-            }
-
-            return true;
+        private void OpenEditorInNewWindow(TabPage tp)
+        {
+            EditorTab et = (EditorTab)tp.Tag!;
+            et.OpenEditorInNewWindow();
         }
 
         private bool SaveTab(TabPage tp)
         {
-            EditorTab si = (EditorTab)tp.Tag!;
-            string? rutaLocal = si.LocalPath;
-
-            if (rutaLocal == null)
-            {
-                return SaveTabAs(tp);
-            }
-            else
-            {
-                try
-                {
-                    File.WriteAllText(rutaLocal, tp.Controls[0].Text);
-                    if (tp.Text.EndsWith(" *")) tp.Text = tp.Text.Substring(0, tp.Text.Length - 2);
-                    si.PendingSaveDB = true;
-                    tmrSaveTabs.Enabled = true;
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(this, Properties.Text.error_saving_file + $":\r\n{rutaLocal}\r\n\r\n{ex.Message}", Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
-            }
+            EditorTab et = (EditorTab)tp.Tag!;
+            return et.ShowSave(this);
         }
 
         private bool SaveTabAs(TabPage tp)
         {
-            sfdSql.FileName = tp.Text;
-            if (sfdSql.FileName.EndsWith(" *")) sfdSql.FileName = sfdSql.FileName.Substring(0, sfdSql.FileName.Length - 2);
-            if (!sfdSql.FileName.Contains(".")) sfdSql.FileName += ".sql";
-
-            if (sfdSql.ShowDialog(this) != DialogResult.OK) return false;
-
-            try
-            {
-                File.WriteAllText(sfdSql.FileName, tp.Controls[0].Text);
-                tp.Text = Path.GetFileName(sfdSql.FileName);
-                tp.ToolTipText = sfdSql.FileName;
-                EditorTab si = (EditorTab)tp.Tag!;
-                si.PendingSaveDB = true;
-                si.LocalPath = sfdSql.FileName;
-                tmrSaveTabs.Enabled = true;
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, Properties.Text.error_saving_file + $":\r\n{sfdSql.FileName}\r\n\r\n{ex.Message}", Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
+            EditorTab et = (EditorTab)tp.Tag!;
+            return et.ShowSaveAs(this);
         }
 
         private TabPage? _MouseMoveTabPage = null;
@@ -1882,7 +1810,7 @@ namespace PgMulti
                         {
                             if (tp != tpNewTab)
                             {
-                                CloseTab(tp);
+                                CloseTab(tp, false);
                             }
                         }
                         else
@@ -1905,7 +1833,13 @@ namespace PgMulti
         private void tsmiCloseTab_Click(object sender, EventArgs e)
         {
             TabPage tp = (TabPage)cmsTabs.Tag!;
-            CloseTab(tp);
+            CloseTab(tp, false);
+        }
+
+        private void tsmiOpenEditorInNewWindow_Click(object sender, EventArgs e)
+        {
+            TabPage tp = (TabPage)cmsTabs.Tag!;
+            OpenEditorInNewWindow(tp);
         }
 
         private void tsmiCloseAllTabs_Click(object sender, EventArgs e)
@@ -1964,6 +1898,113 @@ namespace PgMulti
         #endregion
 
         #region "SQL editor toolbar & context menu"
+
+        public bool CanRun
+        {
+            get
+            {
+                return tsbRun.Enabled;
+            }
+        }
+
+        public void Run(EditorTab et)
+        {
+            string sql = ((CustomFctb)((EditorTab)tcSql.SelectedTab.Tag!).Fctb).SelectedText;
+            if (sql == "")
+            {
+                sql = ((CustomFctb)((EditorTab)tcSql.SelectedTab.Tag!).Fctb).Text;
+            }
+            else if (_Data!.Config.ShowWarningSelectedText)
+            {
+                if (MessageBox.Show(this, Properties.Text.warning_run_selected_text, Properties.Text.warning, MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) == DialogResult.OK)
+                {
+                    _Data.Config.ShowWarningSelectedText = false;
+                    _Data.Config.Save();
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(sql))
+            {
+                MessageBox.Show(this, Properties.Text.warning_empty_query, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
+            List<DB> dbs = SelectedDBs;
+
+            if (dbs.Count == 0)
+            {
+                MessageBox.Show(this, Properties.Text.warning_no_selected_dbs, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
+            foreach (DB db in dbs)
+            {
+                db.InitSchemas();
+            }
+
+            Log h = new Log(_Data!);
+
+            h.SqlText = sql;
+
+            PgTaskIntegrator? ti = null;
+            if (dbs.Count > 1 && (_Data!.Config.MergeTables || _Data!.Config.TransactionMode == Config.TransactionModeEnum.AutoCoordinated))
+            {
+                ti = new PgTaskIntegrator(_Data, new PgTask.OnUpdate(Task_OnUpdate), new PgTask.OnComplete(Task_OnComplete), sql, true);
+                CreateAssociationOfTaskAndEditorTab(ti, et);
+            }
+
+            Config.TransactionModeEnum transactionMode = _Data!.Config.TransactionMode;
+            if (dbs.Count == 1 && transactionMode == Config.TransactionModeEnum.AutoCoordinated)
+            {
+                transactionMode = Config.TransactionModeEnum.AutoSingle;
+            }
+
+            List<PgTaskExecutorSqlTables> tess = new List<PgTaskExecutorSqlTables>();
+            foreach (DB db in dbs)
+            {
+                PgTaskExecutorSqlTables tes = new PgTaskExecutorSqlTables(_Data!, db, new PgTask.OnUpdate(Task_OnUpdate), ti == null ? new PgTask.OnComplete(Task_OnComplete) : null, sql, transactionMode, _Data!.Config.TransactionLevel, _Data!.PGSimpleLanguageData, ti);
+                CreateAssociationOfTaskAndEditorTab(tes, et);
+                tess.Add(tes);
+                h.DBIds.Add(db.Id);
+            }
+
+            if (ti == null)
+            {
+                foreach (PgTaskExecutorSqlTables tes in tess)
+                {
+                    tes.Start();
+                }
+            }
+            else
+            {
+                foreach (PgTaskExecutorSqlTables tes in tess)
+                {
+                    ti.Integrate(tes);
+                }
+
+                ti.Start();
+            }
+
+            h.Save();
+            _Data.CheckAppDbFileSize();
+
+            if (!_Data!.Config.KeepServerSelection)
+            {
+                ClearSelectedNodesTreeView();
+            }
+
+            tsmiRun.Enabled = false;
+            tsbRun.Enabled = false;
+            tsmiExportCsv.Enabled = false;
+            tsbExportCsv.Enabled = false;
+            tsmiCopyToTable.Enabled = false;
+            tmrReenableRunButton.Enabled = true;
+        }
+
 
         private void UpdateRunButton(List<DB>? dbs)
         {
@@ -2099,117 +2140,10 @@ namespace PgMulti
             }
         }
 
-        private void tsmiError_Click(object? sender, EventArgs? e)
-        {
-            ToolStripMenuItem errorDeEjemploToolStripMenuItem = (ToolStripMenuItem)sender!;
-            Tuple<CustomFctb, Irony.LogMessage> tag = (Tuple<CustomFctb, Irony.LogMessage>)errorDeEjemploToolStripMenuItem.Tag;
-            CustomFctb fctbSql = tag.Item1;
-            Irony.LogMessage msg = tag.Item2;
-
-            var loc = msg.Location;
-            var place = new Place(loc.Column, loc.Line);
-            var r = new FastColoredTextBoxNS.Range(fctbSql, place, place);
-
-            fctbSql.Selection = r;
-            fctbSql.DoSelectionVisible();
-        }
         private void tsbRun_Click(object? sender, EventArgs? e)
         {
             EditorTab et = (EditorTab)tcSql.SelectedTab.Tag!;
-            string sql = ((CustomFctb)tcSql.SelectedTab.Controls[0]).SelectedText;
-            if (sql == "")
-            {
-                sql = ((CustomFctb)tcSql.SelectedTab.Controls[0]).Text;
-            }
-            else if (_Data!.Config.ShowWarningSelectedText)
-            {
-                if (MessageBox.Show(this, Properties.Text.warning_run_selected_text, Properties.Text.warning, MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) == DialogResult.OK)
-                {
-                    _Data.Config.ShowWarningSelectedText = false;
-                    _Data.Config.Save();
-                }
-                else
-                {
-                    return;
-                }
-            }
-
-            if (string.IsNullOrWhiteSpace(sql))
-            {
-                MessageBox.Show(this, Properties.Text.warning_empty_query, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return;
-            }
-
-            List<DB> dbs = SelectedDBs;
-
-            if (dbs.Count == 0)
-            {
-                MessageBox.Show(this, Properties.Text.warning_no_selected_dbs, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return;
-            }
-
-            foreach (DB db in dbs)
-            {
-                db.InitSchemas();
-            }
-
-            Log h = new Log(_Data!);
-
-            h.SqlText = sql;
-
-            PgTaskIntegrator? ti = null;
-            if (dbs.Count > 1 && (_Data!.Config.MergeTables || _Data!.Config.TransactionMode == Config.TransactionModeEnum.AutoCoordinated))
-            {
-                ti = new PgTaskIntegrator(_Data, new PgTask.OnUpdate(Task_OnUpdate), new PgTask.OnComplete(Task_OnComplete), sql, true);
-                CreateAssociationOfTaskAndEditorTab(ti, et);
-            }
-
-            Config.TransactionModeEnum transactionMode = _Data!.Config.TransactionMode;
-            if (dbs.Count == 1 && transactionMode == Config.TransactionModeEnum.AutoCoordinated)
-            {
-                transactionMode = Config.TransactionModeEnum.AutoSingle;
-            }
-
-            List<PgTaskExecutorSqlTables> tess = new List<PgTaskExecutorSqlTables>();
-            foreach (DB db in dbs)
-            {
-                PgTaskExecutorSqlTables tes = new PgTaskExecutorSqlTables(_Data!, db, new PgTask.OnUpdate(Task_OnUpdate), ti == null ? new PgTask.OnComplete(Task_OnComplete) : null, sql, transactionMode, _Data!.Config.TransactionLevel, _Data!.PGSimpleLanguageData, ti);
-                CreateAssociationOfTaskAndEditorTab(tes, et);
-                tess.Add(tes);
-                h.DBIds.Add(db.Id);
-            }
-
-            if (ti == null)
-            {
-                foreach (PgTaskExecutorSqlTables tes in tess)
-                {
-                    tes.Start();
-                }
-            }
-            else
-            {
-                foreach (PgTaskExecutorSqlTables tes in tess)
-                {
-                    ti.Integrate(tes);
-                }
-
-                ti.Start();
-            }
-
-            h.Save();
-            _Data.CheckAppDbFileSize();
-
-            if (!_Data!.Config.KeepServerSelection)
-            {
-                ClearSelectedNodesTreeView();
-            }
-
-            tsmiRun.Enabled = false;
-            tsbRun.Enabled = false;
-            tsmiExportCsv.Enabled = false;
-            tsbExportCsv.Enabled = false;
-            tsmiCopyToTable.Enabled = false;
-            tmrReenableRunButton.Enabled = true;
+            Run(et);
         }
 
         private void tsmiRun_Click(object sender, EventArgs e)
@@ -2228,10 +2162,18 @@ namespace PgMulti
         }
 
         private void tmrPosition_Tick(object sender, EventArgs e)
-        {
-            CustomFctb fctbSql = (CustomFctb)tcSql.SelectedTab.Controls[0];
-            Place p = fctbSql.PositionToPlace(fctbSql.SelectionStart);
-            tslPosition.Text = string.Format(Properties.Text.line_column, p.iLine + 1, p.iChar + 1);
+        { 
+            EditorTab et = (EditorTab)tcSql.SelectedTab.Tag!;
+            if (!et.ShownInSeparatedWindow)
+            {
+                CustomFctb fctbSql = et.Fctb;
+                Place p = fctbSql.PositionToPlace(fctbSql.SelectionStart);
+                tslPosition.Text = string.Format(Properties.Text.line_column, p.iLine + 1, p.iChar + 1);
+            }
+            foreach(SeparatedEditorTabForm f in SeparatedEditorTabForms)
+            {
+                f.RefreshPosition();
+            }
         }
 
         private void SaveTabs()
@@ -2262,187 +2204,69 @@ namespace PgMulti
             }
         }
 
-        private void tsmiSearchAndReplace_Click(object sender, EventArgs e)
+        private void tsbSearchAndReplace_Click(object sender, EventArgs e)
         {
             ShowSearchAndReplace();
         }
 
-        private void tsbSearchAndReplace_Click(object sender, EventArgs e)
-        {
-            tsmiSearchAndReplace_Click(sender, e);
-        }
-
-        private void tsmiGoTo_Click(object sender, EventArgs e)
-        {
-            CustomFctb fctb = ((EditorTab)tcSql.SelectedTab.Tag!).Fctb;
-            fctb.ShowGoToDialog();
-        }
-
         private void tsbGoTo_Click(object sender, EventArgs e)
         {
-            tsmiGoTo_Click(sender, e);
-        }
-
-        private void tsmiCut_Click(object sender, EventArgs e)
-        {
-            CustomFctb fctb = ((EditorTab)tcSql.SelectedTab.Tag!).Fctb;
-            fctb.Cut();
-        }
-
-        private void tsmiCopy_Click(object sender, EventArgs e)
-        {
-            CustomFctb fctb = ((EditorTab)tcSql.SelectedTab.Tag!).Fctb;
-            fctb.Copy();
-        }
-
-        private void tsmiPaste_Click(object sender, EventArgs e)
-        {
-            CustomFctb fctb = ((EditorTab)tcSql.SelectedTab.Tag!).Fctb;
-            fctb.Paste();
-        }
-
-        private void tsmiFormat_Click(object? sender, EventArgs? e)
-        {
-            CustomFctb fctb = ((EditorTab)tcSql.SelectedTab.Tag!).Fctb;
-
-            Parser parserGlobal = new Parser(_Data!.PGSimpleLanguageData);
-
-            string globalText;
-            int prevIndentation = 0;
-            if (string.IsNullOrEmpty(fctb.SelectedText))
-            {
-                globalText = fctb.Text;
-            }
-            else
-            {
-                int startLine;
-                int endLine;
-
-                if (fctb.Selection.Start.iLine < fctb.Selection.End.iLine)
-                {
-                    startLine = fctb.Selection.Start.iLine;
-                    endLine = fctb.Selection.End.iLine;
-                }
-                else
-                {
-                    startLine = fctb.Selection.End.iLine;
-                    endLine = fctb.Selection.Start.iLine;
-                }
-
-                fctb.Selection.Start = new Place(0, startLine);
-                fctb.Selection.End = new Place(fctb.Lines[endLine].Length, endLine);
-
-                globalText = fctb.SelectedText;
-
-                foreach (char c in globalText)
-                {
-                    bool exitFor = false;
-                    switch (c)
-                    {
-                        case ' ':
-                            prevIndentation++;
-                            break;
-                        case '\t':
-                            prevIndentation += 4;
-                            break;
-                        case '\r':
-                        case '\n':
-                            prevIndentation = 0;
-                            break;
-                        default:
-                            exitFor = true;
-                            break;
-                    }
-
-                    if (exitFor) break;
-                }
-            }
-
-            if (string.IsNullOrWhiteSpace(globalText)) return;
-
-            ParseTree parseTreeGlobal = parserGlobal.Parse(globalText);
-            bool addedSemicolon = false;
-            if (parseTreeGlobal.Status == ParseTreeStatus.Error)
-            {
-                globalText += "\r\n;";
-                parseTreeGlobal = parserGlobal.Parse(globalText);
-                addedSemicolon = true;
-                if (parseTreeGlobal.Status == ParseTreeStatus.Error)
-                {
-                    return;
-                }
-            }
-
-
-            AstNode globalRootAstNode = AstNode.ProcessParseTree(parseTreeGlobal);
-
-            if (globalRootAstNode.Children.Count == 0) return;
-
-            int pos = 0;
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < globalRootAstNode.Children[0].Children.Count; i++)
-            {
-                int end;
-
-                if (i < globalRootAstNode.Children[0].Children.Count - 1)
-                {
-                    end = globalRootAstNode.Children[0].Children[i + 1].RecursiveTokens[0].Token!.Location.Position;
-                }
-                else
-                {
-                    end = globalText.Length;
-                }
-
-                string stmtText = globalText.Substring(pos, end - pos);
-
-                Parser parserQuery = new Parser(_Data!.PGLanguageData);
-                ParseTree parseTreeQuery = parserQuery.Parse(stmtText);
-                if (parseTreeQuery.Status == ParseTreeStatus.Error)
-                {
-                    for (int j = 0; j < prevIndentation; j++)
-                    {
-                        sb.Append(" ");
-                    }
-
-                    if (addedSemicolon && i == globalRootAstNode.Children[0].Children.Count - 1)
-                    {
-                        stmtText = stmtText.Substring(0, stmtText.Length - 3);
-                    }
-
-                    sb.Append(stmtText);
-                }
-                else
-                {
-                    AstNode queryRootAstNode = AstNode.ProcessParseTree(parseTreeQuery);
-                    queryRootAstNode.Format(sb, parseTreeQuery, prevIndentation);
-
-                    sb.AppendLine();
-                }
-
-                pos = end;
-            }
-
-            string formattedText = sb.ToString();
-
-            fctb.BeginAutoUndo();
-
-            if (string.IsNullOrEmpty(fctb.SelectedText))
-            {
-                fctb.TextSource.Manager.ExecuteCommand(new SelectCommand(fctb.TextSource));
-                fctb.Selection.Start = new Place(0, 0);
-                fctb.Selection.End = new Place(fctb.Lines[fctb.LinesCount - 1].Length, fctb.LinesCount - 1);
-            }
-
-            fctb.InsertText(formattedText);
-            fctb.TextSource.Manager.ExecuteCommand(new SelectCommand(fctb.TextSource));
-
-            fctb.EndAutoUndo();
-            fctb.Focus();
+            ((EditorTab)tcSql.SelectedTab.Tag!).ShowGoTo();
         }
 
         private void tsbFormat_Click(object? sender, EventArgs? e)
         {
-            tsmiFormat_Click(sender, e);
+            ((EditorTab)tcSql.SelectedTab.Tag!).Format();
+        }
+
+        private void tsmiUndo_Click(object? sender, EventArgs e)
+        {
+            ((EditorTab)tcSql.SelectedTab.Tag!).Undo();
+        }
+
+        private void tsmiRedo_Click(object? sender, EventArgs e)
+        {
+            ((EditorTab)tcSql.SelectedTab.Tag!).Redo();
+        }
+
+        private void tsmiBack_Click(object? sender, EventArgs? e)
+        {
+            ((EditorTab)tcSql.SelectedTab.Tag!).Navigate(false);
+        }
+
+        private void tsmiForward_Click(object? sender, EventArgs? e)
+        {
+            ((EditorTab)tcSql.SelectedTab.Tag!).Navigate(true);
+        }
+
+        private void tsmiCut_Click(object? sender, EventArgs e)
+        {
+            ((EditorTab)tcSql.SelectedTab.Tag!).Cut();
+        }
+
+        private void tsmiCopy_Click(object? sender, EventArgs e)
+        {
+            ((EditorTab)tcSql.SelectedTab.Tag!).Copy();
+        }
+
+        private void tsmiPaste_Click(object? sender, EventArgs e)
+        {
+            ((EditorTab)tcSql.SelectedTab.Tag!).Paste();
+        }
+
+        private void tsmiFormat_Click(object? sender, EventArgs? e)
+        {
+            ((EditorTab)tcSql.SelectedTab.Tag!).Format();
+        }
+
+        private void tsmiSearchAndReplace_Click(object? sender, EventArgs e)
+        {
+            ShowSearchAndReplace();
+        }
+
+        private void tsmiGoTo_Click(object? sender, EventArgs e)
+        {
+            ((EditorTab)tcSql.SelectedTab.Tag!).ShowGoTo();
         }
 
         private void tsmiNew_Click(object sender, EventArgs e)
@@ -2461,7 +2285,7 @@ namespace PgMulti
                 string txt = File.ReadAllText(ofdSql.FileName);
 
                 TabPage? replaceTab = null;
-                if (string.IsNullOrWhiteSpace(tcSql.SelectedTab.Controls[0].Text) && (tcSql.SelectedTab.Text == Properties.Text.new_doc_title || tcSql.SelectedTab.Text == Properties.Text.new_doc_title + " *"))
+                if (string.IsNullOrWhiteSpace(((EditorTab)tcSql.SelectedTab.Tag!).Fctb.Text) && (tcSql.SelectedTab.Text == Properties.Text.new_doc_title || tcSql.SelectedTab.Text == Properties.Text.new_doc_title + " *"))
                 {
                     replaceTab = tcSql.SelectedTab;
                 }
@@ -2470,7 +2294,7 @@ namespace PgMulti
 
                 if (replaceTab != null)
                 {
-                    CloseTab(replaceTab);
+                    CloseTab(replaceTab, true);
                 }
             }
             catch (Exception ex)
@@ -2493,6 +2317,11 @@ namespace PgMulti
         private void tsbSave_Click(object sender, EventArgs e)
         {
             SaveTab(tcSql.SelectedTab);
+        }
+
+        private void tsbSaveAs_Click(object sender, EventArgs e)
+        {
+            SaveTabAs(tcSql.SelectedTab);
         }
 
         private void tsmiSaveAs_Click(object sender, EventArgs e)
@@ -2519,7 +2348,7 @@ namespace PgMulti
 
         private void tsmiClose_Click(object sender, EventArgs e)
         {
-            CloseTab(tcSql.SelectedTab);
+            CloseTab(tcSql.SelectedTab, false);
         }
 
         private void tsmiCloseAll_Click(object sender, EventArgs e)
@@ -2544,30 +2373,6 @@ namespace PgMulti
             {
                 _Data.Password = f.Password!;
             }
-        }
-
-        private void tsmiUndo_Click(object sender, EventArgs e)
-        {
-            CustomFctb fctb = ((EditorTab)tcSql.SelectedTab.Tag!).Fctb;
-            fctb.Undo();
-        }
-
-        private void tsmiRedo_Click(object sender, EventArgs e)
-        {
-            CustomFctb fctb = ((EditorTab)tcSql.SelectedTab.Tag!).Fctb;
-            fctb.Redo();
-        }
-
-        private void tsmiBack_Click(object? sender, EventArgs? e)
-        {
-            CustomFctb fctb = ((EditorTab)tcSql.SelectedTab.Tag!).Fctb;
-            fctb.NavigateBackward();
-        }
-
-        private void tsmiForward_Click(object? sender, EventArgs? e)
-        {
-            CustomFctb fctb = ((EditorTab)tcSql.SelectedTab.Tag!).Fctb;
-            fctb.NavigateForward();
         }
 
         private void tsmiIncreaseFont_Click(object sender, EventArgs e)
@@ -2623,10 +2428,10 @@ namespace PgMulti
         private void tsbExportCsv_Click(object sender, EventArgs e)
         {
             EditorTab et = (EditorTab)tcSql.SelectedTab.Tag!;
-            string sql = ((CustomFctb)tcSql.SelectedTab.Controls[0]).SelectedText;
+            string sql = ((CustomFctb)((EditorTab)tcSql.SelectedTab.Tag!).Fctb).SelectedText;
             if (sql == "")
             {
-                sql = ((CustomFctb)tcSql.SelectedTab.Controls[0]).Text;
+                sql = ((CustomFctb)((EditorTab)tcSql.SelectedTab.Tag!).Fctb).Text;
             }
 
             if (string.IsNullOrWhiteSpace(sql))
@@ -2700,10 +2505,10 @@ namespace PgMulti
         private void tsmiCopyToTable_Click(object sender, EventArgs e)
         {
             EditorTab et = (EditorTab)tcSql.SelectedTab.Tag!;
-            string sql = ((CustomFctb)tcSql.SelectedTab.Controls[0]).SelectedText;
+            string sql = ((CustomFctb)((EditorTab)tcSql.SelectedTab.Tag!).Fctb).SelectedText;
             if (sql == "")
             {
-                sql = ((CustomFctb)tcSql.SelectedTab.Controls[0]).Text;
+                sql = ((CustomFctb)((EditorTab)tcSql.SelectedTab.Tag!).Fctb).Text;
             }
 
             if (string.IsNullOrWhiteSpace(sql))
@@ -2806,6 +2611,25 @@ namespace PgMulti
         #endregion
 
         #region "Tasks & results"
+
+        public void ToggleFilterCurrentEditorTabTasks()
+        {
+            if (tsbFilterCurrentEditorTabTasks.Checked)
+            {
+                EditorTab? et = null;
+                if (tcSql.SelectedTab != null && tcSql.SelectedTab != tpNewTab)
+                {
+                    et = (EditorTab?)tcSql.SelectedTab.Tag;
+                }
+
+                FilterTasksByEditorTab(et);
+            }
+            else
+            {
+                UnFilterTasksByEditorTab();
+            }
+        }
+
 
         private void CreateAssociationOfTaskAndEditorTab(PgTask t, EditorTab et)
         {
@@ -3230,20 +3054,7 @@ namespace PgMulti
 
         private void tsbFilterCurrentEditorTabTasks_Click(object? sender, EventArgs? e)
         {
-            if (tsbFilterCurrentEditorTabTasks.Checked)
-            {
-                EditorTab? et = null;
-                if (tcSql.SelectedTab != null && tcSql.SelectedTab != tpNewTab)
-                {
-                    et = (EditorTab?)tcSql.SelectedTab.Tag;
-                }
-
-                FilterTasksByEditorTab(et);
-            }
-            else
-            {
-                UnFilterTasksByEditorTab();
-            }
+            ToggleFilterCurrentEditorTabTasks();
         }
 
         private void tmrTaskList_Tick(object sender, EventArgs e)
@@ -3815,47 +3626,47 @@ namespace PgMulti
 
         private void fctbExecutedSql_SecondaryFormClosed(object? sender, SecondaryFormEventArgs e)
         {
-            _SecondaryForms.Remove(e.Form);
+            SecondaryForms.Remove(e.Form);
         }
 
         private void fctbExecutedSql_SecondaryFormShowed(object? sender, SecondaryFormEventArgs e)
         {
-            _SecondaryForms.Add(e.Form);
+            SecondaryForms.Add(e.Form);
         }
 
         private void fctbResult_SecondaryFormClosed(object? sender, SecondaryFormEventArgs e)
         {
-            _SecondaryForms.Remove(e.Form);
+            SecondaryForms.Remove(e.Form);
         }
 
         private void fctbResult_SecondaryFormShowed(object? sender, SecondaryFormEventArgs e)
         {
-            _SecondaryForms.Add(e.Form);
+            SecondaryForms.Add(e.Form);
         }
 
         #endregion
 
         #region "Search and replace"
-        private void ShowSearchAndReplace()
+        public void ShowSearchAndReplace()
         {
             tcLeftPanel.SelectedTab = tpSearchAndReplace;
             txtSearchText.Focus();
             txtSearchText.SelectionStart = 0;
             txtSearchText.SelectionLength = txtSearchText.Text.Length;
 
-            CustomFctb tb = ((CustomFctb)tcSql.SelectedTab.Controls[0]);
+            CustomFctb tb = ((EditorTab)tcSql.SelectedTab.Tag!).Fctb;
             if (tb.Selection.Length > 0)
             {
                 txtSearchText.SelectedText = tb.SelectedText;
             }
         }
 
-        private void HideSearchAndReplace()
+        public void HideSearchAndReplace()
         {
             txtSearchText.Text = "";
             tcLeftPanel.SelectedTab = tpConnections;
 
-            CustomFctb tb = ((CustomFctb)tcSql.SelectedTab.Controls[0]);
+            CustomFctb tb = ((EditorTab)tcSql.SelectedTab.Tag!).Fctb;
             if (tb.SearchRange != null)
             {
                 tb.SearchRange = null;
@@ -3863,81 +3674,22 @@ namespace PgMulti
 
             UpdateSearchResults();
             UpdateSearchHighlighting();
+            tb.Focus();
         }
 
         private bool UpdateSearchRange()
         {
-            CustomFctb tb = ((CustomFctb)tcSql.SelectedTab.Controls[0]);
-            FastColoredTextBoxNS.Range? searchRange;
-
-            if (chkSearchWithinSelectedText.Checked)
-            {
-                searchRange = tb.Selection.Clone();
-                searchRange.Normalize();
-            }
-            else
-            {
-                searchRange = null;
-            }
-
-            if (tb.SearchRange != searchRange)
-            {
-                tb.SearchRange = searchRange;
-
-                lblSearchResultsSummary.Text = string.Format(Properties.Text.number_of_search_results_found, tb.SearchMatches == null ? 0 : tb.SearchMatches.Count) + "\r\n"
-                    + (searchRange == null ? Properties.Text.searching_the_entire_text : Properties.Text.searching_only_within_selected_text);
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return ((EditorTab)tcSql.SelectedTab.Tag!).UpdateSearchRange();
         }
 
-        internal bool UpdateSearchResults()
+        private bool UpdateSearchResults()
         {
-            string pattern = txtSearchText.Text;
-            CustomFctb tb = ((CustomFctb)tcSql.SelectedTab.Controls[0]);
-
-            List<FastColoredTextBoxNS.Range> matches;
-
-            if (pattern == "")
-            {
-                matches = new List<FastColoredTextBoxNS.Range>();
-            }
-            else
-            {
-                matches = tb.FindAll(pattern, chkSearchMatchCase.Checked, chkSearchMatchWholeWords.Checked, chkSearchRegex.Checked);
-            }
-
-            if (
-                    (matches.Count == 0 && tb.SearchMatches != null && tb.SearchMatches.Count > 0)
-                    || (matches.Count > 0 && (tb.SearchMatches == null || !matches.SequenceEqual(tb.SearchMatches)))
-                )
-            {
-                tb.SearchMatches = matches;
-                UpdateSearchResultsSummary(tb);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        private void UpdateSearchResultsSummary(CustomFctb tb)
-        {
-            btnGoNextSearchResult.Enabled = tb.SearchMatches != null && tb.SearchMatches.Count > 0;
-            btnReplaceCurrent.Enabled = tb.SearchMatches != null && tb.SearchMatches.Count > 0;
-            btnReplaceAll.Enabled = tb.SearchMatches != null && tb.SearchMatches.Count > 0;
-            lblSearchResultsSummary.Text = string.Format(Properties.Text.number_of_search_results_found, tb.SearchMatches == null ? 0 : tb.SearchMatches.Count) + "\r\n"
-                + (tb.SearchRange == null ? Properties.Text.searching_the_entire_text : Properties.Text.searching_only_within_selected_text);
+            return ((EditorTab)tcSql.SelectedTab.Tag!).UpdateSearchResults();
         }
 
         private void UpdateSearchHighlighting()
         {
-            CustomFctb tb = ((CustomFctb)tcSql.SelectedTab.Controls[0]);
+            CustomFctb tb = ((EditorTab)tcSql.SelectedTab.Tag!).Fctb;
             tb.DoHighlighting();
         }
 
@@ -3946,7 +3698,7 @@ namespace PgMulti
             UpdateSearchResults();
             UpdateSearchHighlighting();
 
-            CustomFctb tb = ((CustomFctb)tcSql.SelectedTab.Controls[0]);
+            CustomFctb tb = ((CustomFctb)((EditorTab)tcSql.SelectedTab.Tag!).Fctb);
             if (tb.SearchMatches != null && tb.SearchMatches.Count > 0)
             {
                 GoNextSearchResult();
@@ -3955,21 +3707,7 @@ namespace PgMulti
 
         private void GoNextSearchResult()
         {
-            CustomFctb tb = ((CustomFctb)tcSql.SelectedTab.Controls[0]);
-            if (tb.SearchMatches == null || tb.SearchMatches.Count == 0) return;
-
-            Place p = tb.Selection.End > tb.Selection.Start ? tb.Selection.End : tb.Selection.Start;
-            FastColoredTextBoxNS.Range? r = tb.SearchMatches!.FirstOrDefault(ri => ri.Start > p);
-            if (r == null)
-            {
-                r = tb.SearchMatches!.First();
-            }
-
-            tb.Selection = r;
-            tb.DoSelectionVisible();
-            tb.Focus();
-            tb.Invalidate();
-            return;
+            ((EditorTab)tcSql.SelectedTab.Tag!).GoNextSearchResult();
         }
 
         private void btnGoNextSearchResult_Click(object sender, EventArgs e)
@@ -3987,95 +3725,12 @@ namespace PgMulti
 
         private void btnReplaceCurrent_Click(object sender, EventArgs e)
         {
-            CustomFctb tb = ((CustomFctb)tcSql.SelectedTab.Controls[0]);
-            if (tb.SearchMatches != null && tb.SearchMatches.Count > 0)
-            {
-                if (tb.Selection.Length > 0 && tb.SearchMatches.Any(sm => tb.Selection.Equals(sm)))
-                {
-                    string replaceText = txtReplaceText.Text;
-                    if (chkSearchRegex.Checked)
-                    {
-                        System.Text.RegularExpressions.Regex r = tb.GetRegex(txtSearchText.Text, chkSearchMatchCase.Checked, chkSearchMatchWholeWords.Checked, chkSearchRegex.Checked);
-
-                        replaceText = r.Replace(tb.SelectedText, replaceText);
-                    }
-
-                    tb.InsertText(replaceText);
-
-                    if (UpdateSearchResults())
-                    {
-                        UpdateSearchHighlighting();
-                    }
-
-                    if (tb.SearchMatches != null && tb.SearchMatches.Count > 0)
-                    {
-                        GoNextSearchResult();
-                    }
-                    else
-                    {
-                        tb.Focus();
-                    }
-                }
-                else
-                {
-                    GoNextSearchResult();
-                }
-            }
+            ((EditorTab)tcSql.SelectedTab.Tag!).ReplaceCurrent();
         }
 
         private void btnReplaceAll_Click(object sender, EventArgs e)
         {
-            CustomFctb tb = ((CustomFctb)tcSql.SelectedTab.Controls[0]);
-
-            if (tb.SearchMatches != null && tb.SearchMatches.Count > 0)
-            {
-                tb.Selection.BeginUpdate();
-                tb.BeginAutoUndo();
-                try
-                {
-                    if (chkSearchRegex.Checked)
-                    {
-                        System.Text.RegularExpressions.Regex r = tb.GetRegex(txtSearchText.Text, chkSearchMatchCase.Checked, chkSearchMatchWholeWords.Checked, chkSearchRegex.Checked);
-
-                        for (int i = tb.SearchMatches.Count - 1; i >= 0; i--)
-                        {
-                            FastColoredTextBoxNS.Range ri = tb.SearchMatches[i];
-
-                            string replaceText = r.Replace(ri.Text, txtReplaceText.Text);
-
-                            tb.TextSource.Manager.ExecuteCommand(new ReplaceTextCommand(tb.TextSource, new List<FastColoredTextBoxNS.Range> { ri }, replaceText));
-                        }
-                    }
-                    else
-                    {
-                        tb.TextSource.Manager.ExecuteCommand(new ReplaceTextCommand(tb.TextSource, tb.SearchMatches, txtReplaceText.Text));
-                    }
-
-
-                    if (tb.SearchRange == null)
-                    {
-                        tb.Selection.Start = new Place(0, 0);
-                    }
-                    else
-                    {
-                        tb.Selection.Start = tb.SearchRange.Start;
-                    }
-                }
-                finally
-                {
-                    tb.EndAutoUndo();
-                    tb.Selection.EndUpdate();
-                }
-
-                tb.DoSelectionVisible();
-                tb.Focus();
-                tb.Invalidate();
-
-                if (UpdateSearchResults())
-                {
-                    UpdateSearchHighlighting();
-                }
-            }
+            ((EditorTab)tcSql.SelectedTab.Tag!).ReplaceAll();
         }
 
         private void txtSearchText_TextChanged(object sender, EventArgs e)
@@ -4117,10 +3772,6 @@ namespace PgMulti
                 UpdateSearchHighlighting();
             }
             btnUpdateSearchSelectedText.Visible = chkSearchWithinSelectedText.Checked;
-        }
-
-        private void txtSearchText_Enter(object sender, EventArgs e)
-        {
         }
 
         private void txtSearchText_KeyUp(object sender, KeyEventArgs e)
@@ -4172,6 +3823,7 @@ namespace PgMulti
             this.tscmiRemove.Text = Properties.Text.remove;
             this.tscmiUp.Text = Properties.Text.up;
             this.tscmiDown.Text = Properties.Text.down;
+            this.tscmiClone.Text = Properties.Text.clone;
             this.tscmiRefresh.Text = Properties.Text.refresh;
             this.tsbNewGroup.Text = Properties.Text.new_group;
             this.tsbNewDB.Text = Properties.Text.add_db;
@@ -4190,6 +3842,7 @@ namespace PgMulti
             this.tsbOpen.Text = Properties.Text.open;
             this.tsmiSave.Text = Properties.Text.save;
             this.tsbSave.Text = Properties.Text.save;
+            this.tsbSaveAs.Text = Properties.Text.save_as;
             this.tsmiSaveAs.Text = Properties.Text.save_as;
             this.tsmiSaveAll.Text = Properties.Text.save_all;
             this.tsbSaveAll.Text = Properties.Text.save_all;
@@ -4247,26 +3900,15 @@ namespace PgMulti
             this.tpExecutedSql.Text = Properties.Text.executed_query;
             this.tsbEditExecutedSql.Text = Properties.Text.edit;
             this.tsmiCloseTab.Text = Properties.Text.close_this_tab;
+            this.tsmiOpenEditorInNewWindow.Text = Properties.Text.open_editor_in_new_window;
             this.tsmiCloseAllTabs.Text = Properties.Text.close_all_tabs;
             this.tsmiCloseAllTabsExceptThisOne.Text = Properties.Text.close_all_tabs_except_this_one;
             this.tsmiClosedTabsLog.Text = Properties.Text.closed_tabs_log;
             this.tsmiCopyPath.Text = Properties.Text.copy_path;
             this.tsmiOpenFolder.Text = Properties.Text.open_folder;
             this.tsmiReopenLastClosedTab.Text = Properties.Text.reopen_last_closed_tab;
-            this.tscmiBack.Text = Properties.Text.back;
-            this.tscmiForward.Text = Properties.Text.forward;
-            this.tscmiUndo.Text = Properties.Text.undo_sc;
-            this.tscmiRedo.Text = Properties.Text.redo_sc;
-            this.tscmiCut.Text = Properties.Text.cut_sc;
-            this.tscmiCopy.Text = Properties.Text.copy_sc;
-            this.tscmiPaste.Text = Properties.Text.paste_sc;
-            this.tscmiSearchAndReplace.Text = Properties.Text.search_for_and_replace;
-            this.tscmiGoTo.Text = Properties.Text.goto_sc;
-            this.tscmiFormat.Text = Properties.Text.format_sc;
             this.ofdSql.Filter = Properties.Text.sql_file_filter;
             this.ofdSql.Title = Properties.Text.select_open_file;
-            this.sfdSql.Filter = Properties.Text.sql_file_filter;
-            this.sfdSql.Title = Properties.Text.select_save_file;
             this.sfdCsv.Filter = Properties.Text.csv_file_filter;
             this.sfdCsv.Title = Properties.Text.select_save_file;
             this.tpNewTab.ToolTipText = Properties.Text._new;

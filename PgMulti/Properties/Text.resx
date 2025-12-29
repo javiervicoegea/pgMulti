@@ -1159,4 +1159,13 @@ Unlike other tools, this application does not reuse the connection between diffe
   <data name="input_alias" xml:space="preserve">
     <value>Enter an alias for table {0}</value>
   </data>
+  <data name="open_editor_in_new_window" xml:space="preserve">
+    <value>Open the text editor in a separate window</value>
+  </data>
+  <data name="return_editor_to_main_form" xml:space="preserve">
+    <value>Return the text editor here</value>
+  </data>
+  <data name="clone" xml:space="preserve">
+    <value>Clone</value>
+  </data>
 </root>
