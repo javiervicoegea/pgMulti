@@ -471,20 +471,34 @@ namespace PgMulti
             }
         }
 
-        /// <summary>
-        /// Trick to avoid having to click twice on the toolbar buttons when the window does not have the focus.
-        /// https://stackoverflow.com/questions/13836363/why-two-time-click-is-required-to-click-toolstripmenuitem
-        /// </summary>
-        /// <param name="m"></param>
         protected override void WndProc(ref Message m)
         {
-            const int WM_PARENTNOTIFY = 0x0210;
-            if (m.Msg == WM_PARENTNOTIFY)
+            if (m.Msg == Win32Messages.WM_PARENTNOTIFY)
             {
-                if (!Focused)
-                    Activate();
+                // Trick to avoid having to click twice on the toolbar buttons when the window does not have the focus.
+                // https://stackoverflow.com/questions/13836363/why-two-time-click-is-required-to-click-toolstripmenuitem
+                if (!Focused) Activate();
             }
+            else if (m.Msg == Win32Messages.WM_SHOWME)
+            {
+                // A trick to allow only one instance of the application and bring that instance to the top if someone tries to open another one.
+                // http://sanity-free.org/csharp_dotnet_single_instance_application.html
+                ShowMe();
+            }
+
             base.WndProc(ref m);
+        }
+
+        private void ShowMe()
+        {
+            if (WindowState == FormWindowState.Minimized)
+            {
+                WindowState = FormWindowState.Normal;
+            }
+
+            bool top = TopMost;
+            TopMost = true;
+            TopMost = top;
         }
 
         #endregion
