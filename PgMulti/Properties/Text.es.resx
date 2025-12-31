@@ -1119,4 +1119,7 @@ A diferencia de otras herramientas, esta aplicación no reutiliza la conexión e
   <data name="clone" xml:space="preserve">
     <value>Clonar</value>
   </data>
+  <data name="goto_table" xml:space="preserve">
+    <value>Ir a la tabla</value>
+  </data>
 </root>

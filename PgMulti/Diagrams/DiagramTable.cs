@@ -62,6 +62,7 @@ namespace PgMulti.Diagrams
         {
             _SchemaName = schemaName;
             _TableName = tableName;
+            UpdateSearchString();
             _Columns = columns;
             _Relations = relations;
             _VisibleColumns = Columns.Count;
@@ -73,6 +74,7 @@ namespace PgMulti.Diagrams
         {
             _SchemaName = t.IdSchema;
             _TableName = t.Id;
+            UpdateSearchString();
 
             _Columns = new List<DiagramColumn>();
             foreach (Column c in t.Columns)
@@ -100,6 +102,7 @@ namespace PgMulti.Diagrams
             if (string.IsNullOrEmpty(v)) throw new BadFormatException();
 
             _TableName = v;
+            UpdateSearchString();
 
             _Columns = new List<DiagramColumn>();
             foreach (XmlElement xeColumn in xeTable.SelectNodes("columns/column")!)
@@ -135,9 +138,41 @@ namespace PgMulti.Diagrams
             _RefreshColumnsBoundingBoxLocation();
         }
 
-        public string SchemaName { get => _SchemaName; set => _SchemaName = value; }
-        public string TableName { get => _TableName; set => _TableName = value; }
-        public List<DiagramColumn> Columns { get => _Columns; set => _Columns = value; }
+        public string SchemaName
+        {
+            get => _SchemaName;
+            set
+            {
+                _SchemaName = value;
+                UpdateSearchString();
+            }
+        }
+        public string TableName
+        {
+            get => _TableName;
+            set
+            {
+                _TableName = value;
+                UpdateSearchString();
+            }
+        }
+
+        private string _SearchString;
+        public string SearchString { get => _SearchString; }
+        private void UpdateSearchString()
+        {
+            _SearchString = SchemaName.ToLowerInvariant() + "." + TableName.ToLowerInvariant();
+        }
+
+        public List<DiagramColumn> Columns
+        {
+            get => _Columns;
+            set
+            {
+                _Columns = value;
+                VisibleColumns = Math.Min(VisibleColumns, Columns.Count);
+            }
+        }
         public List<DiagramTableRelation> Relations { get => _Relations; set => _Relations = value; }
         public int VisibleColumns
         {
@@ -839,7 +874,7 @@ namespace PgMulti.Diagrams
 
         public override string ToString()
         {
-            return TableName + " [" + SchemaName + "]";
+            return SchemaName + "." + TableName;
         }
     }
 }

@@ -1287,6 +1287,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Go to table.
+        /// </summary>
+        internal static string goto_table {
+            get {
+                return ResourceManager.GetString("goto_table", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Log.
         /// </summary>
         internal static string history {

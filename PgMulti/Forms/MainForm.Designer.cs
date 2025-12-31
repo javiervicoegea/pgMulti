@@ -1,5 +1,4 @@
 ﻿using FastColoredTextBoxNS;
-using PgMulti.DataStructure;
 using PgMulti.QueryEditor;
 using PgMulti.Tasks;
 using TradeWright.UI.Forms;
@@ -979,7 +978,6 @@ namespace PgMulti
             toolStrip1.Name = "toolStrip1";
             toolStrip1.Size = new Size(511, 37);
             toolStrip1.TabIndex = 1;
-            toolStrip1.Text = "toolStrip1";
             // 
             // tsbOpen
             // 
@@ -988,7 +986,6 @@ namespace PgMulti
             tsbOpen.ImageTransparentColor = Color.Magenta;
             tsbOpen.Name = "tsbOpen";
             tsbOpen.Size = new Size(34, 34);
-            tsbOpen.Text = "toolStripButton1";
             tsbOpen.Click += tsbOpen_Click;
             // 
             // tsbSave
@@ -998,7 +995,6 @@ namespace PgMulti
             tsbSave.ImageTransparentColor = Color.Magenta;
             tsbSave.Name = "tsbSave";
             tsbSave.Size = new Size(34, 34);
-            tsbSave.Text = "toolStripButton1";
             tsbSave.Click += tsbSave_Click;
             // 
             // tsbSaveAs
@@ -1008,7 +1004,6 @@ namespace PgMulti
             tsbSaveAs.ImageTransparentColor = Color.Magenta;
             tsbSaveAs.Name = "tsbSaveAs";
             tsbSaveAs.Size = new Size(34, 34);
-            tsbSaveAs.Text = "toolStripButton1";
             tsbSaveAs.Click += tsbSaveAs_Click;
             // 
             // tsbSaveAll
@@ -1018,7 +1013,6 @@ namespace PgMulti
             tsbSaveAll.ImageTransparentColor = Color.Magenta;
             tsbSaveAll.Name = "tsbSaveAll";
             tsbSaveAll.Size = new Size(34, 34);
-            tsbSaveAll.Text = "toolStripButton1";
             tsbSaveAll.Click += tsbSaveAll_Click;
             // 
             // toolStripSeparator2
@@ -1053,7 +1047,6 @@ namespace PgMulti
             tsddbTransactions.ImageTransparentColor = Color.Magenta;
             tsddbTransactions.Name = "tsddbTransactions";
             tsddbTransactions.Size = new Size(44, 34);
-            tsddbTransactions.Text = "toolStripDropDownButton2";
             // 
             // tsmiTransactionModeManual
             // 

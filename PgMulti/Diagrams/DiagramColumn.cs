@@ -248,7 +248,7 @@ namespace PgMulti.Diagrams
                 case "regnamespace":
                     return "rns";
                 default:
-                    return "";
+                    return (typeName.Length > 4 ? typeName.Substring(0, 4) : typeName) + (typeParams == null ? "" : typeParams);
             }
         }
     }

@@ -1168,4 +1168,7 @@ Unlike other tools, this application does not reuse the connection between diffe
   <data name="clone" xml:space="preserve">
     <value>Clone</value>
   </data>
+  <data name="goto_table" xml:space="preserve">
+    <value>Go to table</value>
+  </data>
 </root>

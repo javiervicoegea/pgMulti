@@ -153,7 +153,7 @@ namespace PgMulti.Forms
         {
             if (gvColumns.SelectedRows.Count != 1) return;
             DataRow dr = _Columns.Rows[gvColumns.SelectedRows[0].Index];
-            
+
             dr["type_name"] = cbColumnType.Text;
         }
 
@@ -298,14 +298,16 @@ namespace PgMulti.Forms
             List<DiagramColumn> columnsToRemove = new List<DiagramColumn>();
             foreach (DiagramColumn dci in _DiagramTable.Columns)
             {
+                bool found = false;
                 foreach (DataRow dri in _Columns.Rows)
                 {
-                    if (dci.ColumnName == (string)dri["original_name"])
+                    if (dri.RowState != DataRowState.Deleted && dci.ColumnName == (string)dri["original_name"])
                     {
-                        columnsToRemove.Add(dci);
+                        found = true;
                         break;
                     }
                 }
+                if (!found) columnsToRemove.Add(dci);
             }
 
             List<DiagramTableRelation> relationsToRemove = new List<DiagramTableRelation>();
@@ -375,7 +377,6 @@ namespace PgMulti.Forms
                 if (dr["original_name"] == DBNull.Value)
                 {
                     dc = new DiagramColumn((string)dr["name"], typeName, typeParams, defaultValue, (bool)dr["is_identity"], (bool)dr["pk"], (bool)dr["not_null"], (string)dr["type_initials"]);
-                    columns.Add(dc);
                 }
                 else
                 {
@@ -389,6 +390,8 @@ namespace PgMulti.Forms
                     dc.NotNull = (bool)dr["not_null"];
                     dc.TypeInitials = (string)dr["type_initials"];
                 }
+
+                columns.Add(dc);
             }
 
             _DiagramTable.TableName = txtTableName.Text;

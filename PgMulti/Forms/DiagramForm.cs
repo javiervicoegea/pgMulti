@@ -126,20 +126,54 @@ namespace PgMulti.Forms
         {
             _PendingSave = true;
             tmrSave.Enabled = true;
+            tsbSave.Enabled = true;
+        }
+
+        private string GetTempFileName(string baseFileName, string ext)
+        {
+            string tmpFileName = baseFileName + "." + ext;
+
+            if (File.Exists(tmpFileName))
+            {
+                int i = 0;
+
+                do
+                {
+                    i++;
+                    tmpFileName = baseFileName + "." + i + "." + ext;
+                }
+                while (File.Exists(tmpFileName));
+            }
+
+            return tmpFileName;
         }
 
         public void Save()
         {
-            string path = Path.GetDirectoryName(_Filename)!;
-            string name = Path.GetFileNameWithoutExtension(_Filename);
-            string ext = Path.GetExtension(_Filename);
+            string newTmpFileName = GetTempFileName(_Filename, "new");
+            string oldTmpFileName = GetTempFileName(_Filename, "old");
 
-            string tmp = Path.Combine(path, Path.ChangeExtension(name + "_old", ext));
-            File.Move(_Filename, tmp);
-            _Diagram.SaveFile(_Filename);
-            File.Delete(tmp);
+            try
+            {
+                _Diagram.SaveFile(newTmpFileName);
+
+                File.Move(_Filename, oldTmpFileName);
+                File.Move(newTmpFileName, _Filename);
+                File.Delete(oldTmpFileName);
+            }
+            catch (Exception)
+            {
+                try
+                {
+                    if (File.Exists(newTmpFileName)) File.Delete(newTmpFileName);
+                    if (File.Exists(newTmpFileName)) File.Delete(newTmpFileName);
+                }
+                catch (Exception) { }
+            }
 
             _PendingSave = false;
+            tsbSave.Enabled = false;
+            tmrSave.Enabled = false;
         }
 
         public void ZoomFull(bool minScaleMode)
@@ -518,6 +552,19 @@ namespace PgMulti.Forms
         #endregion "Form events"
 
         #region "Other controls events"
+        private void tsbSave_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Save();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, string.Format(Properties.Text.error_saving_diagram, ex.Message), Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                _PreviousSavingError = true;
+            }
+        }
+
         private void tsbAddTables_Click(object sender, EventArgs e)
         {
             List<Tuple<string, string>> preselectedTableIds = new List<Tuple<string, string>>();
@@ -585,7 +632,11 @@ namespace PgMulti.Forms
 
             if (tscbTables.SelectedItem == null) return;
             DiagramTable dt = (DiagramTable)tscbTables.SelectedItem;
+            GoToTable(dt);
+        }
 
+        private void GoToTable(DiagramTable dt)
+        {
             if (_SelectedObject != null)
             {
                 _SelectedObject.Selected = false;
@@ -606,13 +657,86 @@ namespace PgMulti.Forms
             _Invalidate();
         }
 
+        private string _tscbTables_LastFilteredText = "";
+        private void tscbTables_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Up || e.KeyCode == Keys.Down) return;
+
+            switch (e.KeyCode)
+            {
+                case Keys.Up:
+                case Keys.Down:
+                    break;
+                case Keys.Enter:
+                    {
+                        if (tscbTables.Items.Count > 0 && tscbTables.SelectedItem != null)
+                        {
+                            DiagramTable dt = (DiagramTable)tscbTables.SelectedItem;
+
+                            UpdateItemsInTscbTables();
+
+                            tscbTables.Text = dt.ToString();
+                            GoToTable(dt);
+                        }
+                        tscbTables.SelectAll();
+                    }
+                    break;
+                default:
+                    {
+                        string originalText = tscbTables.Text;
+                        string searchString = originalText.ToLowerInvariant();
+                        int originalSelectionStart = tscbTables.SelectionStart;
+                        int originalSelectionLength = tscbTables.SelectionLength;
+
+                        tscbTables.Items.Clear();
+                        DiagramTable? autocompleteItem = null;
+                        foreach (DiagramTable dt in _Diagram.Tables.Where(i => i.SearchString.Contains(searchString)).OrderByDescending(i => i.SearchString.StartsWith(searchString)).ThenBy(i => i.SearchString))
+                        {
+                            tscbTables.Items.Add(dt);
+                            if (autocompleteItem == null) autocompleteItem = dt;
+                        }
+
+                        tscbTables.DroppedDown = true;
+
+                        tscbTables.Text = originalText;
+                        tscbTables.SelectionStart = originalSelectionStart;
+                        tscbTables.SelectionLength = originalSelectionLength;
+
+                        if (autocompleteItem != null && originalSelectionStart == tscbTables.Text.Length && originalSelectionLength == 0 && !_tscbTables_LastFilteredText.StartsWith(tscbTables.Text))
+                        {
+                            string? autocompleteText = null;
+                            if (autocompleteItem.SearchString.StartsWith(searchString))
+                            {
+                                autocompleteText = autocompleteItem.ToString().Substring(originalText.Length);
+                            }
+                            else if (autocompleteItem.TableName.ToLowerInvariant().StartsWith(searchString))
+                            {
+                                autocompleteText = autocompleteItem.TableName.Substring(originalText.Length);
+                            }
+
+                            if (autocompleteText != null)
+                            {
+                                tscbTables.Text = originalText + autocompleteText;
+                                tscbTables.Select(originalText.Length, autocompleteText.Length);
+                            }
+                        }
+
+                        _tscbTables_LastFilteredText = originalText;
+                    }
+                    break;
+            }
+
+        }
+
         private void UpdateItemsInTscbTables()
         {
             tscbTables.Items.Clear();
-            foreach (DiagramTable dt in _Diagram.Tables)
+            foreach (DiagramTable dt in _Diagram.Tables.OrderBy(i => i.SearchString))
             {
                 tscbTables.Items.Add(dt);
             }
+            tscbTables.Text = "";
+            _tscbTables_LastFilteredText = "";
         }
 
         #endregion
@@ -676,13 +800,19 @@ namespace PgMulti.Forms
             Point dcMouseLocation = _Diagram.UnProject(e.Location);
             if (e.Button == MouseButtons.Right)
             {
-                _DraggingDiagram = true;
-                _Diagram.StartDrag(dcMouseLocation);
+                StartDrag(dcMouseLocation);
             }
             else if (e.Button == MouseButtons.Left && _Diagram.RelatingTable == null)
             {
                 ClickOnPoint(e.Location, dcMouseLocation, _CtrlKeyPressed || _ShiftKeyPressed, true);
             }
+        }
+
+        private void StartDrag(Point dcMouseLocation)
+        {
+            _DraggingDiagram = true;
+            _Diagram.StartDrag(dcMouseLocation);
+            Cursor = _DraggingCursor;
         }
 
         private void ClickOnPoint(Point ccMouseLocation, Point dcMouseLocation, bool keyModifier, bool canInitDrag)
@@ -740,7 +870,7 @@ namespace PgMulti.Forms
                     //DiagramTableRelation dr=new DiagramTableRelation(_Diagram,_Diagram.RelatingTable, dt)
                     //dt.Relations.Add(dr);
                     //dcClipRectangle = Combine(dcClipRectangle, dr.BoundingBox);
-                    
+
                     dcClipRectangle = Combine(dcClipRectangle, dt.BoundingBox);
 
                     nextSelectedObject = null;
@@ -789,6 +919,7 @@ namespace PgMulti.Forms
                     if (nextSelectedObject == null)
                     {
                         _Ignore_tscbTables_SelectedIndexChanged = true;
+                        if (_tscbTables_LastFilteredText != "") UpdateItemsInTscbTables();
                         tscbTables.SelectedIndex = -1;
                         _Ignore_tscbTables_SelectedIndexChanged = false;
                     }
@@ -856,6 +987,7 @@ namespace PgMulti.Forms
                             dcClipRectangle = Combine(dcClipRectangle, nextSelectedObject.BoundingBox);
 
                             _Ignore_tscbTables_SelectedIndexChanged = true;
+                            if (_tscbTables_LastFilteredText != "") UpdateItemsInTscbTables();
                             tscbTables.SelectedItem = nextSelectedObject is DiagramTable ? nextSelectedObject : null;
                             _Ignore_tscbTables_SelectedIndexChanged = false;
                         }
@@ -876,8 +1008,7 @@ namespace PgMulti.Forms
             }
             else if (nextSelectedObject == null && canInitDrag)
             {
-                _DraggingDiagram = true;
-                _Diagram.StartDrag(dcMouseLocation);
+                StartDrag(dcMouseLocation);
             }
 
             if (nextSelectedObject != null && !nextSelectedObject.Suggested && canInitDrag)
@@ -1111,7 +1242,7 @@ namespace PgMulti.Forms
             if (_Diagram.RelatingTable != null)
             {
                 Point dcPoint;
-                if (_HighlightedObject!=null && _HighlightedObject is DiagramTable)
+                if (_HighlightedObject != null && _HighlightedObject is DiagramTable)
                 {
                     dcPoint = ((DiagramTable)_HighlightedObject).Center;
                 }
@@ -1224,6 +1355,7 @@ namespace PgMulti.Forms
         #region TextI18n
         private void InitializeText()
         {
+            this.tsbSave.Text = Properties.Text.save;
             this.tsbAddTables.Text = Properties.Text.add_tables;
             this.tsbExpandDiagram.Text = Properties.Text.expand_diagram;
             this.tsbZoomFull.Text = Properties.Text.zoom_full;
@@ -1231,6 +1363,7 @@ namespace PgMulti.Forms
             this.tsmiAddTable.Text = Properties.Text.add_table;
             this.tsmiEdit.Text = Properties.Text.edit;
             this.tsmiRemove.Text = Properties.Text.remove;
+            this.tslSelectTable.Text = Properties.Text.goto_table + ":";
         }
         #endregion
 
