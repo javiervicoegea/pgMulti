@@ -27,9 +27,9 @@ namespace PgMulti.Forms
         private Diagram _Diagram;
         private string _Filename;
         private DB? _PreselectedDB;
-
+         
         private Canvas _Canvas;
-        private ExpandDiagramPanel? _ExpandDiagramPanel = null;
+        private RepositionTablesOptionsForm? _ExpandDiagramOptionsForm = null;
 
         private DiagramObject? _DraggingObject = null;
         private DiagramObject? _HighlightedObject = null;
@@ -101,6 +101,7 @@ namespace PgMulti.Forms
 
         public void AddTables(List<Table> tables)
         {
+            DisableAutoSave();
             foreach (Table t in tables)
             {
                 _Diagram.AddTable(t);
@@ -116,10 +117,20 @@ namespace PgMulti.Forms
             _Diagram.CenterTo(dcRectangleViewPort, _Diagram.Center);
         }
 
-        public ExpandDiagramPanel OpenExpandDiagramPanel()
+        public RepositionTablesOptionsForm OpenExpandDiagramOptionsForm()
         {
-            tsbExpandDiagram.Checked = true;
-            return _ExpandDiagramPanel!;
+            tsbRepositionTables.Checked = true;
+            return _ExpandDiagramOptionsForm!;
+        }
+
+        private void EnableAutoSave()
+        {
+            tmrSave.Enabled = true;
+        }
+
+        private void DisableAutoSave()
+        {
+            tmrSave.Enabled = false;
         }
 
         private void SetPendingSave()
@@ -270,7 +281,7 @@ namespace PgMulti.Forms
                                         if (childDiagramTable == null) continue;
                                     }
 
-                                    DiagramTableRelation newDiagramTableRelation = new DiagramTableRelation(_Diagram, parentDiagramTable, childDiagramTable, relatedTableRelation);
+                                    DiagramRelation newDiagramTableRelation = new DiagramRelation(_Diagram, parentDiagramTable, childDiagramTable, relatedTableRelation);
                                     newDiagramTableRelation.Suggested = true;
 
                                     parentDiagramTable.Relations.Add(newDiagramTableRelation);
@@ -338,7 +349,7 @@ namespace PgMulti.Forms
 
             dt.RecalculateRelationPoints();
             dt.DistributeRelationPoints();
-            foreach (DiagramTableRelation dr in dt.Relations)
+            foreach (DiagramRelation dr in dt.Relations)
             {
                 DiagramTable dt2 = (dr.ParentTable == _ResizingTable ? dr.ChildTable : dr.ParentTable);
                 dt2.DistributeRelationPoints();
@@ -348,7 +359,7 @@ namespace PgMulti.Forms
                 dr.RecalculateBoundingBox();
                 dcClipRectangle = Combine(dcClipRectangle, dr.BoundingBox);
 
-                foreach (DiagramTableRelation dr2 in dt2.Relations)
+                foreach (DiagramRelation dr2 in dt2.Relations)
                 {
                     dcClipRectangle = Combine(dcClipRectangle, dr2.BoundingBox);
                     dr2.RecalculateBezierPoints();
@@ -444,10 +455,10 @@ namespace PgMulti.Forms
                     tsmiEdit.Visible = true;
                     tsmiRemove.Visible = true;
                 }
-                else if (_SelectedObject is DiagramTableRelation)
+                else if (_SelectedObject is DiagramRelation)
                 {
-                    tsmiEdit.Visible = false;
-                    tsmiRemove.Visible = false;
+                    tsmiEdit.Visible = true;
+                    tsmiRemove.Visible = true;
                 }
                 else
                 {
@@ -466,7 +477,8 @@ namespace PgMulti.Forms
             {
                 if (_SelectedObject is DiagramTable)
                 {
-                    TableForm f = new TableForm(_Diagram, (DiagramTable)_SelectedObject);
+                    DiagramTableForm f = new DiagramTableForm((DiagramTable)_SelectedObject);
+                    DisableAutoSave();
                     f.ShowDialog(this);
                     if (f.DialogResult == DialogResult.OK)
                     {
@@ -474,9 +486,14 @@ namespace PgMulti.Forms
                         _Invalidate();
                         SetPendingSave();
                     }
+                    else
+                    {
+                        EnableAutoSave();
+                    }
                 }
-                else if (_SelectedObject is DiagramTableRelation)
+                else if (_SelectedObject is DiagramRelation)
                 {
+                    ShowDiagramRelationForm(new DiagramRelationForm((DiagramRelation)_SelectedObject));
                 }
                 else
                 {
@@ -488,7 +505,8 @@ namespace PgMulti.Forms
 
         private void tsmiAddTable_Click(object sender, EventArgs e)
         {
-            TableForm f = new TableForm(_Diagram);
+            DiagramTableForm f = new DiagramTableForm(_Diagram);
+                DisableAutoSave();
             f.ShowDialog(this);
             if (f.DialogResult == DialogResult.OK)
             {
@@ -496,6 +514,10 @@ namespace PgMulti.Forms
                 f.DiagramTable.MoveTo((Point)cms.Tag!);
                 _Invalidate();
                 SetPendingSave();
+            }
+            else
+            {
+                EnableAutoSave();
             }
         }
 
@@ -517,20 +539,22 @@ namespace PgMulti.Forms
                         return;
                     }
 
+                    DisableAutoSave();
                     _Diagram.RemoveTable(dt);
                     _Invalidate();
                     SetPendingSave();
                 }
-                else if (_SelectedObject is DiagramTableRelation)
+                else if (_SelectedObject is DiagramRelation)
                 {
-                    DiagramTableRelation dtr = (DiagramTableRelation)_SelectedObject;
+                    DiagramRelation dtr = (DiagramRelation)_SelectedObject;
                     if (MessageBox.Show(
-                            string.Format(Properties.Text.confirm_relation_deletion, dtr.ChildTable.TableName + "." + dtr.Id),
+                            string.Format(Properties.Text.confirm_relation_deletion, dtr.Id),
                             Properties.Text.warning, MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) != DialogResult.OK)
                     {
                         return;
                     }
 
+                    DisableAutoSave();
                     _Diagram.RemoveRelation(dtr);
                     _Invalidate();
                     SetPendingSave();
@@ -580,23 +604,31 @@ namespace PgMulti.Forms
             AddTables(stf.SelectedTables!);
         }
 
-        private void tsbExpandDiagram_CheckedChanged(object sender, EventArgs e)
+        private bool _tsbRepositionTables_CheckedChanged_Ignore = false;  
+        private void tsbRepositionTables_CheckedChanged(object sender, EventArgs e)
         {
-            if (tsbExpandDiagram.Checked)
+            if (_tsbRepositionTables_CheckedChanged_Ignore) return;
+            if (tsbRepositionTables.Checked)
             {
-                _ExpandDiagramPanel = new ExpandDiagramPanel(_Data, _PreselectedDB, this, _Diagram, _Canvas);
-                _ExpandDiagramPanel.Left = 0;
-                _ExpandDiagramPanel.Top = 0;
-                //_ExpandDiagramPanel.Paint += _ExpandDiagramPanel_Paint;
-                _Canvas.Controls.Add(_ExpandDiagramPanel);
-                _Canvas.Controls.SetChildIndex(_ExpandDiagramPanel, 0);
+                _ExpandDiagramOptionsForm = new RepositionTablesOptionsForm(_Data, _PreselectedDB, this, _Diagram, _Canvas);
+                _ExpandDiagramOptionsForm.Show(this);
+                _ExpandDiagramOptionsForm.FormClosed += _ExpandDiagramOptionsForm_FormClosed;
+
+                _ExpandDiagramOptionsForm.Left = Left + (Width - _ExpandDiagramOptionsForm.Width) / 2;
+                _ExpandDiagramOptionsForm.Top = Top + Height - _ExpandDiagramOptionsForm.Height;
             }
             else
             {
-                _ExpandDiagramPanel!.Close();
-                _Canvas.Controls.Remove(_ExpandDiagramPanel);
-                _ExpandDiagramPanel = null;
+                _ExpandDiagramOptionsForm!.Close();
+                _ExpandDiagramOptionsForm = null;
             }
+        }
+
+        private void _ExpandDiagramOptionsForm_FormClosed(object? sender, FormClosedEventArgs e)
+        {
+            _tsbRepositionTables_CheckedChanged_Ignore = true;
+            tsbRepositionTables.Checked = false;
+            _tsbRepositionTables_CheckedChanged_Ignore = false;
         }
 
         private void tmrSave_Tick(object sender, EventArgs e)
@@ -815,6 +847,56 @@ namespace PgMulti.Forms
             Cursor = _DraggingCursor;
         }
 
+        private void ShowDiagramRelationForm(DiagramRelationForm drf)
+        {
+            DisableAutoSave();
+            drf.ShowDialog(this);
+
+            if (drf.DialogResult == DialogResult.OK)
+            {
+
+                if (drf.IsNewRelation)
+                {
+                    _Diagram.Relations.Add(drf.Relation!);
+                }
+
+                if (drf.OriginalParentTable != drf.Relation!.ParentTable)
+                {
+                    if (drf.OriginalParentTable != null)
+                    {
+                        drf.OriginalParentTable.Relations.Remove(drf.Relation);
+                        drf.OriginalParentTable.RecalculateRelationPoints();
+                    }
+
+                    drf.Relation.ParentTable.Relations.Add(drf.Relation);
+                }
+
+                if (drf.OriginalChildTable != drf.Relation.ChildTable)
+                {
+                    if (drf.OriginalChildTable != null)
+                    {
+                        drf.OriginalChildTable.Relations.Remove(drf.Relation);
+                        drf.OriginalChildTable.RecalculateRelationPoints();
+                    }
+
+                    drf.Relation.ChildTable.Relations.Add(drf.Relation);
+                }
+
+                drf.Relation.ParentTable.RecalculateRelationPoints();
+                drf.Relation.ChildTable.RecalculateRelationPoints();
+                drf.Relation.RecalculateBezierPoints();
+                drf.Relation.RecalculateBoundingBox();
+
+                SetPendingSave();
+
+                _Invalidate();
+            }
+            else
+            {
+                EnableAutoSave();
+            }
+        }
+
         private void ClickOnPoint(Point ccMouseLocation, Point dcMouseLocation, bool keyModifier, bool canInitDrag)
         {
             Rectangle? dcClipRectangle = null;
@@ -867,11 +949,8 @@ namespace PgMulti.Forms
                 if (nextSelectedObject != null && nextSelectedObject is DiagramTable)
                 {
                     DiagramTable dt = (DiagramTable)nextSelectedObject;
-                    //DiagramTableRelation dr=new DiagramTableRelation(_Diagram,_Diagram.RelatingTable, dt)
-                    //dt.Relations.Add(dr);
-                    //dcClipRectangle = Combine(dcClipRectangle, dr.BoundingBox);
 
-                    dcClipRectangle = Combine(dcClipRectangle, dt.BoundingBox);
+                    ShowDiagramRelationForm(new DiagramRelationForm(dt, _Diagram.RelatingTable));
 
                     nextSelectedObject = null;
                 }
@@ -908,9 +987,9 @@ namespace PgMulti.Forms
                         _SelectedObject.Selected = false;
                         dcClipRectangle = Combine(dcClipRectangle, _SelectedObject.BoundingBox);
 
-                        if (_SelectedObject is DiagramTableRelation)
+                        if (_SelectedObject is DiagramRelation)
                         {
-                            DiagramTableRelation dr = (DiagramTableRelation)_SelectedObject;
+                            DiagramRelation dr = (DiagramRelation)_SelectedObject;
                             dcClipRectangle = Combine(dcClipRectangle, dr.ParentTable.BoundingBox);
                             dcClipRectangle = Combine(dcClipRectangle, dr.ChildTable.BoundingBox);
                         }
@@ -933,9 +1012,9 @@ namespace PgMulti.Forms
                             {
                                 st = (DiagramTable)nextSelectedObject;
                             }
-                            else if (nextSelectedObject is DiagramTableRelation)
+                            else if (nextSelectedObject is DiagramRelation)
                             {
-                                DiagramTableRelation sr = (DiagramTableRelation)nextSelectedObject;
+                                DiagramRelation sr = (DiagramRelation)nextSelectedObject;
 
                                 if (sr.ParentTable.Suggested)
                                 {
@@ -970,15 +1049,15 @@ namespace PgMulti.Forms
                                 if (nextSelectedObject is DiagramTable)
                                 {
                                     DiagramTable dt = (DiagramTable)nextSelectedObject;
-                                    foreach (DiagramTableRelation dr in dt.Relations)
+                                    foreach (DiagramRelation dr in dt.Relations)
                                     {
                                         dcClipRectangle = Combine(dcClipRectangle, dr.BoundingBox);
                                         dcClipRectangle = Combine(dcClipRectangle, dt.OtherTableInRelation(dr).BoundingBox);
                                     }
                                 }
-                                else if (nextSelectedObject is DiagramTableRelation)
+                                else if (nextSelectedObject is DiagramRelation)
                                 {
-                                    DiagramTableRelation dr = (DiagramTableRelation)nextSelectedObject;
+                                    DiagramRelation dr = (DiagramRelation)nextSelectedObject;
                                     dcClipRectangle = Combine(dcClipRectangle, dr.ParentTable.BoundingBox);
                                     dcClipRectangle = Combine(dcClipRectangle, dr.ChildTable.BoundingBox);
                                 }
@@ -1042,6 +1121,7 @@ namespace PgMulti.Forms
             {
                 Cursor = Cursors.Arrow;
                 //dcClipRectangle = Combine(dcClipRectangle, _DraggingObject.BoundingBox);
+                DisableAutoSave();
                 _DraggingObject.CompleteDrag(dcMouseLocation);
                 if (_Diagram.UpdateBoundingBox())
                 {
@@ -1154,15 +1234,15 @@ namespace PgMulti.Forms
                         if (prevHighlightedObject is DiagramTable)
                         {
                             DiagramTable dt = (DiagramTable)prevHighlightedObject;
-                            foreach (DiagramTableRelation dr in dt.Relations)
+                            foreach (DiagramRelation dr in dt.Relations)
                             {
                                 dcClipRectangle = Combine(dcClipRectangle, dr.BoundingBox);
                                 dcClipRectangle = Combine(dcClipRectangle, dt.OtherTableInRelation(dr).BoundingBox);
                             }
                         }
-                        else if (prevHighlightedObject is DiagramTableRelation)
+                        else if (prevHighlightedObject is DiagramRelation)
                         {
-                            DiagramTableRelation dr = (DiagramTableRelation)prevHighlightedObject;
+                            DiagramRelation dr = (DiagramRelation)prevHighlightedObject;
                             dcClipRectangle = Combine(dcClipRectangle, dr.ParentTable.BoundingBox);
                             dcClipRectangle = Combine(dcClipRectangle, dr.ChildTable.BoundingBox);
                         }
@@ -1177,15 +1257,15 @@ namespace PgMulti.Forms
                         if (_HighlightedObject is DiagramTable)
                         {
                             DiagramTable dt = (DiagramTable)_HighlightedObject;
-                            foreach (DiagramTableRelation dr in dt.Relations)
+                            foreach (DiagramRelation dr in dt.Relations)
                             {
                                 dcClipRectangle = Combine(dcClipRectangle, dr.BoundingBox);
                                 dcClipRectangle = Combine(dcClipRectangle, dt.OtherTableInRelation(dr).BoundingBox);
                             }
                         }
-                        else if (_HighlightedObject is DiagramTableRelation)
+                        else if (_HighlightedObject is DiagramRelation)
                         {
-                            DiagramTableRelation dr = (DiagramTableRelation)_HighlightedObject;
+                            DiagramRelation dr = (DiagramRelation)_HighlightedObject;
                             dcClipRectangle = Combine(dcClipRectangle, dr.ParentTable.BoundingBox);
                             dcClipRectangle = Combine(dcClipRectangle, dr.ChildTable.BoundingBox);
                         }
@@ -1217,7 +1297,7 @@ namespace PgMulti.Forms
                 if (_DraggingObject is DiagramTable && !_DraggingObject.Dragging)
                 {
                     DiagramTable dt = (DiagramTable)_DraggingObject;
-                    foreach (DiagramTableRelation dr in dt.Relations)
+                    foreach (DiagramRelation dr in dt.Relations)
                     {
                         dcClipRectangle = Combine(dcClipRectangle, dr.BoundingBox);
                     }
@@ -1296,9 +1376,9 @@ namespace PgMulti.Forms
 
             _Diagram.Draw(e.Graphics, e.ClipRectangle);
 
-            if (_ExpandDiagramPanel != null && e.ClipRectangle.IntersectsWith(_ExpandDiagramPanel.Bounds))
+            if (_ExpandDiagramOptionsForm != null && e.ClipRectangle.IntersectsWith(_ExpandDiagramOptionsForm.Bounds))
             {
-                _ExpandDiagramPanel.Update();
+                _ExpandDiagramOptionsForm.Update();
             }
         }
 
@@ -1357,7 +1437,7 @@ namespace PgMulti.Forms
         {
             this.tsbSave.Text = Properties.Text.save;
             this.tsbAddTables.Text = Properties.Text.add_tables;
-            this.tsbExpandDiagram.Text = Properties.Text.expand_diagram;
+            this.tsbRepositionTables.Text = Properties.Text.automatically_reposition_tables;
             this.tsbZoomFull.Text = Properties.Text.zoom_full;
             this.tsmiAddRelation.Text = Properties.Text.add_relation;
             this.tsmiAddTable.Text = Properties.Text.add_table;

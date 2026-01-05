@@ -23,7 +23,7 @@ namespace PgMulti.Diagrams
         public PointF Translate = new PointF(0.0f, 0.0f);
 
         private List<DiagramTable> _Tables;
-        private List<DiagramTableRelation> _Relations;
+        private List<DiagramRelation> _Relations;
         private List<DiagramTable>? _SuggestedRelatedTables = null;
 
         private Point? _StartDraggingPoint = null;
@@ -88,7 +88,7 @@ namespace PgMulti.Diagrams
                 DiagramTable? childTable = dg.Tables.FirstOrDefault(dgi => dgi.SchemaName == childSchemaName && dgi.TableName == childTableName);
                 if (childTable == null) throw new BadFormatException();
 
-                DiagramTableRelation dr = new DiagramTableRelation(dg, parentTable, childTable, xeRelation);
+                DiagramRelation dr = new DiagramRelation(dg, parentTable, childTable, xeRelation);
 
                 dg.Relations.Add(dr);
                 dr.ParentTable.Relations.Add(dr);
@@ -105,12 +105,12 @@ namespace PgMulti.Diagrams
         public Diagram()
         {
             _Tables = new List<DiagramTable>();
-            _Relations = new List<DiagramTableRelation>();
+            _Relations = new List<DiagramRelation>();
             UpdateBoundingBox();
         }
 
         public List<DiagramTable> Tables { get => _Tables; }
-        public List<DiagramTableRelation> Relations { get => _Relations; }
+        public List<DiagramRelation> Relations { get => _Relations; }
 
         public List<DiagramTable>? SuggestedRelatedTables
         {
@@ -131,7 +131,7 @@ namespace PgMulti.Diagrams
                 {
                     foreach (DiagramTable dt in _SuggestedRelatedTables)
                     {
-                        foreach (DiagramTableRelation dr in dt.Relations)
+                        foreach (DiagramRelation dr in dt.Relations)
                         {
                             if (dr.ParentTable == dr.ChildTable)
                             {
@@ -172,7 +172,7 @@ namespace PgMulti.Diagrams
                     {
                         yield return dt;
 
-                        foreach (DiagramTableRelation dr in dt.Relations)
+                        foreach (DiagramRelation dr in dt.Relations)
                         {
                             yield return dr;
                         }
@@ -278,7 +278,7 @@ namespace PgMulti.Diagrams
 
         public void RemoveTable(DiagramTable dt)
         {
-            foreach (DiagramTableRelation dr in dt.Relations)
+            foreach (DiagramRelation dr in dt.Relations)
             {
                 _Relations.Remove(dr);
                 dt.OtherTableInRelation(dr).Relations.Remove(dr);
@@ -289,7 +289,7 @@ namespace PgMulti.Diagrams
             Refresh();
         }
 
-        public void RemoveRelation(DiagramTableRelation dr)
+        public void RemoveRelation(DiagramRelation dr)
         {
             _Relations.Remove(dr);
             dr.ParentTable.Relations.Remove(dr);
@@ -387,7 +387,7 @@ namespace PgMulti.Diagrams
                         throw new Exception();
                     }
 
-                    DiagramTableRelation dtr = new DiagramTableRelation(this, parentTable!, childTable!, r);
+                    DiagramRelation dtr = new DiagramRelation(this, parentTable!, childTable!, r);
                     parentTable!.Relations.Add(dtr);
                     if (parentTable != childTable) childTable!.Relations.Add(dtr);
                     _Relations.Add(dtr);
@@ -432,7 +432,7 @@ namespace PgMulti.Diagrams
                 }
             }
 
-            foreach (DiagramTableRelation dr in Relations)
+            foreach (DiagramRelation dr in Relations)
             {
                 dr.RecalculateBezierPoints();
                 dr.RecalculateBoundingBox();
@@ -442,7 +442,7 @@ namespace PgMulti.Diagrams
             {
                 foreach (DiagramTable dt in SuggestedRelatedTables)
                 {
-                    foreach (DiagramTableRelation dr in dt.Relations)
+                    foreach (DiagramRelation dr in dt.Relations)
                     {
                         dr.RecalculateBezierPoints();
                         dr.RecalculateBoundingBox();
@@ -519,7 +519,7 @@ namespace PgMulti.Diagrams
             XmlElement xeRelations = xd.CreateElement("relations");
             root.AppendChild(xeRelations);
 
-            foreach (DiagramTableRelation r in Relations)
+            foreach (DiagramRelation r in Relations)
             {
                 xeRelations.AppendChild(r.ToXml(xd));
             }
@@ -675,7 +675,7 @@ namespace PgMulti.Diagrams
         {
             if (!st.Suggested) throw new ArgumentException();
 
-            foreach (DiagramTableRelation dri in st.Relations)
+            foreach (DiagramRelation dri in st.Relations)
             {
                 Relations.Add(dri);
                 dri.Suggested = false;

@@ -59,7 +59,7 @@ namespace PgMulti.Diagrams.Efdg
             {
                 Node n = _Nodes[dt];
 
-                foreach (DiagramTableRelation dr in dt.Relations)
+                foreach (DiagramRelation dr in dt.Relations)
                 {
                     Tuple<DiagramTable, DiagramTable> t = new Tuple<DiagramTable, DiagramTable>(dr.ParentTable, dr.ChildTable);
                     if (_Edges.ContainsKey(t)) continue;
@@ -83,7 +83,7 @@ namespace PgMulti.Diagrams.Efdg
                 _Graph.RemoveNode(n);
                 _Nodes.Remove(dt);
 
-                foreach (DiagramTableRelation dr in dt.Relations)
+                foreach (DiagramRelation dr in dt.Relations)
                 {
                     _Edges.Remove(new Tuple<DiagramTable, DiagramTable>(dr.ParentTable, dr.ChildTable));
                 }

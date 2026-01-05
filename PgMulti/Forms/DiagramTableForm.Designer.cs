@@ -1,6 +1,8 @@
-﻿namespace PgMulti.Forms
+﻿using System.Windows.Forms;
+
+namespace PgMulti.Forms
 {
-    partial class TableForm
+    partial class DiagramTableForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +30,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TableForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DiagramTableForm));
             this.lblTableName = new System.Windows.Forms.Label();
             this.txtTableName = new System.Windows.Forms.TextBox();
             this.tc = new System.Windows.Forms.TabControl();
@@ -40,14 +42,14 @@
             this.scColumns = new System.Windows.Forms.SplitContainer();
             this.tscColumns = new System.Windows.Forms.ToolStripContainer();
             this.gvColumns = new System.Windows.Forms.DataGridView();
-            this.gvcName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.gvcDataType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.gvcPrimaryKey = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.gvcNotNull = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.gvcColumnName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.gvcColumnDataType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.gvcColumnPrimaryKey = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.gvcColumnNotNull = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.tsColumns = new System.Windows.Forms.ToolStrip();
-            this.tsbAdd = new System.Windows.Forms.ToolStripButton();
-            this.tsbRemove = new System.Windows.Forms.ToolStripButton();
-            this.panel3 = new System.Windows.Forms.Panel();
+            this.tsbAddColumn = new System.Windows.Forms.ToolStripButton();
+            this.tsbRemoveColumn = new System.Windows.Forms.ToolStripButton();
+            this.pnlColumn = new System.Windows.Forms.Panel();
             this.tlpColumn = new System.Windows.Forms.TableLayoutPanel();
             this.lblColumnName = new System.Windows.Forms.Label();
             this.txtColumnName = new System.Windows.Forms.TextBox();
@@ -55,14 +57,15 @@
             this.cbColumnType = new System.Windows.Forms.ComboBox();
             this.lblColumnTypeInitials = new System.Windows.Forms.Label();
             this.txtColumnTypeInitials = new System.Windows.Forms.TextBox();
-            this.lblPrimaryKey = new System.Windows.Forms.Label();
-            this.chkPrimaryKey = new System.Windows.Forms.CheckBox();
-            this.lblIdentity = new System.Windows.Forms.Label();
-            this.chkIdentity = new System.Windows.Forms.CheckBox();
+            this.lblColumnPrimaryKey = new System.Windows.Forms.Label();
+            this.chkColumnPrimaryKey = new System.Windows.Forms.CheckBox();
+            this.lblColumnIdentity = new System.Windows.Forms.Label();
+            this.chkColumnIdentity = new System.Windows.Forms.CheckBox();
             this.lblColumnDefault = new System.Windows.Forms.Label();
-            this.lblNotNull = new System.Windows.Forms.Label();
-            this.chkNotNull = new System.Windows.Forms.CheckBox();
+            this.lblColumnNotNull = new System.Windows.Forms.Label();
+            this.chkColumnNotNull = new System.Windows.Forms.CheckBox();
             this.txtColumnDefault = new System.Windows.Forms.TextBox();
+
             this.pnlConfirmation = new System.Windows.Forms.Panel();
             this.flp = new System.Windows.Forms.FlowLayoutPanel();
             this.btnCancel = new System.Windows.Forms.Button();
@@ -80,8 +83,9 @@
             this.tscColumns.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gvColumns)).BeginInit();
             this.tsColumns.SuspendLayout();
-            this.panel3.SuspendLayout();
+            this.pnlColumn.SuspendLayout();
             this.tlpColumn.SuspendLayout();
+
             this.pnlConfirmation.SuspendLayout();
             this.flp.SuspendLayout();
             this.SuspendLayout();
@@ -185,7 +189,7 @@
             // scColumns.Panel2
             // 
             this.scColumns.Panel2.AutoScroll = true;
-            this.scColumns.Panel2.Controls.Add(this.panel3);
+            this.scColumns.Panel2.Controls.Add(this.pnlColumn);
             this.scColumns.Panel2MinSize = 400;
             this.scColumns.Size = new System.Drawing.Size(786, 350);
             this.scColumns.SplitterDistance = 354;
@@ -213,12 +217,13 @@
             // 
             this.gvColumns.AllowUserToAddRows = false;
             this.gvColumns.AllowUserToResizeRows = false;
+            this.gvColumns.AutoGenerateColumns = false;
             this.gvColumns.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gvColumns.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.gvcName,
-            this.gvcDataType,
-            this.gvcPrimaryKey,
-            this.gvcNotNull});
+            this.gvcColumnName,
+            this.gvcColumnDataType,
+            this.gvcColumnPrimaryKey,
+            this.gvcColumnNotNull});
             this.gvColumns.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gvColumns.Location = new System.Drawing.Point(0, 0);
             this.gvColumns.MultiSelect = false;
@@ -231,52 +236,50 @@
             this.gvColumns.TabIndex = 0;
             this.gvColumns.RowValidating += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.gvColumns_RowValidating);
             this.gvColumns.SelectionChanged += new System.EventHandler(this.gvColumns_SelectionChanged);
-            this.gvColumns.Enter += new System.EventHandler(this.gvColumns_Enter);
-            this.gvColumns.Leave += new System.EventHandler(this.gvColumns_Leave);
             // 
-            // gvcName
+            // gvcColumnName
             // 
-            this.gvcName.DataPropertyName = "name";
-            this.gvcName.HeaderText = "Name";
-            this.gvcName.MinimumWidth = 6;
-            this.gvcName.Name = "gvcName";
-            this.gvcName.ReadOnly = true;
-            this.gvcName.Width = 125;
+            this.gvcColumnName.DataPropertyName = "name";
+            this.gvcColumnName.HeaderText = "Name";
+            this.gvcColumnName.MinimumWidth = 6;
+            this.gvcColumnName.Name = "gvcColumnName";
+            this.gvcColumnName.ReadOnly = true;
+            this.gvcColumnName.Width = 125;
             // 
-            // gvcDataType
+            // gvcColumnDataType
             // 
-            this.gvcDataType.DataPropertyName = "type_name";
-            this.gvcDataType.HeaderText = "DataType";
-            this.gvcDataType.MinimumWidth = 6;
-            this.gvcDataType.Name = "gvcDataType";
-            this.gvcDataType.ReadOnly = true;
-            this.gvcDataType.Width = 125;
+            this.gvcColumnDataType.DataPropertyName = "type_name";
+            this.gvcColumnDataType.HeaderText = "DataType";
+            this.gvcColumnDataType.MinimumWidth = 6;
+            this.gvcColumnDataType.Name = "gvcColumnDataType";
+            this.gvcColumnDataType.ReadOnly = true;
+            this.gvcColumnDataType.Width = 125;
             // 
-            // gvcPrimaryKey
+            // gvcColumnPrimaryKey
             // 
-            this.gvcPrimaryKey.DataPropertyName = "pk";
-            this.gvcPrimaryKey.HeaderText = "PK";
-            this.gvcPrimaryKey.MinimumWidth = 6;
-            this.gvcPrimaryKey.Name = "gvcPrimaryKey";
-            this.gvcPrimaryKey.ReadOnly = true;
-            this.gvcPrimaryKey.Width = 125;
+            this.gvcColumnPrimaryKey.DataPropertyName = "pk";
+            this.gvcColumnPrimaryKey.HeaderText = "PK";
+            this.gvcColumnPrimaryKey.MinimumWidth = 6;
+            this.gvcColumnPrimaryKey.Name = "gvcColumnPrimaryKey";
+            this.gvcColumnPrimaryKey.ReadOnly = true;
+            this.gvcColumnPrimaryKey.Width = 125;
             // 
-            // gvcNotNull
+            // gvcColumnNotNull
             // 
-            this.gvcNotNull.DataPropertyName = "not_null";
-            this.gvcNotNull.HeaderText = "NN";
-            this.gvcNotNull.MinimumWidth = 6;
-            this.gvcNotNull.Name = "gvcNotNull";
-            this.gvcNotNull.ReadOnly = true;
-            this.gvcNotNull.Width = 125;
+            this.gvcColumnNotNull.DataPropertyName = "not_null";
+            this.gvcColumnNotNull.HeaderText = "NN";
+            this.gvcColumnNotNull.MinimumWidth = 6;
+            this.gvcColumnNotNull.Name = "gvcColumnNotNull";
+            this.gvcColumnNotNull.ReadOnly = true;
+            this.gvcColumnNotNull.Width = 125;
             // 
             // tsColumns
             // 
             this.tsColumns.Dock = System.Windows.Forms.DockStyle.None;
             this.tsColumns.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.tsColumns.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsbAdd,
-            this.tsbRemove});
+            this.tsbAddColumn,
+            this.tsbRemoveColumn});
             this.tsColumns.Location = new System.Drawing.Point(4, 0);
             this.tsColumns.Name = "tsColumns";
             this.tsColumns.Size = new System.Drawing.Size(71, 27);
@@ -284,29 +287,30 @@
             // 
             // tsbAdd
             // 
-            this.tsbAdd.Image = global::PgMulti.Properties.Resources.nuevo;
-            this.tsbAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbAdd.Name = "tsbAdd";
-            this.tsbAdd.Size = new System.Drawing.Size(29, 24);
-            this.tsbAdd.Click += new System.EventHandler(this.tsbAdd_Click);
+            this.tsbAddColumn.Image = global::PgMulti.Properties.Resources.nuevo;
+            this.tsbAddColumn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbAddColumn.Name = "tsbAdd";
+            this.tsbAddColumn.Size = new System.Drawing.Size(29, 24);
+            this.tsbAddColumn.Click += new System.EventHandler(this.tsbColumnAdd_Click);
             // 
             // tsbRemove
             // 
-            this.tsbRemove.Image = global::PgMulti.Properties.Resources.borrar;
-            this.tsbRemove.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbRemove.Name = "tsbRemove";
-            this.tsbRemove.Size = new System.Drawing.Size(29, 24);
-            this.tsbRemove.Click += new System.EventHandler(this.tsbRemove_Click);
+            this.tsbRemoveColumn.Image = global::PgMulti.Properties.Resources.borrar;
+            this.tsbRemoveColumn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbRemoveColumn.Name = "tsbRemove";
+            this.tsbRemoveColumn.Size = new System.Drawing.Size(29, 24);
+            this.tsbRemoveColumn.Click += new System.EventHandler(this.tsbColumnRemove_Click);
             // 
             // panel3
             // 
-            this.panel3.AutoScroll = true;
-            this.panel3.Controls.Add(this.tlpColumn);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(0, 0);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(428, 350);
-            this.panel3.TabIndex = 4;
+            this.pnlColumn.AutoScroll = true;
+            this.pnlColumn.Controls.Add(this.tlpColumn);
+            this.pnlColumn.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlColumn.Location = new System.Drawing.Point(0, 0);
+            this.pnlColumn.Name = "panel3";
+            this.pnlColumn.Size = new System.Drawing.Size(428, 350);
+            this.pnlColumn.TabIndex = 4;
+            this.pnlColumn.Padding = new Padding(0, 30, 0, 0);
             // 
             // tlpColumn
             // 
@@ -321,13 +325,13 @@
             this.tlpColumn.Controls.Add(this.cbColumnType, 1, 1);
             this.tlpColumn.Controls.Add(this.lblColumnTypeInitials, 0, 2);
             this.tlpColumn.Controls.Add(this.txtColumnTypeInitials, 1, 2);
-            this.tlpColumn.Controls.Add(this.lblPrimaryKey, 0, 3);
-            this.tlpColumn.Controls.Add(this.chkPrimaryKey, 1, 3);
-            this.tlpColumn.Controls.Add(this.lblIdentity, 0, 4);
-            this.tlpColumn.Controls.Add(this.chkIdentity, 1, 4);
+            this.tlpColumn.Controls.Add(this.lblColumnPrimaryKey, 0, 3);
+            this.tlpColumn.Controls.Add(this.chkColumnPrimaryKey, 1, 3);
+            this.tlpColumn.Controls.Add(this.lblColumnIdentity, 0, 4);
+            this.tlpColumn.Controls.Add(this.chkColumnIdentity, 1, 4);
             this.tlpColumn.Controls.Add(this.lblColumnDefault, 0, 5);
-            this.tlpColumn.Controls.Add(this.lblNotNull, 0, 6);
-            this.tlpColumn.Controls.Add(this.chkNotNull, 1, 6);
+            this.tlpColumn.Controls.Add(this.lblColumnNotNull, 0, 6);
+            this.tlpColumn.Controls.Add(this.chkColumnNotNull, 1, 6);
             this.tlpColumn.Controls.Add(this.txtColumnDefault, 1, 5);
             this.tlpColumn.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpColumn.Location = new System.Drawing.Point(0, 0);
@@ -463,45 +467,45 @@
             // 
             // lblPrimaryKey
             // 
-            this.lblPrimaryKey.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblPrimaryKey.AutoSize = true;
-            this.lblPrimaryKey.Location = new System.Drawing.Point(3, 130);
-            this.lblPrimaryKey.Name = "lblPrimaryKey";
-            this.lblPrimaryKey.Size = new System.Drawing.Size(0, 20);
-            this.lblPrimaryKey.TabIndex = 0;
+            this.lblColumnPrimaryKey.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblColumnPrimaryKey.AutoSize = true;
+            this.lblColumnPrimaryKey.Location = new System.Drawing.Point(3, 130);
+            this.lblColumnPrimaryKey.Name = "lblColumnPrimaryKey";
+            this.lblColumnPrimaryKey.Size = new System.Drawing.Size(0, 20);
+            this.lblColumnPrimaryKey.TabIndex = 0;
             // 
-            // chkPrimaryKey
+            // chkColumnPrimaryKey
             // 
-            this.chkPrimaryKey.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkPrimaryKey.AutoSize = true;
-            this.chkPrimaryKey.Enabled = false;
-            this.chkPrimaryKey.Location = new System.Drawing.Point(203, 131);
-            this.chkPrimaryKey.Name = "chkPrimaryKey";
-            this.chkPrimaryKey.Size = new System.Drawing.Size(18, 17);
-            this.chkPrimaryKey.TabIndex = 3;
-            this.chkPrimaryKey.UseVisualStyleBackColor = true;
-            this.chkPrimaryKey.CheckedChanged += new System.EventHandler(this.chkPrimaryKey_CheckedChanged);
+            this.chkColumnPrimaryKey.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.chkColumnPrimaryKey.AutoSize = true;
+            this.chkColumnPrimaryKey.Enabled = false;
+            this.chkColumnPrimaryKey.Location = new System.Drawing.Point(203, 131);
+            this.chkColumnPrimaryKey.Name = "chkColumnPrimaryKey";
+            this.chkColumnPrimaryKey.Size = new System.Drawing.Size(18, 17);
+            this.chkColumnPrimaryKey.TabIndex = 3;
+            this.chkColumnPrimaryKey.UseVisualStyleBackColor = true;
+            this.chkColumnPrimaryKey.CheckedChanged += new System.EventHandler(this.chkColumnPrimaryKey_CheckedChanged);
             // 
-            // lblIdentity
+            // lblColumnIdentity
             // 
-            this.lblIdentity.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblIdentity.AutoSize = true;
-            this.lblIdentity.Location = new System.Drawing.Point(3, 170);
-            this.lblIdentity.Name = "lblIdentity";
-            this.lblIdentity.Size = new System.Drawing.Size(0, 20);
-            this.lblIdentity.TabIndex = 0;
+            this.lblColumnIdentity.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblColumnIdentity.AutoSize = true;
+            this.lblColumnIdentity.Location = new System.Drawing.Point(3, 170);
+            this.lblColumnIdentity.Name = "lblColumnIdentity";
+            this.lblColumnIdentity.Size = new System.Drawing.Size(0, 20);
+            this.lblColumnIdentity.TabIndex = 0;
             // 
-            // chkIdentity
+            // chkColumnIdentity
             // 
-            this.chkIdentity.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkIdentity.AutoSize = true;
-            this.chkIdentity.Enabled = false;
-            this.chkIdentity.Location = new System.Drawing.Point(203, 171);
-            this.chkIdentity.Name = "chkIdentity";
-            this.chkIdentity.Size = new System.Drawing.Size(18, 17);
-            this.chkIdentity.TabIndex = 4;
-            this.chkIdentity.UseVisualStyleBackColor = true;
-            this.chkIdentity.CheckedChanged += new System.EventHandler(this.chkIdentity_CheckedChanged);
+            this.chkColumnIdentity.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.chkColumnIdentity.AutoSize = true;
+            this.chkColumnIdentity.Enabled = false;
+            this.chkColumnIdentity.Location = new System.Drawing.Point(203, 171);
+            this.chkColumnIdentity.Name = "chkColumnIdentity";
+            this.chkColumnIdentity.Size = new System.Drawing.Size(18, 17);
+            this.chkColumnIdentity.TabIndex = 4;
+            this.chkColumnIdentity.UseVisualStyleBackColor = true;
+            this.chkColumnIdentity.CheckedChanged += new System.EventHandler(this.chkColumnIdentity_CheckedChanged);
             // 
             // lblColumnDefault
             // 
@@ -512,26 +516,26 @@
             this.lblColumnDefault.Size = new System.Drawing.Size(0, 20);
             this.lblColumnDefault.TabIndex = 0;
             // 
-            // lblNotNull
+            // lblColumnNotNull
             // 
-            this.lblNotNull.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblNotNull.AutoSize = true;
-            this.lblNotNull.Location = new System.Drawing.Point(3, 250);
-            this.lblNotNull.Name = "lblNotNull";
-            this.lblNotNull.Size = new System.Drawing.Size(0, 20);
-            this.lblNotNull.TabIndex = 0;
+            this.lblColumnNotNull.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblColumnNotNull.AutoSize = true;
+            this.lblColumnNotNull.Location = new System.Drawing.Point(3, 250);
+            this.lblColumnNotNull.Name = "lblColumnNotNull";
+            this.lblColumnNotNull.Size = new System.Drawing.Size(0, 20);
+            this.lblColumnNotNull.TabIndex = 0;
             // 
-            // chkNotNull
+            // chkColumnNotNull
             // 
-            this.chkNotNull.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkNotNull.AutoSize = true;
-            this.chkNotNull.Enabled = false;
-            this.chkNotNull.Location = new System.Drawing.Point(203, 251);
-            this.chkNotNull.Name = "chkNotNull";
-            this.chkNotNull.Size = new System.Drawing.Size(18, 17);
-            this.chkNotNull.TabIndex = 6;
-            this.chkNotNull.UseVisualStyleBackColor = true;
-            this.chkNotNull.CheckedChanged += new System.EventHandler(this.chkNotNull_CheckedChanged);
+            this.chkColumnNotNull.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.chkColumnNotNull.AutoSize = true;
+            this.chkColumnNotNull.Enabled = false;
+            this.chkColumnNotNull.Location = new System.Drawing.Point(203, 251);
+            this.chkColumnNotNull.Name = "chkColumnNotNull";
+            this.chkColumnNotNull.Size = new System.Drawing.Size(18, 17);
+            this.chkColumnNotNull.TabIndex = 6;
+            this.chkColumnNotNull.UseVisualStyleBackColor = true;
+            this.chkColumnNotNull.CheckedChanged += new System.EventHandler(this.chkColumnNotNull_CheckedChanged);
             // 
             // txtColumnDefault
             // 
@@ -542,6 +546,7 @@
             this.txtColumnDefault.Size = new System.Drawing.Size(114, 27);
             this.txtColumnDefault.TabIndex = 5;
             this.txtColumnDefault.TextChanged += new System.EventHandler(this.txtColumnDefault_TextChanged);
+
             // 
             // pnlConfirmation
             // 
@@ -590,7 +595,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(900, 600);
             this.Controls.Add(this.tc);
             this.Controls.Add(this.pnlConfirmation);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -613,8 +618,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.gvColumns)).EndInit();
             this.tsColumns.ResumeLayout(false);
             this.tsColumns.PerformLayout();
-            this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
+            this.pnlColumn.ResumeLayout(false);
+            this.pnlColumn.PerformLayout();
             this.tlpColumn.ResumeLayout(false);
             this.tlpColumn.PerformLayout();
             this.pnlConfirmation.ResumeLayout(false);
@@ -640,28 +645,28 @@
         private SplitContainer scColumns;
         private ToolStripContainer tscColumns;
         private ToolStrip tsColumns;
-        private ToolStripButton tsbAdd;
-        private ToolStripButton tsbRemove;
+        private ToolStripButton tsbAddColumn;
+        private ToolStripButton tsbRemoveColumn;
         private TableLayoutPanel tlpColumn;
         private Label lblColumnName;
         private TextBox txtColumnName;
         private Label lblColumnType;
         private Label lblColumnTypeInitials;
-        private Label lblPrimaryKey;
-        private Label lblNotNull;
-        private Label lblIdentity;
+        private Label lblColumnPrimaryKey;
+        private Label lblColumnNotNull;
+        private Label lblColumnIdentity;
         private ComboBox cbColumnType;
         private TextBox txtColumnTypeInitials;
-        private CheckBox chkPrimaryKey;
-        private CheckBox chkNotNull;
-        private CheckBox chkIdentity;
+        private CheckBox chkColumnPrimaryKey;
+        private CheckBox chkColumnNotNull;
+        private CheckBox chkColumnIdentity;
         private Label lblColumnDefault;
         private TextBox txtColumnDefault;
-        private Panel panel3;
+        private Panel pnlColumn;
         private DataGridView gvColumns;
-        private DataGridViewTextBoxColumn gvcName;
-        private DataGridViewTextBoxColumn gvcDataType;
-        private DataGridViewCheckBoxColumn gvcPrimaryKey;
-        private DataGridViewCheckBoxColumn gvcNotNull;
+        private DataGridViewTextBoxColumn gvcColumnName;
+        private DataGridViewTextBoxColumn gvcColumnDataType;
+        private DataGridViewCheckBoxColumn gvcColumnPrimaryKey;
+        private DataGridViewCheckBoxColumn gvcColumnNotNull;
     }
 }

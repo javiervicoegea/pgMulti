@@ -251,5 +251,10 @@ namespace PgMulti.Diagrams
                     return (typeName.Length > 4 ? typeName.Substring(0, 4) : typeName) + (typeParams == null ? "" : typeParams);
             }
         }
+
+        public override string ToString()
+        {
+            return ColumnName;
+        }
     }
 }

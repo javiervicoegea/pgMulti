@@ -1008,9 +1008,9 @@ namespace PgMulti
             if (df == null) return;
 
             df.AddTables(new List<Table>() { t });
-            ExpandDiagramPanel educ = df.OpenExpandDiagramPanel();
+            RepositionTablesOptionsForm f = df.OpenExpandDiagramOptionsForm();
 
-            educ.EnableAll();
+            f.ChooseTableSuggestions();
         }
 
         private void tsbEdit_Click(object sender, EventArgs e)

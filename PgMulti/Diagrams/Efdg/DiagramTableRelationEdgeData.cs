@@ -9,14 +9,14 @@ namespace PgMulti.Diagrams.Efdg
 {
     public class DiagramTableRelationEdgeData : EdgeData
     {
-        private DiagramTableRelation _DiagramTableRelation;
+        private DiagramRelation _DiagramTableRelation;
 
-        public DiagramTableRelationEdgeData(DiagramTableRelation dr) : base()
+        public DiagramTableRelationEdgeData(DiagramRelation dr) : base()
         {
             _DiagramTableRelation = dr;
             label = dr.Id;
         }
-        public DiagramTableRelation DiagramTableRelation
+        public DiagramRelation DiagramTableRelation
         {
             get { return _DiagramTableRelation; }
         }

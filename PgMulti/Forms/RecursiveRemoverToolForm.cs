@@ -60,7 +60,7 @@ namespace PgMulti.Forms
 
             if (string.IsNullOrWhiteSpace(txtSchemaName.Text))
             {
-                MessageBox.Show(this, Properties.Text.warning_empty_schema, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, string.Format(Properties.Text.warning_empty_field, Properties.Text.recursive_remover_schema), Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 txtSchemaName.Focus();
                 return false;
             }

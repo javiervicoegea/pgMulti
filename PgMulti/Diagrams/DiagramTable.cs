@@ -25,7 +25,7 @@ namespace PgMulti.Diagrams
         private string _SchemaName;
         private string _TableName;
         private List<DiagramColumn> _Columns;
-        private List<DiagramTableRelation> _Relations;
+        private List<DiagramRelation> _Relations;
         private int _VisibleColumns;
 
         private static Pen _NormalBorderPen = new Pen(new SolidBrush(Color.FromArgb(255, 0, 0, 0)), 2);
@@ -58,7 +58,7 @@ namespace PgMulti.Diagrams
         private int _MaxColumnsScroll = 0;
         private int _TotalColumnsHeight;
 
-        public DiagramTable(Diagram diagram, string schemaName, string tableName, List<DiagramColumn> columns, List<DiagramTableRelation> relations) : base(diagram)
+        public DiagramTable(Diagram diagram, string schemaName, string tableName, List<DiagramColumn> columns, List<DiagramRelation> relations) : base(diagram)
         {
             _SchemaName = schemaName;
             _TableName = tableName;
@@ -82,7 +82,7 @@ namespace PgMulti.Diagrams
                 Columns.Add(new DiagramColumn(c));
             }
 
-            _Relations = new List<DiagramTableRelation>();
+            _Relations = new List<DiagramRelation>();
             _VisibleColumns = Columns.Count;
 
             RefreshDimensions();
@@ -110,7 +110,7 @@ namespace PgMulti.Diagrams
                 _Columns.Add(new DiagramColumn(xeColumn));
             }
 
-            _Relations = new List<DiagramTableRelation>();
+            _Relations = new List<DiagramRelation>();
 
             v = xeTable.GetAttribute("show_max_columns");
             if (!string.IsNullOrEmpty(v) && int.TryParse(v, out n) && n >= 0)
@@ -173,7 +173,7 @@ namespace PgMulti.Diagrams
                 VisibleColumns = Math.Min(VisibleColumns, Columns.Count);
             }
         }
-        public List<DiagramTableRelation> Relations { get => _Relations; set => _Relations = value; }
+        public List<DiagramRelation> Relations { get => _Relations; set => _Relations = value; }
         public int VisibleColumns
         {
             get => _VisibleColumns;
@@ -279,6 +279,18 @@ namespace PgMulti.Diagrams
             }
         }
 
+        public List<DiagramColumn> GetColumnsFromStringDataValue(string v)
+        {
+            List<DiagramColumn> l = new List<DiagramColumn>();
+            foreach (string s in v.Split(','))
+            {
+                DiagramColumn? dc = Columns.FirstOrDefault(i => i.ColumnName == s);
+                if (dc != null) l.Add(dc);
+            }
+
+            return l;
+        }
+
         public XmlElement ToXml(XmlDocument xd, Point basePoint)
         {
             XmlElement xeTable = xd.CreateElement("table");
@@ -302,7 +314,7 @@ namespace PgMulti.Diagrams
         {
             Brush br;
             Pen pen = _NormalBorderPen;
-            DiagramTableRelation? activeRelation = null;
+            DiagramRelation? activeRelation = null;
             Brush? keyBrush = null;
             Brush? keyBackgroundBrush = null;
 
@@ -476,16 +488,12 @@ namespace PgMulti.Diagrams
                 maxColumnTypeWidth = Math.Max(maxColumnTypeWidth, TextRenderer.MeasureText(dc.TypeInitials, _ColumnTypeFont).Width);
             }
 
-            _ColumnsBoundingBox = new Rectangle(
-                0,
-                0,
-                ColumnIconSize
+            _ColumnsBoundingBox.Width = ColumnIconSize
                 + ColumnIconMargin
                 + _MaxColumnNameWidth.Value
                 + ColumnTypeMargin
-                + maxColumnTypeWidth,
-                SingleColumnHeight * VisibleColumns
-            );
+                + maxColumnTypeWidth;
+            _ColumnsBoundingBox.Height = SingleColumnHeight * VisibleColumns;
 
             if (VisibleColumns < Columns.Count)
             {
@@ -517,7 +525,8 @@ namespace PgMulti.Diagrams
                 + TitleMargin
                 + ColumnsBoundingBox.Height;
 
-            _DrawBox = new Rectangle(0, 0, w, h);
+            _DrawBox.Width = w;
+            _DrawBox.Height = h;
             _BoundingBox = AddMargins(_DrawBox, 1);
             _RefreshColumnsBoundingBoxLocation();
         }
@@ -533,7 +542,7 @@ namespace PgMulti.Diagrams
 
         public void RecalculateRelationPoints()
         {
-            foreach (DiagramTableRelation dr in Relations.Where(dri => dri.ParentTable != dri.ChildTable))
+            foreach (DiagramRelation dr in Relations.Where(dri => dri.ParentTable != dri.ChildTable))
             {
                 dr.RecalculateBinarySides();
             }
@@ -549,12 +558,12 @@ namespace PgMulti.Diagrams
                 binaryRelationCountBySide[side] = Relations.Where(dri => dri.ParentTable != dri.ChildTable && (dri.ParentTable == this ? dri.ParentSide!.Value : dri.ChildSide!.Value) == side).Count();
             }
 
-            foreach (DiagramTableRelation dr in Relations.Where(dri => dri.ParentTable == dri.ChildTable))
+            foreach (DiagramRelation dr in Relations.Where(dri => dri.ParentTable == dri.ChildTable))
             {
                 dr.ResetSides();
             }
 
-            foreach (DiagramTableRelation dr in Relations.Where(dri => dri.ParentTable == dri.ChildTable))
+            foreach (DiagramRelation dr in Relations.Where(dri => dri.ParentTable == dri.ChildTable))
             {
                 dr.RecalculateUnarySide(binaryRelationCountBySide);
             }
@@ -562,18 +571,18 @@ namespace PgMulti.Diagrams
 
         public void DistributeRelationPoints()
         {
-            Dictionary<SideEnum, List<DiagramTableRelation>> relations = new Dictionary<SideEnum, List<DiagramTableRelation>>();
-            relations[SideEnum.Top] = new List<DiagramTableRelation>();
-            relations[SideEnum.Right] = new List<DiagramTableRelation>();
-            relations[SideEnum.Bottom] = new List<DiagramTableRelation>();
-            relations[SideEnum.Left] = new List<DiagramTableRelation>();
+            Dictionary<SideEnum, List<DiagramRelation>> relations = new Dictionary<SideEnum, List<DiagramRelation>>();
+            relations[SideEnum.Top] = new List<DiagramRelation>();
+            relations[SideEnum.Right] = new List<DiagramRelation>();
+            relations[SideEnum.Bottom] = new List<DiagramRelation>();
+            relations[SideEnum.Left] = new List<DiagramRelation>();
 
-            foreach (DiagramTableRelation dr in Relations.Where(dri => dri.ParentTable == dri.ChildTable))
+            foreach (DiagramRelation dr in Relations.Where(dri => dri.ParentTable == dri.ChildTable))
             {
                 relations[dr.ParentSide!.Value].Add(dr);
             }
 
-            foreach (DiagramTableRelation dr in Relations.Where(dri => dri.ParentTable != dri.ChildTable))
+            foreach (DiagramRelation dr in Relations.Where(dri => dri.ParentTable != dri.ChildTable))
             {
                 SideEnum side = (dr.ParentTable == this ? dr.ParentSide!.Value : dr.ChildSide!.Value);
                 relations[side].Add(dr);
@@ -585,7 +594,7 @@ namespace PgMulti.Diagrams
             }
         }
 
-        private void DistributePoints(SideEnum side, List<DiagramTableRelation> relations)
+        private void DistributePoints(SideEnum side, List<DiagramRelation> relations)
         {
             const int MaxGap = 50;
 
@@ -626,7 +635,7 @@ namespace PgMulti.Diagrams
                     throw new NotSupportedException();
             }
 
-            foreach (DiagramTableRelation relation in relations)
+            foreach (DiagramRelation relation in relations)
             {
                 Point p = p0;
                 int w;
@@ -815,7 +824,7 @@ namespace PgMulti.Diagrams
             }
         }
 
-        public DiagramTable OtherTableInRelation(DiagramTableRelation dr)
+        public DiagramTable OtherTableInRelation(DiagramRelation dr)
         {
             return dr.ParentTable == this ? dr.ChildTable : dr.ParentTable;
         }

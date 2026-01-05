@@ -58,7 +58,7 @@
     value   : The object must be serialized into a byte array 
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
-    -->
+    --> 
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -175,7 +175,7 @@
     <value>Cambiar contraseña</value>
   </data>
   <data name="child_table" xml:space="preserve">
-    <value>tabla secundaria</value>
+    <value>Tabla secundaria</value>
   </data>
   <data name="close" xml:space="preserve">
     <value>Cerrar</value>
@@ -443,7 +443,7 @@ ATENCIÓN: Se eliminarán también las bases de datos dentro del grupo.</value>
     <value>Opciones</value>
   </data>
   <data name="parent_table" xml:space="preserve">
-    <value>tabla principal</value>
+    <value>Tabla principal</value>
   </data>
   <data name="password" xml:space="preserve">
     <value>Contraseña</value>
@@ -891,20 +891,8 @@ A diferencia de otras herramientas, esta aplicación no reutiliza la conexión e
   <data name="column_default" xml:space="preserve">
     <value>Valor predeterminado</value>
   </data>
-  <data name="warning_empty_table_name" xml:space="preserve">
-    <value>Debe escribir un nombre para la tabla</value>
-  </data>
-  <data name="warning_empty_schema" xml:space="preserve">
-    <value>Debe escribir el nombre del esquema</value>
-  </data>
-  <data name="warning_empty_column_name" xml:space="preserve">
-    <value>Debe escribir el nombre de la columna</value>
-  </data>
-  <data name="warning_empty_type_name" xml:space="preserve">
-    <value>Debe introducir el tipo de la columna</value>
-  </data>
-  <data name="warning_empty_type_initials" xml:space="preserve">
-    <value>Debe introducir una abreviatura para el tipo de la columna</value>
+  <data name="warning_empty_field" xml:space="preserve">
+    <value>Debe introducir algún valor para el campo '{0}'</value>
   </data>
   <data name="warning_table_already_exists" xml:space="preserve">
     <value>La tabla indicada ya existe en el diagrama</value>
@@ -1121,5 +1109,92 @@ A diferencia de otras herramientas, esta aplicación no reutiliza la conexión e
   </data>
   <data name="goto_table" xml:space="preserve">
     <value>Ir a la tabla</value>
+  </data>
+  <data name="automatically_reposition_tables" xml:space="preserve">
+    <value>Recolocar tablas automáticamente</value>
+  </data>
+  <data name="reopen_last_closed_tab" xml:space="preserve">
+    <value>Reabrir la última solapa cerrada</value>
+  </data>
+  <data name="error_saving_diagram_on_close" xml:space="preserve">
+    <value>Se produjo un error intentando guardar el diagrama. Si lo cierra, perderá los cambios realizados. ¿Desea cerrar el diagrama y perder los cambios?
+{0}</value>
+  </data>
+  <data name="error_saving_diagram" xml:space="preserve">
+    <value>Se produjo un error intentando guardar el diagrama.
+{0}</value>
+  </data>
+  <data name="error_creating_db" xml:space="preserve">
+    <value>Se produjo un error intentando crear el fichero de base de datos en '{0}':
+{1}</value>
+  </data>
+  <data name="warning_no_db_selected" xml:space="preserve">
+    <value>Debe seleccionar una base de datos</value>
+  </data>
+  <data name="create_table_diagram" xml:space="preserve">
+    <value>Crear diagrama a partir de esta tabla</value>
+  </data>
+  <data name="zoom_full" xml:space="preserve">
+    <value>Zoom completo</value>
+  </data>
+  <data name="reposition_explanation" xml:space="preserve">
+    <value>Si lo desea, la aplicación puede recolocar automáticamente las tablas del diagrama simulando fuerzas de repulsión entre ellas y fuerzas de atracción entre las que están relacionadas.</value>
+  </data>
+  <data name="auto_zoom" xml:space="preserve">
+    <value>Centrar y hacer zoom automáticamente durante el proceso</value>
+  </data>
+  <data name="repulsion_force" xml:space="preserve">
+    <value>Fuerza de repulsión:</value>
+  </data>
+  <data name="start_reposition" xml:space="preserve">
+    <value>Iniciar recolocación</value>
+  </data>
+  <data name="stop_reposition" xml:space="preserve">
+    <value>Detener recolocación</value>
+  </data>
+  <data name="suggest_related_tables" xml:space="preserve">
+    <value>Sugerir tablas relacionadas a añadir al seleccionar una tabla</value>
+  </data>
+  <data name="add_all_suggested_tables" xml:space="preserve">
+    <value>Añadir todas las tablas relacionadas sugeridas</value>
+  </data>
+  <data name="new_relation" xml:space="preserve">
+    <value>Nueva relación</value>
+  </data>
+  <data name="remove_relation" xml:space="preserve">
+    <value>Eliminar relación</value>
+  </data>
+  <data name="id" xml:space="preserve">
+    <value>Id</value>
+  </data>
+  <data name="type" xml:space="preserve">
+    <value>Tipo</value>
+  </data>
+  <data name="relation_id" xml:space="preserve">
+    <value>Id de la relación</value>
+  </data>
+  <data name="parent_side_relation" xml:space="preserve">
+    <value>Lado principal de la relación</value>
+  </data>
+  <data name="child_side_relation" xml:space="preserve">
+    <value>Lado secundario de la relación</value>
+  </data>
+  <data name="selected" xml:space="preserve">
+    <value>Seleccionadas</value>
+  </data>
+  <data name="available" xml:space="preserve">
+    <value>Disponibles</value>
+  </data>
+  <data name="warning_incompatible_foraign_key" xml:space="preserve">
+    <value>El número de columnas de la relación en la tabla principal y secundaria deben coincidir, así como cada uno de los tipos correspondientes</value>
+  </data>
+  <data name="warning_wrong_tables_in_relation" xml:space="preserve">
+    <value>La relación {0} no tiene la tabla actual como tabla principal ni como secundaria</value>
+  </data>
+  <data name="warning_existing_relation" xml:space="preserve">
+    <value>La relación {0} ya existe en el diagrama y se reemplazará si continúa. ¿Está seguro?</value>
+  </data>
+  <data name="edit_relation_x" xml:space="preserve">
+    <value>Editar relación {0}</value>
   </data>
 </root>

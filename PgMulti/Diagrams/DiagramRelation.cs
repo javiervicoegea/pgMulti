@@ -10,7 +10,7 @@ using static Npgsql.Replication.PgOutput.Messages.RelationMessage;
 
 namespace PgMulti.Diagrams
 {
-    public class DiagramTableRelation : DiagramObject
+    public class DiagramRelation : DiagramObject
     {
         private const int IntersectTolerance = 25;
         private const int BoundingBoxTolerance = 50;
@@ -54,7 +54,47 @@ namespace PgMulti.Diagrams
         private Rectangle? _InteractBoundingBox = null;
         private string _Id;
 
-        public DiagramTableRelation(Diagram diagram, string id, DiagramTable parentTable, DiagramTable childTable, List<DiagramColumn> parentTableColumns, List<DiagramColumn> childTableColumns, PropagationOptions onDelete, PropagationOptions onUpdate) : base(diagram)
+        public static string RelationTypeOptionsToString(RelationTypeOptions v)
+        {
+            switch (v)
+            {
+                case RelationTypeOptions.One:
+                    return "1";
+                case RelationTypeOptions.OneAndOnlyOne:
+                    return "1..1";
+                case RelationTypeOptions.ZeroOrOne:
+                    return "0..1";
+                case RelationTypeOptions.Many:
+                    return "n";
+                case RelationTypeOptions.OneOrMany:
+                    return "1..n";
+                case RelationTypeOptions.ZeroOrMany:
+                    return "0..n";
+                default:
+                    throw new NotSupportedException();
+            }
+        }
+
+        public static string PropagationOptionsToString(PropagationOptions v)
+        {
+            switch (v)
+            {
+                case PropagationOptions.NoAction:
+                    return "no action";
+                case PropagationOptions.Restrict:
+                    return "restrict";
+                case PropagationOptions.Cascade:
+                    return "cascade";
+                case PropagationOptions.SetNull:
+                    return "set null";
+                case PropagationOptions.SetDefault:
+                    return "set default";
+                default:
+                    throw new NotSupportedException();
+            }
+        }
+
+        public DiagramRelation(Diagram diagram, string id, DiagramTable parentTable, DiagramTable childTable, List<DiagramColumn> parentTableColumns, List<DiagramColumn> childTableColumns, PropagationOptions onDelete, PropagationOptions onUpdate) : base(diagram)
         {
             _Id = id;
             _ParentTable = parentTable;
@@ -73,7 +113,7 @@ namespace PgMulti.Diagrams
             CalculateRelationType();
         }
 
-        public DiagramTableRelation(Diagram diagram, DiagramTable parentTable, DiagramTable childTable, TableRelation r) : base(diagram)
+        public DiagramRelation(Diagram diagram, DiagramTable parentTable, DiagramTable childTable, TableRelation r) : base(diagram)
         {
             _Id = r.Id;
             _ParentTable = parentTable;
@@ -99,7 +139,7 @@ namespace PgMulti.Diagrams
             CalculateRelationType();
         }
 
-        public DiagramTableRelation(Diagram diagram, DiagramTable parentTable, DiagramTable childTable, XmlElement xeRelation) : base(diagram)
+        public DiagramRelation(Diagram diagram, DiagramTable parentTable, DiagramTable childTable, XmlElement xeRelation) : base(diagram)
         {
             string? v;
 
@@ -137,6 +177,12 @@ namespace PgMulti.Diagrams
             _OnUpdate = StringToPropagationOptions(v);
 
             CalculateRelationType();
+
+            v = xeRelation.GetAttribute("parent_type");
+            if (!string.IsNullOrEmpty(v)) { _ParentRelationType = StringToRelationTypeOptions(v); }
+
+            v = xeRelation.GetAttribute("child_type");
+            if (!string.IsNullOrEmpty(v)) { _ChildRelationType = StringToRelationTypeOptions(v); }
         }
 
         public string Id { get { return _Id; } }
@@ -145,6 +191,8 @@ namespace PgMulti.Diagrams
         public DiagramTable ChildTable { get => _ChildTable; set => _ChildTable = value; }
         public List<DiagramColumn> ParentTableColumns { get => _ParentTableColumns; set => _ParentTableColumns = value; }
         public List<DiagramColumn> ChildTableColumns { get => _ChildTableColumns; set => _ChildTableColumns = value; }
+        public RelationTypeOptions ParentRelationType { get => _ParentRelationType; set => _ParentRelationType = value; }
+        public RelationTypeOptions ChildRelationType { get => _ChildRelationType; set => _ChildRelationType = value; }
         public PropagationOptions OnDelete { get => _OnDelete; set => _OnDelete = value; }
         public PropagationOptions OnUpdate { get => _OnUpdate; set => _OnUpdate = value; }
 
@@ -267,10 +315,15 @@ namespace PgMulti.Diagrams
             XmlElement xeRelation = xd.CreateElement("relation");
 
             xeRelation.SetAttribute("id", Id);
+
             xeRelation.SetAttribute("parent_schema_name", ParentTable.SchemaName);
             xeRelation.SetAttribute("parent_table_name", ParentTable.TableName);
+            xeRelation.SetAttribute("parent_type", RelationTypeOptionsToString(ParentRelationType));
+
             xeRelation.SetAttribute("child_schema_name", ChildTable.SchemaName);
             xeRelation.SetAttribute("child_table_name", ChildTable.TableName);
+            xeRelation.SetAttribute("child_type", RelationTypeOptionsToString(ChildRelationType));
+
             xeRelation.SetAttribute("on_delete", PropagationOptionsToString(OnDelete));
             xeRelation.SetAttribute("on_update", PropagationOptionsToString(OnUpdate));
 
@@ -1181,20 +1234,22 @@ namespace PgMulti.Diagrams
             }
         }
 
-        private string PropagationOptionsToString(PropagationOptions o)
+        private RelationTypeOptions StringToRelationTypeOptions(string s)
         {
-            switch (o)
+            switch (s.ToLower())
             {
-                case PropagationOptions.NoAction:
-                    return "no action";
-                case PropagationOptions.Restrict:
-                    return "restrict";
-                case PropagationOptions.Cascade:
-                    return "cascade";
-                case PropagationOptions.SetNull:
-                    return "set null";
-                case PropagationOptions.SetDefault:
-                    return "set default";
+                case "1":
+                    return RelationTypeOptions.One;
+                case "1..1":
+                    return RelationTypeOptions.OneAndOnlyOne;
+                case "0..1":
+                    return RelationTypeOptions.ZeroOrOne;
+                case "n":
+                    return RelationTypeOptions.Many;
+                case "1..n":
+                    return RelationTypeOptions.OneOrMany;
+                case "0..n":
+                    return RelationTypeOptions.ZeroOrMany;
                 default:
                     throw new NotSupportedException();
             }

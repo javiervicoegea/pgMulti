@@ -174,8 +174,11 @@
 	<data name="change_pass" xml:space="preserve">
     <value>Change password</value>
   </data>
-	<data name="child_table" xml:space="preserve">
-    <value>child table</value>
+  <data name="parent_table" xml:space="preserve">
+    <value>Parent table</value>
+  </data>
+  <data name="child_table" xml:space="preserve">
+    <value>Child table</value>
   </data>
 	<data name="close" xml:space="preserve">
     <value>Close</value>
@@ -441,9 +444,6 @@ ATTENTION: Databases within the group will also be deleted.</value>
   </data>
 	<data name="options" xml:space="preserve">
     <value>Options</value>
-  </data>
-	<data name="parent_table" xml:space="preserve">
-    <value>parent table</value>
   </data>
 	<data name="password" xml:space="preserve">
     <value>Password</value>
@@ -843,55 +843,6 @@ Unlike other tools, this application does not reuse the connection between diffe
 	<data name="diagrams" xml:space="preserve">
     <value>Diagrams</value>
   </data>
-
-	<data name="reopen_last_closed_tab" xml:space="preserve">
-    <value>Reabrir la última solapa cerrada</value>
-  </data>
-	<data name="error_saving_diagram_on_close" xml:space="preserve">
-    <value>Se produjo un error intentando guardar el diagrama. Si lo cierra, perderá los cambios realizados. ¿Desea cerrar el diagrama y perder los cambios?
-{0}</value>
-  </data>
-	<data name="error_saving_diagram" xml:space="preserve">
-    <value>Se produjo un error intentando guardar el diagrama.
-{0}</value>
-  </data>
-	<data name="error_creating_db" xml:space="preserve">
-    <value>Se produjo un error intentando crear el fichero de base de datos en '{0}':
-{1}</value>
-  </data>
-	<data name="warning_no_db_selected" xml:space="preserve">
-    <value>Debe seleccionar una base de datos</value>
-  </data>
-	<data name="create_table_diagram" xml:space="preserve">
-    <value>Crear diagrama a partir de esta tabla</value>
-  </data>
-	<data name="expand_diagram" xml:space="preserve">
-    <value>Expandir diagrama</value>
-  </data>
-	<data name="zoom_full" xml:space="preserve">
-    <value>Zoom completo</value>
-  </data>
-	<data name="expand_diagram_explanation" xml:space="preserve">
-    <value>Las siguientes opciones permiten redistribuir las tablas automáticamente o sugerir tablas relacionadas a añadir:</value>
-  </data>
-	<data name="auto_zoom" xml:space="preserve">
-    <value>Centrar y hacer zoom automáticamente</value>
-  </data>
-	<data name="enable_repulsion" xml:space="preserve">
-    <value>Activar recolocación automática de tablas. ATENCIÓN: esto moverá todas las tablas.</value>
-  </data>
-	<data name="suggest_related_tables" xml:space="preserve">
-    <value>Sugerir tablas relacionadas de la base de datos seleccionada:</value>
-  </data>
-	<data name="select_db" xml:space="preserve">
-    <value>Seleccionar</value>
-  </data>
-	<data name="add_all_suggested_tables" xml:space="preserve">
-    <value>Añadir todas las tablas relacionadas sugeridas</value>
-  </data>
-	<data name="repulsion_force" xml:space="preserve">
-    <value>Fuerza de repulsión:</value>
-  </data>
 	<data name="check_updates" xml:space="preserve">
     <value>Check updates</value>
   </data>
@@ -940,20 +891,8 @@ Unlike other tools, this application does not reuse the connection between diffe
   <data name="column_default" xml:space="preserve">
     <value>Default</value>
   </data>
-  <data name="warning_empty_table_name" xml:space="preserve">
-    <value>You must enter a name for the table</value>
-  </data>
-  <data name="warning_empty_schema" xml:space="preserve">
-    <value>You must enter the schema name</value>
-  </data>
-  <data name="warning_empty_column_name" xml:space="preserve">
-    <value>You must enter the column name</value>
-  </data>
-  <data name="warning_empty_type_name" xml:space="preserve">
-    <value>You must enter the column type</value>
-  </data>
-  <data name="warning_empty_type_initials" xml:space="preserve">
-    <value>You must enter an abbreviation for the column type</value>
+  <data name="warning_empty_field" xml:space="preserve">
+    <value>You must enter a value for the '{0}' field.</value>
   </data>
   <data name="warning_table_already_exists" xml:space="preserve">
     <value>The indicated table already exists in the diagram</value>
@@ -1170,5 +1109,92 @@ Unlike other tools, this application does not reuse the connection between diffe
   </data>
   <data name="goto_table" xml:space="preserve">
     <value>Go to table</value>
+  </data>
+  <data name="automatically_reposition_tables" xml:space="preserve">
+    <value>Automatically reposition tables</value>
+  </data>
+  <data name="reopen_last_closed_tab" xml:space="preserve">
+    <value>Reopen last closed tab</value>
+  </data>
+  <data name="error_saving_diagram_on_close" xml:space="preserve">
+    <value>An error occurred while trying to save the diagram. If you close it, you will lose the changes made. Do you want to close the diagram and lose the changes?
+{0}</value>
+  </data>
+  <data name="error_saving_diagram" xml:space="preserve">
+    <value>An error occurred while trying to save the diagram.
+{0}</value>
+  </data>
+  <data name="error_creating_db" xml:space="preserve">
+    <value>An error occurred while trying to create the database file at '{0}':
+{1}</value>
+  </data>
+  <data name="warning_no_db_selected" xml:space="preserve">
+    <value>You must select a database</value>
+  </data>
+  <data name="create_table_diagram" xml:space="preserve">
+    <value>Create diagram from this table</value>
+  </data>
+  <data name="zoom_full" xml:space="preserve">
+    <value>Full zoom</value>
+  </data>
+  <data name="reposition_explanation" xml:space="preserve">
+    <value>If you wish, the application can automatically reposition the diagram tables by simulating repulsion forces between them and attraction forces between those that are related.</value>
+  </data>
+  <data name="auto_zoom" xml:space="preserve">
+    <value>Automatically center and zoom during the process</value>
+  </data>
+  <data name="repulsion_force" xml:space="preserve">
+    <value>Repulsion force:</value>
+  </data>
+  <data name="start_reposition" xml:space="preserve">
+    <value>Start repositioning</value>
+  </data>
+  <data name="stop_reposition" xml:space="preserve">
+    <value>Stop repositioning</value>
+  </data>
+  <data name="suggest_related_tables" xml:space="preserve">
+    <value>Suggest related tables to add when selecting a table</value>
+  </data>
+  <data name="add_all_suggested_tables" xml:space="preserve">
+    <value>Add all suggested related tables</value>
+  </data>
+  <data name="new_relation" xml:space="preserve">
+    <value>New relation</value>
+  </data>
+  <data name="remove_relation" xml:space="preserve">
+    <value>Remove relation</value>
+  </data>
+  <data name="id" xml:space="preserve">
+    <value>Id</value>
+  </data>
+  <data name="type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="relation_id" xml:space="preserve">
+    <value>Relation Id</value>
+  </data>
+  <data name="parent_side_relation" xml:space="preserve">
+    <value>Parent side of the relation</value>
+  </data>
+  <data name="child_side_relation" xml:space="preserve">
+    <value>Child side of the relation</value>
+  </data>
+  <data name="selected" xml:space="preserve">
+    <value>Selected</value>
+  </data>
+  <data name="available" xml:space="preserve">
+    <value>Available</value>
+  </data>
+  <data name="warning_incompatible_foraign_key" xml:space="preserve">
+    <value>The number of columns in the relation in the parent and child tables must match, as well as each of the corresponding types</value>
+  </data>
+  <data name="warning_wrong_tables_in_relation" xml:space="preserve">
+    <value>The relation {0} does not have the current table as either the parent or child table</value>
+  </data>
+  <data name="warning_existing_relation" xml:space="preserve">
+    <value>The relation {0} already exists in the diagram and will be replaced if you continue. Are you sure?</value>
+  </data>
+  <data name="edit_relation_x" xml:space="preserve">
+    <value>Edit relation {0}</value>
   </data>
 </root>

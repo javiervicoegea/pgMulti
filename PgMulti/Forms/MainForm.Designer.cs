@@ -2276,7 +2276,6 @@ namespace PgMulti
         private ToolStripMenuItem tsmiIncreaseFont;
         private ToolStripMenuItem tsmiReduceFont;
         private ToolStripSeparator toolStripSeparator1;
-        private ContextMenuStrip cmsFctb;
         private ToolStripButton tsbApplyTableChanges;
         private ToolStripButton tsbExportCsvCurrentData;
         private ToolStripButton tsbCreateChart;

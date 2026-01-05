@@ -306,13 +306,13 @@ namespace PgMulti.AppData
 
                     if (rt.IdParentTable == tabla.Id)
                     {
-                        n = new Node((sameSchema ? "" : rt.IdParentSchema + ".") + rt.ParentTable!.Id + $" ({Properties.Text.parent_table})");
+                        n = new Node((sameSchema ? "" : rt.IdParentSchema + ".") + rt.ParentTable!.Id + $" ({Properties.Text.parent_table.ToLower()})");
                         n.Image = Properties.Resources.tva_table;
                         n.Tag = rt.ParentTable!;
                     }
                     else
                     {
-                        n = new Node((sameSchema ? "" : rt.IdChildSchema + ".") + rt.ChildTable!.Id + $" ({Properties.Text.child_table})");
+                        n = new Node((sameSchema ? "" : rt.IdChildSchema + ".") + rt.ChildTable!.Id + $" ({Properties.Text.child_table.ToLower()})");
                         n.Image = Properties.Resources.tva_table;
                         n.Tag = rt.ChildTable!;
                     }

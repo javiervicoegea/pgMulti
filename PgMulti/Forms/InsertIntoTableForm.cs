@@ -3,7 +3,6 @@ using Aga.Controls.Tree.NodeControls;
 using Npgsql.Schema;
 using PgMulti.AppData;
 using PgMulti.DataStructure;
-using PgMulti.Export;
 using PgMulti.Tasks;
 using System.Data;
 using static PgMulti.AppData.InsertIntoTableFormTreeModel;
@@ -529,7 +528,7 @@ namespace PgMulti.Forms
             {
                 if (string.IsNullOrWhiteSpace(txtTableName!.Text))
                 {
-                    MessageBox.Show(this, Properties.Text.warning_empty_table_name, Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(this, string.Format(Properties.Text.warning_empty_field, Properties.Text.table_name), Properties.Text.warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 

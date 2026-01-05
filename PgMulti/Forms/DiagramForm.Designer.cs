@@ -28,62 +28,55 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DiagramForm));
-            this.tsc = new System.Windows.Forms.ToolStripContainer();
-            this.ts = new System.Windows.Forms.ToolStrip();
-            this.tsbSave = new System.Windows.Forms.ToolStripButton();
-            this.tsbAddTables = new System.Windows.Forms.ToolStripButton();
-            this.tsbExpandDiagram = new System.Windows.Forms.ToolStripButton();
-            this.tsbZoomFull = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.tslSelectTable = new System.Windows.Forms.ToolStripLabel();
-            this.tscbTables = new System.Windows.Forms.ToolStripComboBox();
-            this.tmrSave = new System.Windows.Forms.Timer(this.components);
-            this.cms = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.tsmiAddTable = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiAddRelation = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiRemove = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiEdit = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsc.TopToolStripPanel.SuspendLayout();
-            this.tsc.SuspendLayout();
-            this.ts.SuspendLayout();
-            this.cms.SuspendLayout();
-            this.SuspendLayout();
+            tsc = new ToolStripContainer();
+            ts = new ToolStrip();
+            tsbSave = new ToolStripButton();
+            tsbAddTables = new ToolStripButton();
+            tsbRepositionTables = new ToolStripButton();
+            tsbZoomFull = new ToolStripButton();
+            toolStripSeparator1 = new ToolStripSeparator();
+            tslSelectTable = new ToolStripLabel();
+            tscbTables = new ToolStripComboBox();
+            tmrSave = new System.Windows.Forms.Timer(components);
+            cms = new ContextMenuStrip(components);
+            tsmiAddTable = new ToolStripMenuItem();
+            tsmiAddRelation = new ToolStripMenuItem();
+            tsmiRemove = new ToolStripMenuItem();
+            tsmiEdit = new ToolStripMenuItem();
+            tsc.TopToolStripPanel.SuspendLayout();
+            tsc.SuspendLayout();
+            ts.SuspendLayout();
+            cms.SuspendLayout();
+            SuspendLayout();
             // 
             // tsc
             // 
             // 
             // tsc.ContentPanel
             // 
-            this.tsc.ContentPanel.Size = new System.Drawing.Size(800, 394);
-            this.tsc.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tsc.Location = new System.Drawing.Point(0, 28);
-            this.tsc.Name = "tsc";
-            this.tsc.Size = new System.Drawing.Size(800, 422);
-            this.tsc.TabIndex = 1;
-            this.tsc.Text = "toolStripContainer1";
+            tsc.ContentPanel.Size = new Size(800, 413);
+            tsc.Dock = DockStyle.Fill;
+            tsc.Location = new Point(0, 0);
+            tsc.Name = "tsc";
+            tsc.Size = new Size(800, 450);
+            tsc.TabIndex = 1;
+            tsc.Text = "toolStripContainer1";
             // 
             // tsc.TopToolStripPanel
             // 
-            this.tsc.TopToolStripPanel.Controls.Add(this.ts);
+            tsc.TopToolStripPanel.Controls.Add(ts);
             // 
             // ts
             // 
-            this.ts.Dock = System.Windows.Forms.DockStyle.None;
-            this.ts.ImageScalingSize = new System.Drawing.Size(30, 30);
-            this.ts.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsbSave,
-            this.tsbAddTables,
-            this.tsbExpandDiagram,
-            this.tsbZoomFull,
-            this.toolStripSeparator1,
-            this.tslSelectTable,
-            this.tscbTables});
-            this.ts.Location = new System.Drawing.Point(4, 0);
-            this.ts.Name = "ts";
-            this.ts.Size = new System.Drawing.Size(634, 28);
-            this.ts.TabIndex = 0;
+            ts.Dock = DockStyle.None;
+            ts.ImageScalingSize = new Size(30, 30);
+            ts.Items.AddRange(new ToolStripItem[] { tsbSave, tsbAddTables, tsbRepositionTables, tsbZoomFull, toolStripSeparator1, tslSelectTable, tscbTables });
+            ts.Location = new Point(4, 0);
+            ts.Name = "ts";
+            ts.Size = new Size(598, 37);
+            ts.TabIndex = 0;
             // 
             // tsbSave
             // 
@@ -98,125 +91,118 @@
             // 
             // tsbAddTables
             // 
-            this.tsbAddTables.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbAddTables.Image = global::PgMulti.Properties.Resources.add_table;
-            this.tsbAddTables.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbAddTables.Name = "tsbAddTables";
-            this.tsbAddTables.Size = new System.Drawing.Size(29, 25);
-            this.tsbAddTables.Click += new System.EventHandler(this.tsbAddTables_Click);
+            tsbAddTables.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbAddTables.Image = Properties.Resources.add_table;
+            tsbAddTables.ImageTransparentColor = Color.Magenta;
+            tsbAddTables.Name = "tsbAddTables";
+            tsbAddTables.Size = new Size(34, 34);
+            tsbAddTables.Click += tsbAddTables_Click;
             // 
             // tsbExpandDiagram
             // 
-            this.tsbExpandDiagram.BackColor = System.Drawing.SystemColors.Control;
-            this.tsbExpandDiagram.CheckOnClick = true;
-            this.tsbExpandDiagram.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbExpandDiagram.Image = global::PgMulti.Properties.Resources.expand;
-            this.tsbExpandDiagram.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbExpandDiagram.Name = "tsbExpandDiagram";
-            this.tsbExpandDiagram.Size = new System.Drawing.Size(29, 25);
-            this.tsbExpandDiagram.Text = "toolStripButton1";
-            this.tsbExpandDiagram.CheckedChanged += new System.EventHandler(this.tsbExpandDiagram_CheckedChanged);
+            tsbRepositionTables.BackColor = SystemColors.Control;
+            tsbRepositionTables.CheckOnClick = true;
+            tsbRepositionTables.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbRepositionTables.Image = Properties.Resources.expand;
+            tsbRepositionTables.ImageTransparentColor = Color.Magenta;
+            tsbRepositionTables.Name = "tsbExpandDiagram";
+            tsbRepositionTables.Size = new Size(34, 34);
+            tsbRepositionTables.Text = "toolStripButton1";
+            tsbRepositionTables.CheckedChanged += tsbRepositionTables_CheckedChanged;
             // 
             // tsbZoomFull
             // 
-            this.tsbZoomFull.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbZoomFull.Image = global::PgMulti.Properties.Resources.zoom_full;
-            this.tsbZoomFull.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbZoomFull.Name = "tsbZoomFull";
-            this.tsbZoomFull.Size = new System.Drawing.Size(29, 25);
-            this.tsbZoomFull.Text = "toolStripButton1";
-            this.tsbZoomFull.Click += new System.EventHandler(this.tsbZoomFull_Click);
+            tsbZoomFull.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbZoomFull.Image = Properties.Resources.zoom_full;
+            tsbZoomFull.ImageTransparentColor = Color.Magenta;
+            tsbZoomFull.Name = "tsbZoomFull";
+            tsbZoomFull.Size = new Size(34, 34);
+            tsbZoomFull.Text = "toolStripButton1";
+            tsbZoomFull.Click += tsbZoomFull_Click;
             // 
             // toolStripSeparator1
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 28);
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new Size(6, 37);
             // 
             // tslSelectTable
             // 
-            this.tslSelectTable.Name = "tslSelectTable";
-            this.tslSelectTable.Size = new System.Drawing.Size(126, 25);
+            tslSelectTable.Name = "tslSelectTable";
+            tslSelectTable.Size = new Size(0, 34);
             // 
             // tscbTables
             // 
-            this.tscbTables.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
-            this.tscbTables.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.tscbTables.Name = "tscbTables";
-            this.tscbTables.Size = new System.Drawing.Size(400, 28);
-            this.tscbTables.SelectedIndexChanged += new System.EventHandler(this.tscbTables_SelectedIndexChanged);
-            this.tscbTables.KeyUp += tscbTables_KeyUp;
+            tscbTables.AutoCompleteSource = AutoCompleteSource.ListItems;
+            tscbTables.Name = "tscbTables";
+            tscbTables.Size = new Size(400, 37);
+            tscbTables.SelectedIndexChanged += tscbTables_SelectedIndexChanged;
+            tscbTables.KeyUp += tscbTables_KeyUp;
             // 
             // tmrSave
             // 
-            this.tmrSave.Interval = 2000;
-            this.tmrSave.Tick += new System.EventHandler(this.tmrSave_Tick);
+            tmrSave.Interval = 2000;
+            tmrSave.Tick += tmrSave_Tick;
             // 
             // cms
             // 
-            this.cms.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.cms.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiAddTable,
-            this.tsmiAddRelation,
-            this.tsmiRemove,
-            this.tsmiEdit});
-            this.cms.Name = "cms";
-            this.cms.Size = new System.Drawing.Size(162, 100);
-            this.cms.Opening += new System.ComponentModel.CancelEventHandler(this.cms_Opening);
+            cms.ImageScalingSize = new Size(20, 20);
+            cms.Items.AddRange(new ToolStripItem[] { tsmiAddTable, tsmiAddRelation, tsmiRemove, tsmiEdit });
+            cms.Name = "cms";
+            cms.Size = new Size(74, 108);
+            cms.Opening += cms_Opening;
             // 
             // tsmiAddTable
             // 
-            this.tsmiAddTable.Name = "tsmiAddTable";
-            this.tsmiAddTable.Image= Properties.Resources.add_table;
-            this.tsmiAddTable.Size = new System.Drawing.Size(161, 24);
-            this.tsmiAddTable.Click += new System.EventHandler(this.tsmiAddTable_Click);
+            tsmiAddTable.Image = Properties.Resources.add_table;
+            tsmiAddTable.Name = "tsmiAddTable";
+            tsmiAddTable.Size = new Size(73, 26);
+            tsmiAddTable.Click += tsmiAddTable_Click;
             // 
             // tsmiAddRelation
             // 
-            this.tsmiAddRelation.Name = "tsmiAddRelation";
-            this.tsmiAddRelation.Image = Properties.Resources.connect;
-            this.tsmiAddRelation.Size = new System.Drawing.Size(161, 24);
-            this.tsmiAddRelation.Click += new System.EventHandler(tsmiAddRelation_Click);
+            tsmiAddRelation.Image = Properties.Resources.connect;
+            tsmiAddRelation.Name = "tsmiAddRelation";
+            tsmiAddRelation.Size = new Size(73, 26);
+            tsmiAddRelation.Click += tsmiAddRelation_Click;
             // 
             // tsmiRemove
             // 
-            this.tsmiRemove.Name = "tsmiRemove";
-            this.tsmiRemove.Image = Properties.Resources.borrar;
-            this.tsmiRemove.Size = new System.Drawing.Size(161, 24);
-            this.tsmiRemove.Click += new System.EventHandler(this.tsmiRemove_Click);
+            tsmiRemove.Image = Properties.Resources.borrar;
+            tsmiRemove.Name = "tsmiRemove";
+            tsmiRemove.Size = new Size(73, 26);
+            tsmiRemove.Click += tsmiRemove_Click;
             // 
             // tsmiEdit
             // 
-            this.tsmiEdit.Name = "tsmiEdit";
-            this.tsmiEdit.Image = Properties.Resources.editar;
-            this.tsmiEdit.Size = new System.Drawing.Size(161, 24);
-            this.tsmiEdit.Click += new System.EventHandler(this.tsmiEdit_Click);
+            tsmiEdit.Image = Properties.Resources.editar;
+            tsmiEdit.Name = "tsmiEdit";
+            tsmiEdit.Size = new Size(73, 26);
+            tsmiEdit.Click += tsmiEdit_Click;
             // 
             // DiagramForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.tsc);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.KeyPreview = true;
-            this.Name = "DiagramForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DiagramForm_FormClosing);
-            this.Load += new System.EventHandler(this.DiagramForm_Load);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DiagramForm_KeyDown);
-            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.DiagramForm_KeyUp);
-            this.Resize += new System.EventHandler(this.DiagramForm_Resize);
-            this.tsc.TopToolStripPanel.ResumeLayout(false);
-            this.tsc.TopToolStripPanel.PerformLayout();
-            this.tsc.ResumeLayout(false);
-            this.tsc.PerformLayout();
-            this.ts.ResumeLayout(false);
-            this.ts.PerformLayout();
-            this.cms.ResumeLayout(false);
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(800, 450);
+            Controls.Add(tsc);
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            KeyPreview = true;
+            Name = "DiagramForm";
+            StartPosition = FormStartPosition.CenterScreen;
+            WindowState = FormWindowState.Maximized;
+            FormClosing += DiagramForm_FormClosing;
+            Load += DiagramForm_Load;
+            KeyDown += DiagramForm_KeyDown;
+            KeyUp += DiagramForm_KeyUp;
+            Resize += DiagramForm_Resize;
+            tsc.TopToolStripPanel.ResumeLayout(false);
+            tsc.TopToolStripPanel.PerformLayout();
+            tsc.ResumeLayout(false);
+            tsc.PerformLayout();
+            ts.ResumeLayout(false);
+            ts.PerformLayout();
+            cms.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         #endregion
@@ -230,7 +216,7 @@
         private ToolStripMenuItem tsmiAddTable;
         private ToolStripMenuItem tsmiRemove;
         private ToolStripMenuItem tsmiEdit;
-        private ToolStripButton tsbExpandDiagram;
+        private ToolStripButton tsbRepositionTables;
         private ToolStripButton tsbZoomFull;
         private ToolStripComboBox tscbTables;
         private ToolStripSeparator toolStripSeparator1;

@@ -79,7 +79,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Añadir todas las tablas relacionadas sugeridas.
+        ///   Busca una cadena traducida similar a Add all suggested related tables.
         /// </summary>
         internal static string add_all_suggested_tables {
             get {
@@ -235,7 +235,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Centrar y hacer zoom automáticamente.
+        ///   Busca una cadena traducida similar a Automatically center and zoom during the process.
         /// </summary>
         internal static string auto_zoom {
             get {
@@ -261,6 +261,24 @@ namespace PgMulti.Properties {
         internal static string automatic_begin_transaction {
             get {
                 return ResourceManager.GetString("automatic_begin_transaction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Automatically reposition tables.
+        /// </summary>
+        internal static string automatically_reposition_tables {
+            get {
+                return ResourceManager.GetString("automatically_reposition_tables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Available.
+        /// </summary>
+        internal static string available {
+            get {
+                return ResourceManager.GetString("available", resourceCulture);
             }
         }
         
@@ -373,7 +391,16 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a child table.
+        ///   Busca una cadena traducida similar a Child side of the relation.
+        /// </summary>
+        internal static string child_side_relation {
+            get {
+                return ResourceManager.GetString("child_side_relation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Child table.
         /// </summary>
         internal static string child_table {
             get {
@@ -716,7 +743,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Crear diagrama a partir de esta tabla.
+        ///   Busca una cadena traducida similar a Create diagram from this table.
         /// </summary>
         internal static string create_table_diagram {
             get {
@@ -905,6 +932,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Edit relation {0}.
+        /// </summary>
+        internal static string edit_relation_x {
+            get {
+                return ResourceManager.GetString("edit_relation_x", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Edit selected script.
         /// </summary>
         internal static string edit_selected_script {
@@ -932,15 +968,6 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Activar recolocación automática de tablas. ATENCIÓN: esto moverá todas las tablas..
-        /// </summary>
-        internal static string enable_repulsion {
-            get {
-                return ResourceManager.GetString("enable_repulsion", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Busca una cadena traducida similar a Error.
         /// </summary>
         internal static string error {
@@ -959,7 +986,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Se produjo un error intentando crear el fichero de base de datos en &apos;{0}&apos;:
+        ///   Busca una cadena traducida similar a An error occurred while trying to create the database file at &apos;{0}&apos;:
         ///{1}.
         /// </summary>
         internal static string error_creating_db {
@@ -1014,7 +1041,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Se produjo un error intentando guardar el diagrama.
+        ///   Busca una cadena traducida similar a An error occurred while trying to save the diagram.
         ///{0}.
         /// </summary>
         internal static string error_saving_diagram {
@@ -1024,7 +1051,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Se produjo un error intentando guardar el diagrama. Si lo cierra, perderá los cambios realizados. ¿Desea cerrar el diagrama y perder los cambios?
+        ///   Busca una cadena traducida similar a An error occurred while trying to save the diagram. If you close it, you will lose the changes made. Do you want to close the diagram and lose the changes?
         ///{0}.
         /// </summary>
         internal static string error_saving_diagram_on_close {
@@ -1075,24 +1102,6 @@ namespace PgMulti.Properties {
         internal static string execution_log {
             get {
                 return ResourceManager.GetString("execution_log", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a Expandir diagrama.
-        /// </summary>
-        internal static string expand_diagram {
-            get {
-                return ResourceManager.GetString("expand_diagram", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a Las siguientes opciones permiten redistribuir las tablas automáticamente o sugerir tablas relacionadas a añadir:.
-        /// </summary>
-        internal static string expand_diagram_explanation {
-            get {
-                return ResourceManager.GetString("expand_diagram_explanation", resourceCulture);
             }
         }
         
@@ -1301,6 +1310,15 @@ namespace PgMulti.Properties {
         internal static string history {
             get {
                 return ResourceManager.GetString("history", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Id.
+        /// </summary>
+        internal static string id {
+            get {
+                return ResourceManager.GetString("id", resourceCulture);
             }
         }
         
@@ -1705,6 +1723,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a New relation.
+        /// </summary>
+        internal static string new_relation {
+            get {
+                return ResourceManager.GetString("new_relation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a New table.
         /// </summary>
         internal static string new_table {
@@ -1822,7 +1849,16 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a parent table.
+        ///   Busca una cadena traducida similar a Parent side of the relation.
+        /// </summary>
+        internal static string parent_side_relation {
+            get {
+                return ResourceManager.GetString("parent_side_relation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Parent table.
         /// </summary>
         internal static string parent_table {
             get {
@@ -2002,6 +2038,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Relation Id.
+        /// </summary>
+        internal static string relation_id {
+            get {
+                return ResourceManager.GetString("relation_id", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a {0} relation.
         /// </summary>
         internal static string relation_type {
@@ -2047,6 +2092,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Remove relation.
+        /// </summary>
+        internal static string remove_relation {
+            get {
+                return ResourceManager.GetString("remove_relation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Clear selected completed results.
         /// </summary>
         internal static string remove_selected {
@@ -2056,7 +2110,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Reabrir la última solapa cerrada.
+        ///   Busca una cadena traducida similar a Reopen last closed tab.
         /// </summary>
         internal static string reopen_last_closed_tab {
             get {
@@ -2119,7 +2173,16 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Fuerza de repulsión:.
+        ///   Busca una cadena traducida similar a If you wish, the application can automatically reposition the diagram tables by simulating repulsion forces between them and attraction forces between those that are related..
+        /// </summary>
+        internal static string reposition_explanation {
+            get {
+                return ResourceManager.GetString("reposition_explanation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Repulsion force:.
         /// </summary>
         internal static string repulsion_force {
             get {
@@ -2407,15 +2470,6 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Seleccionar.
-        /// </summary>
-        internal static string select_db {
-            get {
-                return ResourceManager.GetString("select_db", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Busca una cadena traducida similar a Select destination table.
         /// </summary>
         internal static string select_destination_table {
@@ -2457,6 +2511,15 @@ namespace PgMulti.Properties {
         internal static string select_to_set_null_value {
             get {
                 return ResourceManager.GetString("select_to_set_null_value", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Selected.
+        /// </summary>
+        internal static string selected {
+            get {
+                return ResourceManager.GetString("selected", resourceCulture);
             }
         }
         
@@ -2542,6 +2605,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Start repositioning.
+        /// </summary>
+        internal static string start_reposition {
+            get {
+                return ResourceManager.GetString("start_reposition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Starting tasks.
         /// </summary>
         internal static string starting_tasks {
@@ -2569,6 +2641,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Stop repositioning.
+        /// </summary>
+        internal static string stop_reposition {
+            get {
+                return ResourceManager.GetString("stop_reposition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Stop selected tasks.
         /// </summary>
         internal static string stop_selected {
@@ -2578,7 +2659,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Sugerir tablas relacionadas de la base de datos seleccionada:.
+        ///   Busca una cadena traducida similar a Suggest related tables to add when selecting a table.
         /// </summary>
         internal static string suggest_related_tables {
             get {
@@ -2785,6 +2866,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Type.
+        /// </summary>
+        internal static string type {
+            get {
+                return ResourceManager.GetString("type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Type initials.
         /// </summary>
         internal static string type_initials {
@@ -2938,15 +3028,6 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a You must enter the column name.
-        /// </summary>
-        internal static string warning_empty_column_name {
-            get {
-                return ResourceManager.GetString("warning_empty_column_name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Busca una cadena traducida similar a The database field cannot be blank.
         /// </summary>
         internal static string warning_empty_db {
@@ -2961,6 +3042,15 @@ namespace PgMulti.Properties {
         internal static string warning_empty_delete_filter {
             get {
                 return ResourceManager.GetString("warning_empty_delete_filter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a You must enter a value for the &apos;{0}&apos; field..
+        /// </summary>
+        internal static string warning_empty_field {
+            get {
+                return ResourceManager.GetString("warning_empty_field", resourceCulture);
             }
         }
         
@@ -3001,15 +3091,6 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a You must enter the schema name.
-        /// </summary>
-        internal static string warning_empty_schema {
-            get {
-                return ResourceManager.GetString("warning_empty_schema", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Busca una cadena traducida similar a The server field cannot be blank.
         /// </summary>
         internal static string warning_empty_server {
@@ -3019,38 +3100,29 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a You must enter a name for the table.
-        /// </summary>
-        internal static string warning_empty_table_name {
-            get {
-                return ResourceManager.GetString("warning_empty_table_name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a You must enter an abbreviation for the column type.
-        /// </summary>
-        internal static string warning_empty_type_initials {
-            get {
-                return ResourceManager.GetString("warning_empty_type_initials", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a You must enter the column type.
-        /// </summary>
-        internal static string warning_empty_type_name {
-            get {
-                return ResourceManager.GetString("warning_empty_type_name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Busca una cadena traducida similar a The user field cannot be blank.
         /// </summary>
         internal static string warning_empty_user {
             get {
                 return ResourceManager.GetString("warning_empty_user", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a The relation {0} already exists in the diagram and will be replaced if you continue. Are you sure?.
+        /// </summary>
+        internal static string warning_existing_relation {
+            get {
+                return ResourceManager.GetString("warning_existing_relation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a The number of columns in the relation in the parent and child tables must match, as well as each of the corresponding types.
+        /// </summary>
+        internal static string warning_incompatible_foraign_key {
+            get {
+                return ResourceManager.GetString("warning_incompatible_foraign_key", resourceCulture);
             }
         }
         
@@ -3091,7 +3163,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Debe seleccionar una base de datos.
+        ///   Busca una cadena traducida similar a You must select a database.
         /// </summary>
         internal static string warning_no_db_selected {
             get {
@@ -3181,7 +3253,16 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Zoom completo.
+        ///   Busca una cadena traducida similar a The relation {0} does not have the current table as either the parent or child table.
+        /// </summary>
+        internal static string warning_wrong_tables_in_relation {
+            get {
+                return ResourceManager.GetString("warning_wrong_tables_in_relation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Full zoom.
         /// </summary>
         internal static string zoom_full {
             get {
