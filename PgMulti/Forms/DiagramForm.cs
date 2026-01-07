@@ -66,6 +66,7 @@ namespace PgMulti.Forms
             _Canvas.MouseDown += _Canvas_MouseDown;
             _Canvas.MouseMove += _Canvas_MouseMove;
             _Canvas.MouseUp += _Canvas_MouseUp;
+            _Canvas.DoubleClick += _Canvas_DoubleClick;
             _Canvas.MouseWheel += _Canvas_MouseWheel;
             _Canvas.MouseLeave += _Canvas_MouseLeave;
             _Canvas.BackColor = Color.FromArgb(255, 200, 200, 200);
@@ -1448,6 +1449,11 @@ namespace PgMulti.Forms
             {
                 _Invalidate(_Diagram.ProjectToInt(dcClipRectangle.Value));
             }
+        }
+
+        private void _Canvas_DoubleClick(object? sender, EventArgs e)
+        {
+            EditSelected();
         }
 
         private void _Canvas_MouseMove(object? sender, MouseEventArgs e)
