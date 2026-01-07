@@ -102,8 +102,11 @@ namespace PgMulti.Forms
             }
         }
 
+        private bool gvColumns_SelectionChanged_Ignore = false;
         private void gvColumns_SelectionChanged(object sender, EventArgs e)
         {
+            if (gvColumns_SelectionChanged_Ignore) return;
+
             if (gvColumns.SelectedRows.Count == 1)
             {
                 DataRow dr = _Columns.Rows[gvColumns.SelectedRows[0].Index];
@@ -123,6 +126,10 @@ namespace PgMulti.Forms
                 chkColumnIdentity.Checked = (bool)dr["is_identity"];
                 txtColumnDefault.Text = (dr["default"] == DBNull.Value ? "" : dr.Field<string?>("default"));
                 chkColumnNotNull.Checked = (bool)dr["not_null"];
+
+                tsbRemoveColumn.Enabled = true;
+                tsbMoveUpColumn.Enabled = gvColumns.SelectedRows[0].Index > 0;
+                tsbMoveDownColumn.Enabled = gvColumns.SelectedRows[0].Index < _Columns.Rows.Count - 1;
             }
             else
             {
@@ -141,6 +148,10 @@ namespace PgMulti.Forms
                 chkColumnIdentity.Checked = false;
                 txtColumnDefault.Text = "";
                 chkColumnNotNull.Checked = false;
+
+                tsbRemoveColumn.Enabled = false;
+                tsbMoveUpColumn.Enabled = false;
+                tsbMoveDownColumn.Enabled = false;
             }
         }
 
@@ -166,6 +177,46 @@ namespace PgMulti.Forms
             if (gvColumns.SelectedRows.Count == 1)
             {
                 _Columns.Rows.RemoveAt(gvColumns.SelectedRows[0].Index);
+            }
+        }
+
+        private void tsbMoveUpColumn_Click(object sender, EventArgs e)
+        {
+            if (gvColumns.SelectedRows.Count == 1 && gvColumns.SelectedRows[0].Index > 0)
+            {
+                int index = gvColumns.SelectedRows[0].Index;
+                DataRow dr = _Columns.NewRow();
+                dr.ItemArray = _Columns.Rows[index].ItemArray;
+
+                gvColumns_SelectionChanged_Ignore = true;
+                _Columns.Rows.RemoveAt(index);
+                _Columns.Rows.InsertAt(dr, index - 1);
+                gvColumns.ClearSelection();
+                gvColumns.Rows[index - 1].Selected = true;
+                gvColumns_SelectionChanged_Ignore = false;
+
+                tsbMoveUpColumn.Enabled = gvColumns.SelectedRows[0].Index > 0;
+                tsbMoveDownColumn.Enabled = gvColumns.SelectedRows[0].Index < _Columns.Rows.Count - 1;
+            }
+        }
+
+        private void tsbMoveDownColumn_Click(object sender, EventArgs e)
+        {
+            if (gvColumns.SelectedRows.Count == 1 && gvColumns.SelectedRows[0].Index < _Columns.Rows.Count - 1)
+            {
+                int index = gvColumns.SelectedRows[0].Index;
+                DataRow dr = _Columns.NewRow();
+                dr.ItemArray = _Columns.Rows[index].ItemArray;
+
+                gvColumns_SelectionChanged_Ignore = true;
+                _Columns.Rows.RemoveAt(index);
+                _Columns.Rows.InsertAt(dr, index + 1);
+                gvColumns.ClearSelection();
+                gvColumns.Rows[index + 1].Selected = true;
+                gvColumns_SelectionChanged_Ignore = false;
+
+                tsbMoveUpColumn.Enabled = gvColumns.SelectedRows[0].Index > 0;
+                tsbMoveDownColumn.Enabled = gvColumns.SelectedRows[0].Index < _Columns.Rows.Count - 1;
             }
         }
 

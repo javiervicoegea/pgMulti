@@ -49,6 +49,8 @@ namespace PgMulti.Forms
             this.tsColumns = new System.Windows.Forms.ToolStrip();
             this.tsbAddColumn = new System.Windows.Forms.ToolStripButton();
             this.tsbRemoveColumn = new System.Windows.Forms.ToolStripButton();
+            this.tsbMoveUpColumn = new System.Windows.Forms.ToolStripButton();
+            this.tsbMoveDownColumn = new System.Windows.Forms.ToolStripButton();
             this.pnlColumn = new System.Windows.Forms.Panel();
             this.tlpColumn = new System.Windows.Forms.TableLayoutPanel();
             this.lblColumnName = new System.Windows.Forms.Label();
@@ -279,13 +281,15 @@ namespace PgMulti.Forms
             this.tsColumns.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.tsColumns.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbAddColumn,
-            this.tsbRemoveColumn});
+            this.tsbRemoveColumn,
+            this.tsbMoveUpColumn,
+            this.tsbMoveDownColumn});
             this.tsColumns.Location = new System.Drawing.Point(4, 0);
             this.tsColumns.Name = "tsColumns";
             this.tsColumns.Size = new System.Drawing.Size(71, 27);
             this.tsColumns.TabIndex = 0;
             // 
-            // tsbAdd
+            // tsbAddColumn
             // 
             this.tsbAddColumn.Image = global::PgMulti.Properties.Resources.nuevo;
             this.tsbAddColumn.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -293,13 +297,32 @@ namespace PgMulti.Forms
             this.tsbAddColumn.Size = new System.Drawing.Size(29, 24);
             this.tsbAddColumn.Click += new System.EventHandler(this.tsbColumnAdd_Click);
             // 
-            // tsbRemove
+            // tsbRemoveColumn
             // 
+            this.tsbRemoveColumn.Enabled = false;
             this.tsbRemoveColumn.Image = global::PgMulti.Properties.Resources.borrar;
             this.tsbRemoveColumn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbRemoveColumn.Name = "tsbRemove";
             this.tsbRemoveColumn.Size = new System.Drawing.Size(29, 24);
             this.tsbRemoveColumn.Click += new System.EventHandler(this.tsbColumnRemove_Click);
+            // 
+            // tsbMoveUpColumn
+            // 
+            this.tsbMoveUpColumn.Enabled = false;
+            this.tsbMoveUpColumn.Image = global::PgMulti.Properties.Resources.up;
+            this.tsbMoveUpColumn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbMoveUpColumn.Name = "tsbMoveUpColumn";
+            this.tsbMoveUpColumn.Size = new System.Drawing.Size(29, 24);
+            this.tsbMoveUpColumn.Click += new System.EventHandler(this.tsbMoveUpColumn_Click);
+            // 
+            // tsbMoveDownColumn
+            // 
+            this.tsbMoveDownColumn.Enabled = false;
+            this.tsbMoveDownColumn.Image = global::PgMulti.Properties.Resources.down;
+            this.tsbMoveDownColumn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbMoveDownColumn.Name = "tsbMoveDownColumn";
+            this.tsbMoveDownColumn.Size = new System.Drawing.Size(29, 24);
+            this.tsbMoveDownColumn.Click += new System.EventHandler(this.tsbMoveDownColumn_Click);
             // 
             // panel3
             // 
@@ -647,6 +670,8 @@ namespace PgMulti.Forms
         private ToolStrip tsColumns;
         private ToolStripButton tsbAddColumn;
         private ToolStripButton tsbRemoveColumn;
+        private ToolStripButton tsbMoveUpColumn;
+        private ToolStripButton tsbMoveDownColumn;
         private TableLayoutPanel tlpColumn;
         private Label lblColumnName;
         private TextBox txtColumnName;

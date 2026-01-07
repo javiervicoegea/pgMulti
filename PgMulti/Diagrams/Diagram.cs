@@ -87,7 +87,6 @@ namespace PgMulti.Diagrams
 
             }
 
-            dg.ReorderTableColumns();
             dg.ReorderZIndex();
 
             return dg;
@@ -239,6 +238,7 @@ namespace PgMulti.Diagrams
             if (dt == null)
             {
                 dt = new DiagramTable(this, t);
+                dt.ReorderColumns();
                 AddTableRelations(dt, t);
                 AddTable(dt);
             }
@@ -257,7 +257,6 @@ namespace PgMulti.Diagrams
         public DiagramTable AddTable(DiagramTable dt)
         {
             _Tables.Add(dt);
-            dt.ReorderColumns();
             Refresh();
 
             if (DiagramRelocator != null)
@@ -386,16 +385,7 @@ namespace PgMulti.Diagrams
                     parentTable!.Relations.Add(dtr);
                     if (parentTable != childTable) childTable!.Relations.Add(dtr);
                     _Relations.Add(dtr);
-                    otherSideDiagramTable.ReorderColumns();
                 }
-            }
-        }
-
-        private void ReorderTableColumns()
-        {
-            foreach (DiagramTable dt in Tables)
-            {
-                dt.ReorderColumns();
             }
         }
 
