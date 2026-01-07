@@ -7,6 +7,8 @@ namespace PgMulti.Diagrams
     public class Diagram
     {
         private const int DiagramFileVersion = 1;
+        private const int MinDragLength = 10;
+
         public const int MaxWidth = 10000;
         public const int MaxHeight = 10000;
 
@@ -519,7 +521,7 @@ namespace PgMulti.Diagrams
 
         public void MoveDrag(Point p)
         {
-            if (p != _StartDraggingPoint)
+            if (Math.Abs(p.X - _StartDraggingPoint!.Value.X) + Math.Abs(p.Y - _StartDraggingPoint.Value.Y) > MinDragLength)
             {
                 _CurrentDraggingPoint = p;
             }
