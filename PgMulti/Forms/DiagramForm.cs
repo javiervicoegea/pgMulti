@@ -592,8 +592,8 @@ namespace PgMulti.Forms
                 if (dpf.DialogResult != DialogResult.OK) return;
 
 
-                sfdExportDiagram.DefaultExt = "png";
-                sfdExportDiagram.FileName = Path.ChangeExtension(_Filename, "png");
+                sfdExportDiagram.DefaultExt = "jpg";
+                sfdExportDiagram.FileName = Path.ChangeExtension(_Filename, "jpg");
                 if (sfdExportDiagram.ShowDialog(this) != DialogResult.OK) return;
 
                 string ext = Path.GetExtension(sfdExportDiagram.FileName).ToLowerInvariant();

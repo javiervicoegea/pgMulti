@@ -1178,7 +1178,7 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a PNG Images (*.png)|*.png|JPEG Images (*.jpg)|*.jpg|All files|*.*.
+        ///   Busca una cadena traducida similar a JPEG Images (*.jpg)|*.jpg|PNG Images (*.png)|*.png|All files|*.*.
         /// </summary>
         internal static string export_file_filter {
             get {

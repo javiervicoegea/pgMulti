@@ -826,7 +826,7 @@ Unlike other tools, this application does not reuse the connection between diffe
     <value>pgMulti diagram PGDX files (*.pgdx)|*.pgdx|All files|*.*</value>
   </data>
   <data name="export_file_filter" xml:space="preserve">
-    <value>PNG Images (*.png)|*.png|JPEG Images (*.jpg)|*.jpg|All files|*.*</value>
+    <value>JPEG Images (*.jpg)|*.jpg|PNG Images (*.png)|*.png|All files|*.*</value>
   </data>
   <data name="warning_bad_format_diagram_file" xml:space="preserve">
     <value>The file is not a valid pgMulti diagram</value>

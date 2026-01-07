@@ -7,11 +7,11 @@ namespace PgMulti.Forms
     public partial class DiagramPreviewForm : Form
     {
         private const int MouseResizeTolerance = 5;
+        private const int MinRectangleSize = 50;
         private Diagram _Diagram;
         private Rectangle _RectangleSelection;
         private Rectangle _DCRectangleSelection;
         private Pen _SelectionPen = new Pen(Color.Red, 2);
-        private Bitmap _DoubleBufferBitmap;
 
         private Point? _DraggingStartPoint = null;
         private bool _DraggingSelectionRectangleLeft = false;
@@ -28,16 +28,14 @@ namespace PgMulti.Forms
             _Diagram = Diagram.LoadFile(fileName);
             _Diagram.RecalculateLocations();
 
-            int margin = Math.Max(pnlCanvas.Width, pnlCanvas.Height) / 10;
+            int margin = Math.Max(cvCanvas.Width, cvCanvas.Height) / 10;
 
-            _Diagram.ZoomFull(pnlCanvas.Size, (int)(margin * 1.5), true);
+            _Diagram.ZoomFull(cvCanvas.Size, (int)(margin * 1.5), true);
 
-            _DoubleBufferBitmap = new Bitmap(pnlCanvas.Width, pnlCanvas.Height);
+            int w = cvCanvas.Width - 2 * margin;
+            int h = cvCanvas.Height - 2 * margin;
 
-            int w = pnlCanvas.Width - 2 * margin;
-            int h = pnlCanvas.Height - 2 * margin;
-
-            _RectangleSelection = new Rectangle((pnlCanvas.Width - w) / 2, (pnlCanvas.Height - h) / 2, w, h);
+            _RectangleSelection = new Rectangle((cvCanvas.Width - w) / 2, (cvCanvas.Height - h) / 2, w, h);
             _DCRectangleSelection = _Diagram.UnProject(_RectangleSelection);
         }
 
@@ -59,9 +57,8 @@ namespace PgMulti.Forms
 
         private void RefreshSize()
         {
-            _Diagram.ZoomFull(pnlCanvas.Size, Math.Max(pnlCanvas.Width, pnlCanvas.Height) / 10, true);
+            _Diagram.ZoomFull(cvCanvas.Size, Math.Max(cvCanvas.Width, cvCanvas.Height) / 10, true);
 
-            _DoubleBufferBitmap = new Bitmap(Math.Max(1, pnlCanvas.Width), Math.Max(1, pnlCanvas.Height));
             _RectangleSelection = _Diagram.ProjectToInt(_DCRectangleSelection);
         }
 
@@ -77,41 +74,28 @@ namespace PgMulti.Forms
             Close();
         }
 
-        private void pnlCanvas_Paint(object sender, PaintEventArgs e)
+        private void cvCanvas_Paint(object sender, PaintEventArgs e)
         {
-            using (Graphics g = Graphics.FromImage(_DoubleBufferBitmap))
+            e.Graphics.Clear(Color.White);
+            _Diagram.Draw(e.Graphics, e.ClipRectangle, true, false);
+
+            if (_DraggingRectangleSelection.HasValue)
             {
-                g.Clear(Color.White);
-                _Diagram.Draw(g, e.ClipRectangle, true, false);
-
-                if (_DraggingRectangleSelection.HasValue)
-                {
-                    g.DrawRectangle(_SelectionPen, _Diagram.UnProject(_DraggingRectangleSelection.Value));
-                }
-                else
-                {
-                    g.DrawRectangle(_SelectionPen, _DCRectangleSelection);
-                }
-
-                using (Bitmap b2 = new Bitmap(e.ClipRectangle.Width, e.ClipRectangle.Height))
-                using (Graphics g2 = Graphics.FromImage(b2))
-                {
-                    //g2.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                    g2.DrawImage(_DoubleBufferBitmap, -e.ClipRectangle.X, -e.ClipRectangle.Y);
-
-                    //e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                    e.Graphics.DrawImage(b2, e.ClipRectangle.X, e.ClipRectangle.Y);
-                }
+                e.Graphics.DrawRectangle(_SelectionPen, _Diagram.UnProject(_DraggingRectangleSelection.Value));
+            }
+            else
+            {
+                e.Graphics.DrawRectangle(_SelectionPen, _DCRectangleSelection);
             }
         }
 
-        private void pnlCanvas_Resize(object sender, EventArgs e)
+        private void cvCanvas_Resize(object sender, EventArgs e)
         {
             RefreshSize();
-            pnlCanvas.Invalidate();
+            cvCanvas.Invalidate();
         }
 
-        private void pnlCanvas_MouseDown(object sender, MouseEventArgs e)
+        private void cvCanvas_MouseDown(object sender, MouseEventArgs e)
         {
             switch (GetPositionInRectangle(_RectangleSelection, e.Location, MouseResizeTolerance))
             {
@@ -165,7 +149,7 @@ namespace PgMulti.Forms
             }
         }
 
-        private void pnlCanvas_MouseUp(object sender, MouseEventArgs e)
+        private void cvCanvas_MouseUp(object sender, MouseEventArgs e)
         {
             if (_DraggingStartPoint.HasValue)
             {
@@ -184,7 +168,7 @@ namespace PgMulti.Forms
             }
         }
 
-        private void pnlCanvas_MouseMove(object sender, MouseEventArgs e)
+        private void cvCanvas_MouseMove(object sender, MouseEventArgs e)
         {
             if (_DraggingStartPoint.HasValue)
             {
@@ -197,22 +181,34 @@ namespace PgMulti.Forms
                 {
                     r.X += deltaX;
                     r.Width -= deltaX;
+                    if (r.Width < MinRectangleSize && !_DraggingSelectionRectangleRight)
+                    {
+                        r.X = r.X + r.Width - MinRectangleSize;
+                        r.Width = MinRectangleSize;
+                    }
                 }
 
                 if (_DraggingSelectionRectangleRight)
                 {
                     r.Width += deltaX;
+                    if (!_DraggingSelectionRectangleLeft) r.Width = Math.Max(r.Width, MinRectangleSize);
                 }
 
                 if (_DraggingSelectionRectangleTop)
                 {
                     r.Y += deltaY;
                     r.Height -= deltaY;
+                    if (r.Height < MinRectangleSize && !_DraggingSelectionRectangleBottom)
+                    {
+                        r.Y = r.Y + r.Height - MinRectangleSize;
+                        r.Height = MinRectangleSize;
+                    }
                 }
 
                 if (_DraggingSelectionRectangleBottom)
                 {
                     r.Height += deltaY;
+                    if (!_DraggingSelectionRectangleTop) r.Height = Math.Max(r.Height, MinRectangleSize);
                 }
 
                 _DraggingRectangleSelection = r;
@@ -302,7 +298,7 @@ namespace PgMulti.Forms
             }
         }
 
-        private void pnlCanvas_MouseLeave(object sender, EventArgs e)
+        private void cvCanvas_MouseLeave(object sender, EventArgs e)
         {
             Cursor = Cursors.Arrow;
         }
@@ -316,11 +312,6 @@ namespace PgMulti.Forms
         }
         #endregion
 
-        ~DiagramPreviewForm()
-        {
-            _DoubleBufferBitmap.Dispose();
-        }
-
         private enum PositionInRectangle
         {
             LeftBorder,
@@ -333,6 +324,14 @@ namespace PgMulti.Forms
             RightBottomCorner,
             Inside,
             Outside
+        }
+
+        public class Canvas : Panel
+        {
+            public Canvas()
+            {
+                DoubleBuffered = true;
+            }
         }
     }
 }

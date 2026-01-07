@@ -826,7 +826,7 @@ A diferencia de otras herramientas, esta aplicación no reutiliza la conexión e
     <value>Ficheros PGDX de diagramas de pgMulti (*.pgdx)|*.pgdx|All files|*.*</value>
   </data>
   <data name="export_file_filter" xml:space="preserve">
-    <value>Imágenes PNG (*.png)|*.png|Imágenes JPEG (*.jpg)|*.jpg|Todos los ficheros|*.*</value>
+    <value>Imágenes JPEG (*.jpg)|*.jpg|Imágenes PNG (*.png)|*.png|Todos los ficheros|*.*</value>
   </data>
   <data name="warning_bad_format_diagram_file" xml:space="preserve">
     <value>El fichero no es un diagrama de pgMulti válido</value>

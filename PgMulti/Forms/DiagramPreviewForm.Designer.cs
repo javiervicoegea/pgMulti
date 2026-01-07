@@ -31,27 +31,27 @@ namespace PgMulti.Forms
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DiagramPreviewForm));
-            pnlCanvas = new Panel();
+            cvCanvas = new Canvas();
             btnOk = new Button();
             btnCancel = new Button();
             SuspendLayout();
             // 
-            // pnlCanvas
+            // cvCanvas
             // 
-            pnlCanvas.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            pnlCanvas.BackColor = Color.White;
-            pnlCanvas.BorderStyle = BorderStyle.Fixed3D;
-            pnlCanvas.Location = new Point(19, 19);
-            pnlCanvas.Margin = new Padding(10);
-            pnlCanvas.Name = "pnlCanvas";
-            pnlCanvas.Size = new Size(594, 420);
-            pnlCanvas.TabIndex = 0;
-            pnlCanvas.Paint += pnlCanvas_Paint;
-            pnlCanvas.MouseDown += pnlCanvas_MouseDown;
-            pnlCanvas.MouseLeave += pnlCanvas_MouseLeave;
-            pnlCanvas.MouseMove += pnlCanvas_MouseMove;
-            pnlCanvas.MouseUp += pnlCanvas_MouseUp;
-            pnlCanvas.Resize += pnlCanvas_Resize;
+            cvCanvas.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            cvCanvas.BackColor = Color.White;
+            cvCanvas.BorderStyle = BorderStyle.Fixed3D;
+            cvCanvas.Location = new Point(19, 19);
+            cvCanvas.Margin = new Padding(10);
+            cvCanvas.Name = "cvCanvas";
+            cvCanvas.Size = new Size(594, 420);
+            cvCanvas.TabIndex = 0;
+            cvCanvas.Paint += cvCanvas_Paint;
+            cvCanvas.MouseDown += cvCanvas_MouseDown;
+            cvCanvas.MouseLeave += cvCanvas_MouseLeave;
+            cvCanvas.MouseMove += cvCanvas_MouseMove;
+            cvCanvas.MouseUp += cvCanvas_MouseUp;
+            cvCanvas.Resize += cvCanvas_Resize;
             // 
             // btnOk
             // 
@@ -82,7 +82,7 @@ namespace PgMulti.Forms
             AutoScaleMode = AutoScaleMode.Font;
             CancelButton = btnCancel;
             ClientSize = new Size(632, 507);
-            Controls.Add(pnlCanvas);
+            Controls.Add(cvCanvas);
             Controls.Add(btnOk);
             Controls.Add(btnCancel);
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -95,6 +95,6 @@ namespace PgMulti.Forms
 
         private Button btnOk;
         private Button btnCancel;
-        private Panel pnlCanvas;
+        private Canvas cvCanvas;
     }
 }
