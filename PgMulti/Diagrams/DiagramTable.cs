@@ -3,8 +3,10 @@ using Irony.Parsing;
 using PgMulti.DataStructure;
 using PgMulti.Export;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
+using System.Reflection.Metadata;
 using System.Xml;
 
 namespace PgMulti.Diagrams
@@ -159,6 +161,8 @@ namespace PgMulti.Diagrams
 
         private string _SearchString;
         public string SearchString { get => _SearchString; }
+
+        [MemberNotNull(nameof(_SearchString))]
         private void UpdateSearchString()
         {
             _SearchString = SchemaName.ToLowerInvariant() + "." + TableName.ToLowerInvariant();
@@ -310,7 +314,7 @@ namespace PgMulti.Diagrams
             return xeTable;
         }
 
-        public override void Draw(Graphics g)
+        public override void Draw(Graphics g, bool highResolution)
         {
             Brush br;
             Pen pen = _NormalBorderPen;
@@ -379,10 +383,10 @@ namespace PgMulti.Diagrams
                 }
             }
 
-            DrawContent(g, r, keys, keyBrush, keyBackgroundBrush);
+            DrawContent(g, r, keys, keyBrush, keyBackgroundBrush, highResolution);
         }
 
-        private void DrawContent(Graphics g, Rectangle r, List<DiagramColumn> keys, Brush? keyBrush, Brush? keyBackgroundBrush)
+        private void DrawContent(Graphics g, Rectangle r, List<DiagramColumn> keys, Brush? keyBrush, Brush? keyBackgroundBrush, bool highResolution)
         {
             int y = r.Y + Padding;
             int x = r.X + Padding;
@@ -396,67 +400,101 @@ namespace PgMulti.Diagrams
 
             if (VisibleColumns != 0)
             {
-                using (Bitmap cb = new Bitmap(ColumnsBoundingBox.Width, ColumnsBoundingBox.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
+                Region prevClip = g.Clip;
+                g.SetClip(new Rectangle(x, y, ColumnsBoundingBox.Width, ColumnsBoundingBox.Height));
+                int yc = y - ColumnsScroll;
+                foreach (DiagramColumn dc in Columns)
                 {
-                    Graphics gcb = Graphics.FromImage(cb);
-                    gcb.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
-                    gcb.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                    Bitmap icon;
 
-                    int yc = -ColumnsScroll;
-                    foreach (DiagramColumn dc in Columns)
+                    if (dc.PrimaryKey)
                     {
-                        if (dc.PrimaryKey)
+                        if (highResolution)
                         {
-                            gcb.DrawImage(Properties.DiagramIcons.primary_key, 0, yc, ColumnIconSize, ColumnIconSize);
+                            icon = Properties.DiagramIcons.hr_primary_key;
                         }
-                        else if (dc.ForeignKey)
+                        else
                         {
-                            if (dc.NotNull)
+                            icon = Properties.DiagramIcons.primary_key;
+                        }
+                    }
+                    else if (dc.ForeignKey)
+                    {
+                        if (dc.NotNull)
+                        {
+                            if (highResolution)
                             {
-                                gcb.DrawImage(Properties.DiagramIcons.not_null_foreign_key, 0, yc, ColumnIconSize, ColumnIconSize);
+                                icon = Properties.DiagramIcons.hr_not_null_foreign_key;
                             }
                             else
                             {
-                                gcb.DrawImage(Properties.DiagramIcons.nullable_foreign_key, 0, yc, ColumnIconSize, ColumnIconSize);
+                                icon = Properties.DiagramIcons.not_null_foreign_key;
                             }
                         }
                         else
                         {
-                            if (dc.NotNull)
+                            if (highResolution)
                             {
-                                gcb.DrawImage(Properties.DiagramIcons.not_null_field, 0, yc, ColumnIconSize, ColumnIconSize);
+                                icon = Properties.DiagramIcons.hr_nullable_foreign_key;
                             }
                             else
                             {
-                                gcb.DrawImage(Properties.DiagramIcons.nullable_field, 0, yc, ColumnIconSize, ColumnIconSize);
+                                icon = Properties.DiagramIcons.nullable_foreign_key;
                             }
                         }
-
-                        Font f;
-                        Brush br;
-
-                        if (keys.Contains(dc))
+                    }
+                    else
+                    {
+                        if (dc.NotNull)
                         {
-                            f = _ColumnNameKeyFont;
-                            br = keyBrush!;
-
-                            gcb.FillPath(keyBackgroundBrush!, RoundedRect(new Rectangle(ColumnIconSize + ColumnIconMargin - 2, yc - 2, (int)g.MeasureString(dc.ColumnName, f).Width + 4, (int)(_ColumnNameNormalFont.Size * 3 - 2)), 5));
+                            if (highResolution)
+                            {
+                                icon = Properties.DiagramIcons.hr_not_null_field;
+                            }
+                            else
+                            {
+                                icon = Properties.DiagramIcons.not_null_field;
+                            }
                         }
                         else
                         {
-                            f = _ColumnNameNormalFont;
-                            br = _TextBrush;
+                            if (highResolution)
+                            {
+                                icon = Properties.DiagramIcons.hr_nullable_field;
+                            }
+                            else
+                            {
+                                icon = Properties.DiagramIcons.nullable_field;
+                            }
                         }
-
-                        gcb.DrawString(dc.ColumnName, f, br, ColumnIconSize + ColumnIconMargin, yc);
-
-                        gcb.DrawString(dc.TypeInitials, _ColumnTypeFont, _TextBrush, ColumnIconSize + ColumnIconMargin + _MaxColumnNameWidth!.Value + ColumnTypeMargin, yc);
-
-                        yc += SingleColumnHeight;
                     }
 
-                    g.DrawImage(cb, x, y);
+                    g.DrawImage(icon, x, yc, ColumnIconSize, ColumnIconSize);
+
+                    Font f;
+                    Brush br;
+
+                    if (keys.Contains(dc))
+                    {
+                        f = _ColumnNameKeyFont;
+                        br = keyBrush!;
+
+                        g.FillPath(keyBackgroundBrush!, RoundedRect(new Rectangle(x + ColumnIconSize + ColumnIconMargin - 2, yc - 2, (int)g.MeasureString(dc.ColumnName, f).Width + 4, (int)(_ColumnNameNormalFont.Size * 3 - 2)), 5));
+                    }
+                    else
+                    {
+                        f = _ColumnNameNormalFont;
+                        br = _TextBrush;
+                    }
+
+                    g.DrawString(dc.ColumnName, f, br, x + ColumnIconSize + ColumnIconMargin, yc);
+
+                    g.DrawString(dc.TypeInitials, _ColumnTypeFont, _TextBrush, x + ColumnIconSize + ColumnIconMargin + _MaxColumnNameWidth!.Value + ColumnTypeMargin, yc);
+
+                    yc += SingleColumnHeight;
                 }
+
+                g.SetClip(prevClip, CombineMode.Replace);
 
                 if (VisibleColumns < Columns.Count)
                 {

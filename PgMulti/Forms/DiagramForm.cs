@@ -9,6 +9,9 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,7 +30,7 @@ namespace PgMulti.Forms
         private Diagram _Diagram;
         private string _Filename;
         private DB? _PreselectedDB;
-         
+
         private Canvas _Canvas;
         private RepositionTablesOptionsForm? _ExpandDiagramOptionsForm = null;
 
@@ -99,22 +102,52 @@ namespace PgMulti.Forms
             }
         }
 
-        public void AddTables(List<Table> tables)
+        private void _FinishAddTables(List<DiagramTable> diagramTables)
+        {
+            _Diagram.RecalculateLocations();
+
+            Random r = new Random();
+
+            foreach (DiagramTable t in diagramTables)
+            {
+                int randomX = 0;
+                int randomY = 0;
+
+                if (diagramTables.Count > 1)
+                {
+                    randomX = (int)(r.NextDouble() * 100 * diagramTables.Count);
+                    randomY = (int)(r.NextDouble() * 100 * diagramTables.Count);
+                }
+
+                t.MoveTo(_Diagram.UnProject(new Point(_Canvas.Width / 2 + randomX, _Canvas.Height / 2 + randomY)));
+            }
+
+            _Invalidate();
+            SetPendingSave();
+            UpdateItemsInTscbTables();
+        }
+
+        public void AddTables(List<DiagramTable> diagramTables)
         {
             DisableAutoSave();
-            foreach (Table t in tables)
+            foreach (DiagramTable t in diagramTables)
             {
                 _Diagram.AddTable(t);
             }
 
-            _Diagram.RecalculateLocations();
+            _FinishAddTables(diagramTables);
+        }
 
-            _Canvas.Invalidate();
-            SetPendingSave();
-            UpdateItemsInTscbTables();
+        public void AddTables(List<Table> tables)
+        {
+            DisableAutoSave();
+            List<DiagramTable> diagramTables = new List<DiagramTable>();
+            foreach (Table t in tables)
+            {
+                diagramTables.Add(_Diagram.AddTable(t));
+            }
 
-            Rectangle dcRectangleViewPort = _Diagram.UnProject(new Rectangle(0, 0, _Canvas.Width, _Canvas.Height));
-            _Diagram.CenterTo(dcRectangleViewPort, _Diagram.Center);
+            _FinishAddTables(diagramTables);
         }
 
         public RepositionTablesOptionsForm OpenExpandDiagramOptionsForm()
@@ -159,56 +192,46 @@ namespace PgMulti.Forms
             return tmpFileName;
         }
 
-        public void Save()
+        public void Save(string fileName)
         {
-            string newTmpFileName = GetTempFileName(_Filename, "new");
-            string oldTmpFileName = GetTempFileName(_Filename, "old");
-
-            try
+            bool replace = File.Exists(fileName);
+            if (replace)
             {
-                _Diagram.SaveFile(newTmpFileName);
+                string newTmpFileName = GetTempFileName(fileName, "new");
+                string oldTmpFileName = GetTempFileName(fileName, "old");
 
-                File.Move(_Filename, oldTmpFileName);
-                File.Move(newTmpFileName, _Filename);
-                File.Delete(oldTmpFileName);
-            }
-            catch (Exception)
-            {
                 try
                 {
-                    if (File.Exists(newTmpFileName)) File.Delete(newTmpFileName);
-                    if (File.Exists(newTmpFileName)) File.Delete(newTmpFileName);
+                    _Diagram.SaveFile(newTmpFileName);
+
+                    File.Move(fileName, oldTmpFileName);
+                    File.Move(newTmpFileName, fileName);
+                    File.Delete(oldTmpFileName);
                 }
-                catch (Exception) { }
+                catch (Exception)
+                {
+                    try
+                    {
+                        if (File.Exists(newTmpFileName)) File.Delete(newTmpFileName);
+                        if (File.Exists(newTmpFileName)) File.Delete(newTmpFileName);
+                    }
+                    catch (Exception) { }
+                }
+            }
+            else
+            {
+                _Diagram.SaveFile(fileName);
             }
 
             _PendingSave = false;
             tsbSave.Enabled = false;
             tmrSave.Enabled = false;
+            _Filename = fileName;
         }
 
         public void ZoomFull(bool minScaleMode)
         {
-            float scaleX = (float)_Canvas.Width / _Diagram.BoundingBox.Width;
-            float scaleY = (float)_Canvas.Height / _Diagram.BoundingBox.Height;
-            float scale;
-
-            if (minScaleMode)
-            {
-                scale = Math.Min(scaleX, scaleY);
-            }
-            else
-            {
-                scale = (scaleX + scaleY) / 2.0f;
-            }
-
-            if (scale < 0.1f) scale = 0.1f;
-            if (scale > 1.0f) scale = 1.0f;
-
-            _Diagram.Scale = scale;
-
-            Rectangle dcRectangleViewPort = _Diagram.UnProject(new Rectangle(0, 0, _Canvas.Width, _Canvas.Height));
-            _Diagram.CenterTo(dcRectangleViewPort, new Point(_Diagram.BoundingBox.X + _Diagram.BoundingBox.Width / 2, _Diagram.BoundingBox.Y + _Diagram.BoundingBox.Height / 2));
+            _Diagram.ZoomFull(_Canvas.Size, 0, minScaleMode);
 
             _Invalidate();
         }
@@ -400,7 +423,7 @@ namespace PgMulti.Forms
             {
                 try
                 {
-                    Save();
+                    Save(_Filename);
                 }
                 catch (Exception ex)
                 {
@@ -438,20 +461,20 @@ namespace PgMulti.Forms
 
         private void cms_Opening(object sender, CancelEventArgs e)
         {
-            tsmiAddRelation.Visible = false;
-            tsmiAddTable.Visible = false;
+            tsmiAddNewRelation.Visible = false;
+            tsmiAddNewTable.Visible = false;
             tsmiEdit.Visible = false;
             tsmiRemove.Visible = false;
 
             if (_SelectedObject == null)
             {
-                tsmiAddTable.Visible = true;
+                tsmiAddNewTable.Visible = true;
             }
             else
             {
                 if (_SelectedObject is DiagramTable)
                 {
-                    tsmiAddRelation.Visible = true;
+                    tsmiAddNewRelation.Visible = true;
                     tsmiEdit.Visible = true;
                     tsmiRemove.Visible = true;
                 }
@@ -467,53 +490,257 @@ namespace PgMulti.Forms
             }
         }
 
-        private void tsmiEdit_Click(object sender, EventArgs e)
+        #endregion "Form events"
+
+        #region "Other controls events"
+        private void tsbNew_Click(object sender, EventArgs e)
         {
-            if (_SelectedObject == null)
+            sfdSaveDiagram.FileName = "pgMultiDiagram.pgdx";
+            if (sfdSaveDiagram.ShowDialog(this) != DialogResult.OK) return;
+
+            Diagram dg = new Diagram();
+            try
             {
+                dg.SaveFile(sfdSaveDiagram.FileName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, Properties.Text.error_saving_file + $":\r\n{sfdSaveDiagram.FileName}\r\n\r\n{ex.Message}", Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            else
+
+            DiagramForm df = new DiagramForm(_Data!, dg, sfdSaveDiagram.FileName, _PreselectedDB);
+            df.Show();
+        }
+
+        private void tsbOpen_Click(object sender, EventArgs e)
+        {
+            if (ofdOpenDiagram.ShowDialog(this) != DialogResult.OK) return;
+
+            Diagram dg;
+            try
             {
-                if (_SelectedObject is DiagramTable)
+                dg = Diagram.LoadFile(ofdOpenDiagram.FileName);
+            }
+            catch (BadFormatException)
+            {
+                MessageBox.Show(this, Properties.Text.warning_bad_format_diagram_file, Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, Properties.Text.error_opening_file + $":\r\n{ofdOpenDiagram.FileName}\r\n\r\n{ex.Message}", Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            DiagramForm df = new DiagramForm(_Data!, dg, ofdOpenDiagram.FileName, _PreselectedDB);
+            df.Show();
+        }
+
+        private void tsbSave_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Save(_Filename);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, string.Format(Properties.Text.error_saving_diagram, ex.Message), Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                _PreviousSavingError = true;
+            }
+        }
+
+        private void tsbSaveAs_Click(object sender, EventArgs e)
+        {
+            if (sfdSaveDiagram.ShowDialog(this) != DialogResult.OK) return;
+
+            Diagram dg = new Diagram();
+            try
+            {
+                Save(sfdSaveDiagram.FileName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, Properties.Text.error_saving_file + $":\r\n{sfdSaveDiagram.FileName}\r\n\r\n{ex.Message}", Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            DiagramForm df = new DiagramForm(_Data!, dg, sfdSaveDiagram.FileName, _PreselectedDB);
+            df.Show();
+        }
+
+        private void tsbExport_Click(object sender, EventArgs e)
+        {
+            if (_PendingSave)
+            {
+                try
                 {
-                    DiagramTableForm f = new DiagramTableForm((DiagramTable)_SelectedObject);
-                    DisableAutoSave();
-                    f.ShowDialog(this);
-                    if (f.DialogResult == DialogResult.OK)
-                    {
-                        _Diagram.Refresh();
-                        _Invalidate();
-                        SetPendingSave();
-                    }
-                    else
-                    {
-                        EnableAutoSave();
-                    }
+                    Save(_Filename);
                 }
-                else if (_SelectedObject is DiagramRelation)
+                catch (Exception ex)
                 {
-                    ShowDiagramRelationForm(new DiagramRelationForm((DiagramRelation)_SelectedObject));
-                }
-                else
-                {
+                    MessageBox.Show(this, string.Format(Properties.Text.error_saving_diagram, ex.Message), Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    _PreviousSavingError = true;
                     return;
                 }
             }
 
+            try
+            {
+                DiagramPreviewForm dpf = new DiagramPreviewForm(_Filename);
+                dpf.ShowDialog(this);
+                if (dpf.DialogResult != DialogResult.OK) return;
+
+
+                sfdExportDiagram.DefaultExt = "png";
+                sfdExportDiagram.FileName = Path.ChangeExtension(_Filename, "png");
+                if (sfdExportDiagram.ShowDialog(this) != DialogResult.OK) return;
+
+                string ext = Path.GetExtension(sfdExportDiagram.FileName).ToLowerInvariant();
+                string[] validExtensions = { ".png", ".jpg", ".jpeg" };
+                if (!validExtensions.Contains(ext))
+                {
+                    MessageBox.Show(this, string.Format(Properties.Text.error_invalid_extension, ext), Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return;
+                }
+
+                dpf.Diagram.Scale = 1;
+                dpf.Diagram.Translate.X = -dpf.DCRectangleSelection.X;
+                dpf.Diagram.Translate.Y = -dpf.DCRectangleSelection.Y;
+
+                Rectangle rectangleSelection = dpf.Diagram.ProjectToInt(dpf.DCRectangleSelection);
+
+                using (Bitmap b = new Bitmap(rectangleSelection.Width, rectangleSelection.Height, ext == ".png" ? PixelFormat.Format32bppArgb : PixelFormat.Format32bppRgb))
+                using (Graphics g = Graphics.FromImage(b))
+                {
+                    if(ext != ".png") g.Clear(Color.White);
+                    dpf.Diagram.Draw(g, new Rectangle(0, 0, rectangleSelection.Width, rectangleSelection.Height), false, true);
+
+                    if (ext == ".png")
+                    {
+                        b.Save(sfdExportDiagram.FileName, ImageFormat.Png );
+
+                    }
+                    else
+                    {
+                        EncoderParameters encoderParams = new EncoderParameters(1);
+                        encoderParams.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, (long)95);
+
+                        b.Save(sfdExportDiagram.FileName, ImageCodecInfo.GetImageEncoders().First(c => c.MimeType == "image/jpeg"), encoderParams);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, string.Format(Properties.Text.error_exporting_diagram, ex.Message), Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                _PreviousSavingError = true;
+            }
         }
 
-        private void tsmiAddTable_Click(object sender, EventArgs e)
+        private void tsbPrint_Click(object sender, EventArgs e)
+        {
+            if (_PendingSave)
+            {
+                try
+                {
+                    Save(_Filename);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(this, string.Format(Properties.Text.error_saving_diagram, ex.Message), Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    _PreviousSavingError = true;
+                    return;
+                }
+            }
+
+            try
+            {
+                DiagramPreviewForm dpf = new DiagramPreviewForm(_Filename);
+                dpf.ShowDialog(this);
+                if (dpf.DialogResult != DialogResult.OK) return;
+
+                PrintDocument printDoc = new PrintDocument();
+                pd.Document = printDoc;
+                if (pd.ShowDialog(this) != DialogResult.OK) return;
+
+                printDoc.PrintPage += (sender, e) =>
+                {
+                    float ratioImagen = (float)dpf.DCRectangleSelection.Width / dpf.DCRectangleSelection.Height;
+                    float ratioArea = (float)e.MarginBounds.Width / e.MarginBounds.Height;
+
+                    int anchoFinal;
+                    int altoFinal;
+
+                    if (ratioImagen > ratioArea)
+                    {
+                        // Ajustar por ancho
+                        anchoFinal = e.MarginBounds.Width;
+                        altoFinal = (int)(e.MarginBounds.Width / ratioImagen);
+                    }
+                    else
+                    {
+                        // Ajustar por alto
+                        altoFinal = e.MarginBounds.Height;
+                        anchoFinal = (int)(e.MarginBounds.Height * ratioImagen);
+                    }
+
+                    int x = e.MarginBounds.X + (e.MarginBounds.Width - anchoFinal) / 2;
+                    int y = e.MarginBounds.Y + (e.MarginBounds.Height - altoFinal) / 2;
+
+                    Rectangle destino = new Rectangle(x, y, anchoFinal, altoFinal);
+
+
+                    dpf.Diagram.Scale = ((float)destino.Width) / dpf.DCRectangleSelection.Width;
+
+                    Point p0 = dpf.Diagram.UnProject(new Point(destino.X, destino.Y));
+
+                    dpf.Diagram.Translate.X -= dpf.DCRectangleSelection.X - p0.X;
+                    dpf.Diagram.Translate.Y -= dpf.DCRectangleSelection.Y - p0.Y;
+
+                    e.Graphics!.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                    e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
+                    e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                    e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+                    e.Graphics.SetClip(destino);
+
+                    dpf.Diagram.Draw(e.Graphics, destino, false, true);
+                };
+
+                printDoc.Print();
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, string.Format(Properties.Text.error_exporting_diagram, ex.Message), Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                _PreviousSavingError = true;
+            }
+        }
+
+        private void tsbAddTablesFromDataBase_Click(object sender, EventArgs e)
+        {
+            List<Tuple<string, string>> preselectedTableIds = new List<Tuple<string, string>>();
+
+            foreach (DiagramTable dt in _Diagram.Tables)
+            {
+                preselectedTableIds.Add(new Tuple<string, string>(dt.SchemaName, dt.TableName));
+            }
+
+            SelectTablesForm stf = new SelectTablesForm(_Data, preselectedTableIds);
+            if (stf.ShowDialog(this) != DialogResult.OK) return;
+
+            AddTables(stf.SelectedTables!);
+        }
+
+        private void tsbAddNewTable_Click(object sender, EventArgs e)
         {
             DiagramTableForm f = new DiagramTableForm(_Diagram);
-                DisableAutoSave();
+            DisableAutoSave();
             f.ShowDialog(this);
             if (f.DialogResult == DialogResult.OK)
             {
-                _Diagram.AddTable(f.DiagramTable);
-                f.DiagramTable.MoveTo((Point)cms.Tag!);
-                _Invalidate();
-                SetPendingSave();
+                AddTables(new List<DiagramTable>() { f.DiagramTable });
             }
             else
             {
@@ -521,7 +748,34 @@ namespace PgMulti.Forms
             }
         }
 
-        private void tsmiRemove_Click(object sender, EventArgs e)
+        private void tsmiAddNewTable_Click(object sender, EventArgs e)
+        {
+            DiagramTableForm f = new DiagramTableForm(_Diagram);
+            DisableAutoSave();
+            f.ShowDialog(this);
+            if (f.DialogResult == DialogResult.OK)
+            {
+                AddTables(new List<DiagramTable>() { f.DiagramTable });
+            }
+            else
+            {
+                EnableAutoSave();
+            }
+        }
+
+        private void tsbAddNewRelation_Click(object sender, EventArgs e)
+        {
+            ShowDiagramRelationForm(new DiagramRelationForm(_Diagram));
+        }
+
+        private void tsmiAddNewRelation_Click(object sender, EventArgs e)
+        {
+            if (_SelectedObject == null || !(_SelectedObject is DiagramTable)) return;
+
+            _Diagram.StartRelatingTables((DiagramTable)_SelectedObject);
+        }
+
+        private void RemoveSelected()
         {
             if (_SelectedObject == null)
             {
@@ -566,45 +820,62 @@ namespace PgMulti.Forms
             }
         }
 
-        private void tsmiAddRelation_Click(object sender, EventArgs e)
+        private void tsbRemove_Click(object sender, EventArgs e)
         {
-            if (_SelectedObject == null || !(_SelectedObject is DiagramTable)) return;
-
-            _Diagram.StartRelatingTables((DiagramTable)_SelectedObject);
+            RemoveSelected();
         }
 
-        #endregion "Form events"
-
-        #region "Other controls events"
-        private void tsbSave_Click(object sender, EventArgs e)
+        private void tsmiRemove_Click(object sender, EventArgs e)
         {
-            try
+            RemoveSelected();
+        }
+
+        private void EditSelected()
+        {
+            if (_SelectedObject == null)
             {
-                Save();
+                return;
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show(this, string.Format(Properties.Text.error_saving_diagram, ex.Message), Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                _PreviousSavingError = true;
+                if (_SelectedObject is DiagramTable)
+                {
+                    DiagramTableForm f = new DiagramTableForm((DiagramTable)_SelectedObject);
+                    DisableAutoSave();
+                    f.ShowDialog(this);
+                    if (f.DialogResult == DialogResult.OK)
+                    {
+                        _Diagram.Refresh();
+                        _Invalidate();
+                        SetPendingSave();
+                    }
+                    else
+                    {
+                        EnableAutoSave();
+                    }
+                }
+                else if (_SelectedObject is DiagramRelation)
+                {
+                    ShowDiagramRelationForm(new DiagramRelationForm((DiagramRelation)_SelectedObject));
+                }
+                else
+                {
+                    return;
+                }
             }
         }
 
-        private void tsbAddTables_Click(object sender, EventArgs e)
+        private void tsbEdit_Click(object sender, EventArgs e)
         {
-            List<Tuple<string, string>> preselectedTableIds = new List<Tuple<string, string>>();
-
-            foreach (DiagramTable dt in _Diagram.Tables)
-            {
-                preselectedTableIds.Add(new Tuple<string, string>(dt.SchemaName, dt.TableName));
-            }
-
-            SelectTablesForm stf = new SelectTablesForm(_Data, preselectedTableIds);
-            if (stf.ShowDialog(this) != DialogResult.OK) return;
-
-            AddTables(stf.SelectedTables!);
+            EditSelected();
         }
 
-        private bool _tsbRepositionTables_CheckedChanged_Ignore = false;  
+        private void tsmiEdit_Click(object sender, EventArgs e)
+        {
+            EditSelected();
+        }
+
+        private bool _tsbRepositionTables_CheckedChanged_Ignore = false;
         private void tsbRepositionTables_CheckedChanged(object sender, EventArgs e)
         {
             if (_tsbRepositionTables_CheckedChanged_Ignore) return;
@@ -624,6 +895,10 @@ namespace PgMulti.Forms
             }
         }
 
+        private void tsbSuggestRelatedTables_CheckedChanged(object sender, EventArgs e)
+        {
+        }
+
         private void _ExpandDiagramOptionsForm_FormClosed(object? sender, FormClosedEventArgs e)
         {
             _tsbRepositionTables_CheckedChanged_Ignore = true;
@@ -639,7 +914,7 @@ namespace PgMulti.Forms
             {
                 try
                 {
-                    Save();
+                    Save(_Filename);
                 }
                 catch (Exception ex)
                 {
@@ -667,6 +942,14 @@ namespace PgMulti.Forms
             GoToTable(dt);
         }
 
+        private void SelectObject(DiagramObject? o)
+        {
+            _SelectedObject = o;
+
+            tsbEdit.Enabled = o != null;
+            tsbRemove.Enabled = o != null;
+        }
+
         private void GoToTable(DiagramTable dt)
         {
             if (_SelectedObject != null)
@@ -674,7 +957,7 @@ namespace PgMulti.Forms
                 _SelectedObject.Selected = false;
             }
 
-            _SelectedObject = dt;
+            SelectObject(dt);
 
             if (_SelectedObject != null)
             {
@@ -1074,7 +1357,7 @@ namespace PgMulti.Forms
 
                     if (nextSelectedObject != _SelectedObject)
                     {
-                        _SelectedObject = nextSelectedObject;
+                        SelectObject(nextSelectedObject);
 
                         if (nextSelectedObject == null || nextSelectedObject is DiagramTable)
                         {
@@ -1361,6 +1644,7 @@ namespace PgMulti.Forms
             if (dcClipRectangle.HasValue)
             {
                 _Invalidate(_Diagram.ProjectToInt(dcClipRectangle.Value));
+                _Canvas.Update();
             }
         }
 
@@ -1371,10 +1655,7 @@ namespace PgMulti.Forms
 
         private void _Canvas_Paint(object? sender, PaintEventArgs e)
         {
-            //DrawWaypoints(e.Graphics);
-            //return;
-
-            _Diagram.Draw(e.Graphics, e.ClipRectangle);
+            _Diagram.Draw(e.Graphics, e.ClipRectangle, true, false);
 
             if (_ExpandDiagramOptionsForm != null && e.ClipRectangle.IntersectsWith(_ExpandDiagramOptionsForm.Bounds))
             {
@@ -1406,44 +1687,35 @@ namespace PgMulti.Forms
             return new Rectangle(minX, minY, maxX - minX, maxY - minY);
         }
 
-
-        //private void DrawWaypoints(Graphics g)
-        //{
-        //    Brush brush = new SolidBrush(Color.Black);
-        //    Pen pen = new Pen(brush, 2);
-
-        //    foreach (Point p in waypoints)
-        //    {
-        //        g.FillEllipse(brush, p.X - 5, p.Y - 5, 10, 10);
-        //    }
-
-        //    if (waypoints.Count < 4) return;
-        //    List<Point> bezierPoints = new List<Point>();
-        //    bezierPoints.Add(waypoints[0]);
-        //    for (int i = 1; i + 2 < waypoints.Count; i += 3)
-        //    {
-        //        for (int j = 0; j < 3; j++)
-        //        {
-        //            bezierPoints.Add(waypoints[i + j]);
-        //        }
-        //    }
-        //    g.DrawBeziers(pen, bezierPoints.ToArray());
-        //}
-
         #endregion 
 
         #region TextI18n
         private void InitializeText()
         {
+            this.tsbNew.Text = Properties.Text.new_diagram;
+            this.tsbOpen.Text = Properties.Text.open_diagram;
             this.tsbSave.Text = Properties.Text.save;
-            this.tsbAddTables.Text = Properties.Text.add_tables;
+            this.tsbSaveAs.Text = Properties.Text.save_as;
+            this.tsbExport.Text = Properties.Text.export_to_image;
+            this.tsbAddTablesFromDataBase.Text = Properties.Text.add_tables_from_db;
+            this.tsbAddNewTable.Text = Properties.Text.add_new_table;
+            this.tsbAddNewRelation.Text = Properties.Text.add_new_relation;
+            this.tsbRemove.Text = Properties.Text.remove;
+            this.tsbEdit.Text = Properties.Text.edit;
             this.tsbRepositionTables.Text = Properties.Text.automatically_reposition_tables;
+            this.tsbSuggestRelatedTables.Text = Properties.Text.suggest_related_tables;
             this.tsbZoomFull.Text = Properties.Text.zoom_full;
-            this.tsmiAddRelation.Text = Properties.Text.add_relation;
-            this.tsmiAddTable.Text = Properties.Text.add_table;
+            this.tsmiAddNewRelation.Text = Properties.Text.add_new_relation;
+            this.tsmiAddNewTable.Text = Properties.Text.add_new_table;
             this.tsmiEdit.Text = Properties.Text.edit;
             this.tsmiRemove.Text = Properties.Text.remove;
             this.tslSelectTable.Text = Properties.Text.goto_table + ":";
+            this.ofdOpenDiagram.Filter = Properties.Text.pgdx_file_filter;
+            this.ofdOpenDiagram.Title = Properties.Text.select_open_file;
+            this.sfdSaveDiagram.Filter = Properties.Text.pgdx_file_filter;
+            this.sfdSaveDiagram.Title = Properties.Text.select_save_file;
+            this.sfdExportDiagram.Filter = Properties.Text.export_file_filter;
+            this.sfdExportDiagram.Title = Properties.Text.select_save_file;
         }
         #endregion
 

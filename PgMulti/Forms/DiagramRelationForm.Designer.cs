@@ -138,7 +138,7 @@ namespace PgMulti.Forms
             lblRelationChildTable.Location = new Point(11, 41);
             lblRelationChildTable.Margin = new Padding(8);
             lblRelationChildTable.Name = "lblRelationChildTable";
-            lblRelationChildTable.Size = new Size(150, 20);
+            lblRelationChildTable.Size = new Size(213, 28);
             lblRelationChildTable.TabIndex = 0;
             lblRelationChildTable.Text = "lblRelationChildTable";
             // 
@@ -148,7 +148,7 @@ namespace PgMulti.Forms
             cbRelationChildTable.AutoCompleteSource = AutoCompleteSource.ListItems;
             cbRelationChildTable.Location = new Point(229, 38);
             cbRelationChildTable.Name = "cbRelationChildTable";
-            cbRelationChildTable.Size = new Size(212, 28);
+            cbRelationChildTable.Size = new Size(212, 36);
             cbRelationChildTable.TabIndex = 0;
             cbRelationChildTable.SelectedIndexChanged += cbRelationChildTable_SelectedIndexChanged;
             // 
@@ -158,7 +158,7 @@ namespace PgMulti.Forms
             lblRelationChildColumns.Location = new Point(11, 77);
             lblRelationChildColumns.Margin = new Padding(8);
             lblRelationChildColumns.Name = "lblRelationChildColumns";
-            lblRelationChildColumns.Size = new Size(172, 20);
+            lblRelationChildColumns.Size = new Size(244, 28);
             lblRelationChildColumns.TabIndex = 0;
             lblRelationChildColumns.Text = "lblRelationChildColumns";
             // 
@@ -178,7 +178,7 @@ namespace PgMulti.Forms
             lblRelationChildType.Location = new Point(11, 236);
             lblRelationChildType.Margin = new Padding(8);
             lblRelationChildType.Name = "lblRelationChildType";
-            lblRelationChildType.Size = new Size(146, 20);
+            lblRelationChildType.Size = new Size(208, 28);
             lblRelationChildType.TabIndex = 0;
             lblRelationChildType.Text = "lblRelationChildType";
             // 
@@ -187,7 +187,7 @@ namespace PgMulti.Forms
             cbRelationChildType.DropDownStyle = ComboBoxStyle.DropDownList;
             cbRelationChildType.Location = new Point(229, 233);
             cbRelationChildType.Name = "cbRelationChildType";
-            cbRelationChildType.Size = new Size(50, 28);
+            cbRelationChildType.Size = new Size(50, 36);
             cbRelationChildType.TabIndex = 2;
             // 
             // lblRelationOnUpdate
@@ -206,7 +206,7 @@ namespace PgMulti.Forms
             cbRelationOnUpdate.Location = new Point(246, 660);
             cbRelationOnUpdate.Name = "cbRelationOnUpdate";
             cbRelationOnUpdate.Size = new Size(100, 28);
-            cbRelationOnUpdate.TabIndex = 1;
+            cbRelationOnUpdate.TabIndex = 3;
             // 
             // lblRelationOnDelete
             // 
@@ -224,7 +224,7 @@ namespace PgMulti.Forms
             cbRelationOnDelete.Location = new Point(246, 694);
             cbRelationOnDelete.Name = "cbRelationOnDelete";
             cbRelationOnDelete.Size = new Size(100, 28);
-            cbRelationOnDelete.TabIndex = 2;
+            cbRelationOnDelete.TabIndex = 4;
             // 
             // btnCancel
             // 
@@ -232,7 +232,7 @@ namespace PgMulti.Forms
             btnCancel.Margin = new Padding(10);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(100, 29);
-            btnCancel.TabIndex = 4;
+            btnCancel.TabIndex = 6;
             btnCancel.UseVisualStyleBackColor = true;
             btnCancel.Click += btnCancel_Click;
             // 
@@ -242,7 +242,7 @@ namespace PgMulti.Forms
             btnOk.Margin = new Padding(10);
             btnOk.Name = "btnOk";
             btnOk.Size = new Size(100, 29);
-            btnOk.TabIndex = 3;
+            btnOk.TabIndex = 5;
             btnOk.UseVisualStyleBackColor = true;
             btnOk.Click += btnOk_Click;
             // 
@@ -257,7 +257,7 @@ namespace PgMulti.Forms
             gbParent.Location = new Point(17, 56);
             gbParent.Name = "gbParent";
             gbParent.Size = new Size(649, 273);
-            gbParent.TabIndex = 2;
+            gbParent.TabIndex = 1;
             gbParent.TabStop = false;
             gbParent.Text = "gbParent";
             // 
@@ -269,13 +269,13 @@ namespace PgMulti.Forms
             gbChild.Controls.Add(lblRelationChildColumns);
             gbChild.Controls.Add(odcsRelationChildColumns);
             gbChild.Controls.Add(lblRelationChildType);
+            gbChild.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point);
             gbChild.Location = new Point(17, 348);
             gbChild.Name = "gbChild";
             gbChild.Size = new Size(649, 273);
             gbChild.TabIndex = 2;
             gbChild.TabStop = false;
             gbChild.Text = "gbChild";
-            gbChild.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point);
             // 
             // DiagramRelationForm
             // 

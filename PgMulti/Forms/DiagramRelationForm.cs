@@ -21,21 +21,14 @@ namespace PgMulti.Forms
             if (parentTable == null) throw new ArgumentException();
             if (childTable == null) throw new ArgumentException();
 
-            Text = Properties.Text.new_relation;
-
             txtRelationId.Text = "fk_" + parentTable.TableName + "_" + childTable.TableName;
 
             cbRelationParentTable.SelectedItem = parentTable;
             odcsRelationParentColumns.DiagramTable = parentTable;
             odcsRelationParentColumns.SelectedColumns = parentTable.Columns.Where(i => i.PrimaryKey).ToList();
-            cbRelationParentType.SelectedItem = cbRelationParentType.Items.Cast<RelationTypeOptionListItem>().First(i => i.Value == DiagramRelation.RelationTypeOptions.One);
 
             cbRelationChildTable.SelectedItem = childTable;
             odcsRelationChildColumns.DiagramTable = childTable;
-            cbRelationChildType.SelectedItem = cbRelationChildType.Items.Cast<RelationTypeOptionListItem>().First(i => i.Value == DiagramRelation.RelationTypeOptions.Many);
-
-            cbRelationOnUpdate.SelectedItem = cbRelationOnUpdate.Items.Cast<PropagationOptionListItem>().First(i => i.Value == DiagramRelation.PropagationOptions.Restrict);
-            cbRelationOnDelete.SelectedItem = cbRelationOnDelete.Items.Cast<PropagationOptionListItem>().First(i => i.Value == DiagramRelation.PropagationOptions.Restrict);
         }
 
         public DiagramRelationForm(DiagramRelation dtr) : this(dtr.Diagram)
@@ -64,10 +57,12 @@ namespace PgMulti.Forms
             cbRelationOnDelete.SelectedItem = cbRelationOnDelete.Items.Cast<PropagationOptionListItem>().First(i => i.Value == dtr.OnDelete);
         }
 
-        private DiagramRelationForm(Diagram d)
+        public DiagramRelationForm(Diagram d)
         {
             InitializeComponent();
             InitializeText();
+
+            Text = Properties.Text.new_relation;
 
             Font sectionFont = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point);
             Font normalFont = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
@@ -111,10 +106,17 @@ namespace PgMulti.Forms
             cbRelationOnDelete.Items.Add(new PropagationOptionListItem(DiagramRelation.PropagationOptions.NoAction));
 
             txtRelationId.Text = "";
+
             cbRelationParentTable.SelectedItem = null;
             odcsRelationParentColumns.DiagramTable = null;
+            cbRelationParentType.SelectedItem = cbRelationParentType.Items.Cast<RelationTypeOptionListItem>().First(i => i.Value == DiagramRelation.RelationTypeOptions.One);
+
             cbRelationChildTable.SelectedItem = null;
             odcsRelationChildColumns.DiagramTable = null;
+            cbRelationChildType.SelectedItem = cbRelationChildType.Items.Cast<RelationTypeOptionListItem>().First(i => i.Value == DiagramRelation.RelationTypeOptions.Many);
+
+            cbRelationOnUpdate.SelectedItem = cbRelationOnUpdate.Items.Cast<PropagationOptionListItem>().First(i => i.Value == DiagramRelation.PropagationOptions.Restrict);
+            cbRelationOnDelete.SelectedItem = cbRelationOnDelete.Items.Cast<PropagationOptionListItem>().First(i => i.Value == DiagramRelation.PropagationOptions.Restrict);
         }
 
         public DiagramRelation? Relation

@@ -825,14 +825,17 @@ Unlike other tools, this application does not reuse the connection between diffe
 	<data name="pgdx_file_filter" xml:space="preserve">
     <value>pgMulti diagram PGDX files (*.pgdx)|*.pgdx|All files|*.*</value>
   </data>
-	<data name="warning_bad_format_diagram_file" xml:space="preserve">
+  <data name="export_file_filter" xml:space="preserve">
+    <value>PNG Images (*.png)|*.png|JPEG Images (*.jpg)|*.jpg|All files|*.*</value>
+  </data>
+  <data name="warning_bad_format_diagram_file" xml:space="preserve">
     <value>The file is not a valid pgMulti diagram</value>
   </data>
 	<data name="diagram_title" xml:space="preserve">
     <value>{0} - pgMulti diagram</value>
   </data>
-	<data name="add_tables" xml:space="preserve">
-    <value>Add tables</value>
+	<data name="add_tables_from_db" xml:space="preserve">
+    <value>Add tables from database</value>
   </data>
 	<data name="new_diagram" xml:space="preserve">
     <value>New diagram</value>
@@ -900,11 +903,11 @@ Unlike other tools, this application does not reuse the connection between diffe
   <data name="warning_relations_to_remove" xml:space="preserve">
     <value>If you accept the changes, the following relations will be removed from this table: {0}</value>
   </data>
-  <data name="add_relation" xml:space="preserve">
-    <value>Add relation</value>
+  <data name="add_new_relation" xml:space="preserve">
+    <value>Add new relation</value>
   </data>
-  <data name="add_table" xml:space="preserve">
-    <value>Add table</value>
+  <data name="add_new_table" xml:space="preserve">
+    <value>Add new table</value>
   </data>
   <data name="confirm_table_deletion" xml:space="preserve">
     <value>Are you sure you want to delete table {0}?</value>
@@ -1196,5 +1199,17 @@ Unlike other tools, this application does not reuse the connection between diffe
   </data>
   <data name="edit_relation_x" xml:space="preserve">
     <value>Edit relation {0}</value>
+  </data>
+  <data name="export_to_image" xml:space="preserve">
+    <value>Export to image file</value>
+  </data>
+  <data name="select_area" xml:space="preserve">
+    <value>Select area</value>
+  </data>
+  <data name="error_exporting_diagram" xml:space="preserve">
+    <value>Error exporting diagram: {0}</value>
+  </data>
+  <data name="error_invalid_extension" xml:space="preserve">
+    <value>Extension {0} not allowed. Only JPEG or PNG formats are allowed.</value>
   </data>
 </root>

@@ -97,29 +97,29 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Add relation.
+        ///   Busca una cadena traducida similar a Add new relation.
         /// </summary>
-        internal static string add_relation {
+        internal static string add_new_relation {
             get {
-                return ResourceManager.GetString("add_relation", resourceCulture);
+                return ResourceManager.GetString("add_new_relation", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Add table.
+        ///   Busca una cadena traducida similar a Add new table.
         /// </summary>
-        internal static string add_table {
+        internal static string add_new_table {
             get {
-                return ResourceManager.GetString("add_table", resourceCulture);
+                return ResourceManager.GetString("add_new_table", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Add tables.
+        ///   Busca una cadena traducida similar a Add tables from database.
         /// </summary>
-        internal static string add_tables {
+        internal static string add_tables_from_db {
             get {
-                return ResourceManager.GetString("add_tables", resourceCulture);
+                return ResourceManager.GetString("add_tables_from_db", resourceCulture);
             }
         }
         
@@ -996,11 +996,29 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Error exporting diagram: {0}.
+        /// </summary>
+        internal static string error_exporting_diagram {
+            get {
+                return ResourceManager.GetString("error_exporting_diagram", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a ERROR IN TASK {0}.
         /// </summary>
         internal static string error_in_task {
             get {
                 return ResourceManager.GetString("error_in_task", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Extension {0} not allowed. Only JPEG or PNG formats are allowed..
+        /// </summary>
+        internal static string error_invalid_extension {
+            get {
+                return ResourceManager.GetString("error_invalid_extension", resourceCulture);
             }
         }
         
@@ -1160,6 +1178,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a PNG Images (*.png)|*.png|JPEG Images (*.jpg)|*.jpg|All files|*.*.
+        /// </summary>
+        internal static string export_file_filter {
+            get {
+                return ResourceManager.GetString("export_file_filter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Export successful.
         /// </summary>
         internal static string export_ok {
@@ -1184,6 +1211,15 @@ namespace PgMulti.Properties {
         internal static string export_password {
             get {
                 return ResourceManager.GetString("export_password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Export to image file.
+        /// </summary>
+        internal static string export_to_image {
+            get {
+                return ResourceManager.GetString("export_to_image", resourceCulture);
             }
         }
         
@@ -2466,6 +2502,15 @@ namespace PgMulti.Properties {
         internal static string searching_the_entire_text {
             get {
                 return ResourceManager.GetString("searching_the_entire_text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Select area.
+        /// </summary>
+        internal static string select_area {
+            get {
+                return ResourceManager.GetString("select_area", resourceCulture);
             }
         }
         

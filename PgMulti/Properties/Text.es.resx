@@ -822,17 +822,20 @@ A diferencia de otras herramientas, esta aplicación no reutiliza la conexión e
 	<data name="select_tables" xml:space="preserve">
     <value>Seleccionar tablas</value>
   </data>
-	<data name="pgdx_file_filter" xml:space="preserve">
+  <data name="pgdx_file_filter" xml:space="preserve">
     <value>Ficheros PGDX de diagramas de pgMulti (*.pgdx)|*.pgdx|All files|*.*</value>
   </data>
-	<data name="warning_bad_format_diagram_file" xml:space="preserve">
+  <data name="export_file_filter" xml:space="preserve">
+    <value>Imágenes PNG (*.png)|*.png|Imágenes JPEG (*.jpg)|*.jpg|Todos los ficheros|*.*</value>
+  </data>
+  <data name="warning_bad_format_diagram_file" xml:space="preserve">
     <value>El fichero no es un diagrama de pgMulti válido</value>
   </data>
 	<data name="diagram_title" xml:space="preserve">
     <value>{0} - Diagrama de pgMulti</value>
   </data>
-	<data name="add_tables" xml:space="preserve">
-    <value>Añadir tablas</value>
+	<data name="add_tables_from_db" xml:space="preserve">
+    <value>Añadir tablas desde una base de datos</value>
   </data>
 	<data name="new_diagram" xml:space="preserve">
     <value>Nuevo diagrama</value>
@@ -900,11 +903,11 @@ A diferencia de otras herramientas, esta aplicación no reutiliza la conexión e
   <data name="warning_relations_to_remove" xml:space="preserve">
     <value>Si acepta los cambios realizados, se eliminarán las siguientes relaciones de esta tabla: {0}</value>
   </data>
-  <data name="add_relation" xml:space="preserve">
-    <value>Añadir relación</value>
+  <data name="add_new_relation" xml:space="preserve">
+    <value>Añadir nueva relación</value>
   </data>
-  <data name="add_table" xml:space="preserve">
-    <value>Añadir tabla</value>
+  <data name="add_new_table" xml:space="preserve">
+    <value>Añadir nueva tabla</value>
   </data>
   <data name="confirm_table_deletion" xml:space="preserve">
     <value>¿Está seguro de que quiere eliminar la tabla {0}?</value>
@@ -1196,5 +1199,17 @@ A diferencia de otras herramientas, esta aplicación no reutiliza la conexión e
   </data>
   <data name="edit_relation_x" xml:space="preserve">
     <value>Editar relación {0}</value>
+  </data>
+  <data name="export_to_image" xml:space="preserve">
+    <value>Exportar a un fichero de imagen</value>
+  </data>
+  <data name="select_area" xml:space="preserve">
+    <value>Seleccionar área</value>
+  </data>
+  <data name="error_exporting_diagram" xml:space="preserve">
+    <value>Error al exportar el diagrama: {0}</value>
+  </data>
+  <data name="error_invalid_extension" xml:space="preserve">
+    <value>Extensión {0} no permitida. Solo se permiten los formatos JPEG o PNG.</value>
   </data>
 </root>

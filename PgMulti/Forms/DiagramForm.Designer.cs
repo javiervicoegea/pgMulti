@@ -32,19 +32,36 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DiagramForm));
             tsc = new ToolStripContainer();
             ts = new ToolStrip();
+            tsbNew= new ToolStripButton();
+            tsbOpen = new ToolStripButton();
             tsbSave = new ToolStripButton();
-            tsbAddTables = new ToolStripButton();
+            tsbSaveAs = new ToolStripButton();
+            tsbExport = new ToolStripButton();
+            tsbPrint = new ToolStripButton();
+            tsbAddTablesFromDataBase = new ToolStripButton();
+            tsbAddNewTable = new ToolStripButton();
+            tsbAddNewRelation = new ToolStripButton();
+            tsbRemove = new ToolStripButton();
+            tsbEdit = new ToolStripButton();
             tsbRepositionTables = new ToolStripButton();
+            tsbSuggestRelatedTables = new ToolStripButton();
             tsbZoomFull = new ToolStripButton();
-            toolStripSeparator1 = new ToolStripSeparator();
+            tss1 = new ToolStripSeparator();
+            tss2 = new ToolStripSeparator();
+            tss3 = new ToolStripSeparator();
+            tss4 = new ToolStripSeparator();
             tslSelectTable = new ToolStripLabel();
             tscbTables = new ToolStripComboBox();
             tmrSave = new System.Windows.Forms.Timer(components);
             cms = new ContextMenuStrip(components);
-            tsmiAddTable = new ToolStripMenuItem();
-            tsmiAddRelation = new ToolStripMenuItem();
+            tsmiAddNewTable = new ToolStripMenuItem();
+            tsmiAddNewRelation = new ToolStripMenuItem();
             tsmiRemove = new ToolStripMenuItem();
             tsmiEdit = new ToolStripMenuItem();
+            ofdOpenDiagram = new OpenFileDialog();
+            sfdSaveDiagram = new SaveFileDialog();
+            sfdExportDiagram = new SaveFileDialog();
+            pd = new PrintDialog();
             tsc.TopToolStripPanel.SuspendLayout();
             tsc.SuspendLayout();
             ts.SuspendLayout();
@@ -62,7 +79,6 @@
             tsc.Name = "tsc";
             tsc.Size = new Size(800, 450);
             tsc.TabIndex = 1;
-            tsc.Text = "toolStripContainer1";
             // 
             // tsc.TopToolStripPanel
             // 
@@ -72,11 +88,29 @@
             // 
             ts.Dock = DockStyle.None;
             ts.ImageScalingSize = new Size(30, 30);
-            ts.Items.AddRange(new ToolStripItem[] { tsbSave, tsbAddTables, tsbRepositionTables, tsbZoomFull, toolStripSeparator1, tslSelectTable, tscbTables });
+            ts.Items.AddRange(new ToolStripItem[] { tsbNew, tsbOpen, tsbSave, tsbSaveAs, tsbExport, tsbPrint, tss1, tsbAddNewTable, tsbAddNewRelation, tsbAddTablesFromDataBase, tss2, tsbRemove, tsbEdit, tss3, tsbRepositionTables, tsbSuggestRelatedTables, tsbZoomFull, tss4, tslSelectTable, tscbTables });
             ts.Location = new Point(4, 0);
             ts.Name = "ts";
             ts.Size = new Size(598, 37);
             ts.TabIndex = 0;
+            // 
+            // tsbNew
+            // 
+            tsbNew.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbNew.Image = Properties.Resources.new_diagram;
+            tsbNew.ImageTransparentColor = Color.Magenta;
+            tsbNew.Name = "tsbNew";
+            tsbNew.Size = new Size(34, 34);
+            tsbNew.Click += tsbNew_Click;
+            // 
+            // tsbOpen
+            // 
+            tsbOpen.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbOpen.Image = Properties.Resources.abrir;
+            tsbOpen.ImageTransparentColor = Color.Magenta;
+            tsbOpen.Name = "tsbOpen";
+            tsbOpen.Size = new Size(34, 34);
+            tsbOpen.Click += tsbOpen_Click;
             // 
             // tsbSave
             // 
@@ -86,29 +120,105 @@
             tsbSave.ImageTransparentColor = Color.Magenta;
             tsbSave.Name = "tsbSave";
             tsbSave.Size = new Size(34, 34);
-            tsbSave.Text = "toolStripButton1";
             tsbSave.Click += tsbSave_Click;
             // 
-            // tsbAddTables
+            // tsbSaveAs
             // 
-            tsbAddTables.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            tsbAddTables.Image = Properties.Resources.add_table;
-            tsbAddTables.ImageTransparentColor = Color.Magenta;
-            tsbAddTables.Name = "tsbAddTables";
-            tsbAddTables.Size = new Size(34, 34);
-            tsbAddTables.Click += tsbAddTables_Click;
+            tsbSaveAs.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbSaveAs.Enabled = false;
+            tsbSaveAs.Image = Properties.Resources.guardar_como;
+            tsbSaveAs.ImageTransparentColor = Color.Magenta;
+            tsbSaveAs.Name = "tsbSaveAs";
+            tsbSaveAs.Size = new Size(34, 34);
+            tsbSaveAs.Click += tsbSaveAs_Click;
             // 
-            // tsbExpandDiagram
+            // tsbExport
+            // 
+            tsbExport.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbExport.Image = Properties.Resources.export;
+            tsbExport.ImageTransparentColor = Color.Magenta;
+            tsbExport.Name = "tsbExport";
+            tsbExport.Size = new Size(34, 34);
+            tsbExport.Click += tsbExport_Click;
+            // 
+            // tsbPrint
+            // 
+            tsbPrint.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbPrint.Image = Properties.Resources.print;
+            tsbPrint.ImageTransparentColor = Color.Magenta;
+            tsbPrint.Name = "tsbPrint";
+            tsbPrint.Size = new Size(34, 34);
+            tsbPrint.Click += tsbPrint_Click;
+            // 
+            // tsbAddTablesFromDataBase
+            // 
+            tsbAddTablesFromDataBase.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbAddTablesFromDataBase.Image = Properties.Resources.tva_db;
+            tsbAddTablesFromDataBase.ImageTransparentColor = Color.Magenta;
+            tsbAddTablesFromDataBase.Name = "tsbAddTablesFromDataBase";
+            tsbAddTablesFromDataBase.Size = new Size(34, 34);
+            tsbAddTablesFromDataBase.Click += tsbAddTablesFromDataBase_Click;
+            // 
+            // tsbAddNewTable
+            // 
+            tsbAddNewTable.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbAddNewTable.Image = Properties.Resources.tabla;
+            tsbAddNewTable.ImageTransparentColor = Color.Magenta;
+            tsbAddNewTable.Name = "tsbAddNewTable";
+            tsbAddNewTable.Size = new Size(34, 34);
+            tsbAddNewTable.Click += tsbAddNewTable_Click;
+            // 
+            // tsbAddNewRelation
+            // 
+            tsbAddNewRelation.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbAddNewRelation.Image = Properties.Resources.connect;
+            tsbAddNewRelation.ImageTransparentColor = Color.Magenta;
+            tsbAddNewRelation.Name = "tsbAddNewRelation";
+            tsbAddNewRelation.Size = new Size(34, 34);
+            tsbAddNewRelation.Click += tsbAddNewRelation_Click;
+            // 
+            // tsbRemove
+            // 
+            tsbRemove.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbRemove.Enabled = false;
+            tsbRemove.Image = Properties.Resources.borrar;
+            tsbRemove.ImageTransparentColor = Color.Magenta;
+            tsbRemove.Name = "tsbRemove";
+            tsbRemove.Size = new Size(34, 34);
+            tsbRemove.Click += tsbRemove_Click;
+            // 
+            // tsbEdit
+            // 
+            tsbEdit.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbEdit.Enabled = false;
+            tsbEdit.Image = Properties.Resources.editar;
+            tsbEdit.ImageTransparentColor = Color.Magenta;
+            tsbEdit.Name = "tsbEdit";
+            tsbEdit.Size = new Size(34, 34);
+            tsbEdit.Click += tsbEdit_Click;
+            // 
+            // tsbRepositionTables
             // 
             tsbRepositionTables.BackColor = SystemColors.Control;
             tsbRepositionTables.CheckOnClick = true;
             tsbRepositionTables.DisplayStyle = ToolStripItemDisplayStyle.Image;
             tsbRepositionTables.Image = Properties.Resources.expand;
             tsbRepositionTables.ImageTransparentColor = Color.Magenta;
-            tsbRepositionTables.Name = "tsbExpandDiagram";
+            tsbRepositionTables.Name = "tsbRepositionTables";
             tsbRepositionTables.Size = new Size(34, 34);
-            tsbRepositionTables.Text = "toolStripButton1";
             tsbRepositionTables.CheckedChanged += tsbRepositionTables_CheckedChanged;
+            // 
+            // tsbSuggestRelatedTables
+            // 
+            tsbSuggestRelatedTables.BackColor = SystemColors.Control;
+            tsbSuggestRelatedTables.CheckOnClick = true;
+            tsbSuggestRelatedTables.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbSuggestRelatedTables.Image = Properties.Resources.expand;
+            tsbSuggestRelatedTables.ImageTransparentColor = Color.Magenta;
+            tsbSuggestRelatedTables.Name = "tsbSuggestRelatedTables";
+            tsbSuggestRelatedTables.Size = new Size(34, 34);
+            tsbSuggestRelatedTables.Visible = false;
+            tsbSuggestRelatedTables.CheckedChanged += tsbSuggestRelatedTables_CheckedChanged;
             // 
             // tsbZoomFull
             // 
@@ -117,13 +227,27 @@
             tsbZoomFull.ImageTransparentColor = Color.Magenta;
             tsbZoomFull.Name = "tsbZoomFull";
             tsbZoomFull.Size = new Size(34, 34);
-            tsbZoomFull.Text = "toolStripButton1";
             tsbZoomFull.Click += tsbZoomFull_Click;
             // 
-            // toolStripSeparator1
+            // tss1
             // 
-            toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(6, 37);
+            tss1.Name = "tss1";
+            tss1.Size = new Size(6, 37);
+            // 
+            // tss2
+            // 
+            tss2.Name = "tss2";
+            tss2.Size = new Size(6, 37);
+            // 
+            // tss3
+            // 
+            tss3.Name = "tss3";
+            tss3.Size = new Size(6, 37);
+            // 
+            // tss4
+            // 
+            tss4.Name = "tss4";
+            tss4.Size = new Size(6, 37);
             // 
             // tslSelectTable
             // 
@@ -146,24 +270,24 @@
             // cms
             // 
             cms.ImageScalingSize = new Size(20, 20);
-            cms.Items.AddRange(new ToolStripItem[] { tsmiAddTable, tsmiAddRelation, tsmiRemove, tsmiEdit });
+            cms.Items.AddRange(new ToolStripItem[] { tsmiAddNewTable, tsmiAddNewRelation, tsmiEdit, tsmiRemove });
             cms.Name = "cms";
             cms.Size = new Size(74, 108);
             cms.Opening += cms_Opening;
             // 
-            // tsmiAddTable
+            // tsmiAddNewTable
             // 
-            tsmiAddTable.Image = Properties.Resources.add_table;
-            tsmiAddTable.Name = "tsmiAddTable";
-            tsmiAddTable.Size = new Size(73, 26);
-            tsmiAddTable.Click += tsmiAddTable_Click;
+            tsmiAddNewTable.Image = Properties.Resources.tabla;
+            tsmiAddNewTable.Name = "tsmiAddNewTable";
+            tsmiAddNewTable.Size = new Size(73, 26);
+            tsmiAddNewTable.Click += tsmiAddNewTable_Click;
             // 
-            // tsmiAddRelation
+            // tsmiAddNewRelation
             // 
-            tsmiAddRelation.Image = Properties.Resources.connect;
-            tsmiAddRelation.Name = "tsmiAddRelation";
-            tsmiAddRelation.Size = new Size(73, 26);
-            tsmiAddRelation.Click += tsmiAddRelation_Click;
+            tsmiAddNewRelation.Image = Properties.Resources.connect;
+            tsmiAddNewRelation.Name = "tsmiAddNewRelation";
+            tsmiAddNewRelation.Size = new Size(73, 26);
+            tsmiAddNewRelation.Click += tsmiAddNewRelation_Click;
             // 
             // tsmiRemove
             // 
@@ -178,6 +302,27 @@
             tsmiEdit.Name = "tsmiEdit";
             tsmiEdit.Size = new Size(73, 26);
             tsmiEdit.Click += tsmiEdit_Click;
+            // 
+            // ofdOpenDiagram
+            // 
+            ofdOpenDiagram.FileName = "*.pgdx";
+            ofdOpenDiagram.FilterIndex = 0;
+            // 
+            // sfdSaveDiagram
+            // 
+            sfdSaveDiagram.DefaultExt = "pgdx";
+            sfdSaveDiagram.FileName = "pgMultiDiagram.pgdx";
+            sfdSaveDiagram.FilterIndex = 0;
+            // 
+            // sfdExportDiagram
+            // 
+            sfdExportDiagram.FilterIndex = 0;
+            // 
+            // pd
+            // 
+            pd.AllowSomePages = false;
+            pd.AllowSelection = false;
+            pd.UseEXDialog = true;
             // 
             // DiagramForm
             // 
@@ -209,18 +354,35 @@
 
         private ToolStripContainer tsc;
         private ToolStrip ts;
+        private ToolStripButton tsbNew;
+        private ToolStripButton tsbOpen;
         private ToolStripButton tsbSave;
-        private ToolStripButton tsbAddTables;
+        private ToolStripButton tsbSaveAs;
+        private ToolStripButton tsbExport;
+        private ToolStripButton tsbPrint;
+        private ToolStripButton tsbAddTablesFromDataBase;
+        private ToolStripButton tsbAddNewTable;
+        private ToolStripButton tsbAddNewRelation;
+        private ToolStripButton tsbRemove;
+        private ToolStripButton tsbEdit;
+        private ToolStripButton tsbRepositionTables;
+        private ToolStripButton tsbSuggestRelatedTables;
+        private ToolStripButton tsbZoomFull;
         private System.Windows.Forms.Timer tmrSave;
         private ContextMenuStrip cms;
-        private ToolStripMenuItem tsmiAddTable;
+        private ToolStripMenuItem tsmiAddNewTable;
         private ToolStripMenuItem tsmiRemove;
         private ToolStripMenuItem tsmiEdit;
-        private ToolStripButton tsbRepositionTables;
-        private ToolStripButton tsbZoomFull;
         private ToolStripComboBox tscbTables;
-        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripSeparator tss1;
+        private ToolStripSeparator tss2;
+        private ToolStripSeparator tss3;
+        private ToolStripSeparator tss4;
         private ToolStripLabel tslSelectTable;
-        private ToolStripMenuItem tsmiAddRelation;
+        private ToolStripMenuItem tsmiAddNewRelation;
+        private OpenFileDialog ofdOpenDiagram;
+        private SaveFileDialog sfdSaveDiagram;
+        private SaveFileDialog sfdExportDiagram;
+        private PrintDialog pd;
     }
 }

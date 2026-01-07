@@ -123,7 +123,7 @@ namespace PgMulti.Diagrams
 
         public abstract float SelectingTolerance { get; }
 
-        public abstract void Draw(Graphics g);
+        public abstract void Draw(Graphics g, bool highResolution);
 
         public virtual void SetStartDraggingPoint(Point p)
         {

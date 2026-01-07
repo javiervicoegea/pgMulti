@@ -172,4 +172,19 @@
   <data name="add_row" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\add_row.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="hr_not_null_field" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\hr_not_null_field.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="hr_not_null_foreign_key" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\hr_not_null_foreign_key.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="hr_nullable_field" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\hr_nullable_field.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="hr_nullable_foreign_key" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\hr_nullable_foreign_key.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="hr_primary_key" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\hr_primary_key.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

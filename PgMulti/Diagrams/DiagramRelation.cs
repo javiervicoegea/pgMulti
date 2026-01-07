@@ -402,7 +402,7 @@ namespace PgMulti.Diagrams
             g.DrawString(Id, idFont, br, x + 2, y);
         }
 
-        public override void Draw(Graphics g)
+        public override void Draw(Graphics g, bool highResolution)
         {
             if (ParentTable.Dragging || ChildTable.Dragging) return;
 

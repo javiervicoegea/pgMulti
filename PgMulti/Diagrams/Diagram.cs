@@ -1,14 +1,5 @@
-﻿using FastColoredTextBoxNS;
-using PgMulti.AppData;
-using PgMulti.DataAccess;
-using PgMulti.DataStructure;
+﻿using PgMulti.DataStructure;
 using PgMulti.Diagrams.Efdg;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace PgMulti.Diagrams
@@ -37,7 +28,7 @@ namespace PgMulti.Diagrams
         private Rectangle _BoundingBox;
         private Rectangle _MaxBoundingBox;
 
-        private static Pen _RelatingTablesPen = new Pen(Color.FromArgb(255, 0, 0, 255), 5) { DashPattern = new float[]{ 5, 5 } };
+        private static Pen _RelatingTablesPen = new Pen(Color.FromArgb(255, 0, 0, 255), 5) { DashPattern = new float[] { 5, 5 } };
         //private static Pen _BorderPen = new Pen(new SolidBrush(Color.FromArgb(255, 0, 0, 0)), 2);
         private static Brush _BackgroundBrush = new SolidBrush(Color.FromArgb(255, 245, 245, 245));
 
@@ -241,7 +232,7 @@ namespace PgMulti.Diagrams
         }
 
 
-        public void AddTable(Table t)
+        public DiagramTable AddTable(Table t)
         {
             DiagramTable? dt = FindTable(t);
 
@@ -253,15 +244,17 @@ namespace PgMulti.Diagrams
             }
             else
             {
-                // Update table:
+                // ToDo: Update table
                 // Clear dt columns
                 // Add all columns in t to dt
                 // Clear dt relations in dt and also in _Relations
                 // AddTableRelations(dt, t);
             }
+
+            return dt;
         }
 
-        public void AddTable(DiagramTable dt)
+        public DiagramTable AddTable(DiagramTable dt)
         {
             _Tables.Add(dt);
             dt.ReorderColumns();
@@ -274,6 +267,8 @@ namespace PgMulti.Diagrams
                 DiagramRelocator.Add(l);
             }
             UpdateDiagramRelocator(dt);
+
+            return dt;
         }
 
         public void RemoveTable(DiagramTable dt)
@@ -579,6 +574,30 @@ namespace PgMulti.Diagrams
             Translate.Y += dcRectangleViewPort.Y + dcRectangleViewPort.Height / 2 - dcPoint.Y;
         }
 
+        public void ZoomFull(Size canvasSize, int margin, bool minScaleMode)
+        {
+            float scaleX = ((float)canvasSize.Width - 2 * margin) / BoundingBox.Width;
+            float scaleY = ((float)canvasSize.Height - 2 * margin) / BoundingBox.Height;
+            float scale;
+
+            if (minScaleMode)
+            {
+                scale = Math.Min(scaleX, scaleY);
+            }
+            else
+            {
+                scale = (scaleX + scaleY) / 2.0f;
+            }
+
+            if (scale < 0.1f) scale = 0.1f;
+            if (scale > 1.0f) scale = 1.0f;
+
+            Scale = scale;
+
+            Rectangle dcRectangleViewPort = UnProject(new Rectangle(0, 0, canvasSize.Width, canvasSize.Height));
+            CenterTo(dcRectangleViewPort, new Point(BoundingBox.X + BoundingBox.Width / 2, BoundingBox.Y + BoundingBox.Height / 2));
+        }
+
         public PointF ProjectToFloat(Point p)
         {
             return new PointF((p.X + Translate.X) * Scale, (p.Y + Translate.Y) * Scale);
@@ -620,7 +639,7 @@ namespace PgMulti.Diagrams
             return new Rectangle(p0.X, p0.Y, (int)(r.Width / Scale), (int)(r.Height / Scale));
         }
 
-        public void Draw(Graphics g, Rectangle gcClipRectangle)
+        public void Draw(Graphics g, Rectangle gcClipRectangle, bool clearBackground, bool highResolution)
         {
             Rectangle dcClipRectangle = UnProject(gcClipRectangle);
 
@@ -637,7 +656,7 @@ namespace PgMulti.Diagrams
                 dcClipRectangle.Y -= _CurrentDraggingPoint!.Value.Y - _StartDraggingPoint!.Value.Y;
             }
 
-            g.FillRectangle(_BackgroundBrush, backgroundRectangle);
+            if (clearBackground) g.FillRectangle(_BackgroundBrush, backgroundRectangle);
             //g.DrawRectangle(_BorderPen, backgroundRectangle);
 
             if (_RelatingTable != null && _DcLastMousePositionWhenRelatingTable.HasValue)
@@ -649,7 +668,7 @@ namespace PgMulti.Diagrams
             {
                 if (dro.Dragging || dro.IntersectsWith(dcClipRectangle))
                 {
-                    dro.Draw(g);
+                    dro.Draw(g, highResolution);
                 }
             }
         }
