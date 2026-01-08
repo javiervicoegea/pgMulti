@@ -1714,6 +1714,24 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Move down.
+        /// </summary>
+        internal static string move_down {
+            get {
+                return ResourceManager.GetString("move_down", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Move up.
+        /// </summary>
+        internal static string move_up {
+            get {
+                return ResourceManager.GetString("move_up", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a {0} affected rows.
         /// </summary>
         internal static string n_affected_rows {
@@ -2628,6 +2646,15 @@ namespace PgMulti.Properties {
         internal static string show_text_window {
             get {
                 return ResourceManager.GetString("show_text_window", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Automatically reorder columns.
+        /// </summary>
+        internal static string sort_columns {
+            get {
+                return ResourceManager.GetString("sort_columns", resourceCulture);
             }
         }
         

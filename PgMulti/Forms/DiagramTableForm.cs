@@ -220,6 +220,28 @@ namespace PgMulti.Forms
             }
         }
 
+        private void tsbSortColumns_Click(object sender, EventArgs e)
+        {
+            _Columns.Rows.Clear();
+
+            foreach (DiagramColumn dc in _DiagramTable.Columns.OrderByDescending(ci => ci.PrimaryKey).ThenByDescending(ci => ci.ForeignKey).ThenBy(ci => ci.ColumnName))
+            {
+                DataRow dr = _Columns.NewRow();
+
+                dr["original_name"] = dc.ColumnName;
+                dr["name"] = dc.ColumnName;
+                dr["type_name"] = dc.TypeName + (dc.TypeParams == null ? "" : " " + dc.TypeParams);
+                dr["type_initials"] = dc.TypeInitials;
+                dr["pk"] = dc.PrimaryKey;
+                dr["is_identity"] = dc.IsIdentity;
+                dr["not_null"] = dc.NotNull;
+
+                _Columns.Rows.Add(dr);
+            }
+
+            gvColumns.DataSource = _Columns;
+        }
+
         private void txtColumnName_TextChanged(object sender, EventArgs e)
         {
             if (gvColumns.SelectedRows.Count != 1) return;
@@ -501,6 +523,9 @@ namespace PgMulti.Forms
 
             this.tsbAddColumn.Text = Properties.Text.new_column;
             this.tsbRemoveColumn.Text = Properties.Text.remove_column;
+            this.tsbMoveUpColumn.Text = Properties.Text.move_up;
+            this.tsbMoveDownColumn.Text = Properties.Text.move_down;
+            this.tsbSortColumns.Text = Properties.Text.sort_columns;
             this.gvColumns.Columns[0].HeaderText = Properties.Text.name;
             this.gvColumns.Columns[1].HeaderText = Properties.Text.type_name;
             this.gvColumns.Columns[2].HeaderText = Properties.Text.pk;

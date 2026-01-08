@@ -1218,4 +1218,13 @@ A diferencia de otras herramientas, esta aplicación no reutiliza la conexión e
   <data name="create_script_transform_db" xml:space="preserve">
     <value>Crear script SQL para transformar una base de datos</value>
   </data>
+  <data name="move_up" xml:space="preserve">
+    <value>Mover arriba</value>
+  </data>
+  <data name="move_down" xml:space="preserve">
+    <value>Mover abajo</value>
+  </data>
+  <data name="sort_columns" xml:space="preserve">
+    <value>Reordenar columnas automáticamente</value>
+  </data>
 </root>

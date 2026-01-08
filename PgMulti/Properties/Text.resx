@@ -1218,4 +1218,13 @@ Unlike other tools, this application does not reuse the connection between diffe
   <data name="create_script_transform_db" xml:space="preserve">
     <value>Create SQL script to transform a database</value>
   </data>
+  <data name="move_up" xml:space="preserve">
+    <value>Move up</value>
+  </data>
+  <data name="move_down" xml:space="preserve">
+    <value>Move down</value>
+  </data>
+  <data name="sort_columns" xml:space="preserve">
+    <value>Automatically reorder columns</value>
+  </data>
 </root>

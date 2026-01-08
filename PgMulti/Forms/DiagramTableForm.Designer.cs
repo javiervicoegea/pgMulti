@@ -51,6 +51,7 @@ namespace PgMulti.Forms
             this.tsbRemoveColumn = new System.Windows.Forms.ToolStripButton();
             this.tsbMoveUpColumn = new System.Windows.Forms.ToolStripButton();
             this.tsbMoveDownColumn = new System.Windows.Forms.ToolStripButton();
+            this.tsbSortColumns = new System.Windows.Forms.ToolStripButton();
             this.pnlColumn = new System.Windows.Forms.Panel();
             this.tlpColumn = new System.Windows.Forms.TableLayoutPanel();
             this.lblColumnName = new System.Windows.Forms.Label();
@@ -283,7 +284,8 @@ namespace PgMulti.Forms
             this.tsbAddColumn,
             this.tsbRemoveColumn,
             this.tsbMoveUpColumn,
-            this.tsbMoveDownColumn});
+            this.tsbMoveDownColumn,
+            this.tsbSortColumns});
             this.tsColumns.Location = new System.Drawing.Point(4, 0);
             this.tsColumns.Name = "tsColumns";
             this.tsColumns.Size = new System.Drawing.Size(71, 27);
@@ -323,6 +325,14 @@ namespace PgMulti.Forms
             this.tsbMoveDownColumn.Name = "tsbMoveDownColumn";
             this.tsbMoveDownColumn.Size = new System.Drawing.Size(29, 24);
             this.tsbMoveDownColumn.Click += new System.EventHandler(this.tsbMoveDownColumn_Click);
+            // 
+            // tsbSortColumns
+            // 
+            this.tsbSortColumns.Image = global::PgMulti.Properties.Resources.sort;
+            this.tsbSortColumns.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbSortColumns.Name = "tsbSortColumns";
+            this.tsbSortColumns.Size = new System.Drawing.Size(29, 24);
+            this.tsbSortColumns.Click += new System.EventHandler(this.tsbSortColumns_Click);
             // 
             // panel3
             // 
@@ -672,6 +682,7 @@ namespace PgMulti.Forms
         private ToolStripButton tsbRemoveColumn;
         private ToolStripButton tsbMoveUpColumn;
         private ToolStripButton tsbMoveDownColumn;
+        private ToolStripButton tsbSortColumns;
         private TableLayoutPanel tlpColumn;
         private Label lblColumnName;
         private TextBox txtColumnName;
