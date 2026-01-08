@@ -1,10 +1,12 @@
 ﻿using PgMulti.DataStructure;
+using System.Text;
 using System.Xml;
 
 namespace PgMulti.Diagrams
 {
     public class DiagramColumn
     {
+        private DiagramTable _DiagramTable;
         private string _ColumnName;
         private string _TypeName;
         private string? _TypeParams;
@@ -14,130 +16,6 @@ namespace PgMulti.Diagrams
         private bool _ForeignKey;
         private bool _NotNull;
         private string _TypeInitials;
-
-        public DiagramColumn(string columnName, string typeName, string? typeParams, string? defaultValue, bool isIdentity, bool primaryKey, bool notNull, string typeInitials)
-        {
-            _ColumnName = columnName;
-            _TypeName = typeName;
-            _TypeParams = typeParams;
-            _DefaultValue = defaultValue;
-            _IsIdentity = isIdentity;
-            _PrimaryKey = primaryKey;
-            _NotNull = notNull;
-            _TypeInitials = typeInitials;
-        }
-
-        public DiagramColumn(Column c)
-        {
-            _ColumnName = c.Id;
-            _TypeName = c.Type;
-            _TypeParams = c.TypeParams;
-            _DefaultValue = c.DefaultValue;
-            _IsIdentity = c.IsIdentity;
-            _PrimaryKey = c.PK;
-            _NotNull = c.NotNull;
-            _TypeInitials = GetTypeInitials(c.Type, c.TypeParams);
-        }
-
-        public DiagramColumn(XmlElement xeColumn)
-        {
-            string? v;
-            bool b;
-
-            v = xeColumn.GetAttribute("column_name");
-            if (string.IsNullOrEmpty(v)) throw new BadFormatException();
-
-            _ColumnName = v;
-
-            v = xeColumn.GetAttribute("type_name");
-            if (string.IsNullOrEmpty(v)) throw new BadFormatException();
-
-            _TypeName = v;
-
-            v = xeColumn.GetAttribute("type_params");
-            if (string.IsNullOrEmpty(v)) v = null;
-
-            _TypeParams = v;
-
-            v = xeColumn.GetAttribute("default_value");
-            if (string.IsNullOrEmpty(v)) v = null;
-
-            _DefaultValue = v;
-
-            v = xeColumn.GetAttribute("is_identity");
-            if (!string.IsNullOrEmpty(v) && bool.TryParse(v, out b) && b)
-            {
-                _IsIdentity = true;
-            }
-            else
-            {
-                _IsIdentity = false;
-            }
-
-            v = xeColumn.GetAttribute("type_initials");
-            if (string.IsNullOrEmpty(v)) throw new BadFormatException();
-
-            _TypeInitials = v;
-
-            v = xeColumn.GetAttribute("primary_key");
-            if (string.IsNullOrEmpty(v)) throw new BadFormatException();
-
-            if (!bool.TryParse(v, out _PrimaryKey)) throw new BadFormatException();
-
-            v = xeColumn.GetAttribute("not_null");
-            if (string.IsNullOrEmpty(v)) throw new BadFormatException();
-
-            if (!bool.TryParse(v, out _NotNull)) throw new BadFormatException();
-        }
-
-        public string ColumnName { get => _ColumnName; set => _ColumnName = value; }
-        public string TypeName { get => _TypeName; set => _TypeName = value; }
-        public string? TypeParams { get => _TypeParams; set => _TypeParams = value; }
-        public string? DefaultValue { get => _DefaultValue; set => _DefaultValue = value; }
-        public bool IsIdentity { get => _IsIdentity; set => _IsIdentity = value; }
-        public bool PrimaryKey { get => _PrimaryKey; set => _PrimaryKey = value; }
-        public bool ForeignKey { get => _ForeignKey; internal set => _ForeignKey = value; }
-        public bool NotNull { get => _NotNull; set => _NotNull = value; }
-        public string TypeInitials { get => _TypeInitials; set => _TypeInitials = value; }
-
-        public XmlElement ToXml(XmlDocument xd)
-        {
-            XmlElement xeColumn = xd.CreateElement("column");
-            xeColumn.SetAttribute("column_name", ColumnName);
-            xeColumn.SetAttribute("type_name", TypeName);
-            if (TypeParams != null) xeColumn.SetAttribute("type_params", TypeParams);
-            if (DefaultValue != null) xeColumn.SetAttribute("default_value", DefaultValue);
-            xeColumn.SetAttribute("is_identity", IsIdentity.ToString());
-            xeColumn.SetAttribute("type_initials", TypeInitials);
-            xeColumn.SetAttribute("primary_key", PrimaryKey.ToString());
-            xeColumn.SetAttribute("not_null", NotNull.ToString());
-
-            return xeColumn;
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj == null) return false;
-            if (base.Equals(obj)) return true;
-
-            if (obj is Column)
-            {
-                Column other = (Column)obj;
-                return other.Id == ColumnName && other.Type == TypeName && other.TypeParams == TypeParams;
-            }
-            else if (obj is DiagramColumn)
-            {
-                DiagramColumn other = (DiagramColumn)obj;
-                return other.ColumnName == ColumnName && other.TypeName == TypeName && other.TypeParams == TypeParams;
-            }
-
-            return false;
-        }
-
-        public override int GetHashCode()
-        {
-            return ColumnName.GetHashCode();
-        }
 
         public static string GetTypeInitials(string typeName, string? typeParams)
         {
@@ -250,6 +128,151 @@ namespace PgMulti.Diagrams
                 default:
                     return (typeName.Length > 4 ? typeName.Substring(0, 4) : typeName) + (typeParams == null ? "" : typeParams);
             }
+        }
+
+        public DiagramColumn(DiagramTable dt, string columnName, string typeName, string? typeParams, string? defaultValue, bool isIdentity, bool primaryKey, bool notNull, string typeInitials)
+        {
+            if (dt == null || columnName == null || typeName == null || typeInitials == null) throw new ArgumentException();
+
+            _DiagramTable = dt;
+
+            _ColumnName = columnName;
+            _TypeName = typeName;
+            _TypeParams = typeParams;
+            _DefaultValue = defaultValue;
+            _IsIdentity = isIdentity;
+            _PrimaryKey = primaryKey;
+            _NotNull = notNull;
+            _TypeInitials = typeInitials;
+        }
+
+        public DiagramColumn(DiagramTable dt, Column c)
+        {
+            if (dt == null || c == null) throw new ArgumentException();
+
+            _DiagramTable = dt;
+
+            _ColumnName = c.Id;
+            _TypeName = c.Type;
+            _TypeParams = c.TypeParams;
+            _DefaultValue = c.DefaultValue;
+            _IsIdentity = c.IsIdentity;
+            _PrimaryKey = c.PK;
+            _NotNull = c.NotNull;
+            _TypeInitials = GetTypeInitials(c.Type, c.TypeParams);
+        }
+
+        public DiagramColumn(DiagramTable dt, XmlElement xeColumn)
+        {
+            if (dt == null || xeColumn == null) throw new ArgumentException();
+
+            _DiagramTable = dt;
+
+            string? v;
+            bool b;
+
+            v = xeColumn.GetAttribute("column_name");
+            if (string.IsNullOrEmpty(v)) throw new BadFormatException();
+
+            _ColumnName = v;
+
+            v = xeColumn.GetAttribute("type_name");
+            if (string.IsNullOrEmpty(v)) throw new BadFormatException();
+
+            _TypeName = v;
+
+            v = xeColumn.GetAttribute("type_params");
+            if (string.IsNullOrEmpty(v)) v = null;
+
+            _TypeParams = v;
+
+            v = xeColumn.GetAttribute("default_value");
+            if (string.IsNullOrEmpty(v)) v = null;
+
+            _DefaultValue = v;
+
+            v = xeColumn.GetAttribute("is_identity");
+            if (!string.IsNullOrEmpty(v) && bool.TryParse(v, out b) && b)
+            {
+                _IsIdentity = true;
+            }
+            else
+            {
+                _IsIdentity = false;
+            }
+
+            v = xeColumn.GetAttribute("type_initials");
+            if (string.IsNullOrEmpty(v)) throw new BadFormatException();
+
+            _TypeInitials = v;
+
+            v = xeColumn.GetAttribute("primary_key");
+            if (string.IsNullOrEmpty(v)) throw new BadFormatException();
+
+            if (!bool.TryParse(v, out _PrimaryKey)) throw new BadFormatException();
+
+            v = xeColumn.GetAttribute("not_null");
+            if (string.IsNullOrEmpty(v)) throw new BadFormatException();
+
+            if (!bool.TryParse(v, out _NotNull)) throw new BadFormatException();
+        }
+
+        public string ColumnName { get => _ColumnName; set => _ColumnName = value; }
+        public string TypeName { get => _TypeName; set => _TypeName = value; }
+        public string? TypeParams { get => _TypeParams; set => _TypeParams = value; }
+        public string? DefaultValue { get => _DefaultValue; set => _DefaultValue = value; }
+        public bool IsIdentity { get => _IsIdentity; set => _IsIdentity = value; }
+        public bool PrimaryKey { get => _PrimaryKey; set => _PrimaryKey = value; }
+        public bool ForeignKey { get => _ForeignKey; internal set => _ForeignKey = value; }
+        public bool NotNull { get => _NotNull; set => _NotNull = value; }
+        public string TypeInitials { get => _TypeInitials; set => _TypeInitials = value; }
+
+        public XmlElement ToXml(XmlDocument xd)
+        {
+            XmlElement xeColumn = xd.CreateElement("column");
+            xeColumn.SetAttribute("column_name", ColumnName);
+            xeColumn.SetAttribute("type_name", TypeName);
+            if (TypeParams != null) xeColumn.SetAttribute("type_params", TypeParams);
+            if (DefaultValue != null) xeColumn.SetAttribute("default_value", DefaultValue);
+            xeColumn.SetAttribute("is_identity", IsIdentity.ToString());
+            xeColumn.SetAttribute("type_initials", TypeInitials);
+            xeColumn.SetAttribute("primary_key", PrimaryKey.ToString());
+            xeColumn.SetAttribute("not_null", NotNull.ToString());
+
+            return xeColumn;
+        }
+
+        public void WriteSqlClauseFullDefinition(StringBuilder sb)
+        {
+            sb.Append($"{SqlSyntax.PostgreSqlGrammar.IdToString(ColumnName)} {TypeName}{(TypeParams == null ? "" : TypeParams)} {(NotNull ? "NOT NULL" : "NULL")}{(DefaultValue == null ? "" : $" DEFAULT {DefaultValue}")}{(IsIdentity ? " GENERATED ALWAYS AS IDENTITY" : "")}");
+            if (PrimaryKey && _DiagramTable.Columns.Count(i => i.PrimaryKey) == 1)
+            {
+                sb.Append(" PRIMARY KEY");
+            }
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj == null) return false;
+            if (base.Equals(obj)) return true;
+
+            if (obj is Column)
+            {
+                Column other = (Column)obj;
+                return other.Id == ColumnName && other.Type == TypeName && other.TypeParams == TypeParams;
+            }
+            else if (obj is DiagramColumn)
+            {
+                DiagramColumn other = (DiagramColumn)obj;
+                return other.ColumnName == ColumnName && other.TypeName == TypeName && other.TypeParams == TypeParams;
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return ColumnName.GetHashCode();
         }
 
         public override string ToString()

@@ -1212,4 +1212,10 @@ Unlike other tools, this application does not reuse the connection between diffe
   <data name="error_invalid_extension" xml:space="preserve">
     <value>Extension {0} not allowed. Only JPEG or PNG formats are allowed.</value>
   </data>
+  <data name="create_script_full_definition" xml:space="preserve">
+    <value>Create SQL script with the object definitions from the diagram</value>
+  </data>
+  <data name="create_script_transform_db" xml:space="preserve">
+    <value>Create SQL script to transform a database</value>
+  </data>
 </root>

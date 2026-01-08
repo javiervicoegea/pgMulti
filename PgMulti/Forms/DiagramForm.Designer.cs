@@ -36,7 +36,9 @@
             tsbOpen = new ToolStripButton();
             tsbSave = new ToolStripButton();
             tsbSaveAs = new ToolStripButton();
-            tsbExport = new ToolStripButton();
+            tsbExportToImage = new ToolStripButton();
+            tsbSqlFullDefinition = new ToolStripButton();
+            tsbSqlTransformDB = new ToolStripButton();
             tsbPrint = new ToolStripButton();
             tsbAddTablesFromDataBase = new ToolStripButton();
             tsbAddNewTable = new ToolStripButton();
@@ -88,7 +90,7 @@
             // 
             ts.Dock = DockStyle.None;
             ts.ImageScalingSize = new Size(30, 30);
-            ts.Items.AddRange(new ToolStripItem[] { tsbNew, tsbOpen, tsbSave, tsbSaveAs, tsbExport, tsbPrint, tss1, tsbAddNewTable, tsbAddNewRelation, tsbAddTablesFromDataBase, tss2, tsbRemove, tsbEdit, tss3, tsbRepositionTables, tsbSuggestRelatedTables, tsbZoomFull, tss4, tslSelectTable, tscbTables });
+            ts.Items.AddRange(new ToolStripItem[] { tsbNew, tsbOpen, tsbSave, tsbSaveAs, tsbExportToImage, tsbSqlFullDefinition, tsbSqlTransformDB, tsbPrint, tss1, tsbAddNewTable, tsbAddNewRelation, tsbAddTablesFromDataBase, tss2, tsbRemove, tsbEdit, tss3, tsbRepositionTables, tsbSuggestRelatedTables, tsbZoomFull, tss4, tslSelectTable, tscbTables });
             ts.Location = new Point(4, 0);
             ts.Name = "ts";
             ts.Size = new Size(598, 37);
@@ -132,14 +134,32 @@
             tsbSaveAs.Size = new Size(34, 34);
             tsbSaveAs.Click += tsbSaveAs_Click;
             // 
-            // tsbExport
+            // tsbExportToImage
             // 
-            tsbExport.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            tsbExport.Image = Properties.Resources.export;
-            tsbExport.ImageTransparentColor = Color.Magenta;
-            tsbExport.Name = "tsbExport";
-            tsbExport.Size = new Size(34, 34);
-            tsbExport.Click += tsbExport_Click;
+            tsbExportToImage.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbExportToImage.Image = Properties.Resources.image;
+            tsbExportToImage.ImageTransparentColor = Color.Magenta;
+            tsbExportToImage.Name = "tsbExportToImage";
+            tsbExportToImage.Size = new Size(34, 34);
+            tsbExportToImage.Click += tsbExportToImage_Click;
+            // 
+            // tsbSqlFullDefinition
+            // 
+            tsbSqlFullDefinition.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbSqlFullDefinition.Image = Properties.Resources.sql_new;
+            tsbSqlFullDefinition.ImageTransparentColor = Color.Magenta;
+            tsbSqlFullDefinition.Name = "tsbSqlFullDefinition";
+            tsbSqlFullDefinition.Size = new Size(34, 34);
+            tsbSqlFullDefinition.Click += tsbSqlFullDefinition_Click;
+            // 
+            // tsbSqlTransformDB
+            // 
+            tsbSqlTransformDB.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbSqlTransformDB.Image = Properties.Resources.sql_transform;
+            tsbSqlTransformDB.ImageTransparentColor = Color.Magenta;
+            tsbSqlTransformDB.Name = "tsbSqlTransformDB";
+            tsbSqlTransformDB.Size = new Size(34, 34);
+            tsbSqlTransformDB.Click += tsbSqlTransformDB_Click;
             // 
             // tsbPrint
             // 
@@ -358,7 +378,9 @@
         private ToolStripButton tsbOpen;
         private ToolStripButton tsbSave;
         private ToolStripButton tsbSaveAs;
-        private ToolStripButton tsbExport;
+        private ToolStripButton tsbExportToImage;
+        private ToolStripButton tsbSqlFullDefinition;
+        private ToolStripButton tsbSqlTransformDB;
         private ToolStripButton tsbPrint;
         private ToolStripButton tsbAddTablesFromDataBase;
         private ToolStripButton tsbAddNewTable;

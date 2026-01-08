@@ -743,6 +743,24 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Create SQL script with the object definitions from the diagram.
+        /// </summary>
+        internal static string create_script_full_definition {
+            get {
+                return ResourceManager.GetString("create_script_full_definition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Create SQL script to transform a database.
+        /// </summary>
+        internal static string create_script_transform_db {
+            get {
+                return ResourceManager.GetString("create_script_transform_db", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Create diagram from this table.
         /// </summary>
         internal static string create_table_diagram {

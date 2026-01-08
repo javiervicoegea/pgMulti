@@ -1,5 +1,6 @@
 ﻿using PgMulti.DataStructure;
 using PgMulti.Diagrams.Efdg;
+using System.Text;
 using System.Xml;
 
 namespace PgMulti.Diagrams
@@ -695,6 +696,30 @@ namespace PgMulti.Diagrams
             Tables.Add(st);
             st.Suggested = false;
             SuggestedRelatedTables!.Remove(st);
+        }
+
+        public void WriteSqlScriptFullDefinition(StringBuilder sb)
+        {
+            sb.AppendLine("/* Tables */");
+
+            foreach (DiagramTable dt in Tables)
+            {
+                dt.WriteSqlSentenceCreate(sb);
+            }
+
+            sb.AppendLine("/* Relations */");
+
+            foreach (DiagramRelation dtr in Relations)
+            {
+                dtr.WriteSqlSentenceAlterTableConstraint(sb);
+            }
+
+            sb.AppendLine("/* Foreign Key Indexes */");
+
+            foreach (DiagramRelation dtr in Relations)
+            {
+                dtr.WriteSqlSentenceCreateForeignKeyIndex(sb);
+            }
         }
     }
 }

@@ -1,12 +1,7 @@
-﻿using CsvHelper.Configuration.Attributes;
-using Irony.Parsing;
-using PgMulti.DataStructure;
-using PgMulti.Export;
-using System.Diagnostics;
+﻿using PgMulti.DataStructure;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Drawing2D;
-using System.Drawing.Text;
-using System.Reflection.Metadata;
+using System.Text;
 using System.Xml;
 
 namespace PgMulti.Diagrams
@@ -81,7 +76,7 @@ namespace PgMulti.Diagrams
             _Columns = new List<DiagramColumn>();
             foreach (Column c in t.Columns)
             {
-                Columns.Add(new DiagramColumn(c));
+                Columns.Add(new DiagramColumn(this, c));
             }
 
             _Relations = new List<DiagramRelation>();
@@ -109,7 +104,7 @@ namespace PgMulti.Diagrams
             _Columns = new List<DiagramColumn>();
             foreach (XmlElement xeColumn in xeTable.SelectNodes("columns/column")!)
             {
-                _Columns.Add(new DiagramColumn(xeColumn));
+                _Columns.Add(new DiagramColumn(this, xeColumn));
             }
 
             _Relations = new List<DiagramRelation>();
@@ -178,6 +173,23 @@ namespace PgMulti.Diagrams
             }
         }
         public List<DiagramRelation> Relations { get => _Relations; set => _Relations = value; }
+
+        public IReadOnlyList<DiagramRelation> ParentRelations
+        {
+            get
+            {
+                return Relations.Where(i => i.ChildTable == this).ToList();
+            }
+        }
+
+        public IReadOnlyList<DiagramRelation> ChildRelations
+        {
+            get
+            {
+                return Relations.Where(i => i.ParentTable == this).ToList();
+            }
+        }
+
         public int VisibleColumns
         {
             get => _VisibleColumns;
@@ -893,6 +905,31 @@ namespace PgMulti.Diagrams
             {
                 return 0.0f;
             }
+        }
+
+        public void WriteSqlSentenceCreate(StringBuilder sb)
+        {
+            sb.Append($"CREATE TABLE {SqlSyntax.PostgreSqlGrammar.IdToString(SchemaName)}.{SqlSyntax.PostgreSqlGrammar.IdToString(TableName)}(");
+
+            bool multiColumnPK = Columns.Count(i => i.PrimaryKey) > 1;
+
+            for (int index = 0; index < Columns.Count; index++)
+            {
+                DiagramColumn dc = Columns[index];
+                dc.WriteSqlClauseFullDefinition(sb);
+
+                if (index < Columns.Count - 1)
+                {
+                    sb.Append(", ");
+                }
+            }
+
+            if (multiColumnPK)
+            {
+                sb.Append($", CONSTRAINT {SqlSyntax.PostgreSqlGrammar.IdToString("pk_" + TableName)} PRIMARY KEY ({string.Join(',', Columns.Where(i => i.PrimaryKey).Select(i => i.ColumnName))})");
+            }
+
+            sb.AppendLine(");");
         }
 
         public override bool Equals(object? obj)

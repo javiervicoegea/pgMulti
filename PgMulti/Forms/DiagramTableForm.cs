@@ -360,39 +360,6 @@ namespace PgMulti.Forms
             return true;
         }
 
-        public List<DiagramColumn> GetProvisionalColumnsFromStringDataValue(DiagramTable dt, string v)
-        {
-            if (dt == _DiagramTable)
-            {
-                List<DiagramColumn> l = new List<DiagramColumn>();
-                foreach (string s in v.Split(','))
-                {
-                    DataRow? dr = _Columns.Rows.Cast<DataRow>().FirstOrDefault(i => i.Field<string>("name") == s);
-                    if (dr == null) continue;
-
-                    l.Add(GetProvisionalColumn(dr));
-                }
-
-                return l;
-            }
-            else
-            {
-                return dt.GetColumnsFromStringDataValue(v);
-            }
-        }
-
-        private DiagramColumn GetProvisionalColumn(DataRow dr)
-        {
-            string typeName = dr.Field<string>("type_name")!;
-            string? typeParams;
-
-            ParseTypeName(ref typeName, out typeParams);
-
-            string? defaultValue = (dr["default"] == DBNull.Value ? null : dr.Field<string?>("default"));
-
-            return new DiagramColumn(dr.Field<string>("name")!, typeName, typeParams, defaultValue, (bool)dr["is_identity"], (bool)dr["pk"], (bool)dr["not_null"], dr.Field<string>("type_initials")!);
-        }
-
         private void btnOk_Click(object sender, EventArgs e)
         {
             if (!ValidateFields()) return;
@@ -491,7 +458,7 @@ namespace PgMulti.Forms
 
                 if (dr["original_name"] == DBNull.Value)
                 {
-                    dc = new DiagramColumn(dr.Field<string>("name")!, typeName, typeParams, defaultValue, (bool)dr["is_identity"], (bool)dr["pk"], (bool)dr["not_null"], dr.Field<string>("type_initials")!);
+                    dc = new DiagramColumn(_DiagramTable, dr.Field<string>("name")!, typeName, typeParams, defaultValue, (bool)dr["is_identity"], (bool)dr["pk"], (bool)dr["not_null"], dr.Field<string>("type_initials")!);
                 }
                 else
                 {

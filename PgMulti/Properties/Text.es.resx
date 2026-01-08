@@ -1212,4 +1212,10 @@ A diferencia de otras herramientas, esta aplicación no reutiliza la conexión e
   <data name="error_invalid_extension" xml:space="preserve">
     <value>Extensión {0} no permitida. Solo se permiten los formatos JPEG o PNG.</value>
   </data>
+  <data name="create_script_full_definition" xml:space="preserve">
+    <value>Crear script SQL con las definiciones de objetos del diagrama</value>
+  </data>
+  <data name="create_script_transform_db" xml:space="preserve">
+    <value>Crear script SQL para transformar una base de datos</value>
+  </data>
 </root>

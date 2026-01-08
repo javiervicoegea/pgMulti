@@ -2,11 +2,13 @@
 using PgMulti.DataStructure;
 using PgMulti.Diagrams;
 using PgMulti.Diagrams.Efdg;
+using PgMulti.QueryEditor;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Printing;
+using System.Text;
 
 namespace PgMulti.Forms
 {
@@ -21,6 +23,7 @@ namespace PgMulti.Forms
         private Diagram _Diagram;
         private string _Filename;
         private DB? _PreselectedDB;
+        private MainForm _MainForm;
 
         private Canvas _Canvas;
         private RepositionTablesOptionsForm? _ExpandDiagramOptionsForm = null;
@@ -44,8 +47,10 @@ namespace PgMulti.Forms
         private FormWindowState _LastWindowState = FormWindowState.Normal;
         private Size _LastDCCanvasSize;
 
-        public DiagramForm(Data d, Diagram dg, string filename, DB? preselectedDB)
+        public DiagramForm(Data d, Diagram dg, string filename, DB? preselectedDB, MainForm mf)
         {
+            if (d == null || dg == null || filename == null || mf == null) throw new ArgumentException();
+
             InitializeComponent();
 
             _Canvas = new Canvas();
@@ -78,6 +83,7 @@ namespace PgMulti.Forms
             _LastDCCanvasSize = new Size(_Canvas.Width, _Canvas.Height);
 
             _PreselectedDB = preselectedDB;
+            _MainForm = mf;
         }
 
         private DB? _SuggestAddRelatedTablesDB;
@@ -501,7 +507,7 @@ namespace PgMulti.Forms
                 return;
             }
 
-            DiagramForm df = new DiagramForm(_Data!, dg, sfdSaveDiagram.FileName, _PreselectedDB);
+            DiagramForm df = new DiagramForm(_Data!, dg, sfdSaveDiagram.FileName, _PreselectedDB, _MainForm);
             df.Show();
         }
 
@@ -525,7 +531,7 @@ namespace PgMulti.Forms
                 return;
             }
 
-            DiagramForm df = new DiagramForm(_Data!, dg, ofdOpenDiagram.FileName, _PreselectedDB);
+            DiagramForm df = new DiagramForm(_Data!, dg, ofdOpenDiagram.FileName, _PreselectedDB, _MainForm);
             df.Show();
         }
 
@@ -557,11 +563,11 @@ namespace PgMulti.Forms
                 return;
             }
 
-            DiagramForm df = new DiagramForm(_Data!, dg, sfdSaveDiagram.FileName, _PreselectedDB);
+            DiagramForm df = new DiagramForm(_Data!, dg, sfdSaveDiagram.FileName, _PreselectedDB, _MainForm);
             df.Show();
         }
 
-        private void tsbExport_Click(object sender, EventArgs e)
+        private void tsbExportToImage_Click(object sender, EventArgs e)
         {
             if (_PendingSave)
             {
@@ -605,12 +611,12 @@ namespace PgMulti.Forms
                 using (Bitmap b = new Bitmap(rectangleSelection.Width, rectangleSelection.Height, ext == ".png" ? PixelFormat.Format32bppArgb : PixelFormat.Format32bppRgb))
                 using (Graphics g = Graphics.FromImage(b))
                 {
-                    if(ext != ".png") g.Clear(Color.White);
+                    if (ext != ".png") g.Clear(Color.White);
                     dpf.Diagram.Draw(g, new Rectangle(0, 0, rectangleSelection.Width, rectangleSelection.Height), false, true);
 
                     if (ext == ".png")
                     {
-                        b.Save(sfdExportDiagram.FileName, ImageFormat.Png );
+                        b.Save(sfdExportDiagram.FileName, ImageFormat.Png);
 
                     }
                     else
@@ -628,6 +634,24 @@ namespace PgMulti.Forms
                 MessageBox.Show(this, string.Format(Properties.Text.error_exporting_diagram, ex.Message), Properties.Text.error, MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 _PreviousSavingError = true;
             }
+        }
+
+        private void tsbSqlFullDefinition_Click(object sender, EventArgs e)
+        {
+            StringBuilder sb = new StringBuilder();
+            _Diagram.WriteSqlScriptFullDefinition(sb);
+
+            EditorTab.CreateEditorTabOptions o = new EditorTab.CreateEditorTabOptions();
+            o.Title = Path.GetFileNameWithoutExtension(_Filename) + "_full_definition.sql";
+            o.Text = sb.ToString();
+            o.Format = true;
+            o.Focus = true;
+            _MainForm.CreateEditorTab(o);
+        }
+
+        private void tsbSqlTransformDB_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void tsbPrint_Click(object sender, EventArgs e)
@@ -1693,7 +1717,9 @@ namespace PgMulti.Forms
             this.tsbOpen.Text = Properties.Text.open_diagram;
             this.tsbSave.Text = Properties.Text.save;
             this.tsbSaveAs.Text = Properties.Text.save_as;
-            this.tsbExport.Text = Properties.Text.export_to_image;
+            this.tsbExportToImage.Text = Properties.Text.export_to_image;
+            this.tsbSqlFullDefinition.Text = Properties.Text.create_script_full_definition;
+            this.tsbSqlTransformDB.Text = Properties.Text.create_script_transform_db;
             this.tsbAddTablesFromDataBase.Text = Properties.Text.add_tables_from_db;
             this.tsbAddNewTable.Text = Properties.Text.add_new_table;
             this.tsbAddNewRelation.Text = Properties.Text.add_new_relation;

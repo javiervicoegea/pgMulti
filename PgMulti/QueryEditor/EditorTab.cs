@@ -37,6 +37,12 @@ namespace PgMulti.QueryEditor
             {
                 _Fctb.Text = o.Text;
             }
+
+            if (o.Format)
+            {
+                Format();
+            }
+
             if (o.Title != null)
             {
                 _TabPage.Text = o.Title;
@@ -1403,6 +1409,7 @@ namespace PgMulti.QueryEditor
             public string? Text = null;
             public string? Path = null;
             public bool Focus = false;
+            public bool Format = false;
             public bool PendingFileSave = true;
         }
     }

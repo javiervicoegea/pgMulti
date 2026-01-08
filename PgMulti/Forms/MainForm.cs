@@ -379,7 +379,7 @@ namespace PgMulti
                 return;
             }
 
-            DiagramForm df = new DiagramForm(_Data!, dg, ofdOpenDiagram.FileName, SelectedDBs.FirstOrDefault());
+            DiagramForm df = new DiagramForm(_Data!, dg, ofdOpenDiagram.FileName, SelectedDBs.FirstOrDefault(), this);
             df.Show();
         }
 
@@ -399,7 +399,7 @@ namespace PgMulti
                 return null;
             }
 
-            DiagramForm df = new DiagramForm(_Data!, dg, sfdSaveDiagram.FileName, preselectedDB == null ? SelectedDBs.FirstOrDefault() : preselectedDB);
+            DiagramForm df = new DiagramForm(_Data!, dg, sfdSaveDiagram.FileName, preselectedDB == null ? SelectedDBs.FirstOrDefault() : preselectedDB, this);
             df.Show();
 
             return df;

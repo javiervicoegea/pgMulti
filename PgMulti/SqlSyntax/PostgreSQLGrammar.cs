@@ -537,7 +537,7 @@ namespace PgMulti.SqlSyntax
             idlistPar.Rule = "(" + idSimpleList + ")";
             idSimpleList.Rule = MakePlusRule(idSimpleList, comma, id_simple);
             idList.Rule = MakePlusRule(idList, comma, id);
-            onActionClauseListItem.Rule = ON + (UPDATE | DELETE | INSERT) + (SET + NULL | RESTRICT | CASCADE | ToTerm("NO") + "ACTION");
+            onActionClauseListItem.Rule = ON + (UPDATE | DELETE | INSERT) + (SET + (NULL | DEFAULT) | RESTRICT | CASCADE | ToTerm("NO") + "ACTION");
             onActionClauseListOpt.Rule = MakeStarRule(onActionClauseListOpt, onActionClauseListItem);
             createTableWithClauseOpt.Rule = Empty | WITH + "(" + createTableWithList + ")";
             createTableWithList.Rule = MakeStarRule(createTableWithList, comma, createTableWithItem);

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Printing;
 using System.Security.Policy;
+using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using static Npgsql.Replication.PgOutput.Messages.RelationMessage;
@@ -53,6 +54,47 @@ namespace PgMulti.Diagrams
         private Point[]? _BezierCurveRealPoints = null;
         private Rectangle? _InteractBoundingBox = null;
         private string _Id;
+
+        public static PropagationOptions StringToPropagationOptions(string s)
+        {
+            switch (s.ToLower())
+            {
+                case "no action":
+                    return PropagationOptions.NoAction;
+                case "restrict":
+                    return PropagationOptions.Restrict;
+                case "cascade":
+                    return PropagationOptions.Cascade;
+                case "set null":
+                    return PropagationOptions.SetNull;
+                case "set default":
+                    return PropagationOptions.SetDefault;
+                default:
+                    throw new NotSupportedException();
+            }
+        }
+
+        public static RelationTypeOptions StringToRelationTypeOptions(string s)
+        {
+            switch (s.ToLower())
+            {
+                case "1":
+                    return RelationTypeOptions.One;
+                case "1..1":
+                    return RelationTypeOptions.OneAndOnlyOne;
+                case "0..1":
+                    return RelationTypeOptions.ZeroOrOne;
+                case "n":
+                    return RelationTypeOptions.Many;
+                case "1..n":
+                    return RelationTypeOptions.OneOrMany;
+                case "0..n":
+                    return RelationTypeOptions.ZeroOrMany;
+                default:
+                    throw new NotSupportedException();
+            }
+        }
+
 
         public static string RelationTypeOptionsToString(RelationTypeOptions v)
         {
@@ -1189,6 +1231,31 @@ namespace PgMulti.Diagrams
             }
         }
 
+        public void WriteSqlClauseReferences(StringBuilder sb)
+        {
+            sb.Append($"REFERENCES {SqlSyntax.PostgreSqlGrammar.IdToString(ParentTable.SchemaName)}.{SqlSyntax.PostgreSqlGrammar.IdToString(ParentTable.TableName)} ({SqlSyntax.PostgreSqlGrammar.IdToString(ParentTable.Columns[0].ColumnName)})");
+            if (OnDelete != DiagramRelation.PropagationOptions.NoAction) sb.Append($" ON DELETE {DiagramRelation.PropagationOptionsToString(OnDelete)}");
+            if (OnUpdate != DiagramRelation.PropagationOptions.NoAction) sb.Append($" ON UPDATE {DiagramRelation.PropagationOptionsToString(OnUpdate)}");
+        }
+
+        public void WriteSqlClauseConstraint(StringBuilder sb)
+        {
+            sb.Append($"CONSTRAINT {SqlSyntax.PostgreSqlGrammar.IdToString($"fk_{ChildTable.TableName}_{ParentTable.TableName}")} FOREIGN KEY ({string.Join(',', ChildTableColumns.Select(i => i.ColumnName))}) ");
+            WriteSqlClauseReferences(sb);
+        }
+
+        public void WriteSqlSentenceAlterTableConstraint(StringBuilder sb)
+        {
+            sb.Append($"ALTER TABLE {SqlSyntax.PostgreSqlGrammar.IdToString(ChildTable.SchemaName)}.{SqlSyntax.PostgreSqlGrammar.IdToString(ChildTable.TableName)} ADD ");
+            WriteSqlClauseConstraint(sb);
+            sb.AppendLine(";");
+        }
+
+        public void WriteSqlSentenceCreateForeignKeyIndex(StringBuilder sb)
+        {
+            sb.AppendLine($"CREATE INDEX {SqlSyntax.PostgreSqlGrammar.IdToString($"fk_{ChildTable.TableName}_{ParentTable.TableName}")} ON {SqlSyntax.PostgreSqlGrammar.IdToString(ChildTable.SchemaName)}.{SqlSyntax.PostgreSqlGrammar.IdToString(ChildTable.TableName)} ({string.Join(',', ChildTableColumns.Select(i => i.ColumnName))});");
+        }
+
         internal void RecalculateBoundingBox()
         {
             Rectangle r;
@@ -1213,46 +1280,6 @@ namespace PgMulti.Diagrams
 
             _BoundingBox = AddMargins(r, BoundingBoxTolerance);
             _InteractBoundingBox = AddMargins(r, IntersectTolerance);
-        }
-
-        private PropagationOptions StringToPropagationOptions(string s)
-        {
-            switch (s.ToLower())
-            {
-                case "no action":
-                    return PropagationOptions.NoAction;
-                case "restrict":
-                    return PropagationOptions.Restrict;
-                case "cascade":
-                    return PropagationOptions.Cascade;
-                case "set null":
-                    return PropagationOptions.SetNull;
-                case "set default":
-                    return PropagationOptions.SetDefault;
-                default:
-                    throw new NotSupportedException();
-            }
-        }
-
-        private RelationTypeOptions StringToRelationTypeOptions(string s)
-        {
-            switch (s.ToLower())
-            {
-                case "1":
-                    return RelationTypeOptions.One;
-                case "1..1":
-                    return RelationTypeOptions.OneAndOnlyOne;
-                case "0..1":
-                    return RelationTypeOptions.ZeroOrOne;
-                case "n":
-                    return RelationTypeOptions.Many;
-                case "1..n":
-                    return RelationTypeOptions.OneOrMany;
-                case "0..n":
-                    return RelationTypeOptions.ZeroOrMany;
-                default:
-                    throw new NotSupportedException();
-            }
         }
 
         private void CalculateRelationType()
