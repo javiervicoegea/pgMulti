@@ -177,6 +177,11 @@ namespace PgMulti.Forms
 
                 Rectangle r = _RectangleSelection;
 
+                if (_DraggingSelectionRectangleLeft && r.X + deltaX < 0) deltaX = -r.X;
+                if (_DraggingSelectionRectangleRight && r.X + r.Width + deltaX > cvCanvas.Width - 5) deltaX = cvCanvas.Width - 5 - r.X - r.Width;
+                if (_DraggingSelectionRectangleTop && r.Y + deltaY < 0) deltaY = -r.Y;
+                if (_DraggingSelectionRectangleBottom && r.Y + r.Height + deltaY > cvCanvas.Height - 5) deltaY = cvCanvas.Height - 5 - r.Y - r.Height;
+
                 if (_DraggingSelectionRectangleLeft)
                 {
                     r.X += deltaX;
