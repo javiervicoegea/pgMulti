@@ -14,15 +14,17 @@ namespace PgMulti.Forms
         private Font groupFont = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point);
         private Font itemFont = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
 
+        private DB? _PreselectedDB;
         private List<Tuple<string, string>> _PreselectedTablesIds;
         private List<Table>? _SelectedTables = null;
 
-        public SelectTablesForm(Data d, List<Tuple<string, string>> preselectedTablesIds)
+        public SelectTablesForm(Data d, DB? preselectedDB, List<Tuple<string, string>> preselectedTablesIds)
         {
             InitializeComponent();
             InitializeText();
 
             _Data = d;
+            _PreselectedDB = preselectedDB;
             _PreselectedTablesIds = preselectedTablesIds;
 
             _TreeModelConnections = new TreeModel();
@@ -47,6 +49,8 @@ namespace PgMulti.Forms
             tvaConnections.BeginUpdate();
             Queue<Tuple<Node, Group>> queue = new Queue<Tuple<Node, Group>>();
             queue.Enqueue(new Tuple<Node, Group>(_TreeModelConnections.Root, _Data!.RootGroup));
+
+            Node? preselectedDBNode = null;
 
             while (queue.Count > 0)
             {
@@ -78,6 +82,8 @@ namespace PgMulti.Forms
                         dbNode.Image = Properties.Resources.tva_db;
 
                         n.Nodes.Add(dbNode);
+
+                        if (db == _PreselectedDB) preselectedDBNode = dbNode;
                     }
                     else if (childItem.Item2 is Group)
                     {
@@ -100,6 +106,18 @@ namespace PgMulti.Forms
             _TreeModelConnections.OnStructureChanged(new TreePathEventArgs(TreePath.Empty));
 
             tvaConnections.EndUpdate();
+
+            if (preselectedDBNode != null)
+            {
+                TreeNodeAdv tna = tvaConnections.FindNodeByTag(preselectedDBNode);
+                tna.IsSelected = true;
+
+                while (tna.Parent != null)
+                {
+                    tna = tna.Parent;
+                    tna.Expand();
+                }
+            }
         }
 
         private void tvaConnections_SelectionChanged(object sender, EventArgs e)
@@ -249,7 +267,7 @@ namespace PgMulti.Forms
             UpdateNodeCheck(n);
         }
 
-        private void tsbOk_Click(object sender, EventArgs e)
+        private void btnOk_Click(object sender, EventArgs e)
         {
             _SelectedTables = new List<Table>();
 
@@ -274,7 +292,7 @@ namespace PgMulti.Forms
             Close();
         }
 
-        private void tsbCancel_Click(object sender, EventArgs e)
+        private void btnCancel_Click(object sender, EventArgs e)
         {
             Close();
         }
@@ -283,8 +301,8 @@ namespace PgMulti.Forms
         private void InitializeText()
         {
             this.Text = Properties.Text.select_tables;
-            this.tsbOk.Text = Properties.Text.btn_ok;
-            this.tsbCancel.Text = Properties.Text.btn_cancel;
+            this.btnOk.Text = Properties.Text.btn_ok;
+            this.btnCancel.Text = Properties.Text.btn_cancel;
         }
         #endregion
     }

@@ -41,13 +41,15 @@ namespace PgMulti
             tsddbScript.Text = tsmiComando.Text;
         }
 
-        private void tsbRunAll_Click(object sender, EventArgs e)
+        private void btnRunAll_Click(object sender, EventArgs e)
         {
+            if (MessageBox.Show(this, string.Format(Properties.Text.confirm_run_all_msg, _Statements.Count), Properties.Text.confirm_run_all_title, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) != DialogResult.Yes) return;
+
             Result = ResultEnum.Run;
             Close();
         }
 
-        private void tsbCancel_Click(object sender, EventArgs e)
+        private void btnCancel_Click(object sender, EventArgs e)
         {
             Result = ResultEnum.Cancel;
             Close();
@@ -69,9 +71,8 @@ namespace PgMulti
         #region TextI18n
         private void InitializeText()
         {
-            this.tsbRunAll.Text = Properties.Text.run_all;
-            this.tsbRunAll.ToolTipText = Properties.Text.run_all_extended;
-            this.tsbCancel.Text = Properties.Text.btn_cancel;
+            this.btnRunAll.Text = Properties.Text.run_all;
+            this.btnCancel.Text = Properties.Text.btn_cancel;
             this.tsbEdit.Text = Properties.Text.edit;
             this.Text = Properties.Text.confirm_execution;
         }

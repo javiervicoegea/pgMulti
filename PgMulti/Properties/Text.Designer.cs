@@ -653,6 +653,24 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Do you confirm that you want to run the {0} scripts on their respective databases?.
+        /// </summary>
+        internal static string confirm_run_all_msg {
+            get {
+                return ResourceManager.GetString("confirm_run_all_msg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Confirm execution.
+        /// </summary>
+        internal static string confirm_run_all_title {
+            get {
+                return ResourceManager.GetString("confirm_run_all_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Are you sure you want to stop all running tasks?.
         /// </summary>
         internal static string confirm_stop_all {
@@ -2362,15 +2380,6 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Run all scripts on their respective databases.
-        /// </summary>
-        internal static string run_all_extended {
-            get {
-                return ResourceManager.GetString("run_all_extended", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Busca una cadena traducida similar a Run and copy results to a table.
         /// </summary>
         internal static string run_and_copy_to_table {
@@ -2547,6 +2556,15 @@ namespace PgMulti.Properties {
         internal static string select_area {
             get {
                 return ResourceManager.GetString("select_area", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Select database.
+        /// </summary>
+        internal static string select_db {
+            get {
+                return ResourceManager.GetString("select_db", resourceCulture);
             }
         }
         

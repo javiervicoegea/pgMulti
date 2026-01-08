@@ -84,7 +84,7 @@ namespace PgMulti
             txtText.Enabled = !tsbNull.Checked;
         }
 
-        private void tsbOk_Click(object sender, EventArgs e)
+        private void btnOk_Click(object sender, EventArgs e)
         {
             if (tsbNull.Checked)
             {
@@ -98,7 +98,7 @@ namespace PgMulti
             Close();
         }
 
-        private void tsbCancel_Click(object sender, EventArgs e)
+        private void btnCancel_Click(object sender, EventArgs e)
         {
             Value = null;
             DialogResult = DialogResult.Cancel;
@@ -113,8 +113,8 @@ namespace PgMulti
             this.tsbSaveFile.ToolTipText = Properties.Text.save_as;
             this.tsbNull.Text = Properties.Text.null_value;
             this.tsbNull.ToolTipText = Properties.Text.select_to_set_null_value;
-            this.tsbOk.Text = Properties.Text.btn_ok;
-            this.tsbCancel.Text = Properties.Text.btn_cancel;
+            this.btnOk.Text = Properties.Text.btn_ok;
+            this.btnCancel.Text = Properties.Text.btn_cancel;
             this.Text = Properties.Text.text;
             this.ofdOpenFile.Filter = Properties.Text.txt_file_filter;
             this.ofdOpenFile.Title = Properties.Text.select_open_file;

@@ -526,8 +526,11 @@ ATENCIÓN: Se eliminarán también las bases de datos dentro del grupo.</value>
   <data name="run_all" xml:space="preserve">
     <value>Ejecutar todo</value>
   </data>
-  <data name="run_all_extended" xml:space="preserve">
-    <value>Ejecutar todos los scripts en sus respectivas bases de datos</value>
+  <data name="confirm_run_all_title" xml:space="preserve">
+    <value>Confirmar ejecución</value>
+  </data>
+  <data name="confirm_run_all_msg" xml:space="preserve">
+    <value>¿Confirma que desea ejecutar los {0} scripts en sus respectivas bases de datos?</value>
   </data>
   <data name="run_on" xml:space="preserve">
     <value>Ejecutar en {0} bases de datos</value>
@@ -1226,5 +1229,8 @@ A diferencia de otras herramientas, esta aplicación no reutiliza la conexión e
   </data>
   <data name="sort_columns" xml:space="preserve">
     <value>Reordenar columnas automáticamente</value>
+  </data>
+  <data name="select_db" xml:space="preserve">
+    <value>Seleccionar base de datos</value>
   </data>
 </root>

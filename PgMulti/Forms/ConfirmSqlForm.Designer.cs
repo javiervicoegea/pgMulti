@@ -30,40 +30,38 @@ namespace PgMulti
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConfirmSqlForm));
-            this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
-            this.fctbSql = new PgMulti.QueryEditor.CustomFctb();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.tslSummary = new System.Windows.Forms.ToolStripLabel();
-            this.tsddbScript = new System.Windows.Forms.ToolStripDropDownButton();
-            this.tsbRunAll = new System.Windows.Forms.ToolStripButton();
-            this.tsbCancel = new System.Windows.Forms.ToolStripButton();
-            this.tsbEdit = new System.Windows.Forms.ToolStripButton();
-            this.toolStripContainer1.ContentPanel.SuspendLayout();
-            this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
-            this.toolStripContainer1.SuspendLayout();
+            tsc = new ToolStripContainer();
+            ts = new ToolStrip();
+            tslSummary = new ToolStripLabel();
+            tsddbScript = new ToolStripDropDownButton();
+            tsbEdit = new ToolStripButton();
+            btnCancel = new Button();
+            btnRunAll = new Button();
+            fctbSql = new PgMulti.QueryEditor.CustomFctb();
+            tsc.TopToolStripPanel.SuspendLayout();
+            tsc.SuspendLayout();
+            ts.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fctbSql)).BeginInit();
-            this.toolStrip1.SuspendLayout();
-            this.SuspendLayout();
+            SuspendLayout();
             // 
-            // toolStripContainer1
+            // tsc
             // 
+            tsc.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             // 
-            // toolStripContainer1.ContentPanel
+            // tsc.ContentPanel
             // 
-            this.toolStripContainer1.ContentPanel.Controls.Add(this.fctbSql);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(1191, 590);
-            this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
-            this.toolStripContainer1.Name = "toolStripContainer1";
-            this.toolStripContainer1.Size = new System.Drawing.Size(1191, 627);
-            this.toolStripContainer1.TabIndex = 0;
-            this.toolStripContainer1.Text = "toolStripContainer1";
+            tsc.ContentPanel.Controls.Add(fctbSql);
+            tsc.ContentPanel.Size = new Size(707, 551);
+            tsc.Location = new Point(0, 0);
+            tsc.Name = "tsc";
+            tsc.Size = new Size(1191, 580);
+            tsc.TabIndex = 0;
+            tsc.Text = "toolStripContainer1";
             // 
-            // toolStripContainer1.TopToolStripPanel
+            // tsc.TopToolStripPanel
             // 
-            this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.toolStrip1);
+            tsc.TopToolStripPanel.Controls.Add(ts);
             // 
             // fctbSql
             // 
@@ -95,89 +93,92 @@ namespace PgMulti
             this.fctbSql.TabIndex = 0;
             this.fctbSql.Zoom = 100;
             // 
-            // toolStrip1
+            // ts
             // 
-            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.None;
-            this.toolStrip1.ImageScalingSize = new System.Drawing.Size(30, 30);
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tslSummary,
-            this.tsddbScript,
-            this.tsbRunAll,
-            this.tsbCancel,
-            this.tsbEdit});
-            this.toolStrip1.Location = new System.Drawing.Point(4, 0);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(205, 37);
-            this.toolStrip1.TabIndex = 0;
+            ts.Dock = DockStyle.None;
+            ts.ImageScalingSize = new Size(30, 30);
+            ts.Items.AddRange(new ToolStripItem[] { tslSummary, tsddbScript, tsbEdit });
+            ts.Location = new Point(4, 0);
+            ts.Name = "ts";
+            ts.Size = new Size(137, 37);
+            ts.TabIndex = 0;
             // 
             // tslSummary
             // 
-            this.tslSummary.Name = "tslSummary";
-            this.tslSummary.Size = new System.Drawing.Size(23, 34);
-            this.tslSummary.Text = "xx";
+            tslSummary.Name = "tslSummary";
+            tslSummary.Size = new Size(23, 34);
+            tslSummary.Text = "xx";
             // 
             // tsddbScript
             // 
-            this.tsddbScript.Image = global::PgMulti.Properties.Resources.archivo;
-            this.tsddbScript.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsddbScript.Name = "tsddbScript";
-            this.tsddbScript.Size = new System.Drawing.Size(67, 34);
-            this.tsddbScript.Text = "xx";
-            // 
-            // tsbRunAll
-            // 
-            this.tsbRunAll.Image = global::PgMulti.Properties.Resources.ok;
-            this.tsbRunAll.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbRunAll.Name = "tsbRunAll";
-            this.tsbRunAll.Size = new System.Drawing.Size(34, 34);
-            this.tsbRunAll.Click += new System.EventHandler(this.tsbRunAll_Click);
-            // 
-            // tsbCancel
-            // 
-            this.tsbCancel.Image = global::PgMulti.Properties.Resources.cerrar;
-            this.tsbCancel.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbCancel.Name = "tsbCancel";
-            this.tsbCancel.Size = new System.Drawing.Size(34, 34);
-            this.tsbCancel.Click += new System.EventHandler(this.tsbCancel_Click);
+            tsddbScript.Image = Properties.Resources.archivo;
+            tsddbScript.ImageTransparentColor = Color.Magenta;
+            tsddbScript.Name = "tsddbScript";
+            tsddbScript.Size = new Size(67, 34);
+            tsddbScript.Text = "xx";
             // 
             // tsbEdit
             // 
-            this.tsbEdit.Image = global::PgMulti.Properties.Resources.editar;
-            this.tsbEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbEdit.Name = "tsbEdit";
-            this.tsbEdit.Size = new System.Drawing.Size(34, 34);
-            this.tsbEdit.Click += new System.EventHandler(this.tsbEdit_Click);
+            tsbEdit.Image = Properties.Resources.editar;
+            tsbEdit.ImageTransparentColor = Color.Magenta;
+            tsbEdit.Name = "tsbEdit";
+            tsbEdit.Size = new Size(34, 34);
+            tsbEdit.Click += tsbEdit_Click;
+            // 
+            // btnCancel
+            // 
+            btnCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnCancel.Location = new Point(1070, 586);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new Size(109, 29);
+            btnCancel.TabIndex = 3;
+            btnCancel.Text = "btnCancel";
+            btnCancel.UseVisualStyleBackColor = true;
+            btnCancel.Click += btnCancel_Click;
+            // 
+            // btnRunAll
+            // 
+            btnRunAll.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnRunAll.Location = new Point(955, 586);
+            btnRunAll.Name = "btnRunAll";
+            btnRunAll.Size = new Size(109, 29);
+            btnRunAll.TabIndex = 4;
+            btnRunAll.Text = "btnRunAll";
+            btnRunAll.UseVisualStyleBackColor = true;
+            btnRunAll.Click += btnRunAll_Click;
             // 
             // ConfirmSqlForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1191, 627);
-            this.Controls.Add(this.toolStripContainer1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "ConfirmSqlForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.toolStripContainer1.ContentPanel.ResumeLayout(false);
-            this.toolStripContainer1.TopToolStripPanel.ResumeLayout(false);
-            this.toolStripContainer1.TopToolStripPanel.PerformLayout();
-            this.toolStripContainer1.ResumeLayout(false);
-            this.toolStripContainer1.PerformLayout();
+            AcceptButton = btnRunAll;
+            CancelButton = btnCancel;
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(1191, 627);
+            Controls.Add(btnCancel);
+            Controls.Add(btnRunAll);
+            Controls.Add(tsc);
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            Name = "ConfirmSqlForm";
+            StartPosition = FormStartPosition.CenterParent;
             ((System.ComponentModel.ISupportInitialize)(this.fctbSql)).EndInit();
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
-            this.ResumeLayout(false);
-
+            tsc.TopToolStripPanel.ResumeLayout(false);
+            tsc.TopToolStripPanel.PerformLayout();
+            tsc.ResumeLayout(false);
+            tsc.PerformLayout();
+            ts.ResumeLayout(false);
+            ts.PerformLayout();
+            ResumeLayout(false);
         }
 
         #endregion
 
-        private ToolStripContainer toolStripContainer1;
+        private ToolStripContainer tsc;
         private CustomFctb fctbSql;
-        private ToolStrip toolStrip1;
+        private ToolStrip ts;
         private ToolStripLabel tslSummary;
         private ToolStripDropDownButton tsddbScript;
-        private ToolStripButton tsbRunAll;
-        private ToolStripButton tsbCancel;
         private ToolStripButton tsbEdit;
+        private Button btnCancel;
+        private Button btnRunAll;
     }
 }

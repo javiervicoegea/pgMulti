@@ -30,128 +30,127 @@ namespace PgMulti
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TextBoxForm));
-            this.txtText = new FastColoredTextBox();
-            this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
-            this.tsToolbar = new System.Windows.Forms.ToolStrip();
-            this.tsbWordWrap = new System.Windows.Forms.ToolStripButton();
-            this.tsbOpenFile = new System.Windows.Forms.ToolStripButton();
-            this.tsbSaveFile = new System.Windows.Forms.ToolStripButton();
-            this.tsbNull = new System.Windows.Forms.ToolStripButton();
-            this.tsbOk = new System.Windows.Forms.ToolStripButton();
-            this.tsbCancel = new System.Windows.Forms.ToolStripButton();
-            this.ofdOpenFile = new OpenFileDialog();
-            this.sfdSaveFile = new SaveFileDialog();
-            this.toolStripContainer1.ContentPanel.SuspendLayout();
-            this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
-            this.toolStripContainer1.SuspendLayout();
-            this.tsToolbar.SuspendLayout();
-            this.SuspendLayout();
+            txtText = new FastColoredTextBox();
+            tsc = new ToolStripContainer();
+            tsToolbar = new ToolStrip();
+            tsbWordWrap = new ToolStripButton();
+            tsbOpenFile = new ToolStripButton();
+            tsbSaveFile = new ToolStripButton();
+            tsbNull = new ToolStripButton();
+            ofdOpenFile = new OpenFileDialog();
+            sfdSaveFile = new SaveFileDialog();
+            btnCancel = new Button();
+            btnOk = new Button();
+            ((System.ComponentModel.ISupportInitialize)txtText).BeginInit();
+            tsc.ContentPanel.SuspendLayout();
+            tsc.TopToolStripPanel.SuspendLayout();
+            tsc.SuspendLayout();
+            tsToolbar.SuspendLayout();
+            SuspendLayout();
             // 
             // txtText
             // 
-            this.txtText.Name = "txtText";
-            this.txtText.ShowScrollBars = true;
-            this.txtText.TabIndex = 0;
-            this.txtText.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtText_KeyUp);
-            this.txtText.BackBrush = null;
-            this.txtText.CharHeight = 19;
-            this.txtText.CharWidth = 10;
-            this.txtText.Dock = DockStyle.Fill;
-            this.txtText.Font = new Font("Cascadia Code", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            this.txtText.IsReplaceMode = false;
-            this.txtText.Location = new Point(0, 0);
-            this.txtText.Paddings = new Padding(20);
-            this.txtText.ReadOnly = true;
-            this.txtText.SelectionColor = Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
-            this.txtText.Zoom = 100;
-            this.txtText.ShowLineNumbers = true;
-            this.txtText.WordWrap = true;
+            txtText.AutoCompleteBracketsList = new char[]
+    {
+    '(',
+    ')',
+    '{',
+    '}',
+    '[',
+    ']',
+    '"',
+    '"',
+    '\'',
+    '\''
+    };
+            txtText.AutoIndentCharsPatterns = "^\\s*[\\w\\.]+(\\s\\w+)?\\s*(?<range>=)\\s*(?<range>[^;=]+);\r\n^\\s*(case|default)\\s*[^:]*(?<range>:)\\s*(?<range>[^;]+);";
+            txtText.AutoScrollMinSize = new Size(0, 59);
+            txtText.BackBrush = null;
+            txtText.CharHeight = 19;
+            txtText.CharWidth = 10;
+            txtText.DefaultMarkerSize = 8;
+            txtText.DisabledColor = Color.FromArgb(100, 180, 180, 180);
+            txtText.Dock = DockStyle.Fill;
+            txtText.Font = new Font("Cascadia Code", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            txtText.Hotkeys = resources.GetString("txtText.Hotkeys");
+            txtText.IsReplaceMode = false;
+            txtText.Location = new Point(0, 0);
+            txtText.Name = "txtText";
+            txtText.Paddings = new Padding(20);
+            txtText.ReadOnly = true;
+            txtText.SelectionColor = Color.FromArgb(60, 0, 0, 255);
+            txtText.ServiceColors = (ServiceColors)resources.GetObject("txtText.ServiceColors");
+            txtText.Size = new Size(745, 411);
+            txtText.TabIndex = 0;
+            txtText.WordWrap = true;
+            txtText.Zoom = 100;
+            txtText.KeyUp += txtText_KeyUp;
             // 
-            // toolStripContainer1
+            // tsc
             // 
+            tsc.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             // 
-            // toolStripContainer1.ContentPanel
+            // tsc.ContentPanel
             // 
-            this.toolStripContainer1.ContentPanel.Controls.Add(this.txtText);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(815, 459);
-            this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
-            this.toolStripContainer1.Name = "toolStripContainer1";
-            this.toolStripContainer1.Size = new System.Drawing.Size(815, 486);
-            this.toolStripContainer1.TabIndex = 1;
-            this.toolStripContainer1.Text = "toolStripContainer1";
+            tsc.ContentPanel.Controls.Add(txtText);
+            tsc.ContentPanel.Size = new Size(745, 411);
+            tsc.Location = new Point(0, 0);
+            tsc.Name = "tsc";
+            tsc.Size = new Size(745, 438);
+            tsc.TabIndex = 1;
+            tsc.Text = "toolStripContainer1";
             // 
-            // toolStripContainer1.TopToolStripPanel
+            // tsc.TopToolStripPanel
             // 
-            this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.tsToolbar);
+            tsc.TopToolStripPanel.Controls.Add(tsToolbar);
             // 
             // tsToolbar
             // 
-            this.tsToolbar.Dock = System.Windows.Forms.DockStyle.None;
-            this.tsToolbar.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.tsToolbar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsbWordWrap,
-            this.tsbOpenFile,
-            this.tsbSaveFile,
-            this.tsbNull,
-            this.tsbOk,
-            this.tsbCancel});
-            this.tsToolbar.Location = new System.Drawing.Point(4, 0);
-            this.tsToolbar.Name = "tsToolbar";
-            this.tsToolbar.Size = new System.Drawing.Size(100, 27);
-            this.tsToolbar.TabIndex = 0;
+            tsToolbar.Dock = DockStyle.None;
+            tsToolbar.ImageScalingSize = new Size(20, 20);
+            tsToolbar.Items.AddRange(new ToolStripItem[] { tsbWordWrap, tsbOpenFile, tsbSaveFile, tsbNull });
+            tsToolbar.Location = new Point(4, 0);
+            tsToolbar.Name = "tsToolbar";
+            tsToolbar.Size = new Size(129, 27);
+            tsToolbar.TabIndex = 0;
             // 
             // tsbWordWrap
             // 
-            this.tsbWordWrap.CheckOnClick = true;
-            this.tsbWordWrap.Image = global::PgMulti.Properties.Resources.text_wrap;
-            this.tsbWordWrap.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbWordWrap.Name = "tsbWordWrap";
-            this.tsbWordWrap.Size = new System.Drawing.Size(29, 24);
-            this.tsbWordWrap.Checked = true;
-            this.tsbWordWrap.Click += new System.EventHandler(this.tsbWordWrap_Click);
+            tsbWordWrap.Checked = true;
+            tsbWordWrap.CheckOnClick = true;
+            tsbWordWrap.CheckState = CheckState.Checked;
+            tsbWordWrap.Image = Properties.Resources.text_wrap;
+            tsbWordWrap.ImageTransparentColor = Color.Magenta;
+            tsbWordWrap.Name = "tsbWordWrap";
+            tsbWordWrap.Size = new Size(29, 24);
+            tsbWordWrap.Click += tsbWordWrap_Click;
             // 
             // tsbOpenFile
             // 
-            this.tsbOpenFile.Image = global::PgMulti.Properties.Resources.abrir;
-            this.tsbOpenFile.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbOpenFile.Name = "tsbOpenFile";
-            this.tsbOpenFile.Size = new System.Drawing.Size(29, 24);
-            this.tsbOpenFile.Click += new System.EventHandler(this.tsbOpenFile_Click);
+            tsbOpenFile.Image = Properties.Resources.abrir;
+            tsbOpenFile.ImageTransparentColor = Color.Magenta;
+            tsbOpenFile.Name = "tsbOpenFile";
+            tsbOpenFile.Size = new Size(29, 24);
+            tsbOpenFile.Click += tsbOpenFile_Click;
             // 
             // tsbSaveFile
             // 
-            this.tsbSaveFile.Image = global::PgMulti.Properties.Resources.guardar_como;
-            this.tsbSaveFile.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbSaveFile.Name = "tsbSaveFile";
-            this.tsbSaveFile.Size = new System.Drawing.Size(29, 24);
-            this.tsbSaveFile.Click += new System.EventHandler(this.tsbSaveFile_Click);
+            tsbSaveFile.Image = Properties.Resources.guardar_como;
+            tsbSaveFile.ImageTransparentColor = Color.Magenta;
+            tsbSaveFile.Name = "tsbSaveFile";
+            tsbSaveFile.Size = new Size(29, 24);
+            tsbSaveFile.Click += tsbSaveFile_Click;
             // 
             // tsbNull
             // 
-            this.tsbNull.CheckOnClick = true;
-            this.tsbNull.Image = global::PgMulti.Properties.Resources._null;
-            this.tsbNull.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbNull.Name = "tsbNull";
-            this.tsbNull.Size = new System.Drawing.Size(29, 24);
-            this.tsbNull.Click += new System.EventHandler(this.tsbNull_Click);
-            // 
-            // tsbOk
-            // 
-            this.tsbOk.Image = global::PgMulti.Properties.Resources.ok;
-            this.tsbOk.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbOk.Name = "tsbOk";
-            this.tsbOk.Size = new System.Drawing.Size(29, 24);
-            this.tsbOk.Click += new System.EventHandler(this.tsbOk_Click);
-            // 
-            // tsbCancel
-            // 
-            this.tsbCancel.Image = global::PgMulti.Properties.Resources.cerrar;
-            this.tsbCancel.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbCancel.Name = "tsbCancel";
-            this.tsbCancel.Size = new System.Drawing.Size(29, 24);
-            this.tsbCancel.Click += new System.EventHandler(this.tsbCancel_Click);
+            tsbNull.CheckOnClick = true;
+            tsbNull.Image = Properties.Resources._null;
+            tsbNull.ImageTransparentColor = Color.Magenta;
+            tsbNull.Name = "tsbNull";
+            tsbNull.Size = new Size(29, 24);
+            tsbNull.Click += tsbNull_Click;
             // 
             // ofdOpenFile
             // 
@@ -163,40 +162,63 @@ namespace PgMulti
             sfdSaveFile.DefaultExt = "txt";
             sfdSaveFile.FilterIndex = 0;
             // 
+            // btnCancel
+            // 
+            btnCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnCancel.Location = new Point(624, 444);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new Size(109, 29);
+            btnCancel.TabIndex = 3;
+            btnCancel.Text = "btnCancel";
+            btnCancel.UseVisualStyleBackColor = true;
+            btnCancel.Click += btnCancel_Click;
+            // 
+            // btnOk
+            // 
+            btnOk.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnOk.Location = new Point(509, 444);
+            btnOk.Name = "btnOk";
+            btnOk.Size = new Size(109, 29);
+            btnOk.TabIndex = 4;
+            btnOk.Text = "btnOk";
+            btnOk.UseVisualStyleBackColor = true;
+            btnOk.Click += btnOk_Click;
+            // 
             // TextBoxForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(815, 486);
-            this.Controls.Add(this.toolStripContainer1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "TextBoxForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Shown += new System.EventHandler(this.TextBoxForm_Shown);
-            this.toolStripContainer1.ContentPanel.ResumeLayout(false);
-            this.toolStripContainer1.ContentPanel.PerformLayout();
-            this.toolStripContainer1.TopToolStripPanel.ResumeLayout(false);
-            this.toolStripContainer1.TopToolStripPanel.PerformLayout();
-            this.toolStripContainer1.ResumeLayout(false);
-            this.toolStripContainer1.PerformLayout();
-            this.tsToolbar.ResumeLayout(false);
-            this.tsToolbar.PerformLayout();
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(745, 485);
+            Controls.Add(btnCancel);
+            Controls.Add(btnOk);
+            Controls.Add(tsc);
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            Name = "TextBoxForm";
+            StartPosition = FormStartPosition.CenterParent;
+            Shown += TextBoxForm_Shown;
+            ((System.ComponentModel.ISupportInitialize)txtText).EndInit();
+            tsc.ContentPanel.ResumeLayout(false);
+            tsc.TopToolStripPanel.ResumeLayout(false);
+            tsc.TopToolStripPanel.PerformLayout();
+            tsc.ResumeLayout(false);
+            tsc.PerformLayout();
+            tsToolbar.ResumeLayout(false);
+            tsToolbar.PerformLayout();
+            ResumeLayout(false);
         }
 
         #endregion
 
         private FastColoredTextBox txtText;
-        private ToolStripContainer toolStripContainer1;
+        private ToolStripContainer tsc;
         private ToolStrip tsToolbar;
         private ToolStripButton tsbWordWrap;
         private ToolStripButton tsbOpenFile;
         private ToolStripButton tsbSaveFile;
         private ToolStripButton tsbNull;
-        private ToolStripButton tsbOk;
-        private ToolStripButton tsbCancel;
         private OpenFileDialog ofdOpenFile;
         private SaveFileDialog sfdSaveFile;
+        private Button btnCancel;
+        private Button btnOk;
     }
 }

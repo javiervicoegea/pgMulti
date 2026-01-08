@@ -29,199 +29,162 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SelectTablesForm));
-            this.tvaConnections = new Aga.Controls.Tree.TreeViewAdv();
-            this.tvaTables = new Aga.Controls.Tree.TreeViewAdv();
-            this.nsiConnections = new Aga.Controls.Tree.NodeControls.NodeStateIcon();
-            this.ntbConnections = new Aga.Controls.Tree.NodeControls.NodeTextBox();
-            this.ncbTables = new Aga.Controls.Tree.NodeControls.NodeCheckBox();
-            this.nsiTables = new Aga.Controls.Tree.NodeControls.NodeStateIcon();
-            this.ntbTables = new Aga.Controls.Tree.NodeControls.NodeTextBox();
-            this.tsc = new System.Windows.Forms.ToolStripContainer();
-            this.sc = new System.Windows.Forms.SplitContainer();
-            this.ts = new System.Windows.Forms.ToolStrip();
-            this.tsbOk = new System.Windows.Forms.ToolStripButton();
-            this.tsbCancel = new System.Windows.Forms.ToolStripButton();
-            this.tsc.ContentPanel.SuspendLayout();
-            this.tsc.TopToolStripPanel.SuspendLayout();
-            this.tsc.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.sc)).BeginInit();
-            this.sc.Panel1.SuspendLayout();
-            this.sc.SuspendLayout();
-            this.ts.SuspendLayout();
-            this.SuspendLayout();
+            tvaConnections = new Aga.Controls.Tree.TreeViewAdv();
+            nsiConnections = new Aga.Controls.Tree.NodeControls.NodeStateIcon();
+            ntbConnections = new Aga.Controls.Tree.NodeControls.NodeTextBox();
+            tvaTables = new Aga.Controls.Tree.TreeViewAdv();
+            ncbTables = new Aga.Controls.Tree.NodeControls.NodeCheckBox();
+            nsiTables = new Aga.Controls.Tree.NodeControls.NodeStateIcon();
+            ntbTables = new Aga.Controls.Tree.NodeControls.NodeTextBox();
+            sc = new SplitContainer();
+            btnCancel = new Button();
+            btnOk = new Button();
+            ((System.ComponentModel.ISupportInitialize)sc).BeginInit();
+            sc.Panel1.SuspendLayout();
+            sc.Panel2.SuspendLayout();
+            sc.SuspendLayout();
+            SuspendLayout();
             // 
             // tvaConnections
             // 
-            this.tvaConnections.AsyncExpanding = true;
-            this.tvaConnections.AutoRowHeight = true;
-            this.tvaConnections.BackColor = System.Drawing.SystemColors.Window;
-            this.tvaConnections.DefaultToolTipProvider = null;
-            this.tvaConnections.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tvaConnections.DragDropMarkColor = System.Drawing.Color.Black;
-            this.tvaConnections.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.tvaConnections.Indent = 25;
-            this.tvaConnections.LineColor = System.Drawing.SystemColors.ControlDark;
-            this.tvaConnections.LoadOnDemand = false;
-            this.tvaConnections.Location = new System.Drawing.Point(0, 0);
-            this.tvaConnections.Margin = new System.Windows.Forms.Padding(10);
-            this.tvaConnections.Model = null;
-            this.tvaConnections.Name = "tvaConnections";
-            this.tvaConnections.NodeControls.Add(this.nsiConnections);
-            this.tvaConnections.NodeControls.Add(this.ntbConnections);
-            this.tvaConnections.RowHeight = 25;
-            this.tvaConnections.SelectedNode = null;
-            this.tvaConnections.Size = new System.Drawing.Size(275, 498);
-            this.tvaConnections.TabIndex = 0;
-            this.tvaConnections.SelectionChanged += new System.EventHandler(this.tvaConnections_SelectionChanged);
-            // 
-            // tvaTables
-            // 
-            this.tvaTables.AsyncExpanding = true;
-            this.tvaTables.AutoRowHeight = true;
-            this.tvaTables.BackColor = System.Drawing.SystemColors.Window;
-            this.tvaTables.DefaultToolTipProvider = null;
-            this.tvaTables.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tvaTables.DragDropMarkColor = System.Drawing.Color.Black;
-            this.tvaTables.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.tvaTables.Indent = 25;
-            this.tvaTables.LineColor = System.Drawing.SystemColors.ControlDark;
-            this.tvaTables.LoadOnDemand = false;
-            this.tvaTables.Location = new System.Drawing.Point(0, 0);
-            this.tvaTables.Margin = new System.Windows.Forms.Padding(10);
-            this.tvaTables.Model = null;
-            this.tvaTables.Name = "tvaTables";
-            this.tvaTables.NodeControls.Add(this.ncbTables);
-            this.tvaTables.NodeControls.Add(this.nsiTables);
-            this.tvaTables.NodeControls.Add(this.ntbTables);
-            this.tvaTables.RowHeight = 25;
-            this.tvaTables.SelectedNode = null;
-            this.tvaTables.Size = new System.Drawing.Size(275, 498);
-            this.tvaTables.TabIndex = 0;
+            tvaConnections.AsyncExpanding = true;
+            tvaConnections.AutoRowHeight = true;
+            tvaConnections.BackColor = SystemColors.Window;
+            tvaConnections.DefaultToolTipProvider = null;
+            tvaConnections.Dock = DockStyle.Fill;
+            tvaConnections.DragDropMarkColor = Color.Black;
+            tvaConnections.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            tvaConnections.Indent = 25;
+            tvaConnections.LineColor = SystemColors.ControlDark;
+            tvaConnections.Location = new Point(0, 0);
+            tvaConnections.Margin = new Padding(10);
+            tvaConnections.Model = null;
+            tvaConnections.Name = "tvaConnections";
+            tvaConnections.NodeControls.Add(nsiConnections);
+            tvaConnections.NodeControls.Add(ntbConnections);
+            tvaConnections.RowHeight = 25;
+            tvaConnections.SelectedNode = null;
+            tvaConnections.Size = new Size(274, 528);
+            tvaConnections.TabIndex = 0;
+            tvaConnections.SelectionChanged += tvaConnections_SelectionChanged;
             // 
             // nsiConnections
             // 
-            this.nsiConnections.DataPropertyName = "Image";
-            this.nsiConnections.LeftMargin = 5;
-            this.nsiConnections.ParentColumn = null;
-            this.nsiConnections.ScaleMode = Aga.Controls.Tree.ImageScaleMode.AlwaysScale;
+            nsiConnections.DataPropertyName = "Image";
+            nsiConnections.LeftMargin = 5;
+            nsiConnections.ParentColumn = null;
+            nsiConnections.ScaleMode = Aga.Controls.Tree.ImageScaleMode.AlwaysScale;
             // 
             // ntbConnections
             // 
-            this.ntbConnections.DataPropertyName = "Text";
-            this.ntbConnections.IncrementalSearchEnabled = true;
-            this.ntbConnections.LeftMargin = 5;
-            this.ntbConnections.ParentColumn = null;
+            ntbConnections.DataPropertyName = "Text";
+            ntbConnections.IncrementalSearchEnabled = true;
+            ntbConnections.LeftMargin = 5;
+            ntbConnections.ParentColumn = null;
+            // 
+            // tvaTables
+            // 
+            tvaTables.AsyncExpanding = true;
+            tvaTables.AutoRowHeight = true;
+            tvaTables.BackColor = SystemColors.Window;
+            tvaTables.DefaultToolTipProvider = null;
+            tvaTables.Dock = DockStyle.Fill;
+            tvaTables.DragDropMarkColor = Color.Black;
+            tvaTables.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            tvaTables.Indent = 25;
+            tvaTables.LineColor = SystemColors.ControlDark;
+            tvaTables.Location = new Point(0, 0);
+            tvaTables.Margin = new Padding(10);
+            tvaTables.Model = null;
+            tvaTables.Name = "tvaTables";
+            tvaTables.NodeControls.Add(ncbTables);
+            tvaTables.NodeControls.Add(nsiTables);
+            tvaTables.NodeControls.Add(ntbTables);
+            tvaTables.RowHeight = 25;
+            tvaTables.SelectedNode = null;
+            tvaTables.Size = new Size(547, 528);
+            tvaTables.TabIndex = 0;
             // 
             // ncbTables
             // 
-            this.ncbTables.DataPropertyName = "CheckState";
-            this.ncbTables.EditEnabled = true;
-            this.ncbTables.ImageSize = 20;
-            this.ncbTables.LeftMargin = 5;
-            this.ncbTables.ParentColumn = null;
+            ncbTables.DataPropertyName = "CheckState";
+            ncbTables.EditEnabled = true;
+            ncbTables.ImageSize = 20;
+            ncbTables.LeftMargin = 5;
+            ncbTables.ParentColumn = null;
             // 
             // nsiTables
             // 
-            this.nsiTables.DataPropertyName = "Image";
-            this.nsiTables.LeftMargin = 5;
-            this.nsiTables.ParentColumn = null;
-            this.nsiTables.ScaleMode = Aga.Controls.Tree.ImageScaleMode.AlwaysScale;
+            nsiTables.DataPropertyName = "Image";
+            nsiTables.LeftMargin = 5;
+            nsiTables.ParentColumn = null;
+            nsiTables.ScaleMode = Aga.Controls.Tree.ImageScaleMode.AlwaysScale;
             // 
             // ntbTables
             // 
-            this.ntbTables.DataPropertyName = "Text";
-            this.ntbTables.IncrementalSearchEnabled = true;
-            this.ntbTables.LeftMargin = 5;
-            this.ntbTables.ParentColumn = null;
-            // 
-            // tsc
-            // 
-            // 
-            // tsc.ContentPanel
-            // 
-            this.tsc.ContentPanel.Controls.Add(this.sc);
-            this.tsc.ContentPanel.Size = new System.Drawing.Size(827, 498);
-            this.tsc.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tsc.Location = new System.Drawing.Point(0, 0);
-            this.tsc.Name = "tsc";
-            this.tsc.Size = new System.Drawing.Size(827, 525);
-            this.tsc.TabIndex = 0;
-            this.tsc.Text = "tsc";
-            // 
-            // tsc.TopToolStripPanel
-            // 
-            this.tsc.TopToolStripPanel.Controls.Add(this.ts);
+            ntbTables.DataPropertyName = "Text";
+            ntbTables.IncrementalSearchEnabled = true;
+            ntbTables.LeftMargin = 5;
+            ntbTables.ParentColumn = null;
             // 
             // sc
             // 
-            this.sc.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.sc.Location = new System.Drawing.Point(0, 0);
-            this.sc.Name = "sc";
+            sc.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            sc.Location = new Point(12, 12);
+            sc.Name = "sc";
             // 
             // sc.Panel1
             // 
-            this.sc.Panel1.Controls.Add(this.tvaConnections);
-            this.sc.Size = new System.Drawing.Size(827, 498);
-            this.sc.SplitterDistance = 275;
-            this.sc.TabIndex = 1;
+            sc.Panel1.Controls.Add(tvaConnections);
             // 
             // sc.Panel2
             // 
-            this.sc.Panel2.Controls.Add(this.tvaTables);
-            this.sc.Size = new System.Drawing.Size(827, 498);
-            this.sc.SplitterDistance = 275;
-            this.sc.TabIndex = 2;
+            sc.Panel2.Controls.Add(tvaTables);
+            sc.Size = new Size(825, 528);
+            sc.SplitterDistance = 274;
+            sc.TabIndex = 2;
             // 
-            // ts
+            // btnCancel
             // 
-            this.ts.Dock = System.Windows.Forms.DockStyle.None;
-            this.ts.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.ts.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsbOk,
-            this.tsbCancel});
-            this.ts.Location = new System.Drawing.Point(4, 0);
-            this.ts.Name = "ts";
-            this.ts.Size = new System.Drawing.Size(71, 27);
-            this.ts.TabIndex = 0;
+            btnCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnCancel.Location = new Point(728, 546);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new Size(109, 29);
+            btnCancel.TabIndex = 5;
+            btnCancel.Text = "btnCancel";
+            btnCancel.UseVisualStyleBackColor = true;
+            btnCancel.Click += btnCancel_Click;
             // 
-            // tsbOk
+            // btnOk
             // 
-            this.tsbOk.Image = global::PgMulti.Properties.Resources.ok;
-            this.tsbOk.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbOk.Name = "tsbOk";
-            this.tsbOk.Size = new System.Drawing.Size(29, 24);
-            this.tsbOk.Click += new System.EventHandler(this.tsbOk_Click);
-            // 
-            // tsbCancel
-            // 
-            this.tsbCancel.Image = global::PgMulti.Properties.Resources.cerrar;
-            this.tsbCancel.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbCancel.Name = "tsbCancel";
-            this.tsbCancel.Size = new System.Drawing.Size(29, 24);
-            this.tsbCancel.Click += new System.EventHandler(this.tsbCancel_Click);
+            btnOk.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnOk.Location = new Point(613, 546);
+            btnOk.Name = "btnOk";
+            btnOk.Size = new Size(109, 29);
+            btnOk.TabIndex = 6;
+            btnOk.Text = "btnOk";
+            btnOk.UseVisualStyleBackColor = true;
+            btnOk.Click += btnOk_Click;
             // 
             // SelectTablesForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(827, 525);
-            this.Controls.Add(this.tsc);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "SelectTablesForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Load += new System.EventHandler(this.SelectTablesForm_Load);
-            this.tsc.ContentPanel.ResumeLayout(false);
-            this.tsc.TopToolStripPanel.ResumeLayout(false);
-            this.tsc.TopToolStripPanel.PerformLayout();
-            this.tsc.ResumeLayout(false);
-            this.tsc.PerformLayout();
-            this.sc.Panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.sc)).EndInit();
-            this.sc.ResumeLayout(false);
-            this.ts.ResumeLayout(false);
-            this.ts.PerformLayout();
-            this.ResumeLayout(false);
-
+            AcceptButton = btnOk;
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            CancelButton = btnCancel;
+            ClientSize = new Size(849, 587);
+            Controls.Add(sc);
+            Controls.Add(btnCancel);
+            Controls.Add(btnOk);
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            Name = "SelectTablesForm";
+            StartPosition = FormStartPosition.CenterParent;
+            Load += SelectTablesForm_Load;
+            sc.Panel1.ResumeLayout(false);
+            sc.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)sc).EndInit();
+            sc.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         #endregion
@@ -233,10 +196,8 @@
         private Aga.Controls.Tree.NodeControls.NodeCheckBox ncbTables;
         private Aga.Controls.Tree.NodeControls.NodeStateIcon nsiTables;
         private Aga.Controls.Tree.NodeControls.NodeTextBox ntbTables;
-        private ToolStripContainer tsc;
-        private ToolStrip ts;
-        private ToolStripButton tsbOk;
-        private ToolStripButton tsbCancel;
         private SplitContainer sc;
+        private Button btnCancel;
+        private Button btnOk;
     }
 }

@@ -49,6 +49,8 @@ namespace PgMulti.Forms
             Queue<Tuple<Node, Group>> queue = new Queue<Tuple<Node, Group>>();
             queue.Enqueue(new Tuple<Node, Group>(_TreeModelConnections.Root, _Data!.RootGroup));
 
+            Node? preselectedDBNode = null;
+
             while (queue.Count > 0)
             {
                 Tuple<Node, Group> tuple = queue.Dequeue();
@@ -79,6 +81,8 @@ namespace PgMulti.Forms
                         dbNode.Image = Properties.Resources.tva_db;
 
                         n.Nodes.Add(dbNode);
+
+                        if (db == _PreselectedDB) preselectedDBNode = dbNode;
                     }
                     else if (childItem.Item2 is Group)
                     {
@@ -101,6 +105,18 @@ namespace PgMulti.Forms
             _TreeModelConnections.OnStructureChanged(new TreePathEventArgs(TreePath.Empty));
 
             tvaConnections.EndUpdate();
+
+            if (preselectedDBNode != null)
+            {
+                TreeNodeAdv tna = tvaConnections.FindNodeByTag(preselectedDBNode);
+                tna.IsSelected = true;
+
+                while (tna.Parent != null)
+                {
+                    tna = tna.Parent;
+                    tna.Expand();
+                }
+            }
         }
 
         private void ntbConnections_DrawText(object? sender, DrawEventArgs e)
@@ -116,7 +132,7 @@ namespace PgMulti.Forms
             }
         }
 
-        private void tsbOk_Click(object sender, EventArgs e)
+        private void btnOk_Click(object sender, EventArgs e)
         {
             if (tvaConnections.SelectedNode == null)
             {
@@ -130,7 +146,7 @@ namespace PgMulti.Forms
             Close();
         }
 
-        private void tsbCancel_Click(object sender, EventArgs e)
+        private void btnCancel_Click(object sender, EventArgs e)
         {
             Close();
         }
@@ -138,9 +154,9 @@ namespace PgMulti.Forms
         #region TextI18n
         private void InitializeText()
         {
-            this.Text = Properties.Text.select_tables;
-            this.tsbOk.Text = Properties.Text.btn_ok;
-            this.tsbCancel.Text = Properties.Text.btn_cancel;
+            this.Text = Properties.Text.select_db;
+            this.btnOk.Text = Properties.Text.btn_ok;
+            this.btnCancel.Text = Properties.Text.btn_cancel;
         }
         #endregion
     }

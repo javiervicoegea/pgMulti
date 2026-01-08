@@ -113,8 +113,8 @@ namespace PgMulti.Forms
 
                 if (diagramTables.Count > 1)
                 {
-                    randomX = (int)(r.NextDouble() * 100 * diagramTables.Count);
-                    randomY = (int)(r.NextDouble() * 100 * diagramTables.Count);
+                    randomX = 500 - (int)(r.NextDouble() * 1000);
+                    randomY = 500 - (int)(r.NextDouble() * 1000);
                 }
 
                 t.MoveTo(_Diagram.UnProject(new Point(_Canvas.Width / 2 + randomX, _Canvas.Height / 2 + randomY)));
@@ -756,10 +756,13 @@ namespace PgMulti.Forms
                 preselectedTableIds.Add(new Tuple<string, string>(dt.SchemaName, dt.TableName));
             }
 
-            SelectTablesForm stf = new SelectTablesForm(_Data, preselectedTableIds);
+            SelectTablesForm stf = new SelectTablesForm(_Data, _PreselectedDB, preselectedTableIds);
             if (stf.ShowDialog(this) != DialogResult.OK) return;
 
             AddTables(stf.SelectedTables!);
+            _Invalidate();
+
+            tsbRepositionTables.Checked = true;
         }
 
         private void tsbAddNewTable_Click(object sender, EventArgs e)

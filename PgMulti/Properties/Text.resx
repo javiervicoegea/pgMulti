@@ -526,10 +526,13 @@ ATTENTION: Databases within the group will also be deleted.</value>
 	<data name="run_all" xml:space="preserve">
     <value>Run all</value>
   </data>
-	<data name="run_all_extended" xml:space="preserve">
-    <value>Run all scripts on their respective databases</value>
+  <data name="confirm_run_all_title" xml:space="preserve">
+    <value>Confirm execution</value>
   </data>
-	<data name="run_on" xml:space="preserve">
+  <data name="confirm_run_all_msg" xml:space="preserve">
+    <value>Do you confirm that you want to run the {0} scripts on their respective databases?</value>
+  </data>
+  <data name="run_on" xml:space="preserve">
     <value>Run on {0} databases</value>
   </data>
 	<data name="save" xml:space="preserve">
@@ -1226,5 +1229,8 @@ Unlike other tools, this application does not reuse the connection between diffe
   </data>
   <data name="sort_columns" xml:space="preserve">
     <value>Automatically reorder columns</value>
+  </data>
+  <data name="select_db" xml:space="preserve">
+    <value>Select database</value>
   </data>
 </root>
