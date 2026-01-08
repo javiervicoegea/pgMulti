@@ -1,4 +1,5 @@
 ﻿using Npgsql;
+using PgMulti.AppData;
 
 namespace PgMulti.DataStructure
 {
@@ -43,18 +44,43 @@ namespace PgMulti.DataStructure
         public void CreateInDB(NpgsqlConnection connection, NpgsqlTransaction t)
         {
             NpgsqlCommand cmdCreateTable = new NpgsqlCommand();
-            cmdCreateTable.CommandText = $"CREATE TABLE {IdSchema}.{Id} ({
-                    string.Join(",", Columns.Select(c => 
-                        c.Id + " " + c.Type 
-                        + (string.IsNullOrWhiteSpace(c.TypeParams)?"":" " + c.TypeParams) 
-                        + (c.NotNull?" NOT NULL":"") 
-                        + (string.IsNullOrWhiteSpace(c.DefaultValue)?"":" DEFAULT" + c.DefaultValue) 
-                        + (c.IsIdentity?" GENERATED " + (c.IsGeneratedAlways?"ALWAYS":"BY DEFAULT") + " AS IDENTITY":""))
-                    )
-                })";
+            cmdCreateTable.CommandText = $"CREATE TABLE {IdSchema}.{Id} ({string.Join(",", Columns.Select(c =>
+                                                                              c.Id + " " + c.Type
+                                                                              + (string.IsNullOrWhiteSpace(c.TypeParams) ? "" : " " + c.TypeParams)
+                                                                              + (c.NotNull ? " NOT NULL" : "")
+                                                                              + (string.IsNullOrWhiteSpace(c.DefaultValue) ? "" : " DEFAULT" + c.DefaultValue)
+                                                                              + (c.IsIdentity ? " GENERATED " + (c.IsGeneratedAlways ? "ALWAYS" : "BY DEFAULT") + " AS IDENTITY" : ""))
+                    )})";
             cmdCreateTable.Connection = connection;
             cmdCreateTable.Transaction = t;
             cmdCreateTable.ExecuteNonQuery();
+        }
+
+        private string? _PKConstraintName = null;
+        private bool _PKConstraintNameLoaded = false;
+        public string? PKConstraintName
+        {
+            get
+            {
+                if (!_PKConstraintNameLoaded)
+                {
+                    using (NpgsqlConnection c = Schema.DB.Connection)
+                    {
+                        NpgsqlCommand cmd = c.CreateCommand();
+
+                        c.Open();
+
+                        cmd.CommandText = "SELECT constraint_name FROM information_schema.table_constraints WHERE table_schema = :schema AND table_name = :table AND constraint_type = 'PRIMARY KEY'";
+                        cmd.CommandTimeout = 10;
+
+                        object? o = cmd.ExecuteScalar();
+                        _PKConstraintName = o == null || o == DBNull.Value ? null : (string)o;
+                        _PKConstraintNameLoaded = true;
+                    }
+                }
+
+                return _PKConstraintName;
+            }
         }
 
         public override string ToString()

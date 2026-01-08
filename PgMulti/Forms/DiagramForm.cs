@@ -651,7 +651,20 @@ namespace PgMulti.Forms
 
         private void tsbSqlTransformDB_Click(object sender, EventArgs e)
         {
+            SelectDBForm f = new SelectDBForm(_Data, _PreselectedDB);
+            f.ShowDialog(this);
 
+            if (f.DialogResult != DialogResult.OK) return;
+
+            StringBuilder sb = new StringBuilder();
+            _Diagram.WriteSqlScriptTransformDb(sb, f.SelectedDB!);
+
+            EditorTab.CreateEditorTabOptions o = new EditorTab.CreateEditorTabOptions();
+            o.Title = Path.GetFileNameWithoutExtension(_Filename) + "_transformation.sql";
+            o.Text = sb.ToString();
+            o.Format = true;
+            o.Focus = true;
+            _MainForm.CreateEditorTab(o);
         }
 
         private void tsbPrint_Click(object sender, EventArgs e)

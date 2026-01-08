@@ -1,4 +1,5 @@
-﻿using PgMulti.DataStructure;
+﻿using PgMulti.AppData;
+using PgMulti.DataStructure;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Drawing2D;
 using System.Text;
@@ -907,8 +908,25 @@ namespace PgMulti.Diagrams
             }
         }
 
+        public Table? FindInDB(DB db)
+        {
+            Schema? sch = db.Schemas.FirstOrDefault(i => i.Id == SchemaName);
+            if (sch == null) return null;
+
+            return sch.Tables.FirstOrDefault(i => i.Id == TableName);
+        }
+
+        public void WriteSqlClauseConstraintPK(StringBuilder sb)
+        {
+            if (sb == null) throw new ArgumentException();
+
+            sb.Append($"CONSTRAINT {SqlSyntax.PostgreSqlGrammar.IdToString("pk_" + TableName)} PRIMARY KEY ({string.Join(',', Columns.Where(i => i.PrimaryKey).Select(i => i.ColumnName))})");
+        }
+
         public void WriteSqlSentenceCreate(StringBuilder sb)
         {
+            if (sb == null) throw new ArgumentException();
+
             sb.Append($"CREATE TABLE {SqlSyntax.PostgreSqlGrammar.IdToString(SchemaName)}.{SqlSyntax.PostgreSqlGrammar.IdToString(TableName)}(");
 
             bool multiColumnPK = Columns.Count(i => i.PrimaryKey) > 1;
@@ -926,10 +944,76 @@ namespace PgMulti.Diagrams
 
             if (multiColumnPK)
             {
-                sb.Append($", CONSTRAINT {SqlSyntax.PostgreSqlGrammar.IdToString("pk_" + TableName)} PRIMARY KEY ({string.Join(',', Columns.Where(i => i.PrimaryKey).Select(i => i.ColumnName))})");
+                sb.Append(", ");
+                WriteSqlClauseConstraintPK(sb);
             }
 
             sb.AppendLine(");");
+        }
+
+        public void WriteSqlSentenceAlter(StringBuilder sb, Table t)
+        {
+            if (sb == null || t == null) throw new ArgumentException();
+
+            List<Column> pkColumns = t.Columns.Where(i => i.PK).ToList();
+            List<DiagramColumn> pkDiagramColumns = Columns.Where(i => i.PrimaryKey).ToList();
+
+            if (pkColumns.Count != pkDiagramColumns.Count || pkColumns.Where((i, index) => i.Id != pkDiagramColumns[index].ColumnName).Any())
+            {
+                if (pkColumns.Count > 0)
+                {
+                    if (t.PKConstraintName == null) throw new NotSupportedException();
+
+                    sb.AppendLine($"ALTER TABLE {SqlSyntax.PostgreSqlGrammar.IdToString(SchemaName)}.{SqlSyntax.PostgreSqlGrammar.IdToString(TableName)} DROP CONSTRAINT {SqlSyntax.PostgreSqlGrammar.IdToString(t.PKConstraintName)};");
+                }
+
+                if (pkDiagramColumns.Count > 0)
+                {
+                    sb.Append($"ALTER TABLE {SqlSyntax.PostgreSqlGrammar.IdToString(SchemaName)}.{SqlSyntax.PostgreSqlGrammar.IdToString(TableName)} ADD ");
+                    WriteSqlClauseConstraintPK(sb);
+                    sb.AppendLine(";");
+                }
+            }
+
+            List<DiagramColumn> newColumns = new List<DiagramColumn>();
+            List<DiagramColumn> existingColumns = new List<DiagramColumn>();
+            List<Column> extraColumns = new List<Column>();
+
+            foreach (DiagramColumn dc in Columns)
+            {
+                Column? c = t.Columns.FirstOrDefault(i => i.Id == dc.ColumnName);
+
+                if (c == null)
+                {
+                    newColumns.Add(dc);
+                }
+                else
+                {
+                    existingColumns.Add(dc);
+                }
+            }
+
+            foreach (Column c in t.Columns)
+            {
+                if (!Columns.Any(i => i.ColumnName == c.Id)) extraColumns.Add(c);
+            }
+
+            foreach (DiagramColumn dc in newColumns)
+            {
+                sb.Append($"ALTER TABLE {SqlSyntax.PostgreSqlGrammar.IdToString(SchemaName)}.{SqlSyntax.PostgreSqlGrammar.IdToString(TableName)} ADD COLUMN ");
+                dc.WriteSqlClauseFullDefinition(sb);
+                sb.AppendLine(";");
+            }
+
+            foreach (DiagramColumn dc in existingColumns)
+            {
+                dc.WriteSqlSentenceAlter(sb, t.Columns.First(i => i.Id == dc.ColumnName));
+            }
+
+            foreach (Column c in extraColumns)
+            {
+                sb.AppendLine($"ALTER TABLE {SqlSyntax.PostgreSqlGrammar.IdToString(SchemaName)}.{SqlSyntax.PostgreSqlGrammar.IdToString(TableName)} DROP COLUMN {SqlSyntax.PostgreSqlGrammar.IdToString(c.Id)} CASCADE;");
+            }
         }
 
         public override bool Equals(object? obj)

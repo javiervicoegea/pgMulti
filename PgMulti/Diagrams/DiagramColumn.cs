@@ -244,11 +244,30 @@ namespace PgMulti.Diagrams
 
         public void WriteSqlClauseFullDefinition(StringBuilder sb)
         {
+            if (sb == null) throw new ArgumentException();
+
             sb.Append($"{SqlSyntax.PostgreSqlGrammar.IdToString(ColumnName)} {TypeName}{(TypeParams == null ? "" : TypeParams)} {(NotNull ? "NOT NULL" : "NULL")}{(DefaultValue == null ? "" : $" DEFAULT {DefaultValue}")}{(IsIdentity ? " GENERATED ALWAYS AS IDENTITY" : "")}");
             if (PrimaryKey && _DiagramTable.Columns.Count(i => i.PrimaryKey) == 1)
             {
                 sb.Append(" PRIMARY KEY");
             }
+        }
+
+        public void WriteSqlSentenceAlter(StringBuilder sb, Column c)
+        {
+            if (sb == null || c == null) throw new ArgumentException();
+
+            if (TypeName != c.Type || TypeParams != c.TypeParams) WriteSqlClauseAlter(sb, $"TYPE {TypeName}{(TypeParams == null ? "" : TypeParams)}");
+            if (DefaultValue != c.DefaultValue) WriteSqlClauseAlter(sb, DefaultValue == null ? "DROP DEFAULT" : $"SET DEFAULT {DefaultValue}");
+            if (IsIdentity != c.IsIdentity) WriteSqlClauseAlter(sb, IsIdentity ? "ADD GENERATED ALWAYS AS IDENTITY" : "DROP IDENTITY");
+            if (NotNull != c.NotNull) WriteSqlClauseAlter(sb, NotNull ? "SET NOT NULL" : "DROP NOT NULL");
+        }
+
+        public void WriteSqlClauseAlter(StringBuilder sb, string sql)
+        {
+            if (sb == null || sql == null) throw new ArgumentException();
+
+            sb.AppendLine($"ALTER TABLE {SqlSyntax.PostgreSqlGrammar.IdToString(_DiagramTable.SchemaName)}.{SqlSyntax.PostgreSqlGrammar.IdToString(_DiagramTable.TableName)} ALTER COLUMN {SqlSyntax.PostgreSqlGrammar.IdToString(ColumnName)} {sql};");
         }
 
         public override bool Equals(object? obj)

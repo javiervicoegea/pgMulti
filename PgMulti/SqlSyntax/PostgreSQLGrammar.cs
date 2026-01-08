@@ -128,6 +128,7 @@ namespace PgMulti.SqlSyntax
             var ANALYZE = ToTerm("ANALYZE");
             var EXPLAIN = ToTerm("EXPLAIN");
             var LATERAL = ToTerm("LATERAL");
+            var IDENTITY = ToTerm("IDENTITY");
 
             //Non-terminals
             var id = new NonTerminal("id");
@@ -404,7 +405,7 @@ namespace PgMulti.SqlSyntax
                 | "OWNED" + BY + columnId;
 
             createExtensionStmt.Rule = CREATE + "EXTENSION" + (IF + NOT + EXISTS | Empty) + id_simple + (Empty | WITH + SCHEMA + id_simple);
-            createSchemaStmt.Rule = CREATE + SCHEMA + id_simple;
+            createSchemaStmt.Rule = CREATE + SCHEMA + (IF + NOT + EXISTS | Empty) + id_simple;
 
             //Create trigger
             createTriggerStmt.Rule = CREATE + (ToTerm("OR") + "REPLACE" | Empty) + TRIGGER + id_simple + createTriggerMomentumClause + createTriggerActionClause + ON + tableId + createTriggerRepetitionClause + createTriggerWhenClauseOpt + createTriggerExecuteClause;
@@ -500,7 +501,7 @@ namespace PgMulti.SqlSyntax
                     | UNIQUE
                     | "DEFAULT" + expression
                     | CHECK + "(" + expression + ")"
-                    | ToTerm("GENERATED") + ("ALWAYS" | BY + DEFAULT) + AS + "IDENTITY"
+                    | ToTerm("GENERATED") + ("ALWAYS" | BY + DEFAULT) + AS + IDENTITY
                 );
             nullColumnConstraint.Rule = NULL | notNull;
             fkColumnConstraint.Rule = constraintId + fkConstraint;
@@ -605,13 +606,13 @@ namespace PgMulti.SqlSyntax
                 | ALTER + COLUMN + id_simple
                     + (
                         SET + (notNull | DEFAULT + expression)
-                        | DROP + (DEFAULT | notNull)
+                        | DROP + (DEFAULT | notNull | IDENTITY)
                         | ("TYPE" | ToTerm("SET") + "DATA" + "TYPE") + typeNameAndParams
-                        | ADD + "GENERATED" + "ALWAYS" + AS + "IDENTITY" + (Empty | "(" + SEQUENCE + "NAME" + id + createSequenceClauseList + ")")
+                        | ADD + "GENERATED" + "ALWAYS" + AS + IDENTITY + (Empty | "(" + SEQUENCE + "NAME" + id + createSequenceClauseList + ")")
                     )
                 | ALTER + CONSTRAINT + id_simple + deferrable + initiallyDeferred
                 | DROP + COLUMN + id_simple + (Empty | CASCADE | RESTRICT)
-                | DROP + CONSTRAINT + id_simple
+                | DROP + CONSTRAINT + (Empty | IF + EXISTS) + id_simple
                 | RENAME + TO + id_simple
                 | RENAME + COLUMN + id_simple + TO + id_simple
                 | RENAME + CONSTRAINT + id_simple + TO + id_simple

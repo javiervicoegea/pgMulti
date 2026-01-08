@@ -1,4 +1,5 @@
-﻿using PgMulti.DataStructure;
+﻿using PgMulti.AppData;
+using PgMulti.DataStructure;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -1231,29 +1232,42 @@ namespace PgMulti.Diagrams
             }
         }
 
+        public TableRelation? FindInDB(DB db)
+        {
+            Table? t = ChildTable.FindInDB(db);
+            if (t == null) return null;
+
+            return t.Relations.Where(i => i.ChildTable == t).FirstOrDefault(i => i.Id == Id);
+        }
+
         public void WriteSqlClauseReferences(StringBuilder sb)
         {
-            sb.Append($"REFERENCES {SqlSyntax.PostgreSqlGrammar.IdToString(ParentTable.SchemaName)}.{SqlSyntax.PostgreSqlGrammar.IdToString(ParentTable.TableName)} ({SqlSyntax.PostgreSqlGrammar.IdToString(ParentTable.Columns[0].ColumnName)})");
+            sb.Append($"REFERENCES {SqlSyntax.PostgreSqlGrammar.IdToString(ParentTable.SchemaName)}.{SqlSyntax.PostgreSqlGrammar.IdToString(ParentTable.TableName)} ({string.Join(',', ParentTableColumns.Select(i => SqlSyntax.PostgreSqlGrammar.IdToString(i.ColumnName)))})");
             if (OnDelete != DiagramRelation.PropagationOptions.NoAction) sb.Append($" ON DELETE {DiagramRelation.PropagationOptionsToString(OnDelete)}");
             if (OnUpdate != DiagramRelation.PropagationOptions.NoAction) sb.Append($" ON UPDATE {DiagramRelation.PropagationOptionsToString(OnUpdate)}");
         }
 
         public void WriteSqlClauseConstraint(StringBuilder sb)
         {
-            sb.Append($"CONSTRAINT {SqlSyntax.PostgreSqlGrammar.IdToString($"fk_{ChildTable.TableName}_{ParentTable.TableName}")} FOREIGN KEY ({string.Join(',', ChildTableColumns.Select(i => i.ColumnName))}) ");
+            sb.Append($"CONSTRAINT {SqlSyntax.PostgreSqlGrammar.IdToString(Id)} FOREIGN KEY ({string.Join(',', ChildTableColumns.Select(i => SqlSyntax.PostgreSqlGrammar.IdToString(i.ColumnName)))}) ");
             WriteSqlClauseReferences(sb);
         }
 
-        public void WriteSqlSentenceAlterTableConstraint(StringBuilder sb)
+        public void WriteSqlSentenceAlterTableAddConstraint(StringBuilder sb)
         {
             sb.Append($"ALTER TABLE {SqlSyntax.PostgreSqlGrammar.IdToString(ChildTable.SchemaName)}.{SqlSyntax.PostgreSqlGrammar.IdToString(ChildTable.TableName)} ADD ");
             WriteSqlClauseConstraint(sb);
             sb.AppendLine(";");
         }
 
+        public void WriteSqlSentenceAlterTableDropConstraint(StringBuilder sb)
+        {
+            sb.AppendLine($"ALTER TABLE {SqlSyntax.PostgreSqlGrammar.IdToString(ChildTable.SchemaName)}.{SqlSyntax.PostgreSqlGrammar.IdToString(ChildTable.TableName)} DROP CONSTRAINT IF EXISTS {SqlSyntax.PostgreSqlGrammar.IdToString(Id)};");
+        }
+
         public void WriteSqlSentenceCreateForeignKeyIndex(StringBuilder sb)
         {
-            sb.AppendLine($"CREATE INDEX {SqlSyntax.PostgreSqlGrammar.IdToString($"fk_{ChildTable.TableName}_{ParentTable.TableName}")} ON {SqlSyntax.PostgreSqlGrammar.IdToString(ChildTable.SchemaName)}.{SqlSyntax.PostgreSqlGrammar.IdToString(ChildTable.TableName)} ({string.Join(',', ChildTableColumns.Select(i => i.ColumnName))});");
+            sb.AppendLine($"CREATE INDEX {SqlSyntax.PostgreSqlGrammar.IdToString(Id)} ON {SqlSyntax.PostgreSqlGrammar.IdToString(ChildTable.SchemaName)}.{SqlSyntax.PostgreSqlGrammar.IdToString(ChildTable.TableName)} ({string.Join(',', ChildTableColumns.Select(i => i.ColumnName))});");
         }
 
         internal void RecalculateBoundingBox()

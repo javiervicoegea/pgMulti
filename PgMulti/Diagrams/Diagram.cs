@@ -1,4 +1,5 @@
-﻿using PgMulti.DataStructure;
+﻿using PgMulti.AppData;
+using PgMulti.DataStructure;
 using PgMulti.Diagrams.Efdg;
 using System.Text;
 using System.Xml;
@@ -700,6 +701,15 @@ namespace PgMulti.Diagrams
 
         public void WriteSqlScriptFullDefinition(StringBuilder sb)
         {
+            if (sb == null) throw new ArgumentException();
+
+            sb.AppendLine("/* Schemas */");
+
+            foreach (string schemaName in Tables.Select(i => i.SchemaName).Distinct())
+            {
+                sb.AppendLine($"CREATE SCHEMA IF NOT EXISTS {SqlSyntax.PostgreSqlGrammar.IdToString(schemaName)};");
+            }
+
             sb.AppendLine("/* Tables */");
 
             foreach (DiagramTable dt in Tables)
@@ -711,12 +721,126 @@ namespace PgMulti.Diagrams
 
             foreach (DiagramRelation dtr in Relations)
             {
-                dtr.WriteSqlSentenceAlterTableConstraint(sb);
+                dtr.WriteSqlSentenceAlterTableAddConstraint(sb);
             }
 
-            sb.AppendLine("/* Foreign Key Indexes */");
+            sb.AppendLine("/* Foreign key indexes */");
 
             foreach (DiagramRelation dtr in Relations)
+            {
+                dtr.WriteSqlSentenceCreateForeignKeyIndex(sb);
+            }
+        }
+
+        public void WriteSqlScriptTransformDb(StringBuilder sb, DB db)
+        {
+            if (sb == null || db == null) throw new ArgumentException();
+
+            sb.AppendLine("/* Schemas */");
+
+            foreach (string schemaName in Tables.Select(i => i.SchemaName).Distinct())
+            {
+                sb.AppendLine($"CREATE SCHEMA IF NOT EXISTS {SqlSyntax.PostgreSqlGrammar.IdToString(schemaName)};");
+            }
+
+            List<DiagramTable> newTables = new List<DiagramTable>();
+            List<DiagramTable> existingTables = new List<DiagramTable>();
+
+            foreach (DiagramTable dt in Tables)
+            {
+                Table? t = dt.FindInDB(db);
+
+                if (t == null)
+                {
+                    newTables.Add(dt);
+                }
+                else
+                {
+                    existingTables.Add(dt);
+                }
+            }
+
+            sb.AppendLine("/* New tables to create */");
+
+            foreach (DiagramTable dt in newTables)
+            {
+                dt.WriteSqlSentenceCreate(sb);
+            }
+
+            sb.AppendLine("/* Existing tables to transform */");
+
+            foreach (DiagramTable dt in existingTables)
+            {
+                dt.WriteSqlSentenceAlter(sb, dt.FindInDB(db)!);
+            }
+
+
+            List<DiagramRelation> newRelations = new List<DiagramRelation>();
+            List<DiagramRelation> existingRelations = new List<DiagramRelation>();
+            List<TableRelation> extraRelations = new List<TableRelation>();
+
+            foreach (DiagramRelation dtr in Relations)
+            {
+                TableRelation? tr = dtr.FindInDB(db);
+
+                if (tr == null)
+                {
+                    newRelations.Add(dtr);
+                }
+                else
+                {
+                    existingRelations.Add(dtr);
+                }
+            }
+
+            foreach (TableRelation tr in db.Schemas
+                    .SelectMany(i => i.Tables.Where(j => Tables.Any(k => k.SchemaName == j.IdSchema && k.TableName == j.Id)))
+                    .SelectMany(i => i.Relations.Where(j => j.ChildTable == i && Tables.Any(k => k.SchemaName == j.IdParentSchema && k.TableName == j.IdParentTable)))
+                    .Where(i => !Tables.First(j => i.IdChildSchema == j.SchemaName && i.IdChildTable == j.TableName).ParentRelations.Any(j => j.Id == i.Id))
+                )
+            {
+                extraRelations.Add(tr);
+            }
+
+            sb.AppendLine("/* New relations to create */");
+
+            foreach (DiagramRelation dtr in newRelations)
+            {
+                dtr.WriteSqlSentenceAlterTableAddConstraint(sb);
+            }
+
+            sb.AppendLine("/* Existing relations to transform */");
+
+            foreach (DiagramRelation dtr in existingRelations)
+            {
+                TableRelation tr = dtr.FindInDB(db)!;
+
+                if (dtr.ParentTable.SchemaName != tr.IdParentSchema
+                        || dtr.ParentTable.TableName != tr.IdParentTable
+                        || DiagramRelation.PropagationOptionsToString(dtr.OnDelete).ToUpperInvariant() != tr.OnDelete
+                        || DiagramRelation.PropagationOptionsToString(dtr.OnUpdate).ToUpperInvariant() != tr.OnUpdate
+                        || dtr.ParentTableColumns.Count != tr.ParentColumns.Length
+                        || dtr.ChildTableColumns.Count != tr.ChildColumns.Length
+                        || dtr.ParentTableColumns.Where((i, index) => i.ColumnName != tr.ParentColumns[index]).Any()
+                        || dtr.ChildTableColumns.Where((i, index) => i.ColumnName != tr.ChildColumns[index]).Any()
+                    )
+                {
+                    dtr.WriteSqlSentenceAlterTableDropConstraint(sb);
+                    dtr.WriteSqlSentenceAlterTableAddConstraint(sb);
+                }
+            }
+
+            sb.AppendLine("/* Extra relations to delete */");
+
+            foreach (TableRelation tr in extraRelations)
+            {
+                sb.AppendLine($"ALTER TABLE {SqlSyntax.PostgreSqlGrammar.IdToString(tr.ChildTable!.IdSchema)}.{SqlSyntax.PostgreSqlGrammar.IdToString(tr.ChildTable.Id)} DROP CONSTRAINT {SqlSyntax.PostgreSqlGrammar.IdToString(tr.Id)};");
+            }
+
+            sb.AppendLine("/* Foreign key indexes in new relations to create */");
+            sb.AppendLine("/* (It needs review, as existing indices are not being checked and could be duplicated) */");
+
+            foreach (DiagramRelation dtr in newRelations)
             {
                 dtr.WriteSqlSentenceCreateForeignKeyIndex(sb);
             }
