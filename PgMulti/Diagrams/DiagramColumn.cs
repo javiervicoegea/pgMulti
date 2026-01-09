@@ -289,6 +289,21 @@ namespace PgMulti.Diagrams
             return false;
         }
 
+        public void UpdateFrom(Column c)
+        {
+            if (TypeName != c.Type || TypeParams != c.TypeParams)
+            {
+                _TypeName = c.Type;
+                _TypeParams = c.TypeParams;
+                _TypeInitials = GetTypeInitials(c.Type, c.TypeParams);
+            }
+
+            _DefaultValue = c.DefaultValue;
+            _IsIdentity = c.IsIdentity;
+            _PrimaryKey = c.PK;
+            _NotNull = c.NotNull;
+        }
+
         public override int GetHashCode()
         {
             return ColumnName.GetHashCode();

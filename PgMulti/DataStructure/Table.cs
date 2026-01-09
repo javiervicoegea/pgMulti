@@ -1,5 +1,6 @@
 ﻿using Npgsql;
 using PgMulti.AppData;
+using PgMulti.Diagrams;
 
 namespace PgMulti.DataStructure
 {
@@ -18,6 +19,23 @@ namespace PgMulti.DataStructure
         public List<Column> Columns { get => _Columns; }
         public Schema? Schema { get => _Schema; internal set => _Schema = value; }
         public List<TableRelation> Relations { get => _Relations; }
+
+        public IReadOnlyList<TableRelation> ParentRelations
+        {
+            get
+            {
+                return Relations.Where(i => i.ChildTable == this).ToList();
+            }
+        }
+
+        public IReadOnlyList<TableRelation> ChildRelations
+        {
+            get
+            {
+                return Relations.Where(i => i.ParentTable == this).ToList();
+            }
+        }
+
         public List<TableIndex> Indexes { get => _Indexes; }
         public List<Trigger> Triggers { get => _Triggers; }
 

@@ -5,10 +5,12 @@ using PgMulti.Diagrams.Efdg;
 using PgMulti.QueryEditor;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Printing;
 using System.Text;
+using static Npgsql.Replication.PgOutput.Messages.RelationMessage;
 
 namespace PgMulti.Forms
 {
@@ -100,18 +102,16 @@ namespace PgMulti.Forms
             }
         }
 
-        private void _FinishAddTables(List<DiagramTable> diagramTables)
+        private void _FinishAddTables(List<DiagramTable> newDiagramTables)
         {
-            _Diagram.RecalculateLocations();
-
             Random r = new Random();
 
-            foreach (DiagramTable t in diagramTables)
+            foreach (DiagramTable t in newDiagramTables)
             {
                 int randomX = 0;
                 int randomY = 0;
 
-                if (diagramTables.Count > 1)
+                if (newDiagramTables.Count > 1)
                 {
                     randomX = 500 - (int)(r.NextDouble() * 1000);
                     randomY = 500 - (int)(r.NextDouble() * 1000);
@@ -120,32 +120,24 @@ namespace PgMulti.Forms
                 t.MoveTo(_Diagram.UnProject(new Point(_Canvas.Width / 2 + randomX, _Canvas.Height / 2 + randomY)));
             }
 
+            _Diagram.RecalculateLocations();
             _Invalidate();
             SetPendingSave();
             UpdateItemsInTscbTables();
         }
 
-        public void AddTables(List<DiagramTable> diagramTables)
+        public void AddNewDiagramTables(List<DiagramTable> newDiagramTables)
         {
             DisableAutoSave();
-            foreach (DiagramTable t in diagramTables)
-            {
-                _Diagram.AddTable(t);
-            }
-
-            _FinishAddTables(diagramTables);
+            _Diagram.AddNewDiagramTables(newDiagramTables);
+            _FinishAddTables(newDiagramTables);
         }
 
-        public void AddTables(List<Table> tables)
+        public void AddDBTables(List<Table> tables)
         {
             DisableAutoSave();
-            List<DiagramTable> diagramTables = new List<DiagramTable>();
-            foreach (Table t in tables)
-            {
-                diagramTables.Add(_Diagram.AddTable(t));
-            }
-
-            _FinishAddTables(diagramTables);
+            List<DiagramTable> newDiagramTables = _Diagram.AddDBTables(tables);
+            _FinishAddTables(newDiagramTables);
         }
 
         public RepositionTablesOptionsForm OpenExpandDiagramOptionsForm()
@@ -759,7 +751,7 @@ namespace PgMulti.Forms
             SelectTablesForm stf = new SelectTablesForm(_Data, _PreselectedDB, preselectedTableIds);
             if (stf.ShowDialog(this) != DialogResult.OK) return;
 
-            AddTables(stf.SelectedTables!);
+            AddDBTables(stf.SelectedTables!);
             _Invalidate();
 
             tsbRepositionTables.Checked = true;
@@ -772,7 +764,7 @@ namespace PgMulti.Forms
             f.ShowDialog(this);
             if (f.DialogResult == DialogResult.OK)
             {
-                AddTables(new List<DiagramTable>() { f.DiagramTable });
+                AddNewDiagramTables(new List<DiagramTable>() { f.DiagramTable });
             }
             else
             {
@@ -787,7 +779,7 @@ namespace PgMulti.Forms
             f.ShowDialog(this);
             if (f.DialogResult == DialogResult.OK)
             {
-                AddTables(new List<DiagramTable>() { f.DiagramTable });
+                AddNewDiagramTables(new List<DiagramTable>() { f.DiagramTable });
             }
             else
             {
@@ -1495,8 +1487,7 @@ namespace PgMulti.Forms
             if (_ResizingTable != null)
             {
                 int delta = (int)Math.Round((dcMouseLocation.Y - _ResizingTableInitY!.Value) / (float)DiagramTable.SingleColumnHeight);
-
-                if (delta != 0)
+                if (_ResizingTable.VisibleColumns != Math.Min(_ResizingTable.Columns.Count, Math.Max(0, _ResizingTableInitVisibleColumns!.Value + delta)))
                 {
                     int prevVisibleColumns = _ResizingTable.VisibleColumns;
                     Rectangle prevBoundingBox = _ResizingTable.BoundingBox;

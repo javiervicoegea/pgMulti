@@ -1237,7 +1237,7 @@ namespace PgMulti.Diagrams
             Table? t = ChildTable.FindInDB(db);
             if (t == null) return null;
 
-            return t.Relations.Where(i => i.ChildTable == t).FirstOrDefault(i => i.Id == Id);
+            return t.ParentRelations.FirstOrDefault(i => i.Id == Id);
         }
 
         public void WriteSqlClauseReferences(StringBuilder sb)

@@ -3,6 +3,7 @@ using PgMulti.DataStructure;
 using PgMulti.Diagrams.Efdg;
 using System.Text;
 using System.Xml;
+using static PgMulti.Forms.DiagramPreviewForm;
 
 namespace PgMulti.Diagrams
 {
@@ -235,7 +236,7 @@ namespace PgMulti.Diagrams
         }
 
 
-        public DiagramTable AddTable(Table t)
+        public DiagramTable AddTableFromDB(Table t, out bool isNewTable)
         {
             DiagramTable? dt = FindTable(t);
 
@@ -243,22 +244,61 @@ namespace PgMulti.Diagrams
             {
                 dt = new DiagramTable(this, t);
                 dt.ReorderColumns();
-                AddTableRelations(dt, t);
-                AddTable(dt);
+                AddNewDiagramTable(dt);
+                isNewTable = true;
             }
             else
             {
-                // ToDo: Update table
-                // Clear dt columns
-                // Add all columns in t to dt
-                // Clear dt relations in dt and also in _Relations
-                // AddTableRelations(dt, t);
+                dt.UpdateFrom(t);
+                isNewTable = false;
             }
 
             return dt;
         }
 
-        public DiagramTable AddTable(DiagramTable dt)
+        public void AddNewDiagramTables(List<DiagramTable> newDiagramTables)
+        {
+            foreach (DiagramTable t in newDiagramTables)
+            {
+                AddNewDiagramTable(t);
+            }
+        }
+
+        public List<DiagramTable> AddDBTables(List<Table> tables)
+        {
+            List<DiagramTable> newDiagramTables = new List<DiagramTable>();
+            foreach (Table t in tables)
+            {
+                bool isNewTable;
+                DiagramTable dt = AddTableFromDB(t, out isNewTable);
+                if (isNewTable) newDiagramTables.Add(dt);
+            }
+
+            foreach (Table childTable in tables)
+            {
+                DiagramTable childDiagramTable = FindTable(childTable)!;
+
+                foreach (DiagramRelation dtr in childDiagramTable.ParentRelations.Where(i => tables.Any(j => j.IdSchema == i.ParentTable.SchemaName && j.Id == i.ParentTable.TableName)))
+                {
+                    childDiagramTable.Relations.Remove(dtr);
+                    dtr.ParentTable.Relations.Remove(dtr);
+                    Relations.Remove(dtr);
+                }
+
+                foreach (TableRelation tr in childTable.ParentRelations.Where(i => tables.Contains(i.ParentTable!)))
+                {
+                    DiagramTable parentDiagramTable  = FindTable(tr.ParentTable!)!;
+                    DiagramRelation dtr = new DiagramRelation(this, parentDiagramTable, childDiagramTable, tr);
+                    parentDiagramTable.Relations.Add(dtr);
+                    if (parentDiagramTable != childDiagramTable) childDiagramTable.Relations.Add(dtr);
+                    Relations.Add(dtr);
+                }
+            }
+            
+            return newDiagramTables;
+        }
+
+        public void AddNewDiagramTable(DiagramTable dt)
         {
             _Tables.Add(dt);
             Refresh();
@@ -270,8 +310,6 @@ namespace PgMulti.Diagrams
                 DiagramRelocator.Add(l);
             }
             UpdateDiagramRelocator(dt);
-
-            return dt;
         }
 
         public void RemoveTable(DiagramTable dt)
@@ -313,84 +351,6 @@ namespace PgMulti.Diagrams
             }
 
             return null;
-        }
-
-        private void AddTableRelations(DiagramTable dt, Table t)
-        {
-            foreach (TableRelation r in t.Relations)
-            {
-                DiagramTable? parentTable = null;
-                DiagramTable? childTable = null;
-
-                Table otherSideTable;
-                if (t.Equals(r.ParentTable))
-                {
-                    otherSideTable = r.ChildTable!;
-                    parentTable = dt;
-                }
-                else if (t.Equals(r.ChildTable))
-                {
-                    otherSideTable = r.ParentTable!;
-                    childTable = dt;
-                }
-                else
-                {
-                    throw new NotSupportedException();
-                }
-
-                DiagramTable? otherSideDiagramTable = null;
-                foreach (DiagramTable dti in _Tables)
-                {
-                    if (dti.Equals(otherSideTable))
-                    {
-                        bool allColumnsFound = true;
-                        foreach (Column c in otherSideTable.Columns)
-                        {
-                            bool columnFound = false;
-                            foreach (DiagramColumn dc in dti.Columns)
-                            {
-                                if (dc.Equals(c))
-                                {
-                                    columnFound = true;
-                                    break;
-                                }
-                            }
-                            if (!columnFound)
-                            {
-                                allColumnsFound = false;
-                                break;
-                            }
-                        }
-
-                        if (allColumnsFound)
-                        {
-                            otherSideDiagramTable = dti;
-                            break;
-                        }
-                    }
-                }
-
-                if (otherSideDiagramTable != null)
-                {
-                    if (parentTable == null)
-                    {
-                        parentTable = otherSideDiagramTable;
-                    }
-                    else if (childTable == null)
-                    {
-                        childTable = otherSideDiagramTable;
-                    }
-                    else
-                    {
-                        throw new Exception();
-                    }
-
-                    DiagramRelation dtr = new DiagramRelation(this, parentTable!, childTable!, r);
-                    parentTable!.Relations.Add(dtr);
-                    if (parentTable != childTable) childTable!.Relations.Add(dtr);
-                    _Relations.Add(dtr);
-                }
-            }
         }
 
         public void RecalculateLocations()

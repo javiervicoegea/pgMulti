@@ -167,6 +167,14 @@ namespace PgMulti.Forms
 
             _TreeModelTables.OnStructureChanged(new TreePathEventArgs(TreePath.Empty));
             tvaTables.EndUpdate();
+
+            foreach (TreeNodeAdv tvaSchema in tvaTables.Root.Children)
+            {
+                if (tvaSchema.Children.Any(i => ((Node)i.Tag).IsChecked))
+                {
+                    tvaSchema.Expand();
+                }
+            }
         }
 
         private void ncbTables_IsVisibleValueNeeded(object? sender, NodeControlValueEventArgs e)

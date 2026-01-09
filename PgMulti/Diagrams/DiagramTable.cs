@@ -77,7 +77,7 @@ namespace PgMulti.Diagrams
             _Columns = new List<DiagramColumn>();
             foreach (Column c in t.Columns)
             {
-                Columns.Add(new DiagramColumn(this, c));
+                _Columns.Add(new DiagramColumn(this, c));
             }
 
             _Relations = new List<DiagramRelation>();
@@ -1014,6 +1014,46 @@ namespace PgMulti.Diagrams
             {
                 sb.AppendLine($"ALTER TABLE {SqlSyntax.PostgreSqlGrammar.IdToString(SchemaName)}.{SqlSyntax.PostgreSqlGrammar.IdToString(TableName)} DROP COLUMN {SqlSyntax.PostgreSqlGrammar.IdToString(c.Id)} CASCADE;");
             }
+        }
+
+        public void UpdateFrom(Table t)
+        {
+            bool allColumnsAreVisible = VisibleColumns == Columns.Count;
+
+            foreach (Column c in t.Columns)
+            {
+                DiagramColumn? dc = Columns.FirstOrDefault(i => i.ColumnName == c.Id);
+
+                if (dc == null)
+                {
+                    _Columns.Add(new DiagramColumn(this, c));
+                }
+                else
+                {
+                    dc.UpdateFrom(c);
+                }
+            }
+
+            foreach (DiagramColumn dc in Columns.ToList())
+            {
+                if (!t.Columns.Any(i => i.Id == dc.ColumnName))
+                {
+                    Columns.Remove(dc);
+                }
+            }
+
+            _TotalColumnsHeight = SingleColumnHeight * Columns.Count;
+
+            if (allColumnsAreVisible)
+            {
+                VisibleColumns = Columns.Count;
+            }
+            else
+            {
+                VisibleColumns = Math.Min(VisibleColumns, Columns.Count);
+            }
+
+            RefreshDimensions();
         }
 
         public override bool Equals(object? obj)

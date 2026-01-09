@@ -66,7 +66,7 @@ namespace PgMulti.RecursiveRemover
 
                 sb.AppendLine("---- Temporary tables for foreign key references to child tables within the loop:\r\n");
 
-                foreach (TableRelation tr in t.Relations.Where(tri => tri.ParentTable == t && _Tables.Contains(tri.ChildTable!)))
+                foreach (TableRelation tr in t.ChildRelations.Where(tri => _Tables.Contains(tri.ChildTable!)))
                 {
                     string stepRelationTuplesTableName = RecursiveRemover.GetStepRelationTuplesTableName(tr, delete);
 
@@ -80,7 +80,7 @@ namespace PgMulti.RecursiveRemover
 
                 sb.AppendLine("---- Tuples of parent tables external to the loop:\r\n");
 
-                foreach (TableRelation tr in t.Relations.Where(tri => tri.ChildTable == t && !_Tables.Contains(tri.ParentTable!) && RecursiveRemover.Graph.Nodes.Any(ni => ni.Value.ContainsTable(tri.ParentTable!))))
+                foreach (TableRelation tr in t.ParentRelations.Where(tri => !_Tables.Contains(tri.ParentTable!) && RecursiveRemover.Graph.Nodes.Any(ni => ni.Value.ContainsTable(tri.ParentTable!))))
                 {
                     string collectTuplesParentTableName = GetCollectTableName(tr.ParentTable!, delete);
                     string stepRelationTuplesTableName = RecursiveRemover.GetStepRelationTuplesTableName(tr, delete);
@@ -111,7 +111,7 @@ namespace PgMulti.RecursiveRemover
                 sb.AppendLine("     SELECT *");
                 sb.AppendLine("     FROM " + stepTuplesTableName + ";\r\n");
 
-                foreach (TableRelation tr in t.Relations.Where(tri => tri.ParentTable == t && _Tables.Contains(tri.ChildTable!)))
+                foreach (TableRelation tr in t.ChildRelations.Where(tri => _Tables.Contains(tri.ChildTable!)))
                 {
                     string stepRelationTuplesTableName = RecursiveRemover.GetStepRelationTuplesTableName(tr, delete);
 
@@ -146,7 +146,7 @@ namespace PgMulti.RecursiveRemover
 
                 sb.AppendLine("                --- Parent tables:\r\n");
 
-                foreach (TableRelation tr in t.Relations.Where(tri => tri.ChildTable == t && _Tables.Contains(tri.ParentTable!)))
+                foreach (TableRelation tr in t.ParentRelations.Where(tri => _Tables.Contains(tri.ParentTable!)))
                 {
                     string stepRelationTuplesTableName = RecursiveRemover.GetStepRelationTuplesTableName(tr, delete);
                     Tuple<string, string>[] fkColumnMatch = new Tuple<string, string>[tr.ParentColumns.Length];
@@ -188,7 +188,7 @@ namespace PgMulti.RecursiveRemover
 
                 sb.AppendLine("                --- Child tables:\r\n");
 
-                foreach (TableRelation tr in t.Relations.Where(tri => tri.ParentTable == t && _Tables.Contains(tri.ChildTable!)))
+                foreach (TableRelation tr in t.ChildRelations.Where(tri => _Tables.Contains(tri.ChildTable!)))
                 {
                     string stepRelationTuplesTableName = RecursiveRemover.GetStepRelationTuplesTableName(tr, delete);
 
@@ -224,7 +224,7 @@ namespace PgMulti.RecursiveRemover
 
                 sb.AppendLine("    DROP TABLE " + stepTuplesTableName + ";\r\n");
 
-                foreach (TableRelation tr in t.Relations.Where(tri => tri.ParentTable == t && _Tables.Contains(tri.ChildTable!)))
+                foreach (TableRelation tr in t.ChildRelations.Where(tri => _Tables.Contains(tri.ChildTable!)))
                 {
                     string stepRelationTuplesTableName = RecursiveRemover.GetStepRelationTuplesTableName(tr, delete);
 
@@ -241,7 +241,7 @@ namespace PgMulti.RecursiveRemover
 
             foreach (Table t in _Tables)
             {
-                foreach (TableRelation tr in t.Relations.Where(tri => tri.ChildTable == t && _Tables.Contains(tri.ParentTable!)))
+                foreach (TableRelation tr in t.ParentRelations.Where(tri => _Tables.Contains(tri.ParentTable!)))
                 {
                     if (tr.OnDelete != "NO ACTION" || !tr.Deferrable)
                     {
@@ -275,7 +275,7 @@ namespace PgMulti.RecursiveRemover
 
             foreach (Table t in _Tables)
             {
-                foreach (TableRelation tr in t.Relations.Where(tri => tri.ChildTable == t && _Tables.Contains(tri.ParentTable!)))
+                foreach (TableRelation tr in t.ParentRelations.Where(tri => _Tables.Contains(tri.ParentTable!)))
                 {
                     if (tr.OnDelete != "NO ACTION" || !tr.Deferrable)
                     {

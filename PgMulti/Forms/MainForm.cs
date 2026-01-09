@@ -1007,7 +1007,7 @@ namespace PgMulti
             DiagramForm? df = CreateDiagram(t.Schema!.DB);
             if (df == null) return;
 
-            df.AddTables(new List<Table>() { t });
+            df.AddDBTables(new List<Table>() { t });
             RepositionTablesOptionsForm f = df.OpenExpandDiagramOptionsForm();
 
             f.ChooseTableSuggestions();
