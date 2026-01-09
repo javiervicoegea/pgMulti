@@ -1269,6 +1269,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Filter.
+        /// </summary>
+        internal static string filter {
+            get {
+                return ResourceManager.GetString("filter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Show only the tasks in the active tab.
         /// </summary>
         internal static string filter_current_tab_tasks {
@@ -1310,6 +1319,15 @@ namespace PgMulti.Properties {
         internal static string forward {
             get {
                 return ResourceManager.GetString("forward", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a From.
+        /// </summary>
+        internal static string from {
+            get {
+                return ResourceManager.GetString("from", resourceCulture);
             }
         }
         
@@ -2916,6 +2934,15 @@ namespace PgMulti.Properties {
         internal static string tip_title_no_selected_db {
             get {
                 return ResourceManager.GetString("tip_title_no_selected_db", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a To.
+        /// </summary>
+        internal static string to {
+            get {
+                return ResourceManager.GetString("to", resourceCulture);
             }
         }
         

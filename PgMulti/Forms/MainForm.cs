@@ -95,7 +95,7 @@ namespace PgMulti
 
         internal List<Form> SecondaryForms { get => _SecondaryForms; }
         internal List<SeparatedEditorTabForm> SeparatedEditorTabForms { get => _SeparatedEditorTabForms; }
-       internal TradeWright.UI.Forms.TabControlExtra SqlEditorTabControl { get => tcSql; }
+        internal TradeWright.UI.Forms.TabControlExtra SqlEditorTabControl { get => tcSql; }
 
         TextBox IEditorTabForm.txtSearchText => txtSearchText;
         TextBox IEditorTabForm.txtReplaceText => txtReplaceText;
@@ -1699,7 +1699,7 @@ namespace PgMulti
             {
                 et = (EditorTab)tc.SelectedTab.Tag!;
                 et.Fctb.Focus();
-                
+
                 ShowTabAsInSeparatedWindow(et.ShownInSeparatedWindow);
                 if (!et.ShownInSeparatedWindow)
                 {
@@ -2134,7 +2134,7 @@ namespace PgMulti
 
         private void ShowLogForm(bool closedTabsMode)
         {
-            LogForm f = new LogForm(_Data!, closedTabsMode);
+            LogForm f = new LogForm(_Data!, closedTabsMode, SelectedDBs.FirstOrDefault());
             f.ShowDialog(this);
 
             if (f.DialogResult == DialogResult.OK)
@@ -2176,7 +2176,7 @@ namespace PgMulti
         }
 
         private void tmrPosition_Tick(object sender, EventArgs e)
-        { 
+        {
             EditorTab et = (EditorTab)tcSql.SelectedTab.Tag!;
             if (!et.ShownInSeparatedWindow)
             {
@@ -2184,7 +2184,7 @@ namespace PgMulti
                 Place p = fctbSql.PositionToPlace(fctbSql.SelectionStart);
                 tslPosition.Text = string.Format(Properties.Text.line_column, p.iLine + 1, p.iChar + 1);
             }
-            foreach(SeparatedEditorTabForm f in SeparatedEditorTabForms)
+            foreach (SeparatedEditorTabForm f in SeparatedEditorTabForms)
             {
                 f.RefreshPosition();
             }

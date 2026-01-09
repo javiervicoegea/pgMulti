@@ -16,7 +16,7 @@ namespace PgMulti.AppData
         private Data _Data;
         private int _Id;
 
-        public static List<Log> List(Data d, int? lastLogId)
+        public static List<Log> List(Data d, int? lastLogId, Filter f)
         {
             using (Connection c = d.OpenConnection())
             {
@@ -32,6 +32,10 @@ namespace PgMulti.AppData
                     sb.Append(" AND h.id<:lastLogId");
                     cmd.Parameters.AddWithValue("lastLogId", lastLogId.Value);
                 }
+
+                List<string> sqlClauses = new List<string>();
+                f.ApplyFilter(sqlClauses, cmd.Parameters);
+                if (sqlClauses.Count > 0) sb.Append(" WHERE " + string.Join(" AND ", sqlClauses));
 
                 sb.Append(" GROUP BY h.id,h.timestamp,h.txt");
                 sb.Append(" ORDER BY h.id DESC");
@@ -163,6 +167,43 @@ namespace PgMulti.AppData
                 cmd.ExecuteNonQuery();
 
                 return n;
+            }
+        }
+
+        public class Filter
+        {
+            public DB? DB = null;
+            public DateTime? FromTimestamp = null;
+            public DateTime? ToTimestamp = null;
+            public string? Text = null;
+
+            public void ApplyFilter(List<string> sqlClauses, SqliteParameterCollection parms)
+            {
+                if (DB != null)
+                {
+                    sqlClauses.Add("dh.dbid=:dbId");
+                    parms.AddWithValue("dbId", DB.Id);
+                }
+                if (FromTimestamp.HasValue)
+                {
+                    sqlClauses.Add("h.timestamp>=:fromTimestamp");
+                    parms.AddWithValue("fromTimestamp", FromTimestamp.Value.Ticks);
+                }
+                if (ToTimestamp.HasValue)
+                {
+                    sqlClauses.Add("h.timestamp<=:toTimestamp");
+                    parms.AddWithValue("toTimestamp", ToTimestamp.Value.Date == ToTimestamp.Value ? ToTimestamp.Value.AddDays(1) : ToTimestamp.Value.Ticks);
+                }
+                if (!string.IsNullOrEmpty(Text))
+                {
+                    int i = 0;
+                    foreach (string word in Text.Split(' ').Select(i => i.Trim()).Where(i => i != ""))
+                    {
+                        sqlClauses.Add("h.txt LIKE '%' || :word_" + i + " || '%'");
+                        parms.AddWithValue("word_" + i, word);
+                        i++;
+                    }
+                }
             }
         }
     }

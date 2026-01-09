@@ -1,4 +1,4 @@
-﻿using PgMulti.QueryEditor;
+﻿using Timer = System.Windows.Forms.Timer;
 
 namespace PgMulti
 {
@@ -30,194 +30,334 @@ namespace PgMulti
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LogForm));
-            this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.flpLog = new System.Windows.Forms.FlowLayoutPanel();
-            this.fctbSql = new PgMulti.QueryEditor.CustomFctb();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.tsddbMode = new System.Windows.Forms.ToolStripDropDownButton();
-            this.tsmiExecutionLog = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiClosedTabs = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsbEditReopen = new System.Windows.Forms.ToolStripButton();
-            this.toolStripContainer1.ContentPanel.SuspendLayout();
-            this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
-            this.toolStripContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.fctbSql)).BeginInit();
-            this.toolStrip1.SuspendLayout();
-            this.SuspendLayout();
+            tsc = new ToolStripContainer();
+            scFilter = new SplitContainer();
+            btnRemoveDBFilter = new Button();
+            btnSelectDBFilter = new Button();
+            txtTextFilter = new TextBox();
+            dtpTimestampToFilter = new DateTimePicker();
+            lblTextFilter = new Label();
+            dtpTimestampFromFilter = new DateTimePicker();
+            lblTimestampToFilter = new Label();
+            txtDBFilter = new TextBox();
+            lblTimestampFromFilter = new Label();
+            lblDBFilter = new Label();
+            scList = new SplitContainer();
+            flpLog = new FlowLayoutPanel();
+            ts = new ToolStrip();
+            tsddbMode = new ToolStripDropDownButton();
+            tsmiExecutionLog = new ToolStripMenuItem();
+            tsmiClosedTabs = new ToolStripMenuItem();
+            tsbFilter = new ToolStripButton();
+            tsbEditReopen = new ToolStripButton();
+            pnlDBFilter = new Panel();
+            tmrDelayFilterUpdate = new Timer();
+            tsc.ContentPanel.SuspendLayout();
+            tsc.TopToolStripPanel.SuspendLayout();
+            tsc.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)scFilter).BeginInit();
+            scFilter.Panel1.SuspendLayout();
+            scFilter.Panel2.SuspendLayout();
+            scFilter.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)scList).BeginInit();
+            scList.Panel1.SuspendLayout();
+            scList.SuspendLayout();
+            ts.SuspendLayout();
+            pnlDBFilter.SuspendLayout();
+            SuspendLayout();
             // 
-            // toolStripContainer1
+            // tsc
             // 
             // 
-            // toolStripContainer1.ContentPanel
+            // tsc.ContentPanel
             // 
-            this.toolStripContainer1.ContentPanel.Controls.Add(this.splitContainer1);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(1000, 663);
-            this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
-            this.toolStripContainer1.Name = "toolStripContainer1";
-            this.toolStripContainer1.Size = new System.Drawing.Size(1000, 700);
-            this.toolStripContainer1.TabIndex = 0;
-            this.toolStripContainer1.Text = "toolStripContainer1";
+            tsc.ContentPanel.Controls.Add(scFilter);
+            tsc.ContentPanel.Size = new Size(1373, 750);
+            tsc.Dock = DockStyle.Fill;
+            tsc.Location = new Point(0, 0);
+            tsc.Name = "tsc";
+            tsc.Size = new Size(1373, 787);
+            tsc.TabIndex = 0;
+            tsc.Text = "tsc";
             // 
-            // toolStripContainer1.TopToolStripPanel
+            // tsc.TopToolStripPanel
             // 
-            this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.toolStrip1);
+            tsc.TopToolStripPanel.Controls.Add(ts);
             // 
-            // splitContainer1
+            // scFilter
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer1.IsSplitterFixed = true;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
+            scFilter.Dock = DockStyle.Fill;
+            scFilter.Location = new Point(0, 0);
+            scFilter.Name = "scFilter";
             // 
-            // splitContainer1.Panel1
+            // scFilter.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.flpLog);
+            scFilter.Panel1.Controls.Add(pnlDBFilter);
+            scFilter.Panel1.Controls.Add(txtTextFilter);
+            scFilter.Panel1.Controls.Add(dtpTimestampToFilter);
+            scFilter.Panel1.Controls.Add(lblTextFilter);
+            scFilter.Panel1.Controls.Add(dtpTimestampFromFilter);
+            scFilter.Panel1.Controls.Add(lblTimestampToFilter);
+            scFilter.Panel1.Controls.Add(lblTimestampFromFilter);
             // 
-            // splitContainer1.Panel2
+            // scFilter.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.fctbSql);
-            this.splitContainer1.Size = new System.Drawing.Size(1000, 663);
-            this.splitContainer1.SplitterDistance = 535;
-            this.splitContainer1.TabIndex = 0;
+            scFilter.Panel2.Controls.Add(scList);
+            scFilter.Size = new Size(1373, 750);
+            scFilter.SplitterDistance = 379;
+            scFilter.TabIndex = 0;
+            // 
+            // btnRemoveDBFilter
+            // 
+            btnRemoveDBFilter.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnRemoveDBFilter.Image = Properties.Resources.remove_24p;
+            btnRemoveDBFilter.Location = new Point(326, -3);
+            btnRemoveDBFilter.Name = "btnRemoveDBFilter";
+            btnRemoveDBFilter.Size = new Size(32, 32);
+            btnRemoveDBFilter.TabIndex = 2;
+            btnRemoveDBFilter.UseVisualStyleBackColor = true;
+            btnRemoveDBFilter.Click += btnRemoveDBFilter_Click;
+            // 
+            // btnSelectDBFilter
+            // 
+            btnSelectDBFilter.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnSelectDBFilter.Image = Properties.Resources.select_from_list_24p;
+            btnSelectDBFilter.Location = new Point(288, -3);
+            btnSelectDBFilter.Name = "btnSelectDBFilter";
+            btnSelectDBFilter.Size = new Size(32, 32);
+            btnSelectDBFilter.TabIndex = 2;
+            btnSelectDBFilter.UseVisualStyleBackColor = true;
+            btnSelectDBFilter.Click += btnSelectDB_Click;
+            // 
+            // txtTextFilter
+            // 
+            txtTextFilter.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtTextFilter.Location = new Point(143, 90);
+            txtTextFilter.Name = "txtTextFilter";
+            txtTextFilter.Size = new Size(227, 27);
+            txtTextFilter.TabIndex = 1;
+            txtTextFilter.TextChanged += txtTextFilter_TextChanged;
+            // 
+            // dtpTimestampToFilter
+            // 
+            dtpTimestampToFilter.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+            dtpTimestampToFilter.Checked = false;
+            dtpTimestampToFilter.Location = new Point(143, 57);
+            dtpTimestampToFilter.Name = "dtpTimestampToFilter";
+            dtpTimestampToFilter.ShowCheckBox = true;
+            dtpTimestampToFilter.Size = new Size(200, 27);
+            dtpTimestampToFilter.TabIndex = 1;
+            dtpTimestampToFilter.Format = DateTimePickerFormat.Custom;
+            dtpTimestampToFilter.ValueChanged += dtpTimestampToFilter_ValueChanged;
+            // 
+            // lblTextFilter
+            // 
+            lblTextFilter.AutoSize = true;
+            lblTextFilter.Location = new Point(12, 93);
+            lblTextFilter.Name = "lblTextFilter";
+            lblTextFilter.Size = new Size(86, 20);
+            lblTextFilter.TabIndex = 0;
+            lblTextFilter.Text = "lblTextFilter";
+            // 
+            // dtpTimestampFromFilter
+            // 
+            dtpTimestampFromFilter.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+            dtpTimestampFromFilter.Checked = false;
+            dtpTimestampFromFilter.Location = new Point(143, 24);
+            dtpTimestampFromFilter.Name = "dtpTimestampFromFilter";
+            dtpTimestampFromFilter.ShowCheckBox = true;
+            dtpTimestampFromFilter.Size = new Size(200, 27);
+            dtpTimestampFromFilter.TabIndex = 1;
+            dtpTimestampFromFilter.Format = DateTimePickerFormat.Custom;
+            dtpTimestampFromFilter.ValueChanged += dtpTimestampFromFilter_ValueChanged;
+            // 
+            // lblTimestampToFilter
+            // 
+            lblTimestampToFilter.AutoSize = true;
+            lblTimestampToFilter.Location = new Point(12, 60);
+            lblTimestampToFilter.Name = "lblTimestampToFilter";
+            lblTimestampToFilter.Size = new Size(149, 20);
+            lblTimestampToFilter.TabIndex = 0;
+            lblTimestampToFilter.Text = "lblTimestampToFilter";
+            // 
+            // txtDBFilter
+            // 
+            txtDBFilter.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtDBFilter.Location = new Point(131, 0);
+            txtDBFilter.Name = "txtDBFilter";
+            txtDBFilter.ReadOnly = true;
+            txtDBFilter.Size = new Size(151, 27);
+            txtDBFilter.TabIndex = 1;
+            // 
+            // lblTimestampFromFilter
+            // 
+            lblTimestampFromFilter.AutoSize = true;
+            lblTimestampFromFilter.Location = new Point(12, 27);
+            lblTimestampFromFilter.Name = "lblTimestampFromFilter";
+            lblTimestampFromFilter.Size = new Size(167, 20);
+            lblTimestampFromFilter.TabIndex = 0;
+            lblTimestampFromFilter.Text = "lblTimestampFromFilter";
+            // 
+            // lblDBFilter
+            // 
+            lblDBFilter.AutoSize = true;
+            lblDBFilter.Location = new Point(0, 3);
+            lblDBFilter.Name = "lblDBFilter";
+            lblDBFilter.Size = new Size(79, 20);
+            lblDBFilter.TabIndex = 0;
+            lblDBFilter.Text = "lblDBFilter";
+            // 
+            // scList
+            // 
+            scList.Dock = DockStyle.Fill;
+            scList.FixedPanel = FixedPanel.Panel1;
+            scList.IsSplitterFixed = true;
+            scList.Location = new Point(0, 0);
+            scList.Name = "scList";
+            // 
+            // scList.Panel1
+            // 
+            scList.Panel1.Controls.Add(flpLog);
+            scList.Size = new Size(990, 750);
+            scList.SplitterDistance = 535;
+            scList.TabIndex = 0;
             // 
             // flpLog
             // 
-            this.flpLog.AutoScroll = true;
-            this.flpLog.AutoSize = true;
-            this.flpLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flpLog.Location = new System.Drawing.Point(0, 0);
-            this.flpLog.Name = "flpLog";
-            this.flpLog.Size = new System.Drawing.Size(535, 663);
-            this.flpLog.TabIndex = 0;
-            this.flpLog.Scroll += flpLog_Scroll;
-            this.flpLog.MouseWheel += flpLog_MouseWheel;
+            flpLog.AutoScroll = true;
+            flpLog.AutoSize = true;
+            flpLog.BackColor = SystemColors.ControlDark;
+            flpLog.Dock = DockStyle.Fill;
+            flpLog.Location = new Point(0, 0);
+            flpLog.Name = "flpLog";
+            flpLog.Size = new Size(535, 750);
+            flpLog.TabIndex = 0;
+            flpLog.Scroll += flpLog_Scroll;
+            flpLog.MouseWheel += flpLog_MouseWheel;
             // 
-            // fctbSql
+            // ts
             // 
-            this.fctbSql.AutoCompleteBracketsList = new char[] {
-        '(',
-        ')',
-        '{',
-        '}',
-        '[',
-        ']',
-        '\"',
-        '\"',
-        '\'',
-        '\''};
-            this.fctbSql.AutoIndentCharsPatterns = "^\\s*[\\w\\.]+(\\s\\w+)?\\s*(?<range>=)\\s*(?<range>[^;=]+);\n^\\s*(case|default)\\s*[^:]*(" +
-    "?<range>:)\\s*(?<range>[^;]+);";
-            this.fctbSql.AutoScrollMinSize = new System.Drawing.Size(71, 59);
-            this.fctbSql.BackBrush = null;
-            this.fctbSql.CharHeight = 19;
-            this.fctbSql.CharWidth = 10;
-            this.fctbSql.DefaultMarkerSize = 8;
-            this.fctbSql.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
-            this.fctbSql.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.fctbSql.Font = new System.Drawing.Font("Cascadia Code", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.fctbSql.Hotkeys = resources.GetString("fctbSql.Hotkeys");
-            this.fctbSql.IsReplaceMode = false;
-            this.fctbSql.Location = new System.Drawing.Point(0, 0);
-            this.fctbSql.Name = "fctbSql";
-            this.fctbSql.Paddings = new System.Windows.Forms.Padding(20);
-            this.fctbSql.ReadOnly = true;
-            this.fctbSql.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
-            this.fctbSql.ServiceColors = ((FastColoredTextBoxNS.ServiceColors)(resources.GetObject("fctbSql.ServiceColors")));
-            this.fctbSql.Size = new System.Drawing.Size(461, 663);
-            this.fctbSql.TabIndex = 0;
-            this.fctbSql.Zoom = 100;
-            // 
-            // toolStrip1
-            // 
-            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.None;
-            this.toolStrip1.ImageScalingSize = new System.Drawing.Size(30, 30);
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsddbMode,
-            this.tsbEditReopen});
-            this.toolStrip1.Location = new System.Drawing.Point(4, 0);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(91, 37);
-            this.toolStrip1.TabIndex = 0;
+            ts.Dock = DockStyle.None;
+            ts.ImageScalingSize = new Size(30, 30);
+            ts.Items.AddRange(new ToolStripItem[] { tsddbMode, tsbFilter, tsbEditReopen });
+            ts.Location = new Point(4, 0);
+            ts.Name = "ts";
+            ts.Size = new Size(125, 37);
+            ts.TabIndex = 0;
             // 
             // tsddbMode
             // 
-            this.tsddbMode.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiExecutionLog,
-            this.tsmiClosedTabs});
-            this.tsddbMode.Image = global::PgMulti.Properties.Resources.historial;
-            this.tsddbMode.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsddbMode.Name = "tsddbMode";
-            this.tsddbMode.Size = new System.Drawing.Size(44, 34);
+            tsddbMode.DropDownItems.AddRange(new ToolStripItem[] { tsmiExecutionLog, tsmiClosedTabs });
+            tsddbMode.Image = Properties.Resources.historial;
+            tsddbMode.ImageTransparentColor = Color.Magenta;
+            tsddbMode.Name = "tsddbMode";
+            tsddbMode.Size = new Size(44, 34);
             // 
             // tsmiExecutionLog
             // 
-            this.tsmiExecutionLog.Image = global::PgMulti.Properties.Resources.ejecutar;
-            this.tsmiExecutionLog.Name = "tsmiExecutionLog";
-            this.tsmiExecutionLog.Size = new System.Drawing.Size(234, 36);
-            this.tsmiExecutionLog.Click += new System.EventHandler(this.tsmiExecutionLog_Click);
+            tsmiExecutionLog.Image = Properties.Resources.ejecutar;
+            tsmiExecutionLog.Name = "tsmiExecutionLog";
+            tsmiExecutionLog.Size = new Size(83, 26);
+            tsmiExecutionLog.Click += tsmiExecutionLog_Click;
             // 
             // tsmiClosedTabs
             // 
-            this.tsmiClosedTabs.Image = global::PgMulti.Properties.Resources.tab;
-            this.tsmiClosedTabs.Name = "tsmiClosedTabs";
-            this.tsmiClosedTabs.Size = new System.Drawing.Size(234, 36);
-            this.tsmiClosedTabs.Click += new System.EventHandler(this.tsmiClosedTabs_Click);
+            tsmiClosedTabs.Image = Properties.Resources.tab;
+            tsmiClosedTabs.Name = "tsmiClosedTabs";
+            tsmiClosedTabs.Size = new Size(83, 26);
+            tsmiClosedTabs.Click += tsmiClosedTabs_Click;
+            // 
+            // tsbFilter
+            // 
+            tsbFilter.CheckOnClick = true;
+            tsbFilter.Image = Properties.Resources.filter;
+            tsbFilter.ImageTransparentColor = Color.Magenta;
+            tsbFilter.Name = "tsbFilter";
+            tsbFilter.Size = new Size(34, 34);
+            tsbFilter.Click += tsbFilter_Click;
             // 
             // tsbEditReopen
             // 
-            this.tsbEditReopen.Image = global::PgMulti.Properties.Resources.extract;
-            this.tsbEditReopen.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbEditReopen.Name = "tsbEditReopen";
-            this.tsbEditReopen.Size = new System.Drawing.Size(34, 34);
-            this.tsbEditReopen.Click += new System.EventHandler(this.tsbEditReopen_Click);
+            tsbEditReopen.Image = Properties.Resources.extract;
+            tsbEditReopen.ImageTransparentColor = Color.Magenta;
+            tsbEditReopen.Name = "tsbEditReopen";
+            tsbEditReopen.Size = new Size(34, 34);
+            tsbEditReopen.Click += tsbEditReopen_Click;
+            // 
+            // pnlDBFilter
+            // 
+            pnlDBFilter.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
+            pnlDBFilter.Controls.Add(lblDBFilter);
+            pnlDBFilter.Controls.Add(btnRemoveDBFilter);
+            pnlDBFilter.Controls.Add(txtDBFilter);
+            pnlDBFilter.Controls.Add(btnSelectDBFilter);
+            pnlDBFilter.Location = new Point(12, 123);
+            pnlDBFilter.Name = "pnlDBFilter";
+            pnlDBFilter.Size = new Size(358, 29);
+            pnlDBFilter.TabIndex = 3;
+            // 
+            // tmrDelayFilterUpdate
+            // 
+            tmrDelayFilterUpdate.Interval = 1000;
+            tmrDelayFilterUpdate.Enabled = false;
+            tmrDelayFilterUpdate.Tick += tmrDelayFilterUpdate_Tick;
             // 
             // LogForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1000, 700);
-            this.Controls.Add(this.toolStripContainer1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "LogForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.Load += new System.EventHandler(this.LogForm_Load);
-            this.toolStripContainer1.ContentPanel.ResumeLayout(false);
-            this.toolStripContainer1.TopToolStripPanel.ResumeLayout(false);
-            this.toolStripContainer1.TopToolStripPanel.PerformLayout();
-            this.toolStripContainer1.ResumeLayout(false);
-            this.toolStripContainer1.PerformLayout();
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel1.PerformLayout();
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.fctbSql)).EndInit();
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(1373, 787);
+            Controls.Add(tsc);
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            Name = "LogForm";
+            StartPosition = FormStartPosition.CenterParent;
+            WindowState = FormWindowState.Maximized;
+            Load += LogForm_Load;
+            tsc.ContentPanel.ResumeLayout(false);
+            tsc.TopToolStripPanel.ResumeLayout(false);
+            tsc.TopToolStripPanel.PerformLayout();
+            tsc.ResumeLayout(false);
+            tsc.PerformLayout();
+            scFilter.Panel1.ResumeLayout(false);
+            scFilter.Panel1.PerformLayout();
+            scFilter.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)scFilter).EndInit();
+            scFilter.ResumeLayout(false);
+            scList.Panel1.ResumeLayout(false);
+            scList.Panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)scList).EndInit();
+            scList.ResumeLayout(false);
+            ts.ResumeLayout(false);
+            ts.PerformLayout();
+            pnlDBFilter.ResumeLayout(false);
+            pnlDBFilter.PerformLayout();
+            ResumeLayout(false);
         }
 
         #endregion
 
-        private ToolStripContainer toolStripContainer1;
-        private SplitContainer splitContainer1;
+        private ToolStripContainer tsc;
+        private SplitContainer scFilter;
+        private SplitContainer scList;
         private FlowLayoutPanel flpLog;
-        private CustomFctb fctbSql;
-        private ToolStrip toolStrip1;
+        private ToolStrip ts;
+        private ToolStripButton tsbFilter;
         private ToolStripButton tsbEditReopen;
         private ToolStripDropDownButton tsddbMode;
         private ToolStripMenuItem tsmiExecutionLog;
         private ToolStripMenuItem tsmiClosedTabs;
+        private Button btnSelectDBFilter;
+        private TextBox txtDBFilter;
+        private Label lblDBFilter;
+        private Button btnRemoveDBFilter;
+        private DateTimePicker dtpTimestampToFilter;
+        private DateTimePicker dtpTimestampFromFilter;
+        private Label lblTimestampToFilter;
+        private Label lblTimestampFromFilter;
+        private TextBox txtTextFilter;
+        private Label lblTextFilter;
+        private Panel pnlDBFilter;
+        private Timer tmrDelayFilterUpdate;
     }
 }

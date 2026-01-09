@@ -736,6 +736,16 @@ namespace PgMulti.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap remove_24p {
+            get {
+                object obj = ResourceManager.GetObject("remove_24p", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap right {
             get {
                 object obj = ResourceManager.GetObject("right", resourceCulture);
@@ -759,6 +769,26 @@ namespace PgMulti.Properties {
         internal static System.Drawing.Bitmap scroll_auto {
             get {
                 object obj = ResourceManager.GetObject("scroll_auto", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap select_from_list {
+            get {
+                object obj = ResourceManager.GetObject("select_from_list", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap select_from_list_24p {
+            get {
+                object obj = ResourceManager.GetObject("select_from_list_24p", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

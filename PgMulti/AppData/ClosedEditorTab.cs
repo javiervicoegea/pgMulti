@@ -46,5 +46,36 @@ namespace PgMulti.QueryEditor
                 cmd.ExecuteNonQuery();
             }
         }
+
+        public class Filter
+        {
+            public DateTime? FromTimestamp = null;
+            public DateTime? ToTimestamp = null;
+            public string? Text = null;
+
+            public void ApplyFilter(List<string> sqlClauses, SqliteParameterCollection parms)
+            {
+                if (FromTimestamp.HasValue)
+                {
+                    sqlClauses.Add("et.closedAt>=:fromTimestamp");
+                    parms.AddWithValue("fromTimestamp", FromTimestamp.Value.Ticks);
+                }
+                if (ToTimestamp.HasValue)
+                {
+                    sqlClauses.Add("et.closedAt<=:toTimestamp");
+                    parms.AddWithValue("toTimestamp", ToTimestamp.Value.Date == ToTimestamp.Value ? ToTimestamp.Value.AddDays(1) : ToTimestamp.Value.Ticks);
+                }
+                if (!string.IsNullOrEmpty(Text))
+                {
+                    int i = 0;
+                    foreach (string word in Text.Split(' ').Select(i => i.Trim()).Where(i => i != ""))
+                    {
+                        sqlClauses.Add("et.text LIKE '%' || :word_" + i + " || '%'");
+                        parms.AddWithValue("word_" + i, word);
+                        i++;
+                    }
+                }
+            }
+        }
     }
 }

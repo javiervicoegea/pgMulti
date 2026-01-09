@@ -1233,4 +1233,13 @@ A diferencia de otras herramientas, esta aplicación no reutiliza la conexión e
   <data name="select_db" xml:space="preserve">
     <value>Seleccionar base de datos</value>
   </data>
+  <data name="filter" xml:space="preserve">
+    <value>Filtrar</value>
+  </data>
+  <data name="from" xml:space="preserve">
+    <value>Desde</value>
+  </data>
+  <data name="to" xml:space="preserve">
+    <value>Hasta</value>
+  </data>
 </root>

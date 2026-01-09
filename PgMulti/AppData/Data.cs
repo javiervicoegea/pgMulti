@@ -335,12 +335,19 @@ namespace PgMulti.AppData
                 return l;
             }
         }
-        public List<ClosedEditorTab> ListClosedEditorTabs()
+
+        public List<ClosedEditorTab> ListClosedEditorTabs(ClosedEditorTab.Filter f)
         {
             using (Connection c = OpenConnection())
             {
                 SqliteCommand cmd = c.CreateCommand();
-                cmd.CommandText = "SELECT * FROM editortabs WHERE closedAt IS NOT NULL ORDER BY closedAt DESC";
+                cmd.CommandText = "SELECT * FROM editortabs et WHERE closedAt IS NOT NULL";
+
+                List<string> sqlClauses = new List<string>();
+                f.ApplyFilter(sqlClauses, cmd.Parameters);
+                if (sqlClauses.Count > 0) cmd.CommandText += " AND " + string.Join(" AND ", sqlClauses);
+
+                cmd.CommandText += " ORDER BY closedAt DESC";
 
                 SqliteDataReader drd = cmd.ExecuteReader();
                 DataTable dt = new DataTable();

@@ -1233,4 +1233,13 @@ Unlike other tools, this application does not reuse the connection between diffe
   <data name="select_db" xml:space="preserve">
     <value>Select database</value>
   </data>
+  <data name="filter" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="from" xml:space="preserve">
+    <value>From</value>
+  </data>
+  <data name="to" xml:space="preserve">
+    <value>To</value>
+  </data>
 </root>

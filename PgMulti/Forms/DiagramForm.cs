@@ -648,6 +648,8 @@ namespace PgMulti.Forms
 
             if (f.DialogResult != DialogResult.OK) return;
 
+            _PreselectedDB = f.SelectedDB;
+
             StringBuilder sb = new StringBuilder();
             _Diagram.WriteSqlScriptTransformDb(sb, f.SelectedDB!);
 
@@ -750,6 +752,8 @@ namespace PgMulti.Forms
 
             SelectTablesForm stf = new SelectTablesForm(_Data, _PreselectedDB, preselectedTableIds);
             if (stf.ShowDialog(this) != DialogResult.OK) return;
+
+            if (stf.SelectedTables!.Count > 0) _PreselectedDB = stf.SelectedTables!.First().Schema!.DB;
 
             AddDBTables(stf.SelectedTables!);
             _Invalidate();
