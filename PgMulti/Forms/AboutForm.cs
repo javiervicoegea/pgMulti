@@ -23,10 +23,16 @@ namespace PgMulti
             }
         }
 
-        private void frmAcercaDe_Load(object sender, EventArgs e)
+        private void AboutForm_Load(object sender, EventArgs e)
         {
             llUrl.Text = AppSettings.Default.ProjectUrl;
             lblTitle.Text += Application.ProductVersion;
+
+#if IS_BETA
+            lblTitle.Text += " - Beta";
+            pb.Image = Resources.beta_logo_completo;
+#endif
+
             txtAttributions.SelectionStart = 0;
             txtAttributions.SelectionLength = 0;
         }

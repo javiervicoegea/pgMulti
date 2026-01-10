@@ -34,9 +34,9 @@
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnReset = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pb = new System.Windows.Forms.PictureBox();
             this.lblVersion = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pb)).BeginInit();
             this.SuspendLayout();
             // 
             // lblPassword
@@ -82,15 +82,15 @@
             this.btnReset.UseVisualStyleBackColor = true;
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
-            // pictureBox1
+            // pb
             // 
-            this.pictureBox1.Image = global::PgMulti.Properties.Resources.logo_completo;
-            this.pictureBox1.Location = new System.Drawing.Point(79, 15);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(205, 205);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 5;
-            this.pictureBox1.TabStop = false;
+            this.pb.Image = global::PgMulti.Properties.Resources.logo_completo;
+            this.pb.Location = new System.Drawing.Point(79, 15);
+            this.pb.Name = "pb";
+            this.pb.Size = new System.Drawing.Size(205, 205);
+            this.pb.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pb.TabIndex = 5;
+            this.pb.TabStop = false;
             // 
             // lblVersion
             // 
@@ -109,7 +109,7 @@
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(366, 376);
             this.Controls.Add(this.lblVersion);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.pb);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnReset);
             this.Controls.Add(this.btnOk);
@@ -122,7 +122,7 @@
             this.Name = "LoginForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Load += new System.EventHandler(this.LoginForm_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pb)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -134,7 +134,7 @@
         public Button btnOk;
         private Button btnCancel;
         private Button btnReset;
-        private PictureBox pictureBox1;
+        private PictureBox pb;
         private Label lblVersion;
     }
 }

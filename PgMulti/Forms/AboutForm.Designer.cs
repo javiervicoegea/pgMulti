@@ -34,8 +34,8 @@
             this.lblAttributions = new System.Windows.Forms.Label();
             this.txtAttributions = new System.Windows.Forms.TextBox();
             this.llUrl = new System.Windows.Forms.LinkLabel();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.pb = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pb)).BeginInit();
             this.SuspendLayout();
             // 
             // lblTitle
@@ -90,22 +90,22 @@
             this.llUrl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.llUrl.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llUrl_LinkClicked);
             // 
-            // pictureBox1
+            // pb
             // 
-            this.pictureBox1.Image = global::PgMulti.Properties.Resources.logo_completo;
-            this.pictureBox1.Location = new System.Drawing.Point(232, 12);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(205, 205);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 4;
-            this.pictureBox1.TabStop = false;
+            this.pb.Image = global::PgMulti.Properties.Resources.logo_completo;
+            this.pb.Location = new System.Drawing.Point(232, 12);
+            this.pb.Name = "pb";
+            this.pb.Size = new System.Drawing.Size(205, 205);
+            this.pb.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pb.TabIndex = 4;
+            this.pb.TabStop = false;
             // 
             // AboutForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(686, 625);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.pb);
             this.Controls.Add(this.llUrl);
             this.Controls.Add(this.txtAttributions);
             this.Controls.Add(this.lblAuthor);
@@ -118,8 +118,8 @@
             this.MinimizeBox = false;
             this.Name = "AboutForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Load += new System.EventHandler(this.frmAcercaDe_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.Load += new System.EventHandler(this.AboutForm_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.pb)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -132,6 +132,6 @@
         private Label lblAttributions;
         private TextBox txtAttributions;
         private LinkLabel llUrl;
-        private PictureBox pictureBox1;
+        private PictureBox pb;
     }
 }

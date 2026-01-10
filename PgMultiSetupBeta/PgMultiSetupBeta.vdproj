@@ -3,7 +3,7 @@
 "VSVersion" = "3:800"
 "ProjectType" = "8:{978C614F-708E-4E1A-B201-565925725DBA}"
 "IsWebType" = "8:FALSE"
-"ProjectName" = "8:PgMultiSetup"
+"ProjectName" = "8:PgMultiSetupBeta"
 "LanguageId" = "3:3082"
 "CodePage" = "3:1252"
 "UILanguageId" = "3:3082"
@@ -142,7 +142,7 @@
         {
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_12E587F11B2944AFA8BD0434BAE8D82D"
             {
-            "SourcePath" = "8:..\\Resources\\Icons\\setup_banner.jpg"
+            "SourcePath" = "8:..\\Resources\\Icons\\logos-beta\\beta-setup_banner.jpg"
             "TargetName" = "8:setup_banner.jpg"
             "Tag" = "8:"
             "Folder" = "8:_BF30C875E04F43C3B928491E5C3BE5A0"
@@ -202,7 +202,7 @@
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8F4ED1814B4D49BDB85E0552938575DA"
             {
-            "SourcePath" = "8:..\\Resources\\Icons\\icon.ico"
+            "SourcePath" = "8:..\\Resources\\Icons\\logos-beta\\beta-icon.ico"
             "TargetName" = "8:icon.ico"
             "Tag" = "8:"
             "Folder" = "8:_BF30C875E04F43C3B928491E5C3BE5A0"
@@ -286,10 +286,10 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:pgMulti"
-        "ProductCode" = "8:{04BD5B46-DDFA-43A9-9E29-FFBC34B7C6DD}"
-        "PackageCode" = "8:{553E9491-BB3A-4450-BEAA-5584CE24570D}"
-        "UpgradeCode" = "8:{C5365C5A-A3CF-48E2-A1D9-EBD7666CB6AE}"
+        "ProductName" = "8:pgMulti Beta"
+        "ProductCode" = "8:{4443F8FD-52F9-4806-91ED-8CB2CE1491E2}"
+        "PackageCode" = "8:{2541B7CC-4AF7-41D9-B7B0-3F63CFE2CB44}"
+        "UpgradeCode" = "8:{FA8D66C4-A8CA-46C9-9D3B-C4D5BBAC3BA4}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
@@ -299,11 +299,11 @@
         "Manufacturer" = "8:Javier Vico Egea"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:pgMulti"
+        "Title" = "8:pgMulti Beta"
         "Subject" = "8:"
         "ARPCONTACT" = "8:Javier Vico Egea"
         "Keywords" = "8:"
-        "ARPCOMMENTS" = "8:pgMulti"
+        "ARPCOMMENTS" = "8:pgMulti Beta"
         "ARPURLINFOABOUT" = "8:"
         "ARPPRODUCTICON" = "8:_8F4ED1814B4D49BDB85E0552938575DA"
         "ARPIconIndex" = "3:0"
@@ -410,7 +410,7 @@
         {
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_DB10DCD48AFA45B6B1F6328BEE219723"
             {
-            "Name" = "8:pgMulti"
+            "Name" = "8:pgMulti Beta"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
@@ -917,7 +917,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_8CA3FB7CBCFF44709F6FA55D92FE168C"
             {
-            "SourcePath" = "8:..\\PgMulti\\obj\\Debug\\net7.0-windows\\apphost.exe"
+            "SourcePath" = "8:..\\PgMulti\\obj\\Release-Beta\\net7.0-windows\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_BF30C875E04F43C3B928491E5C3BE5A0"

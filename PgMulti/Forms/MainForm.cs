@@ -47,6 +47,12 @@ namespace PgMulti
         {
             InitializeComponent();
             InitializeText();
+
+#if IS_BETA
+            Icon = Resources.beta_icon;
+            Text += " - Beta";
+#endif
+
             mm.CanOverflow = true;
             _TreeModel = new MainFormTreeModel();
             tvaConnections.Model = _TreeModel;
@@ -109,7 +115,7 @@ namespace PgMulti
         Label IEditorTabForm.lblSearchResultsSummary => lblSearchResultsSummary;
         ToolStripDropDownButton IEditorTabForm.tsddbErrors => tsddbErrors;
 
-        #endregion
+#endregion
 
         #region "Form"
         private void MainForm_Load(object sender, EventArgs e)

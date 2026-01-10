@@ -23,6 +23,12 @@ namespace PgMulti
         private void LoginForm_Load(object sender, EventArgs e)
         {
             lblVersion.Text = "v" + Application.ProductVersion.Split('+').First();
+
+#if IS_BETA
+            Icon = Properties.Resources.beta_icon;
+            pb.Image = Properties.Resources.beta_logo_completo;
+            lblVersion.Text += " - Beta";
+#endif
         }
 
         private void btnReset_Click(object sender, EventArgs e)
