@@ -370,7 +370,7 @@ namespace PgMulti.SqlSyntax
                     | SELECT | INSERT | UPDATE | DELETE | TRUNCATE | REFERENCES
                     | TRIGGER | "USAGE" | CREATE | "CONNECT" | "TEMPORARY" | "TEMP"
                     | SET | ALTER + "SYSTEM"
-                ) + "ON" +
+                ) + ON +
                 (
                     SCHEMA + id_simple
                     | grantObjectTable
@@ -379,8 +379,8 @@ namespace PgMulti.SqlSyntax
                     | "DATABASE" + id_simple
                 ) + TO + id_simple;
 
-            grantObjectTable.Rule = (Empty | "TABLE") + id;
-            grantObjectSchema.Rule = "SEQUENCE" + id;
+            grantObjectTable.Rule = (Empty | TABLE) + tableId;
+            grantObjectSchema.Rule = SEQUENCE + id;
 
             revokeStmt.Rule = ToTerm("REVOKE") +
                 (
@@ -388,11 +388,11 @@ namespace PgMulti.SqlSyntax
                     | SELECT | INSERT | UPDATE | DELETE | TRUNCATE | REFERENCES
                     | TRIGGER | "USAGE" | CREATE | "CONNECT" | "TEMPORARY" | "TEMP"
                     | SET | ALTER + "SYSTEM"
-                ) + "ON" +
+                ) + ON +
                 (
                     SCHEMA + id_simple
-                    | "TABLE" + id
-                    | "SEQUENCE" + id
+                    | TABLE + tableId
+                    | SEQUENCE + id
                     | ALL + (ToTerm("TABLES") | "SEQUENCES") + IN + SCHEMA + id_simple
                     | "DATABASE" + id_simple
                 ) + FROM + id_simple;
@@ -538,7 +538,7 @@ namespace PgMulti.SqlSyntax
                     | CHECK + "(" + expression + ")";
             constraintId.Rule = Empty | CONSTRAINT + id;
             fkTableConstraint.Rule = "FOREIGN" + KEY + idlistPar + fkConstraint;
-            fkConstraint.Rule = REFERENCES + id + idlistPar + fkTableConstraintOpt;
+            fkConstraint.Rule = REFERENCES + tableId + idlistPar + fkTableConstraintOpt;
             fkTableConstraintOpt.Rule = (Empty | "MATCH" + (FULL | "SIMPLE")) + onActionClauseListOpt + deferrable + initiallyDeferred;
             deferrable.Rule = Empty | CustomActionHere(ResolveNotDeferrableConflict) + NOT + DEFERRABLE | DEFERRABLE;
             initiallyDeferred.Rule = Empty | ToTerm("INITIALLY") + deferred;
@@ -580,7 +580,7 @@ namespace PgMulti.SqlSyntax
             //Alter 
             alterStmt.Rule = ALTER
                 + (
-                    TABLE + (Empty | IF + EXISTS) + (Empty | "ONLY") + id + alterTable
+                    TABLE + (Empty | IF + EXISTS) + (Empty | ONLY) + tableId + alterTable
                     | INDEX + (Empty | IF + EXISTS) + id + RENAME + TO + id
                     | SEQUENCE + (Empty | IF + EXISTS) + id
                         + (
