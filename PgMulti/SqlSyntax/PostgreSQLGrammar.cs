@@ -125,8 +125,11 @@ namespace PgMulti.SqlSyntax
             var RENAME = ToTerm("RENAME");
             var CHECK = ToTerm("CHECK");
             var VACUUM = ToTerm("VACUUM");
+            var ONLY = ToTerm("ONLY");
             var ANALYZE = ToTerm("ANALYZE");
             var EXPLAIN = ToTerm("EXPLAIN");
+            var FREEZE = ToTerm("FREEZE");
+            var VERBOSE = ToTerm("VERBOSE");
             var LATERAL = ToTerm("LATERAL");
             var IDENTITY = ToTerm("IDENTITY");
 
@@ -157,6 +160,9 @@ namespace PgMulti.SqlSyntax
             var updateStmt = new NonTerminal("updateStmt");
             var deleteStmt = new NonTerminal("deleteStmt");
             var vacuumStmt = new NonTerminal("vacuumStmt");
+            var vacuumOptList = new NonTerminal("vacuumOptList");
+            var vacuumOpt = new NonTerminal("vacuumOpt");
+            var vacuumTableList = new NonTerminal("vacuumTableList");
             var explainStmt = new NonTerminal("explainStmt");
             var analyzeStmt = new NonTerminal("analyzeStmt");
             var fieldDef = new NonTerminal("fieldDef");
@@ -259,6 +265,9 @@ namespace PgMulti.SqlSyntax
             var join = new NonTerminal("join");
             var usingClauseOpt = new NonTerminal("usingClauseOpt");
             var idList = new NonTerminal("idList");
+            var optIdList = new NonTerminal("optIdList");
+            var idTableList = new NonTerminal("idTableList");
+            var optIdTableList = new NonTerminal("optIdTableList");
             var columnId = new NonTerminal("columnId");
             var fkTableConstraint = new NonTerminal("fkTableConstraint");
             var fkConstraint = new NonTerminal("fkConstraint");
@@ -538,6 +547,9 @@ namespace PgMulti.SqlSyntax
             idlistPar.Rule = "(" + idSimpleList + ")";
             idSimpleList.Rule = MakePlusRule(idSimpleList, comma, id_simple);
             idList.Rule = MakePlusRule(idList, comma, id);
+            optIdList.Rule = MakeStarRule(optIdList, comma, id);
+            idTableList.Rule = MakePlusRule(idTableList, comma, tableId);
+            optIdTableList.Rule = MakeStarRule(optIdTableList, comma, tableId);
             onActionClauseListItem.Rule = ON + (UPDATE | DELETE | INSERT) + (SET + (NULL | DEFAULT) | RESTRICT | CASCADE | ToTerm("NO") + "ACTION");
             onActionClauseListOpt.Rule = MakeStarRule(onActionClauseListOpt, onActionClauseListItem);
             createTableWithClauseOpt.Rule = Empty | WITH + "(" + createTableWithList + ")";
@@ -729,7 +741,10 @@ namespace PgMulti.SqlSyntax
             performStmt.Rule = PERFORM + selectBaseClauses + selectCombineClauseOpt + orderClauseOpt + limitClauseOpt + offsetClauseOpt;
 
             //Vacuum stmt
-            vacuumStmt.Rule = VACUUM + (Empty | ANALYZE);
+            vacuumStmt.Rule = VACUUM + vacuumOptList + vacuumTableList;
+            vacuumTableList.Rule = (optIdTableList | ONLY + idTableList);
+            vacuumOptList.Rule = MakeStarRule(vacuumOptList, comma, vacuumOpt);
+            vacuumOpt.Rule = Empty | FULL | FREEZE | VERBOSE | ANALYZE;
 
             //Explain stmt
             explainStmt.Rule = EXPLAIN + (ANALYZE | Empty) + stmt;
