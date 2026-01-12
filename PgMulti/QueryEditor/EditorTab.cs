@@ -31,6 +31,8 @@ namespace PgMulti.QueryEditor
         private SeparatedEditorTabForm? _SeparatedEditorTabForm;
         private Button? _ReturnButton;
 
+        private List<PgTask> _Tasks = new List<PgTask>();
+
         public EditorTab(Data d, MainForm mainForm, CreateEditorTabOptions o) : this(d, mainForm, false)
         {
             if (o.Text != null)
@@ -156,6 +158,14 @@ namespace PgMulti.QueryEditor
             _AutocompleteMenu.AppearInterval = (_Data.Config.AutocompleteDelay == 0 ? int.MaxValue : _Data!.Config.AutocompleteDelay);
         }
 
+        public List<PgTask> Tasks
+        {
+            get
+            {
+                return _Tasks;
+            }
+        }
+
         public IEditorTabForm EditorTabForm
         {
             get
@@ -192,6 +202,7 @@ namespace PgMulti.QueryEditor
                 return _CmsFctb;
             }
         }
+
         public void OpenEditorInNewWindow()
         {
             _SeparatedEditorTabForm = new SeparatedEditorTabForm(this);

@@ -28,15 +28,28 @@ namespace PgMulti.Tasks
         private Dictionary<DataRow, Dictionary<int, bool>>? _Editions = null;
         internal Dictionary<DataRow, DataRow> _InsertedRowsMapping = new Dictionary<DataRow, DataRow>();
 
-        public Query(Data d, int index, string sql)
+        private PgTask _Task;
+
+        public Query(Data d, PgTask t, int index, string sql)
         {
+            if (d == null || t == null || index < 0 || sql == null) throw new ArgumentException();
+
             _Data = d;
+            _Task = t;
             Index = index;
             Sql = sql;
             DataTable = new DataTable();
             Columns = new List<QueryColumn>();
             _Table = null;
             _Editable = false;
+        }
+
+        public PgTask Task
+        {
+            get
+            {
+                return _Task;
+            }
         }
 
         public string Description

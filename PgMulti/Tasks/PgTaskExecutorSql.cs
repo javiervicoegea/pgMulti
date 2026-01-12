@@ -2,6 +2,7 @@
 using Irony.Parsing;
 using Npgsql;
 using PgMulti.AppData;
+using PgMulti.QueryEditor;
 using PgMulti.SqlSyntax;
 using System.Diagnostics;
 using System.Text;
@@ -19,10 +20,10 @@ namespace PgMulti.Tasks
         protected Thread _Thread;
 
         public PgTaskExecutorSql(
-            Data d, OnUpdate onUpdate, OnComplete? onComplete, string sql,
+            Data d, EditorTab? et, OnUpdate onUpdate, OnComplete? onComplete, string sql,
             Config.TransactionModeEnum transactionMode, Config.TransactionLevelEnum transactionLevel,
             LanguageData sld
-        ) : base(d, onUpdate, onComplete, sql)
+        ) : base(d, et, onUpdate, onComplete, sql)
         {
             _PGSimpleLanguageData = sld;
             _TransactionMode = transactionMode;

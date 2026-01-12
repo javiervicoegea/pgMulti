@@ -1,9 +1,8 @@
 ﻿using FastColoredTextBoxNS;
 using PgMulti.AppData;
-using System.Security.Cryptography.X509Certificates;
+using PgMulti.QueryEditor;
 using System.Text;
 using System.Text.RegularExpressions;
-using static PgMulti.Tasks.PgTask;
 
 namespace PgMulti.Tasks
 {
@@ -11,6 +10,8 @@ namespace PgMulti.Tasks
     {
         public delegate void OnUpdate(PgTask t);
         public delegate void OnComplete(PgTask t);
+
+        public EditorTab? EditorTab;
 
         protected Data _Data;
         protected string _Sql;
@@ -29,9 +30,10 @@ namespace PgMulti.Tasks
         private StringBuilder _StringBuilder;
         private Mutex _Mutex;
 
-        public PgTask(Data d, OnUpdate onUpdate, OnComplete? onComplete, string sql)
+        public PgTask(Data d, EditorTab? et, OnUpdate onUpdate, OnComplete? onComplete, string sql)
         {
             _Data = d;
+            EditorTab = et;
             _OnUpdate = onUpdate;
             _OnComplete = onComplete;
             _CreationTimestamp = DateTime.Now;

@@ -20,7 +20,7 @@ namespace PgMulti.Tasks
         private PgTaskExecutorSqlTables _TaskExecutor;
         internal QueryIntegrator? _QueryIntegrator = null;
 
-        public QueryExecutorSql(Data d, PgTaskExecutorSqlTables tes, int index, string sql) : base(d, index, sql)
+        public QueryExecutorSql(Data d, PgTaskExecutorSqlTables tes, int index, string sql) : base(d, tes, index, sql)
         {
             _Data = d;
             _TaskExecutor = tes;
@@ -46,7 +46,7 @@ namespace PgMulti.Tasks
                 Columns.Add(new QueryColumn(i, dc.ColumnName));
                 DataColumn dtc = new DataColumn("_" + i, dc.DataType!);
 
-                dtc.DataType=Column.GetDataTableTypeMapping(dc.DataType);
+                dtc.DataType = Column.GetDataTableTypeMapping(dc.DataType);
 
                 DataTable.Columns.Add(dtc);
             }

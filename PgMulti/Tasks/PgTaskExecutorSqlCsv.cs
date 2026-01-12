@@ -5,6 +5,7 @@ using Npgsql;
 using Npgsql.Schema;
 using PgMulti.AppData;
 using PgMulti.DataStructure;
+using PgMulti.QueryEditor;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
@@ -19,10 +20,10 @@ namespace PgMulti.Tasks
         private int _CurrentDBIndex = -1;
 
         public PgTaskExecutorSqlCsv(
-            Data d, List<DB> dbs, OnUpdate onUpdate, OnComplete? onComplete, string sql,
+            Data d, EditorTab? et, List<DB> dbs, OnUpdate onUpdate, OnComplete? onComplete, string sql,
             Config.TransactionModeEnum modoTransacciones, Config.TransactionLevelEnum nivelTransacciones,
             LanguageData sld, string fileName
-        ) : base(d, onUpdate, onComplete, sql, modoTransacciones, nivelTransacciones, sld)
+        ) : base(d, et, onUpdate, onComplete, sql, modoTransacciones, nivelTransacciones, sld)
         {
             _DBs = dbs;
             _FileName = fileName;

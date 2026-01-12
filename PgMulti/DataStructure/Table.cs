@@ -82,7 +82,7 @@ namespace PgMulti.DataStructure
             {
                 if (!_PKConstraintNameLoaded)
                 {
-                    using (NpgsqlConnection c = Schema.DB.Connection)
+                    using (NpgsqlConnection c = Schema!.DB.Connection)
                     {
                         NpgsqlCommand cmd = c.CreateCommand();
 

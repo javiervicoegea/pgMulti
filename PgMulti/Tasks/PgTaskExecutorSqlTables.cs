@@ -2,6 +2,7 @@
 using Microsoft.VisualBasic;
 using Npgsql;
 using PgMulti.AppData;
+using PgMulti.QueryEditor;
 using System.Data;
 using System.Diagnostics;
 using System.Threading;
@@ -15,10 +16,10 @@ namespace PgMulti.Tasks
         private bool _PreparedCommit = false;
 
         public PgTaskExecutorSqlTables(
-            Data d, DB db, OnUpdate onUpdate, OnComplete? onComplete, string sql,
+            Data d, EditorTab? et, DB db, OnUpdate onUpdate, OnComplete? onComplete, string sql,
             Config.TransactionModeEnum transactionMode, Config.TransactionLevelEnum transactionLevel,
             LanguageData sld, PgTaskIntegrator? ti
-        ) : base(d, onUpdate, onComplete, sql, transactionMode, transactionLevel, sld)
+        ) : base(d, et, onUpdate, onComplete, sql, transactionMode, transactionLevel, sld)
         {
             _DB = db;
             _TaskIntegrator = ti;

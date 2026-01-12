@@ -1,4 +1,5 @@
 ﻿using PgMulti.AppData;
+using PgMulti.QueryEditor;
 using static PgMulti.Tasks.QueryIntegrator;
 
 namespace PgMulti.Tasks
@@ -12,8 +13,8 @@ namespace PgMulti.Tasks
         private Mutex _Mutex;
         private string? _CoordinatedTransactionId = null;
 
-        public PgTaskIntegrator(Data d, OnUpdate onUpdate, OnComplete? onComplete, string sql, bool symmetric)
-            : base(d, onUpdate, onComplete, sql)
+        public PgTaskIntegrator(Data d, EditorTab? et, OnUpdate onUpdate, OnComplete? onComplete, string sql, bool symmetric)
+            : base(d, et, onUpdate, onComplete, sql)
         {
             _ExecutorTasks = new List<PgTaskExecutorSqlTables>();
             _StatementCount = -1;
@@ -209,25 +210,25 @@ namespace PgMulti.Tasks
                 QueryIntegrator? qi = null;
                 foreach (PgTaskExecutorSqlTables tes in _ExecutorTasks)
                 {
-                    QueryExecutorSql? ces;
+                    QueryExecutorSql? qes;
 
                     tes.Mutex.WaitOne();
                     try
                     {
-                        ces = (QueryExecutorSql?)tes.Queries.FirstOrDefault(cii => cii.Index == _CurrentStatementIndex);
+                        qes = (QueryExecutorSql?)tes.Queries.FirstOrDefault(cii => cii.Index == _CurrentStatementIndex);
                     }
                     finally { tes.Mutex.ReleaseMutex(); }
 
-                    if (ces == null) break;
+                    if (qes == null) break;
 
                     if (qi == null)
                     {
-                        qi = new QueryIntegrator(_Data, _CurrentStatementIndex, ces.Sql);
+                        qi = new QueryIntegrator(_Data, this, _CurrentStatementIndex, qes.Sql);
                     }
 
                     try
                     {
-                        qi.Integrate(_Data, ces);
+                        qi.Integrate(_Data, qes);
                     }
                     catch (IncompatibleQueryException iqex)
                     {

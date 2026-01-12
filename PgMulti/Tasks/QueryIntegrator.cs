@@ -14,7 +14,7 @@ namespace PgMulti.Tasks
         private List<QueryExecutorSql> _IntegratedQueries = new List<QueryExecutorSql>();
         internal Dictionary<DataRow, QueryExecutorSql> _InsertedRowsQueriesMapping = new Dictionary<DataRow, QueryExecutorSql>();
 
-        public QueryIntegrator(Data d, int index, string sql) : base(d, index, sql)
+        public QueryIntegrator(Data d, PgTask t, int index, string sql) : base(d, t, index, sql)
         {
         }
 

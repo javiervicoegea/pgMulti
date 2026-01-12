@@ -3,6 +3,7 @@ using Npgsql;
 using Npgsql.Schema;
 using PgMulti.AppData;
 using PgMulti.DataStructure;
+using PgMulti.QueryEditor;
 using System.Collections.ObjectModel;
 using System.Globalization;
 
@@ -20,10 +21,10 @@ namespace PgMulti.Tasks
         private string? _DestinationNewTableName = null;
 
         public PgTaskExecutorSqlCopyToTable(
-            Data d, List<DB> sourceDBs, OnUpdate onUpdate, OnComplete? onComplete, string sql,
+            Data d, EditorTab? et, List<DB> sourceDBs, OnUpdate onUpdate, OnComplete? onComplete, string sql,
             Config.TransactionModeEnum modoTransacciones, Config.TransactionLevelEnum nivelTransacciones,
             LanguageData sld
-        ) : base(d, onUpdate, onComplete, sql, modoTransacciones, nivelTransacciones, sld)
+        ) : base(d, et, onUpdate, onComplete, sql, modoTransacciones, nivelTransacciones, sld)
         {
             _SourceDBs = sourceDBs;
         }
