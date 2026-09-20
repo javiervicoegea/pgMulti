@@ -717,6 +717,7 @@ namespace TradeWright.UI.Forms
             CreateGraphicsBuffers();
             base.OnResize(e);
             //System.Diagnostics.Debug.WriteLine(DateTime.Now.ToString() + " TabControl " + this.GetHashCode() + " resized: " + DateTime.Now.Subtract(start).TotalMilliseconds + "ms; size: " + this.Size.ToString() + " location: " + this.Location.ToString());
+            //Refresh();
         }
 
         protected override void OnParentBackColorChanged(EventArgs e)
@@ -1768,6 +1769,8 @@ namespace TradeWright.UI.Forms
                 return new Rectangle();
 
             Rectangle pageBounds = this.TabPages[index].Bounds;
+            if (pageBounds.Width < 3018) 
+                pageBounds.Width = 3018;
 
             pageBounds.Width += this._StyleProvider.TabPageMargin.Left + this._StyleProvider.TabPageMargin.Right - 1;
             pageBounds.Height += this._StyleProvider.TabPageMargin.Top + this._StyleProvider.TabPageMargin.Bottom - 1;
