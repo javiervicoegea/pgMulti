@@ -60,12 +60,12 @@ namespace PgMulti
             DateTime?[] dateTimes = new DateTime?[Query.DataTable.Rows.Count];
             if (xAxisIsDateTime)
             {
-                Regex re = new Regex(@"^(\d+)\-(\d+)\-(\d+)( (\d+)\:(\d+)(\:(\d+)(\.(\d\d\d))?)?)?$");
+                Regex re = new Regex(@"^(\d+)\-(\d+)\-(\d+)( (\d+)\:(\d+)(\:(\d+)(\.(\d+))?)?)?$");
                 for (int i = 0; i < DataGridView.Rows.Count; i++)
                 {
                     DataGridViewRow gvRow = DataGridView.Rows[i];
                     DataRow row = ((DataRowView)gvRow.DataBoundItem).Row;
-                    
+
                     object o = (string)row[0];
 
                     if (o == DBNull.Value)
@@ -76,10 +76,12 @@ namespace PgMulti
                     {
                         Match ma = re.Match((string)o);
 
+                        if (!ma.Success) throw new Exception($"Invalid DateTime: {(string)o}");
+
                         int h = ma.Groups[5].Value == "" ? 0 : int.Parse(ma.Groups[5].Value);
                         int m = ma.Groups[6].Value == "" ? 0 : int.Parse(ma.Groups[6].Value);
                         int s = ma.Groups[8].Value == "" ? 0 : int.Parse(ma.Groups[8].Value);
-                        int ms = ma.Groups[9].Value == "" ? 0 : int.Parse(ma.Groups[9].Value);
+                        int ms = ma.Groups[9].Value == "" ? 0 : int.Parse(ma.Groups[10].Value);
 
                         dateTimes[i] = new DateTime(int.Parse(ma.Groups[1].Value), int.Parse(ma.Groups[2].Value), int.Parse(ma.Groups[3].Value), h, m, s, ms);
                     }
@@ -110,7 +112,7 @@ namespace PgMulti
                 {
                     Name = name,
                     ChartType = chartType,
-                    IsValueShownAsLabel = true,
+                    IsValueShownAsLabel = false,
                     LabelBackColor = Color.FromArgb(200, 255, 255, 255)
                 };
 

@@ -23,6 +23,7 @@ namespace PgMulti
             {
                 System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
                 ApplicationConfiguration.Initialize();
+                AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
                 Application.Run(new MainForm());
             }
             else

@@ -502,6 +502,9 @@ namespace PgMulti.DataStructure
                         return "B'" + (string)v + "'::" + Type + (TypeParams == null ? "" : TypeParams);
                     case "bytea":
                         return "decode('" + (string)v + "', 'base64')::" + Type;
+                    case "timestamp with time zone":
+                        TimeSpan ts = TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow);
+                        return "'" + v.ToString() + (ts.Ticks >= 0 ? "+" : "") + ts + "'::" + Type;
                     default:
                         return "'" + v.ToString() + "'::" + Type;
                 }
