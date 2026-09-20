@@ -2820,11 +2820,13 @@ namespace PgMulti
                         tsddbTables.Text = Properties.Text.no_results;
                         tsddbTables.DropDownItems.Clear();
                         RefreshSelectedResult();
+                        tlcTaskList.Invalidate(t);
                     }
                 }
                 else if (tlcTaskList.SelectedIndices.Count == 1 && pos == tlcTaskList.SelectedIndices[0])
                 {
                     RefreshSelectedResult();
+                    tlcTaskList.Invalidate(t);
                 }
 
                 if (t.State == PgTask.StateEnum.Running)
@@ -2833,8 +2835,6 @@ namespace PgMulti
                 }
 
                 RefreshTaskListButtons();
-
-                tlcTaskList.Invalidate(t);
             }
             finally { tlcTaskList.Mutex.ReleaseMutex(); }
         }
