@@ -773,7 +773,10 @@ A diferencia de otras herramientas, esta aplicación no reutiliza la conexión e
   <data name="copy_text" xml:space="preserve">
     <value>Copiar texto</value>
   </data>
-	<data name="import_databases" xml:space="preserve">
+  <data name="explore_relations" xml:space="preserve">
+    <value>Explorar relaciones</value>
+  </data>
+  <data name="import_databases" xml:space="preserve">
     <value>Importar lista de bases de datos</value>
   </data>
 	<data name="export_databases" xml:space="preserve">

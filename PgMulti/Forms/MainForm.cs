@@ -3608,6 +3608,8 @@ namespace PgMulti
             tsbSaveCellBinaryValueInFile.Visible = false;
             tsbTextEditor.Enabled = false;
             tsbSetNull.Enabled = false;
+            tsbExploreRelations.Enabled = false;
+            tsbExploreRelations.DropDownItems.Clear();
 
             if (cell.ColumnIndex < q.Columns.Count && cell.RowIndex < gvTable.RowCount)
             {
@@ -3637,9 +3639,88 @@ namespace PgMulti
 
                     tsbTextEditor.Enabled = true;
                 }
+
+                if (col.Column != null)
+                {
+                    foreach (TableRelation tr in col.Column.Table!.ParentRelations.Where(i => i.ChildColumns.Any(j => j == col.Column.Id) && i.ChildColumns.All(j => q.Columns.Any(k => k.Column != null && j == k.Column.Id))))
+                    {
+                        object[] values = tr.ChildColumns.Select(i => q.DataTable.Rows[e.RowIndex]["_" + q.Columns.First(j => j.Column != null && j.Column.Id == i).Index]).ToArray();
+
+                        if (!values.Any(i => i == DBNull.Value))
+                        {
+                            tsbExploreRelations.Enabled = true;
+
+                            ToolStripMenuItem tsbExploreRelationItem = new ToolStripMenuItem();
+                            tsbExploreRelationItem.Image = Properties.Resources.tabla;
+                            tsbExploreRelationItem.Size = new Size(73, 26);
+                            tsbExploreRelationItem.Text = tr.ParentTable!.IdSchema + "." + tr.ParentTable.Id;
+                            tsbExploreRelationItem.Tag = new Tuple<TableRelation, bool, object[]>(tr, true, values);
+                            tsbExploreRelationItem.Click += tsbExploreRelationItem_Click;
+
+                            tsbExploreRelations.DropDownItems.Add(tsbExploreRelationItem);
+                        }
+                    }
+
+                    foreach (TableRelation tr in col.Column.Table!.ChildRelations.Where(i => i.ParentColumns.Any(j => j == col.Column.Id) && i.ParentColumns.All(j => q.Columns.Any(k => k.Column != null && j == k.Column.Id))))
+                    {
+                        object[] values = tr.ParentColumns.Select(i => q.DataTable.Rows[e.RowIndex]["_" + q.Columns.First(j => j.Column != null && j.Column.Id == i).Index]).ToArray();
+
+                        if (!values.Any(i => i == DBNull.Value))
+                        {
+                            tsbExploreRelations.Enabled = true;
+
+                            ToolStripMenuItem tsbExploreRelationItem = new ToolStripMenuItem();
+                            tsbExploreRelationItem.Image = Properties.Resources.tabla;
+                            tsbExploreRelationItem.Size = new Size(73, 26);
+                            tsbExploreRelationItem.Text = tr.ChildTable!.IdSchema + "." + tr.ChildTable.Id;
+                            tsbExploreRelationItem.Tag = new Tuple<TableRelation, bool, object[]>(tr, false, values);
+                            tsbExploreRelationItem.Click += tsbExploreRelationItem_Click;
+
+                            tsbExploreRelations.DropDownItems.Add(tsbExploreRelationItem);
+                        }
+                    }
+                }
             }
         }
 
+        private void tsbExploreRelationItem_Click(object? sender, EventArgs e)
+        {
+            Tuple<TableRelation, bool, object[]> t = (Tuple<TableRelation, bool, object[]>)((ToolStripMenuItem)sender!).Tag;
+            Table table;
+            string where;
+
+            if (t.Item2)
+            {
+                table = t.Item1.ParentTable!;
+                where = string.Join(" AND ", t.Item1.ParentColumns.Select((i, index) => i + " = " + table.Columns.First(j => j.Id == i).GetSqlLiteralValue(t.Item3[index])).ToArray());
+            }
+            else
+            {
+                table = t.Item1.ChildTable!;
+                where = string.Join(" AND ", t.Item1.ChildColumns.Select((i, index) => i + " = " + table.Columns.First(j => j.Id == i).GetSqlLiteralValue(t.Item3[index])).ToArray());
+            }
+
+            string sql = "SELECT * FROM " + SqlSyntax.PostgreSqlGrammar.IdToString(table.IdSchema) + "." + SqlSyntax.PostgreSqlGrammar.IdToString(table.Id) + " WHERE " + where + ";";
+
+            EditorTab.CreateEditorTabOptions o = new EditorTab.CreateEditorTabOptions();
+            o.Title = string.Format(Properties.Text.explore_table_x, table.Id);
+            o.Text = sql;
+            o.Focus = true;
+
+            EditorTab et = CreateEditorTab(o);
+
+            Log h = new Log(_Data!);
+
+            h.SqlText = sql;
+
+            PgTaskExecutorSqlTables tes = new PgTaskExecutorSqlTables(_Data!, et, table.Schema!.DB, new PgTask.OnUpdate(Task_OnUpdate), null, sql, Config.TransactionModeEnum.Manual, Config.TransactionLevelEnum.ReadCommited, _Data!.PGSimpleLanguageData, null);
+            AddTask(tes, et);
+            h.DBIds.Add(table.Schema!.DB.Id);
+            tes.Start();
+
+            h.Save();
+            _Data.CheckAppDbFileSize();
+        }
 
         private void fctbExecutedSql_SecondaryFormClosed(object? sender, SecondaryFormEventArgs e)
         {
@@ -3906,6 +3987,7 @@ namespace PgMulti
             this.tpTable.Text = Properties.Text.table;
             this.tsbTextEditor.Text = Properties.Text.show_text_window;
             this.tsbCopyCellText.Text = Properties.Text.copy_text;
+            this.tsbExploreRelations.Text = Properties.Text.explore_relations;
             this.tsbLoadCellBinaryValueFromFile.Text = Properties.Text.load_binary_file;
             this.tsbSaveCellBinaryValueInFile.Text = Properties.Text.save_binary_file;
             this.tsbSetNull.Text = Properties.Text.set_null;

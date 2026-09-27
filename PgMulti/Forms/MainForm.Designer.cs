@@ -152,6 +152,7 @@ namespace PgMulti
             tsbSaveCellBinaryValueInFile = new ToolStripMenuItem();
             tsbTextEditor = new ToolStripMenuItem();
             tsbSetNull = new ToolStripMenuItem();
+            tsbExploreRelations = new ToolStripMenuItem();
             toolStrip5 = new ToolStrip();
             tsddbTables = new ToolStripDropDownButton();
             tsddbInsertRow = new ToolStripDropDownButton();
@@ -1482,7 +1483,7 @@ namespace PgMulti
             // cmsTable
             // 
             cmsTable.ImageScalingSize = new Size(20, 20);
-            cmsTable.Items.AddRange(new ToolStripItem[] { tsbCopyCellText, tsbLoadCellBinaryValueFromFile, tsbSaveCellBinaryValueInFile, tsbTextEditor, tsbSetNull });
+            cmsTable.Items.AddRange(new ToolStripItem[] { tsbCopyCellText, tsbLoadCellBinaryValueFromFile, tsbSaveCellBinaryValueInFile, tsbTextEditor, tsbSetNull, tsbExploreRelations });
             cmsTable.Name = "cmsTable";
             cmsTable.Size = new Size(74, 134);
             // 
@@ -1520,6 +1521,12 @@ namespace PgMulti
             tsbSetNull.Name = "tsbSetNull";
             tsbSetNull.Size = new Size(73, 26);
             tsbSetNull.Click += tsbSetNull_Click;
+            // 
+            // tsbExploreRelations
+            // 
+            tsbExploreRelations.Image = Properties.Resources.abrir_tabla;
+            tsbExploreRelations.Name = "tsbExploreRelations";
+            tsbExploreRelations.Size = new Size(73, 26);
             // 
             // toolStrip5
             // 
@@ -2284,6 +2291,7 @@ namespace PgMulti
         private ToolStripMenuItem tsbLoadCellBinaryValueFromFile;
         private ToolStripMenuItem tsbSaveCellBinaryValueInFile;
         private ToolStripMenuItem tsbTextEditor;
+        private ToolStripMenuItem tsbExploreRelations;
         private ContextMenuStrip cmsServers;
         private ToolStripMenuItem tscmiNewGroup;
         private ToolStripMenuItem tscmiNewDB;

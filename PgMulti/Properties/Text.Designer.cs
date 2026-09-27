@@ -1160,6 +1160,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Explore relations.
+        /// </summary>
+        internal static string explore_relations {
+            get {
+                return ResourceManager.GetString("explore_relations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Explore table.
         /// </summary>
         internal static string explore_table {

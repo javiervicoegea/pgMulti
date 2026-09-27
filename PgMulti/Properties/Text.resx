@@ -773,6 +773,9 @@ Unlike other tools, this application does not reuse the connection between diffe
 	<data name="copy_text" xml:space="preserve">
     <value>Copy text</value>
   </data>
+	<data name="explore_relations" xml:space="preserve">
+    <value>Explore relations</value>
+  </data>
 	<data name="import_databases" xml:space="preserve">
     <value>Import database list</value>
   </data>

@@ -287,15 +287,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:pgMulti"
-        "ProductCode" = "8:{04BD5B46-DDFA-43A9-9E29-FFBC34B7C6DD}"
-        "PackageCode" = "8:{553E9491-BB3A-4450-BEAA-5584CE24570D}"
+        "ProductCode" = "8:{3DF41FDF-95DB-47C5-BB30-DD27C4C18FBD}"
+        "PackageCode" = "8:{8D3FEE6D-2F10-489B-A0C6-82788106336F}"
         "UpgradeCode" = "8:{C5365C5A-A3CF-48E2-A1D9-EBD7666CB6AE}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:2.0.0"
+        "ProductVersion" = "8:2.1.0"
         "Manufacturer" = "8:Javier Vico Egea"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -917,7 +917,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_8CA3FB7CBCFF44709F6FA55D92FE168C"
             {
-            "SourcePath" = "8:..\\PgMulti\\obj\\Debug\\net7.0-windows\\apphost.exe"
+            "SourcePath" = "8:..\\PgMulti\\obj\\Debug-Beta\\net7.0-windows\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_BF30C875E04F43C3B928491E5C3BE5A0"
