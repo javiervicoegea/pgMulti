@@ -2820,19 +2820,27 @@ namespace PgMulti
                         tsddbTables.Text = Properties.Text.no_results;
                         tsddbTables.DropDownItems.Clear();
                         RefreshSelectedResult();
-                        tlcTaskList.Invalidate(t);
                     }
                 }
                 else if (tlcTaskList.SelectedIndices.Count == 1 && pos == tlcTaskList.SelectedIndices[0])
                 {
                     RefreshSelectedResult();
-                    tlcTaskList.Invalidate(t);
                 }
 
-                if (t.State == PgTask.StateEnum.Running)
+                if (t.State == PgTask.StateEnum.Running) tmrTaskList.Enabled = true;
+
+                bool visible;
+                if (tsbFilterCurrentEditorTabTasks.Checked)
                 {
-                    tmrTaskList.Enabled = true;
+                    EditorTab et = (EditorTab)tcSql.SelectedTab.Tag!;
+                    visible = et.Tasks.Contains(t);
                 }
+                else
+                {
+                    visible = true;
+                }
+
+                if (visible) tlcTaskList.Invalidate(t);
 
                 RefreshTaskListButtons();
             }
@@ -2898,6 +2906,7 @@ namespace PgMulti
                         //fctbResult.ForeColor = Color.DarkBlue;
                         fctbResult.AppendText("\r\n\r\n");
                         fctbResult.AppendText($"{Properties.Text.executing_since}: {t.StartTimestamp!.Value:g}", _FctbResultStyles[PgTask.LogStyle.TaskIsRunning]);
+                        if (t.State == PgTask.StateEnum.Init) tcTask.SelectedIndex = 0;
                     }
 
                     bool tsddbTablesPrevEmpty = tsddbTables.DropDown.Items.Count == 0;

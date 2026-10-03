@@ -137,8 +137,8 @@ namespace PgMulti.Tasks
         public virtual void Start()
         {
             _StartTimestamp = DateTime.Now;
-            _State = StateEnum.Running;
             _OnUpdate(this);
+            _State = StateEnum.Running;
         }
 
         public virtual void Cancel()
