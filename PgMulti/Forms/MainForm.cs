@@ -2787,7 +2787,6 @@ namespace PgMulti
             tlcTaskList.Invoke((MethodInvoker)delegate
             {
                 RefreshTaskListItem(t);
-                RefreshTaskListButtons();
             });
         }
 
@@ -2827,7 +2826,7 @@ namespace PgMulti
                     RefreshSelectedResult();
                 }
 
-                if (t.State == PgTask.StateEnum.Running) tmrTaskList.Enabled = true;
+                if (t.State != PgTask.StateEnum.Finished) tmrTaskList.Enabled = true;
 
                 bool visible;
                 if (tsbFilterCurrentEditorTabTasks.Checked)
@@ -3026,6 +3025,7 @@ namespace PgMulti
                     RemoveTask(t);
                 }
 
+                RefreshSelectedResult();
                 RefreshTaskListButtons();
             }
             finally { tlcTaskList.Mutex.ReleaseMutex(); }
