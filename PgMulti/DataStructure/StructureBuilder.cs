@@ -22,19 +22,21 @@ namespace PgMulti.DataStructure
             using (NpgsqlConnection c = db.Connection)
             {
                 NpgsqlCommand cmd = c.CreateCommand();
+                cmd.CommandText = "SHOW server_version";
+                cmd.CommandTimeout = 10;
+
+                int v;
 
                 try
                 {
                     c.Open();
+                    v = int.Parse(((string)cmd.ExecuteScalar()!).Split('.')[0]);
                 }
                 catch (Exception)
                 {
                     return null;
                 }
 
-                cmd.CommandText = "SHOW server_version";
-                cmd.CommandTimeout = 10;
-                int v = int.Parse(((string)cmd.ExecuteScalar()!).Split('.')[0]);
 
                 if (v >= 15)
                 {
