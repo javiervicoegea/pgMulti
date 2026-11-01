@@ -1957,7 +1957,7 @@ namespace PgMulti
 
             foreach (DB db in dbs)
             {
-                db.InitSchemas();
+                db.InitSchemas(true);
             }
 
             Log h = new Log(_Data!);
@@ -2651,6 +2651,7 @@ namespace PgMulti
             // Already done in PgTask constructor:
             // t.EditorTab = et;
             _Tasks.Add(t);
+            RefreshTaskListItem(t);
         }
 
         private void RemoveTask(PgTask t)
@@ -2904,8 +2905,15 @@ namespace PgMulti
                     {
                         //fctbResult.ForeColor = Color.DarkBlue;
                         fctbResult.AppendText("\r\n\r\n");
-                        fctbResult.AppendText($"{Properties.Text.executing_since}: {t.StartTimestamp!.Value:g}", _FctbResultStyles[PgTask.LogStyle.TaskIsRunning]);
-                        if (t.State == PgTask.StateEnum.Init) tcTask.SelectedIndex = 0;
+                        if (t.State == PgTask.StateEnum.Init)
+                        {
+                            tcTask.SelectedIndex = 0;
+                            fctbResult.AppendText($"{Properties.Text.initializing}", _FctbResultStyles[PgTask.LogStyle.TaskIsRunning]);
+                        }
+                        else
+                        {
+                            fctbResult.AppendText($"{Properties.Text.executing_since}: {t.StartTimestamp!.Value:g}", _FctbResultStyles[PgTask.LogStyle.TaskIsRunning]);
+                        }
                     }
 
                     bool tsddbTablesPrevEmpty = tsddbTables.DropDown.Items.Count == 0;

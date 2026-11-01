@@ -154,8 +154,6 @@ namespace PgMulti.Tasks
                 }
             }
             finally { _Mutex.ReleaseMutex(); }
-
-            if (_OnComplete != null) _OnComplete(this);
         }
 
         internal void OnTesException(PgTaskExecutorSqlTables tes)
@@ -262,6 +260,8 @@ namespace PgMulti.Tasks
                 }
                 finally { _Mutex.ReleaseMutex(); }
             }
+
+            if (_OnComplete != null) _OnComplete(this);
         }
 
         public override string ToString()

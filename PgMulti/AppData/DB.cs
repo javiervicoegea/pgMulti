@@ -23,6 +23,7 @@ namespace PgMulti.AppData
         private List<Schema>? _Schemas = null;
         private List<Schema>? _SearchPathSchemas = null;
         private Group _Group;
+        private Mutex _SchemaMutex = new Mutex(false);
 
         public DB(Data d, Group g)
         {
@@ -83,9 +84,10 @@ namespace PgMulti.AppData
         {
             get
             {
+
                 if (_Schemas == null)
                 {
-                    InitSchemas();
+                    InitSchemas(false);
                 }
 
                 return _Schemas!;
@@ -135,7 +137,63 @@ namespace PgMulti.AppData
             }
         }
 
-        public void InitSchemas()
+        private Thread? _InitializationThread = null;
+
+        public void ResetSchemas()
+        {
+            _SchemaMutex.WaitOne();
+
+            try
+            {
+                if (_InitializationThread != null)
+                {
+                    _InitializationThread.Join();
+                    _InitializationThread = null;
+                }
+                _Schemas = null;
+            }
+            finally { _SchemaMutex.ReleaseMutex(); }
+        }
+
+        public void InitSchemas(bool asyncronous)
+        {
+            _SchemaMutex.WaitOne();
+
+            try
+            {
+                if (asyncronous)
+                {
+                    if (_InitializationThread == null)
+                    {
+                        _InitializationThread = new Thread(() =>
+                        {
+                            _SchemaMutex.WaitOne();
+                            try
+                            {
+                                _InitSchemas();
+                            }
+                            finally { _SchemaMutex.ReleaseMutex(); }
+                        });
+                        _InitializationThread.Start();
+                    }
+                }
+                else
+                {
+                    if (_InitializationThread == null)
+                    {
+                        _InitSchemas();
+                    }
+                    else
+                    {
+                        _InitializationThread.Join();
+                        _InitializationThread = null;
+                    }
+                }
+            }
+            finally { _SchemaMutex.ReleaseMutex(); }
+        }
+
+        private void _InitSchemas()
         {
             StructureBuilder? eb = StructureBuilder.CreateStructureBuilder(_Data, this);
             if (eb == null)
@@ -274,11 +332,6 @@ namespace PgMulti.AppData
 
             msg = null;
             return true;
-        }
-
-        public void ResetSchemas()
-        {
-            _Schemas = null;
         }
 
         public CultureInfo GetMonetaryCultureInfo(out string lcMonetary)

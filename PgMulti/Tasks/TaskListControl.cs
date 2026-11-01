@@ -47,6 +47,8 @@
         private Pen ProgressForePen;
         private Pen SelectedProgressForePen;
 
+        private StringFormat StringFormat;
+
         public TaskListControl()
         {
             TabStop = true;
@@ -81,6 +83,9 @@
             ErrorForePen = new Pen(ErrorForeBrush);
             ProgressForePen = new Pen(ProgressForeBrush);
             SelectedProgressForePen = new Pen(SelectedProgressForeBrush);
+
+            StringFormat = StringFormat.GenericTypographic;
+            StringFormat.Trimming = StringTrimming.EllipsisCharacter;
         }
 
         public List<int> SelectedIndices
@@ -157,7 +162,7 @@
                 if (index == -1) return;
 
                 if (_SelectedIndices.Contains(index)) _SelectedIndices.Remove(index);
-                for (int i = 0; i < _SelectedIndices.Count; i++) if (_SelectedIndices[i]>index) _SelectedIndices[i]--;
+                for (int i = 0; i < _SelectedIndices.Count; i++) if (_SelectedIndices[i] > index) _SelectedIndices[i]--;
 
                 _Tasks.Remove(t);
                 UpdateScrollBars();
@@ -380,9 +385,9 @@
 
                     if (IsSelectedTabTaskNeeded != null) IsSelectedTabTaskNeeded(this, isttn);
 
-                    if (isttn.IsSelectedTabTask) e.Graphics.DrawEllipse(forePen, taskMiddleBaseX + ItemPadding + (ReservedGliphSize-SelectedTabGliphSize)/2, taskMiddleBaseY + (MiddleItemHeight - SelectedTabGliphSize) / 2, SelectedTabGliphSize, SelectedTabGliphSize);
+                    if (isttn.IsSelectedTabTask) e.Graphics.DrawEllipse(forePen, taskMiddleBaseX + ItemPadding + (ReservedGliphSize - SelectedTabGliphSize) / 2, taskMiddleBaseY + (MiddleItemHeight - SelectedTabGliphSize) / 2, SelectedTabGliphSize, SelectedTabGliphSize);
 
-                    e.Graphics.DrawString(t.ToString(), Font, foreBrush, new RectangleF(taskMiddleBaseX + 3 * ItemPadding + ReservedGliphSize, taskMiddleBaseY + ItemPadding, internalItemWidth - ReservedGliphSize - 2 * ItemPadding, InternalItemHeight), StringFormat.GenericTypographic);
+                    e.Graphics.DrawString(t.ToString(), Font, foreBrush, new RectangleF(taskMiddleBaseX + 3 * ItemPadding + ReservedGliphSize, taskMiddleBaseY + ItemPadding, internalItemWidth - ReservedGliphSize - 2 * ItemPadding, InternalItemHeight), StringFormat);
                 }
             }
             finally { _Mutex.ReleaseMutex(); }
@@ -458,6 +463,12 @@
                 finally { _Mutex.ReleaseMutex(); }
 
             }
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            Invalidate();
         }
 
         private void UpdateScrollBars()
