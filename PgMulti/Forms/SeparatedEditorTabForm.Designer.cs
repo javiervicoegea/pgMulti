@@ -31,7 +31,7 @@ namespace PgMulti
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TextBoxForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SeparatedEditorTabForm));
             splitContainer = new SplitContainer();
             tlpSearchAndReplace = new TableLayoutPanel();
             lblSearch = new Label();

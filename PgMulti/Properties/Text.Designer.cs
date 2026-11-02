@@ -2686,6 +2686,15 @@ namespace PgMulti.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Cancel editing and open in read-only mode.
+        /// </summary>
+        internal static string show_readonly_text_window {
+            get {
+                return ResourceManager.GetString("show_readonly_text_window", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a View in text window.
         /// </summary>
         internal static string show_text_window {

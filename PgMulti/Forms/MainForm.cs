@@ -3575,19 +3575,27 @@ namespace PgMulti
             */
 
             TextBoxForm f = new TextBoxForm(txt, q.Editable && col.IsEditableOnEdit);
-            f.ShowDialog(this);
 
-            if (f.DialogResult == DialogResult.OK)
+            if (q.Editable && col.IsEditableOnEdit)
             {
-                if (f.Value == null)
+                f.ShowDialog(this);
+
+                if (f.DialogResult == DialogResult.OK)
                 {
-                    drCurrent[cell.ColumnIndex] = DBNull.Value;
+                    if (f.Value == null)
+                    {
+                        drCurrent[cell.ColumnIndex] = DBNull.Value;
+                    }
+                    else
+                    {
+                        drCurrent[cell.ColumnIndex] = f.Value;
+                    }
+                    q.SetEditedCell(drCurrent, cell.ColumnIndex);
                 }
-                else
-                {
-                    drCurrent[cell.ColumnIndex] = f.Value;
-                }
-                q.SetEditedCell(drCurrent, cell.ColumnIndex);
+            }
+            else
+            {
+                f.Show();
             }
         }
 

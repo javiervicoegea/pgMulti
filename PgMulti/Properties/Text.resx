@@ -577,7 +577,10 @@ ATTENTION: Databases within the group will also be deleted.</value>
 	<data name="show_text_window" xml:space="preserve">
     <value>View in text window</value>
   </data>
-	<data name="sql_file_filter" xml:space="preserve">
+  <data name="show_readonly_text_window" xml:space="preserve">
+    <value>Cancel editing and open in read-only mode</value>
+  </data>
+  <data name="sql_file_filter" xml:space="preserve">
     <value>SQL files (*.sql)|*.sql|All files|*.*</value>
   </data>
 	<data name="pgcx_file_filter" xml:space="preserve">

@@ -102,7 +102,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(39, 16);
             this.label1.TabIndex = 5;
-            this.label1.Text = "Find: ";
+            this.label1.Text = Texts.Texts.Find + ": ";
             // 
             // cbWholeWord
             // 
@@ -138,7 +138,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Find";
+            this.Text = Texts.Texts.Find;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FindForm_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();

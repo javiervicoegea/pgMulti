@@ -169,6 +169,7 @@
     <EmbeddedResource Include="Texts\Texts.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Texts.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ToolTipForm.resx">
       <DependentUpon>ToolTipForm.cs</DependentUpon>

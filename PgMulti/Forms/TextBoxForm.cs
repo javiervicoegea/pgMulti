@@ -25,6 +25,9 @@ namespace PgMulti
             {
                 txtText.ReadOnly = true;
                 tsToolbar.Visible = false;
+                btnOk.Visible = false;
+                btnCancel.Visible = false;
+                txtText.BackColor = SystemColors.Menu;
             }
         }
 
@@ -78,10 +81,20 @@ namespace PgMulti
             }
             else
             {
-                txtText.Text = Value;
+                txtText.Text = Value??"";
             }
 
             txtText.Enabled = !tsbNull.Checked;
+            tsbOpenFile.Enabled = !tsbNull.Checked;
+            tsbSaveFile.Enabled = !tsbNull.Checked;
+            tsbWordWrap.Enabled = !tsbNull.Checked;
+        }
+
+        private void tsbReadOnlyMode_Click(object? sender, EventArgs? e)
+        {
+            TextBoxForm f = new TextBoxForm(Value??"", false);
+            f.Show();
+            btnCancel_Click(null, null);
         }
 
         private void btnOk_Click(object sender, EventArgs e)
@@ -98,7 +111,7 @@ namespace PgMulti
             Close();
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
+        private void btnCancel_Click(object? sender, EventArgs? e)
         {
             Value = null;
             DialogResult = DialogResult.Cancel;
@@ -113,6 +126,7 @@ namespace PgMulti
             this.tsbSaveFile.ToolTipText = Properties.Text.save_as;
             this.tsbNull.Text = Properties.Text.null_value;
             this.tsbNull.ToolTipText = Properties.Text.select_to_set_null_value;
+            this.tsbReadOnlyMode.ToolTipText = Properties.Text.show_readonly_text_window;
             this.btnOk.Text = Properties.Text.btn_ok;
             this.btnCancel.Text = Properties.Text.btn_cancel;
             this.Text = Properties.Text.text;

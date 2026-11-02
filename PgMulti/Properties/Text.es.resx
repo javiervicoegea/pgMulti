@@ -577,6 +577,9 @@ ATENCIÓN: Se eliminarán también las bases de datos dentro del grupo.</value>
   <data name="show_text_window" xml:space="preserve">
     <value>Ver en ventana de texto</value>
   </data>
+  <data name="show_readonly_text_window" xml:space="preserve">
+    <value>Cancelar edición y abrir en modo de solo lectura</value>
+  </data>
   <data name="sql_file_filter" xml:space="preserve">
     <value>Ficheros SQL (*.sql)|*.sql|Todos los archivos|*.*</value>
   </data>

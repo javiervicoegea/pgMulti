@@ -39,6 +39,7 @@ namespace PgMulti
             tsbOpenFile = new ToolStripButton();
             tsbSaveFile = new ToolStripButton();
             tsbNull = new ToolStripButton();
+            tsbReadOnlyMode= new ToolStripButton();
             ofdOpenFile = new OpenFileDialog();
             sfdSaveFile = new SaveFileDialog();
             btnCancel = new Button();
@@ -110,7 +111,7 @@ namespace PgMulti
             // 
             tsToolbar.Dock = DockStyle.None;
             tsToolbar.ImageScalingSize = new Size(20, 20);
-            tsToolbar.Items.AddRange(new ToolStripItem[] { tsbWordWrap, tsbOpenFile, tsbSaveFile, tsbNull });
+            tsToolbar.Items.AddRange(new ToolStripItem[] { tsbWordWrap, tsbOpenFile, tsbSaveFile, tsbReadOnlyMode, tsbNull });
             tsToolbar.Location = new Point(4, 0);
             tsToolbar.Name = "tsToolbar";
             tsToolbar.Size = new Size(129, 27);
@@ -151,6 +152,14 @@ namespace PgMulti
             tsbNull.Name = "tsbNull";
             tsbNull.Size = new Size(29, 24);
             tsbNull.Click += tsbNull_Click;
+            // 
+            // tsbReadOnlyMode
+            // 
+            tsbReadOnlyMode.Image = Properties.Resources.export;
+            tsbReadOnlyMode.ImageTransparentColor = Color.Magenta;
+            tsbReadOnlyMode.Name = "tsbReadOnlyMode";
+            tsbReadOnlyMode.Size = new Size(29, 24);
+            tsbReadOnlyMode.Click += tsbReadOnlyMode_Click;
             // 
             // ofdOpenFile
             // 
@@ -216,6 +225,7 @@ namespace PgMulti
         private ToolStripButton tsbOpenFile;
         private ToolStripButton tsbSaveFile;
         private ToolStripButton tsbNull;
+        private ToolStripButton tsbReadOnlyMode;
         private OpenFileDialog ofdOpenFile;
         private SaveFileDialog sfdSaveFile;
         private Button btnCancel;
